@@ -18,23 +18,26 @@ const Login = () => {
           <TextSecondary text="Enter your phone number . We will send you confirmation code here" />
         </div>
 
-        <div className="flex flex-row gap-3 mt-5">
-          <div className="flex flex-col ">
-            <p>Country</p>
-            {/* <select className="py-3.5 pl-1 w-auto">
-            {countries.map((i: any) => (
-              <option key={i.name} className="flex gap-1">
-                <ReactCountryFlag countryCode={i.code} />
-                <h1 className="ml-1">+{i.phone}</h1>
-              </option>
-            ))}
-          </select> */}
+        <div className="flex flex-col gap-6 mt-5">
+          <div className="flex flex-col">
+            <p className="text-sm font-semibold mb-1">Country</p>
+
+            <select className="w-full py-3.5 text-base pl-1.5 bg-inherit border border-slate-300 rounded-md focus:outline-none focus:border-sky-500 focus:ring-sky-500">
+              {countries.map((i: any) => (
+                <option key={i.name} className="flex gap-1">
+                  <ReactCountryFlag countryCode={i.code} />
+                  <> +{i.phone}</>
+                  <> {i.name}</>
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="flex flex-col ">
-            <p>Mobile number</p>
+            <p className="text-sm font-semibold mb-1">Mobile number</p>
             <input
               type="number"
-              className="py-3.5 px-2 text-base text-black border w-[200px] border-slate-300 rounded-md focus:outline-none focus:border-sky-500 focus:ring-sky-500"
+              className="py-3.5 px-2 text-base text-black border w-full border-slate-300 rounded-md focus:outline-none focus:border-sky-500 focus:ring-sky-500"
             />
           </div>
         </div>

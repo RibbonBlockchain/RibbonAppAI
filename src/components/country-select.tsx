@@ -2,9 +2,9 @@
 
 import ReactSelect from "react-select";
 import ReactCountryFlag from "react-country-flag";
-import { countries } from "@/utils/values/countries";
+import { countries } from "@/app/lib/values/countries";
 
-type Props = { value: string; setValue: (v: string) => void };
+type Props = { setValue: (v: string) => void };
 
 const options = countries.map((c) => ({
   value: c.code,
@@ -21,7 +21,7 @@ const options = countries.map((c) => ({
   ),
 }));
 
-const CountrySelect = ({ value, setValue }: Props) => {
+const CountrySelect = ({ setValue }: Props) => {
   return (
     <ReactSelect
       unstyled

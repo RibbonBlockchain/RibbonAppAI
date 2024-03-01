@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Button from "@/components/button";
 import { getUsers } from "@/utils/api-requests";
 import { useQuery } from "@tanstack/react-query";
 import React, { Fragment, useState } from "react";
@@ -86,10 +85,12 @@ const Dashboard = () => {
                   </Dialog.Title>
 
                   <div onClick={closeModal} className="py-4">
-                    <Button
-                      textColor="text-white"
-                      text="Link your World ID now"
-                    />
+                    <button
+                      type="submit"
+                      className="w-full text-sm font-semibold text-center p-4 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+                    >
+                      Link your World ID now
+                    </button>
                   </div>
 
                   <div className="flex flex-row gap-2 mt-4">

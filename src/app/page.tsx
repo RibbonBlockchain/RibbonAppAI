@@ -1,7 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Phone } from "lucide-react";
-import Button from "@/components/button";
 
 const Home = () => {
   return (

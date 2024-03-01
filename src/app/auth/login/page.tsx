@@ -1,15 +1,10 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
+import Submit from "./sections/submit";
+import FormInput from "./sections/form";
 import { ArrowLeft } from "lucide-react";
-import PhoneInput from "@/components/phone-input";
-import CountrySelect from "@/components/country-select";
 
 const Login = () => {
-  const [phone, setPhone] = React.useState("");
-  const [countryCode, setCountryCode] = React.useState("");
-
   return (
     <div className="flex flex-col h-[inherit] items-center justify-between gap-6">
       <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
@@ -26,23 +21,10 @@ const Login = () => {
           </p>
         </div>
 
-        <CountrySelect value={countryCode} setValue={setCountryCode} />
-
-        <PhoneInput
-          value={phone}
-          setValue={setPhone}
-          country={countryCode?.toLowerCase()}
-        />
+        <FormInput />
       </div>
 
-      <div className="flex items-center justify-center w-full pb-6">
-        <Link
-          href="/auth/verify"
-          className="w-full text-sm font-semibold text-center p-4 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
-        >
-          Continue
-        </Link>
-      </div>
+      <Submit />
     </div>
   );
 };

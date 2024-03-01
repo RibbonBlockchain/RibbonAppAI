@@ -4,7 +4,6 @@ import Link from "next/link";
 import OtpInput from "react-otp-input";
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import TextPrimary, { TextSecondary } from "@/components/text";
 
 const Verify = () => {
   const phoneNumber = "+234 8143481577";
@@ -18,8 +17,12 @@ const Verify = () => {
         </Link>
 
         <div className="flex flex-col gap-2">
-          <TextPrimary text="Verify your phone number" />
-          <TextSecondary text={`A code has been sent to ${phoneNumber}`} />
+          <h1 className="text-slate-700 font-extrabold text-3xl">
+            Verify your phone number
+          </h1>
+          <p className="text-sm text-slate-600">
+            {`A code has been sent to ${phoneNumber}`}{" "}
+          </p>
         </div>
 
         <OtpInput
@@ -49,7 +52,7 @@ const Verify = () => {
         />
 
         <div className="flex flex-row gap-2">
-          <TextSecondary text="I didn’t get a code!" />
+          <p className="text-sm text-slate-600">I didn’t get a code! </p>
           <span className="text-sm font-normal text-[#4285F4]">
             Resend code
           </span>

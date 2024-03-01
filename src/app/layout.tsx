@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import ReactQueryProvider from "@/provider/react-query-provider";
 
 export const metadata: Metadata = {
   title: "Ribbon Protocol",
@@ -19,9 +20,11 @@ const RootLayout = ({
 }>) => (
   <html lang="en" className={`h-full ${inter.className}`}>
     <body className="h-full">
-      <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6">
-        {children}
-      </main>
+      <ReactQueryProvider>
+        <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6">
+          {children}
+        </main>
+      </ReactQueryProvider>
     </body>
   </html>
 );

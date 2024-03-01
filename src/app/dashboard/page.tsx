@@ -2,22 +2,63 @@
 
 import Image from "next/image";
 import Button from "@/components/button";
+import { getUsers } from "@/utils/api-requests";
+import { useQuery } from "@tanstack/react-query";
 import React, { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
+  const { isPending, error, data } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(),
+  });
+
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
-    <div className="w-full py-3 h-screen bg-gray-300">
-      <p className="h-[60px]">Dashboard</p>
+    <div className="w-full py-3 h-auto">
+      <div className="my-5">
+        <h1 className="text-center text-2xl font-bold">Dashboard</h1>
+
+        <h1 className="text-center text-base font-medium my-3 ">
+          List of Users
+        </h1>
+        {
+          <div
+            style={{
+              gap: 20,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+            }}
+          >
+            {data?.map((user) => (
+              <div
+                key={user.id}
+                style={{ border: "1px solid #ccc", textAlign: "center" }}
+              >
+                <Image
+                  width={180}
+                  height={180}
+                  alt={user.name}
+                  className="mx-auto"
+                  src={`https://robohash.org/${user.id}?set=set2&size=180x180`}
+                />
+                <h3>{user.name}</h3>
+              </div>
+            ))}
+          </div>
+        }
+      </div>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 overflow-y-auto bg-black bg-opacity-70">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}

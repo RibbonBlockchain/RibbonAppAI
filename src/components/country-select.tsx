@@ -29,7 +29,7 @@ const CountrySelect = ({ setValue }: Props) => {
       options={options}
       defaultValue={options?.[0]}
       instanceId="auth-country-select"
-      onChange={(v) => setValue(v!.value)}
+      onChange={(v) => setValue(JSON.parse(v!.value)?.code)}
       classNames={{
         option: () => ``,
         input: () => `pl-14`,

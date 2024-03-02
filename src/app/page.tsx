@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import LinkButton from "@/components/button/link";
 
 const Home = () => {
   return (
@@ -27,12 +27,7 @@ const Home = () => {
           Signup with World ID
         </button>
 
-        <Link
-          href="/auth/login"
-          className="w-full text-sm font-semibold text-center p-4 rounded-xl border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 text-gray-700 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
-        >
-          Continue with Mobile Number
-        </Link>
+        <LinkButton href="/auth/login">Continue with Mobile Number</LinkButton>
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { Phone } from "lucide-react";
+import { signIn } from "next-auth/react";
 import LinkButton from "@/components/button/link";
 
 const Home = () => {
@@ -24,7 +27,13 @@ const Home = () => {
       </div>
 
       <div className="w-full flex flex-col gap-3 pb-6">
-        <span className="text-white bg-black border-black w-full py-4 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2">
+        <span
+          onClick={() => {
+            console.log("sapdmpamdpasmdpma");
+            signIn("worldcoin");
+          }}
+          className="cursor-pointer text-white bg-black border-black w-full py-4 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+        >
           Signin with World ID
           <Image
             width={24}

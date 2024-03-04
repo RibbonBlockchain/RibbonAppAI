@@ -23,7 +23,7 @@ const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  const points = 150;
+  const points = 350;
   const targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
 
   return (

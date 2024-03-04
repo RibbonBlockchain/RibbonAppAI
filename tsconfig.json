@@ -25,12 +25,11 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "src/app/page.tsx",
     ".next/types/**/*.ts",
     "src/components/otp-input.tsx",
-    "src/app/api/auth/[...nextauth]/options.ts",
-    "src/app/api/auth/[...nextauth]/route.ts",
-    "src/app/page.tsx",
-    "src/components/countdown-timer.jsx"
+    "src/components/countdown-timer.jsx",
+    "src/app/api/auth/[...nextauth]/route.ts"
   ],
   "exclude": ["node_modules"]
 }

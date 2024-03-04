@@ -29,7 +29,7 @@ export const data = [
   },
   {
     id: 4,
-    score: 90,
+    score: 70,
     reward: 5,
     approximateTime: 8,
     bgColor: "bg-white",

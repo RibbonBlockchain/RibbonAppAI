@@ -19,7 +19,7 @@
     "jotai": "^2.7.0",
     "lucide-react": "^0.341.0",
     "next": "14.1.0",
-    "next-auth": "4.24.6",
+    "next-auth": "latest",
     "react": "^18",
     "react-circular-progressbar": "^2.1.0",
     "react-country-flag": "^3.1.0",

@@ -4,22 +4,23 @@ import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { mobileOnboardAtom } from "@/app/lib/atoms";
-import { useOnboardOTPRequest } from "@/app/api/auth";
+import { useOnboardOTPVerify } from "@/app/api/auth";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(mobileOnboardAtom);
-  const { mutate: request, isPending, isSuccess } = useOnboardOTPRequest();
+  const { mutate: verify, isPending, isSuccess } = useOnboardOTPVerify();
 
   const isLoading = isPending || isSuccess;
+  const isFormValid = form.code.length && form.phoneNumber.length;
 
   const onSuccess = () => {
-    router.push("/auth/verify");
+    router.push("/dashboard");
   };
 
   const handleSubmit = () => {
-    if (!form.phoneNumber || isPending) return;
-    request({ phone: form.phoneNumber }, { onSuccess });
+    if (!isFormValid || isLoading) return;
+    verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
   };
 
   return (

@@ -11,8 +11,10 @@ const FormInput = () => {
   const setCountryCode = (countryCode: string) =>
     setState((prev) => ({ ...prev, countryCode }));
 
-  const setPhoneNumber = (phoneNumber: string) =>
+  const setPhoneNumber = (phone: string) => {
+    const phoneNumber = phone?.startsWith("+") ? phone : `+${phone}`;
     setState((prev) => ({ ...prev, phoneNumber }));
+  };
 
   return (
     <>

@@ -7,7 +7,7 @@ import LinkButton from "@/components/button/link";
 
 const Home = () => {
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6">
+    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
       <div className="h-full w-full flex flex-col items-center justify-center gap-4 sm:gap-6">
         <Image
           width={100}
@@ -43,7 +43,10 @@ const Home = () => {
           />
         </span>
 
-        <LinkButton href="/auth/login">
+        <LinkButton
+          href="/auth/login"
+          className="flex flex-row items-center justify-center gap-3"
+        >
           Continue with Mobile Number <Phone />
         </LinkButton>
       </div>

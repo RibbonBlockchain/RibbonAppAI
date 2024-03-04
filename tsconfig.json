@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "src/components/otp-input.tsx",
     "src/app/api/auth/[...nextauth]/options.ts",
-    "src/app/api/auth/[...nextauth]/route.ts",
+    "src/app/api/auth/[...nextauth].ts",
     "src/app/page.tsx"
   ],
   "exclude": ["node_modules"]

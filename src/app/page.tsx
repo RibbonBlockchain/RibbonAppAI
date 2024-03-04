@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import LinkButton from "@/components/button/link";
+import { signIn, useSession } from "next-auth/react";
 
 const Home = () => {
   const { data: session } = useSession();
@@ -48,13 +49,12 @@ const Home = () => {
           </Link>
         )}
 
-        <Link
+        <LinkButton
           href="/auth/login"
-          className="w-full flex flex-row items-center justify-center gap-3 text-sm font-semibold text-center p-4 rounded-xl border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 text-gray-700 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+          className="flex flex-row items-center justify-center gap-3"
         >
-          Continue with Mobile Number
-          <Phone />
-        </Link>
+          Continue with Mobile Number <Phone />
+        </LinkButton>
       </div>
     </div>
   );

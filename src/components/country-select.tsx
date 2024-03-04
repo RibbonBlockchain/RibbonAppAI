@@ -7,7 +7,7 @@ import { countries } from "@/app/lib/values/countries";
 type Props = { setValue: (v: string) => void };
 
 const options = countries.map((c) => ({
-  value: c.code,
+  value: JSON.stringify(c),
   label: (
     <div className="p-3 rounded-xl flex gap-4 items-center">
       <ReactCountryFlag
@@ -25,14 +25,14 @@ const CountrySelect = ({ setValue }: Props) => {
   return (
     <ReactSelect
       unstyled
+      isSearchable
       options={options}
-      isSearchable={false}
       defaultValue={options?.[0]}
       instanceId="auth-country-select"
-      onChange={(v) => setValue(v!.value)}
+      onChange={(v) => setValue(JSON.parse(v!.value)?.code)}
       classNames={{
         option: () => ``,
-        input: () => `pl-3`,
+        input: () => `pl-14`,
         control: () => `w-full`,
         placeholder: () => `px-3`,
         singleValue: () => `!pl-0`,

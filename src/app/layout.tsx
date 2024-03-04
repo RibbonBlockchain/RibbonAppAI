@@ -27,7 +27,8 @@ const RootLayout = async ({
       <body className="h-full">
         <SessionProvider session={session}>
           <ReactQueryProvider>
-            <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6">
+            {/* <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6"> */}
+            <main className="w-full max-w-[500px] h-[inherit] mx-auto">
               {children}
             </main>
           </ReactQueryProvider>

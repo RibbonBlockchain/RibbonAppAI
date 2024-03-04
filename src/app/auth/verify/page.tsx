@@ -10,7 +10,7 @@ const Verify = () => {
   const phoneNumber = "+234 8143481577";
 
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6">
+    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
       <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
         <Link href="/auth/login" className="flex py-4 w-[40px]">
           <ArrowLeft className="text-slate-700" />

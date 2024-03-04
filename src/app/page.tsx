@@ -3,14 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone } from "lucide-react";
-// import VerifyWorldID from "@/components/verify-worldID";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 const Home = () => {
   const { data: session } = useSession();
 
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6">
+    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
       <div className="h-full w-full flex flex-col items-center justify-center gap-4 sm:gap-6">
         <Image
           width={100}
@@ -48,8 +47,6 @@ const Home = () => {
             />
           </Link>
         )}
-
-        {/* <VerifyWorldID /> */}
 
         <Link
           href="/auth/login"

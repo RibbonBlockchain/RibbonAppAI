@@ -28,10 +28,10 @@ dependencies:
     version: 0.341.0(react@18.2.0)
   next:
     specifier: 14.1.0
-    version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
+    version: 14.1.0(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
   next-auth:
-    specifier: 5.0.0-beta.13
-    version: 5.0.0-beta.13(next@14.1.0)(react@18.2.0)
+    specifier: 4.24.6
+    version: 4.24.6(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18
     version: 18.2.0
@@ -56,6 +56,9 @@ dependencies:
   react-window:
     specifier: ^1.8.10
     version: 1.8.10(react-dom@18.2.0)(react@18.2.0)
+  sass:
+    specifier: ^1.71.1
+    version: 1.71.1
 
 devDependencies:
   '@types/node':
@@ -103,29 +106,6 @@ packages:
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
-
-  /@auth/core@0.27.0:
-    resolution: {integrity: sha512-3bydnRJIM/Al6mkYmb53MsC+6G8ojw3lLPzwgVnX4dCo6N2lrib6Wq6r0vxZIhuHGjLObqqtUfpeaEj5aeTHFg==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.1.1
-      '@types/cookie': 0.6.0
-      cookie: 0.6.0
-      jose: 5.2.2
-      oauth4webapi: 2.10.3
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-    dev: false
 
   /@babel/code-frame@7.23.5:
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -1023,10 +1003,6 @@ packages:
     resolution: {integrity: sha512-Y5B4EYyv1j9V8LzeAoOVeTg0LI7Fo5InYKgAjkY1Pu9GjtUwX/EKxNcU7ng3sKr99WEf+bPTcktAeybyMOYo+g==}
     dev: false
 
-  /@types/cookie@0.6.0:
-    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
-    dev: false
-
   /@types/js-cookie@2.2.6:
     resolution: {integrity: sha512-+oY0FDTO2GYKEV0YPvSshGq9t7YozVkgvXLty7zogQNuCxBhT9/3INX9Q7H1aRZ4SUDRXAKlJuA4EA5nTt7SNw==}
     dev: false
@@ -1612,8 +1588,8 @@ packages:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
     dev: false
 
-  /cookie@0.6.0:
-    resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
+  /cookie@0.5.0:
+    resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
     dev: false
 
@@ -2554,6 +2530,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immutable@4.3.5:
+    resolution: {integrity: sha512-8eabxkth9gZatlwl5TBuJnCsoTADlL6ftEr7A4qgdaTsPyreilDSnUk57SO+jfKcNtxPa22U5KK6DSeAYhpBJw==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -2801,8 +2781,8 @@ packages:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
 
-  /jose@5.2.2:
-    resolution: {integrity: sha512-/WByRr4jDcsKlvMd1dRJnPfS1GVO3WuKyaurJ/vvXcOaUQO8rnNObCQMlv/5uCceVQIq5Q4WLF44ohsdiTohdg==}
+  /jose@4.15.4:
+    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
     dev: false
 
   /jotai@2.7.0(@types/react@18.2.60)(react@18.2.0):
@@ -2953,7 +2933,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-    dev: true
 
   /lucide-react@0.341.0(react@18.2.0):
     resolution: {integrity: sha512-fqI0TLU/VbzC3p90MHP3kdCRRUMTRT5qBfxwaXlllkZieYfRrMVd/RORXytqJUC2GBrvZdWYs6yvJIrqdsOmDQ==}
@@ -3065,28 +3044,32 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-auth@5.0.0-beta.13(next@14.1.0)(react@18.2.0):
-    resolution: {integrity: sha512-2m2Gq69WQ0YXcHCCpHn2y5z1bxSlqD/XOuAgrdtz49/VIAdTFFeYZz97RYqf6xMF8VGmoG32VUnJ6LzaHk6Fwg==}
+  /next-auth@4.24.6(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-djQt3ZEaWEIxcsuh3HTW2uuzLfXMRjHH+ugAsichlQSbH4iA5MRcgMA2HvTNvsDTDLh44tyU72+/gWsxgTbAKg==}
     peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      next: ^14
+      next: ^12.2.5 || ^13 || ^14
       nodemailer: ^6.6.5
-      react: ^18.2.0
+      react: ^17.0.2 || ^18
+      react-dom: ^17.0.2 || ^18
     peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
       nodemailer:
         optional: true
     dependencies:
-      '@auth/core': 0.27.0
-      next: 14.1.0(react-dom@18.2.0)(react@18.2.0)
+      '@babel/runtime': 7.24.0
+      '@panva/hkdf': 1.1.1
+      cookie: 0.5.0
+      jose: 4.15.4
+      next: 14.1.0(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
+      oauth: 0.9.15
+      openid-client: 5.6.4
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
       react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      uuid: 8.3.2
     dev: false
 
-  /next@14.1.0(react-dom@18.2.0)(react@18.2.0):
+  /next@14.1.0(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1):
     resolution: {integrity: sha512-wlzrsbfeSU48YQBjZhDzOwhWhGsy+uQycR8bHAOt1LY1bn3zZEcDyHQOEoN3aWzQ8LHCAJ1nqrWCc9XF2+O45Q==}
     engines: {node: '>=18.17.0'}
     hasBin: true
@@ -3109,6 +3092,7 @@ packages:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      sass: 1.71.1
       styled-jsx: 5.1.1(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.1.0
@@ -3138,13 +3122,18 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /oauth4webapi@2.10.3:
-    resolution: {integrity: sha512-9FkXEXfzVKzH63GUOZz1zMr3wBaICSzk6DLXx+CGdrQ10ItNk2ePWzYYc1fdmKq1ayGFb2aX97sRCoZ2s0mkDw==}
+  /oauth@0.9.15:
+    resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
     dev: false
 
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
+
+  /object-hash@2.2.0:
+    resolution: {integrity: sha512-gScRMn0bS5fH+IuwyIFgnh9zBdo4DV+6GhygmWM9HyNJSgS0hScp1f5vjtm7oIIOiT9trXrShAkLFSc2IqKNgw==}
+    engines: {node: '>= 6'}
+    dev: false
 
   /object-hash@3.0.0:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
@@ -3213,11 +3202,25 @@ packages:
       es-abstract: 1.22.4
     dev: true
 
+  /oidc-token-hash@5.0.3:
+    resolution: {integrity: sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==}
+    engines: {node: ^10.13.0 || >=12.0.0}
+    dev: false
+
   /once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
       wrappy: 1.0.2
     dev: true
+
+  /openid-client@5.6.4:
+    resolution: {integrity: sha512-T1h3B10BRPKfcObdBklX639tVz+xh34O7GjofqrqiAQdm7eHsQ00ih18x6wuJ/E6FxdtS2u3FmUGPDeEcMwzNA==}
+    dependencies:
+      jose: 4.15.4
+      lru-cache: 6.0.0
+      object-hash: 2.2.0
+      oidc-token-hash: 5.0.3
+    dev: false
 
   /optionator@0.9.3:
     resolution: {integrity: sha512-JjCoypp+jKn1ttEFExxhetCKeJt9zhAgAve5FXHixTvFDW/5aEktX9bufBKLRRMdU7bNtpLfcGu94B3cdEJgjg==}
@@ -3793,6 +3796,16 @@ packages:
       is-regex: 1.1.4
     dev: true
 
+  /sass@1.71.1:
+    resolution: {integrity: sha512-wovtnV2PxzteLlfNzbgm1tFXPLoZILYAMJtvoXXkD7/+1uP41eKkIt1ypWq5/q2uT94qHjXehEYfmjKOvjL9sg==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.6.0
+      immutable: 4.3.5
+      source-map-js: 1.0.2
+    dev: false
+
   /scheduler@0.23.0:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
@@ -4308,6 +4321,11 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
   /viem@1.21.4(typescript@5.3.3):
     resolution: {integrity: sha512-BNVYdSaUjeS2zKQgPs+49e5JKocfo60Ib2yiXOWBT6LuVxY1I/6fFX3waEtpXvL1Xn4qu+BVitVtMh9lyThyhQ==}
     peerDependencies:
@@ -4438,7 +4456,6 @@ packages:
 
   /yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
-    dev: true
 
   /yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}

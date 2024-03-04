@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  buildStyles,
+  CircularProgressbarWithChildren,
+} from "react-circular-progressbar";
 import Link from "next/link";
 import Image from "next/image";
 import Todo from "@/components/todo";
@@ -9,12 +13,19 @@ import styles from "../ui/border.module.scss";
 import React, { Fragment, useState } from "react";
 import DashboardLayout from "../dashboard-layout";
 import { Dialog, Transition } from "@headlessui/react";
+import CountdownTimer from "@/components/countdown-timer";
 import backgroundImage from "../../../public/images/background-1.svg";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  const [hideBalance, setHideBalance] = useState(false);
+  const toggleHideBalance = () => setHideBalance(!hideBalance);
+
+  const points = 150;
+  const targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+
   return (
     <DashboardLayout>
       <div className="w-full h-auto text-white bg-[#F5F5F5]">
@@ -26,16 +37,22 @@ const Dashboard = () => {
         <div className="relative p-4 sm:p-6 mx-auto flex flex-col items-center justify-center content-center">
           <div className="flex flex-col items-center gap-1 text-center py-1 mt-2 mb-10">
             <div className="flex flex-row gap-2 items-center text-sm font-medium  ">
-              Total Balance <EyeOff size={16} />{" "}
+              Total Balance
+              {hideBalance ? (
+                <EyeOff onClick={toggleHideBalance} size={16} />
+              ) : (
+                <EyeOff onClick={toggleHideBalance} fill="gray-400" size={16} />
+              )}
             </div>
-            <div className="flex flex-row gap-2 items-center text-3xl font-bold">
-              <Coins size={16} /> 25 WLD
+            <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
+              <Coins size={16} />
+              {hideBalance ? "25 WLD" : "*****"}
             </div>
           </div>
           <div className="w-full flex flex-row gap-3">
             <Link
               href={`/`}
-              className="text-[#A81DA6] bg-white border-white w-full py-3.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+              className="text-[#A81DA6] bg-white border-white w-full py-3.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
             >
               <Image
                 width={24}
@@ -53,48 +70,58 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className="w-full flex flex-row gap-3 mt-6">
-            <div className="bg-white border-white w-full py-5 flex flex-col self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2">
-              <Image
-                width={81}
-                height={81}
-                alt="progressive-bar"
-                src="/images/circle.svg"
-              />
+            <div className="bg-white border-white w-full py-5 flex flex-col self-center items-center justify-center text-center text-base font-semibold rounded-xl border-2">
+              <div className="w-[91px] sm:w-[91px] flex flex-col justify-center mb-3">
+                <CircularProgressbarWithChildren
+                  styles={buildStyles({
+                    pathColor: `#A81DA6`,
+                    trailColor: `#E8E8E8`,
+                  })}
+                  value={(points / 500) * 100}
+                  strokeWidth={8}
+                >
+                  <p className="text-black flex flex-col text-lg font-extrabold leading-4">
+                    {points}
+                    <span className="font-normal text-[10px]">
+                      of 500 points
+                    </span>
+                  </p>
+                </CircularProgressbarWithChildren>
+              </div>
+
               <p className="text-center text-sm font-semibold text-[#939393] flex flex-col gap-1">
                 Next token <span>reward 10 WLD</span>
               </p>
             </div>
 
-            <div className="bg-white border-white w-full h-[181px] py-5 flex flex-col self-center items-center justify-center text-center font-semibold rounded-xl border-2">
-              <p className=" text-lg text-[#A81DA6]">Withdraw</p>
+            <div className="bg-white border-white w-full h-auto py-5 flex flex-col self-center items-center justify-between text-center font-semibold rounded-xl border-2">
+              <p className="text-[#A81DA6] text-lg ">Withdraw</p>
               <p className="text-[#939393] ">Spend tokens</p>
+              <Image
+                width={70}
+                height={81}
+                alt="withdraw"
+                className="mt-6"
+                src="/images/withdraw-icon.svg"
+              />
             </div>
           </div>
 
-          <div className="w-full mt-5 mb-10 px-2 sm:px-12">
+          <div className="w-full mt-5 mb-10 px-2 sm:px-12 ">
             <div
-              className={`w-full flex flex-row items-center justify-between text-sm font-semibold px-2 py-2 text-black  ${styles["border"]} `}
+              className={`w-full flex flex-row items-center justify-between text-[14px] font-semibold px-2 py-2.5 text-black bg-white  ${styles["border"]} `}
             >
-              Claim daily reward
-              <div className="flex flex-row gap-1 items-center justify-center ">
-                <p
-                  className={`text-xs font-normal text-black p-2  ${styles["border"]}`}
-                >
-                  23
-                </p>
-                :
-                <p
-                  className={`text-xs font-normal text-black p-2  ${styles["border"]}`}
-                >
-                  23
-                </p>
-                :
-                <p
-                  className={`text-xs font-normal text-black p-2  ${styles["border"]}`}
-                >
-                  23
-                </p>
+              <div className="flex flex-row gap-3 items-center justify-center">
+                Claim daily reward
+                <Image
+                  width={30}
+                  height={30}
+                  alt="trophy"
+                  src="/images/trophy.svg"
+                />
               </div>
+
+              <CountdownTimer targetTime={targetTime} />
             </div>
           </div>
 
@@ -104,7 +131,7 @@ const Dashboard = () => {
                 key={i.id}
                 score={i.score}
                 reward={i.reward}
-                bgColor={i.bgColor}
+                priority={i.priority}
                 taskTitle={i.taskTitle}
                 approximateTime={i.approximateTime}
                 ratings={i.ratings}

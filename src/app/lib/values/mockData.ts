@@ -6,14 +6,16 @@ export const data = [
     approximateTime: 5,
     bgColor: "bg-[#D8EBFF]",
     taskTitle: "Complete your profile",
+    priority: 1,
   },
   {
-    id: 1,
+    id: 2,
     score: 55,
     reward: 7,
     approximateTime: 8,
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
+    priority: 2,
   },
   {
     id: 3,
@@ -27,7 +29,7 @@ export const data = [
   },
   {
     id: 4,
-    score: 15,
+    score: 90,
     reward: 5,
     approximateTime: 8,
     bgColor: "bg-white",
@@ -37,7 +39,7 @@ export const data = [
   },
   {
     id: 5,
-    score: 15,
+    score: 25,
     reward: 5,
     approximateTime: 8,
     bgColor: "bg-white",

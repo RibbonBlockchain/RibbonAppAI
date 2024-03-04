@@ -3,50 +3,47 @@ import { CircleUser, History, Home } from "lucide-react";
 
 const items = [
   {
-    id: 1,
     href: "#",
     text: "Home",
+    value: "home",
     icon: <Home />,
     iconFilled: <Home fill="#D9D9D9" />,
   },
   {
-    id: 2,
     href: "#",
     text: "Activity",
+    value: "activity",
     icon: <History />,
     iconFilled: <History fill="#D9D9D9" />,
   },
   {
-    id: 3,
     href: "#",
     text: "Account",
+    value: "account",
     icon: <CircleUser />,
     iconFilled: <CircleUser fill="#D9D9D9" />,
   },
 ];
 
 const FooterNav = () => {
-  const [selectedItem, setSelectedItem] = React.useState(0);
+  const [activeItem, setActiveItem] = React.useState("home");
 
-  const handleItemClick = (item: any) => {
-    setSelectedItem(item);
-  };
   return (
     <footer className="fixed bottom-0 w-full max-w-[500px] bg-[#FEFEFE] text-xs font-extrabold text-white">
-      <div className="container mx-auto flex items-center justify-around p-4 sm:p-6 sm:py-5">
+      <div className="container mx-auto grid grid-cols-3 items-center justify-around p-4 sm:p-6 sm:py-5">
         {items.map((i) => (
           <a
-            key={i.id}
+            key={i.value}
             href={i.href}
-            onClick={() => handleItemClick(i.id)}
-            className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center ${
-              selectedItem === i.id
+            onClick={() => setActiveItem(i.value)}
+            className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center ${
+              activeItem === i.value
                 ? "bg-gradient-to-b from-[#334272] to-[#871785]"
                 : ""
             }`}
           >
-            {selectedItem === i.id ? <>{i.icon}</> : <>{i.iconFilled}</>}
-            {selectedItem === i.id ? <>{i.text}</> : <></>}
+            {activeItem === i.value ? <>{i.icon}</> : <>{i.iconFilled}</>}
+            {activeItem === i.value ? <>{i.text}</> : <></>}
           </a>
         ))}
       </div>

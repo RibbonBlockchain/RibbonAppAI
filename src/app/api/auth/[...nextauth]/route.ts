@@ -27,18 +27,18 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ account, user, credentials, email, profile }) {
-      console.log(account, user, credentials, email, profile);
+      console.log("account", account, user, credentials, email, profile);
       return true;
     },
 
     async session({ session, newSession, token, trigger, user }) {
-      console.log(session, newSession, token, trigger, user);
+      console.log("session", session, newSession, token, trigger, user);
       return session;
     },
 
     async redirect({ baseUrl, url }) {
-      console.log(baseUrl, url);
-      return url;
+      console.log("baseurl", baseUrl, url);
+      return "https://ribbon-app.vercel.app/auth/dashboard";
     },
 
     async jwt({ token }) {

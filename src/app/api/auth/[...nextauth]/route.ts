@@ -1,34 +1,55 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+// For more information on each option (and a full list of options) go to
+// https://next-auth.js.org/configuration/options
+const authOptions: NextAuthOptions = {
+  // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     {
+      idToken: true,
+      type: "oauth",
       id: "worldcoin",
       name: "Worldcoin",
-      type: "oauth",
-      wellKnown: "https://id.worldcoin.org/.well-known/openid-configuration",
-      authorization: { params: { scope: "openid" } },
       clientId: process.env.WLD_CLIENT_ID,
       clientSecret: process.env.WLD_CLIENT_SECRET,
-      idToken: true,
+      authorization: { params: { scope: "openid" } },
+      wellKnown: "https://id.worldcoin.org/.well-known/openid-configuration",
+
       profile(profile) {
         return {
           id: profile.sub,
           name: profile.sub,
           credentialType:
-            profile["https://id.worldcoin.org/v1"].credential_type,
+            profile["https://id.worldcoin.org/beta"].credential_type,
         };
       },
     },
   ],
   callbacks: {
+    async signIn({ account, user, credentials, email, profile }) {
+      console.log("account", account, user, credentials, email, profile);
+      return true;
+    },
+
+    async session({ session, newSession, token, trigger, user }) {
+      console.log("session", session, newSession, token, trigger, user);
+      return session;
+    },
+
+    async redirect({ baseUrl, url }) {
+      console.log("baseurl", baseUrl, url);
+      return "https://ribbon-app.vercel.app/dashboard";
+    },
+
     async jwt({ token }) {
+      console.log("token", token);
+
       token.userRole = "admin";
       return token;
     },
   },
 };
 
-export const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

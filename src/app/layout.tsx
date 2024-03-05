@@ -1,8 +1,6 @@
 import "./ui/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { getServerSession } from "next-auth/next";
-import SessionProvider from "@/provider/session-provider";
 import ReactQueryProvider from "@/provider/react-query-provider";
 
 export const metadata: Metadata = {
@@ -20,19 +18,14 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const session = await getServerSession();
-
   return (
     <html lang="en" className={`h-full ${inter.className}`}>
       <body className="h-full">
-        <SessionProvider session={session}>
-          <ReactQueryProvider>
-            {/* <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6"> */}
-            <main className="w-full max-w-[500px] h-[inherit] mx-auto">
-              {children}
-            </main>
-          </ReactQueryProvider>
-        </SessionProvider>
+        <ReactQueryProvider>
+          <main className="w-full max-w-[500px] h-[inherit] mx-auto">
+            {children}
+          </main>
+        </ReactQueryProvider>
       </body>
     </html>
   );

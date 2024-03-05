@@ -29,7 +29,6 @@ const Home = () => {
       <div className="w-full flex flex-col gap-3 pb-6">
         <span
           onClick={() => {
-            console.log("sapdmpamdpasmdpma");
             signIn("worldcoin");
           }}
           className="cursor-pointer text-white bg-black border-black w-full py-4 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"

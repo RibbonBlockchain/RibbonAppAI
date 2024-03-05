@@ -14,6 +14,7 @@ const authOptions: NextAuthOptions = {
       clientSecret: process.env.WLD_CLIENT_SECRET,
       authorization: { params: { scope: "openid" } },
       wellKnown: "https://id.worldcoin.org/.well-known/openid-configuration",
+
       profile(profile) {
         return {
           id: profile.sub,
@@ -25,7 +26,24 @@ const authOptions: NextAuthOptions = {
     },
   ],
   callbacks: {
+    async signIn({ account, user, credentials, email, profile }) {
+      console.log(account, user, credentials, email, profile);
+      return true;
+    },
+
+    async session({ session, newSession, token, trigger, user }) {
+      console.log(session, newSession, token, trigger, user);
+      return session;
+    },
+
+    async redirect({ baseUrl, url }) {
+      console.log(baseUrl, url);
+      return url;
+    },
+
     async jwt({ token }) {
+      console.log("token", token);
+
       token.userRole = "admin";
       return token;
     },

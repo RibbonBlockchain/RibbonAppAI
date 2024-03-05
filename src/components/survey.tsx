@@ -1,0 +1,37 @@
+import React from "react";
+import Image from "next/image";
+
+const Survey = () => {
+  return (
+    <div className="bg-[#FFE9E7] w-[85%] text-black p-4 flex flex-row gap-3 self-start items-center justify-between rounded-lg mb-3">
+      <div className="flex flex-col gap-3">
+        <p className="text-xs font-medium"> HEALTH SURVEYS</p>
+
+        <div className="flex flex-row gap-3">
+          <div className="flex flex-col gap-3">
+            <p className="text-base font-extrabold leading-7">
+              Complete 5 surveys and Earn more 7 WLD
+            </p>
+            <Image
+              width={180}
+              height={25}
+              alt="health-survey"
+              src="/images/survey-steps.svg"
+              className=""
+            />
+          </div>
+
+          <Image
+            width={108}
+            height={105}
+            alt="health-survey"
+            src="/images/health.svg"
+            className="rotate-37"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Survey;

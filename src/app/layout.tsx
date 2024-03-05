@@ -22,7 +22,7 @@ const RootLayout = async ({
     <html lang="en" className={`h-full ${inter.className}`}>
       <body className="h-full">
         <ReactQueryProvider>
-          <main className="w-full max-w-[500px] h-[inherit] mx-auto p-4 sm:p-6">
+          <main className="w-full max-w-[500px] h-[inherit] mx-auto">
             {children}
           </main>
         </ReactQueryProvider>

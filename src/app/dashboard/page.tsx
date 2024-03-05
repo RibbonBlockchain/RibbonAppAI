@@ -7,14 +7,18 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Todo from "@/components/todo";
-import { Coins, EyeOff } from "lucide-react";
-import { data } from "../lib/values/mockData";
+import { EyeOff } from "lucide-react";
+import Survey from "@/components/survey";
 import styles from "../ui/border.module.scss";
 import React, { Fragment, useState } from "react";
 import DashboardLayout from "../dashboard-layout";
+import CoinSVG from "../../../public/images/coin";
 import { Dialog, Transition } from "@headlessui/react";
 import CountdownTimer from "@/components/countdown-timer";
+import { priorityTask, todo } from "../lib/values/mockData";
 import backgroundImage from "../../../public/images/background-1.svg";
+import Lottie from "lottie-react";
+import animationData from "../../../public/images/trophy-animation.json";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -41,18 +45,18 @@ const Dashboard = () => {
               {hideBalance ? (
                 <EyeOff onClick={toggleHideBalance} size={16} />
               ) : (
-                <EyeOff onClick={toggleHideBalance} fill="gray-400" size={16} />
+                <EyeOff onClick={toggleHideBalance} fill="white" size={16} />
               )}
             </div>
             <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
-              <Coins size={16} />
+              <CoinSVG />
               {hideBalance ? "25 WLD" : "*****"}
             </div>
           </div>
           <div className="w-full flex flex-row gap-3">
             <Link
               href={`/`}
-              className="text-[#A81DA6] bg-white border-white w-full py-3.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
+              className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
             >
               <Image
                 width={24}
@@ -64,7 +68,7 @@ const Dashboard = () => {
             </Link>
             <Link
               href="/dashboard"
-              className="w-full text-white bg-[#4285F4] border-[#4285F4] py-3.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+              className="w-full text-white bg-[#4285F4] border-[#4285F4] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
             >
               Connect Wallet
             </Link>
@@ -107,26 +111,26 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="w-full mt-5 mb-10 px-2 sm:px-12 ">
+          <div className="w-full mt-5 mb-3 mx-auto ">
             <div
-              className={`w-full flex flex-row items-center justify-between text-[14px] font-semibold px-2 py-2.5 text-black bg-white  ${styles["border"]} `}
+              // className={`w-full flex flex-row items-center justify-between text-[14px] font-semibold px-2 py-1.5 text-black bg-white ${styles["border"]} `}
+              className={`w-full max-w-[320px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-1.5 text-black bg-white border-2 border-[#4285F4] rounded-full `}
             >
-              <div className="flex flex-row gap-3 items-center justify-center">
-                Claim daily reward
-                <Image
-                  width={30}
-                  height={30}
-                  alt="trophy"
-                  src="/images/trophy.svg"
-                />
+              {/* <div className="flex flex-row gap-1 items-center justify-center"> */}
+              Claim daily reward
+              <div className="w-[42px] h-[42px] ">
+                <Lottie loop={true} animationData={animationData} />
               </div>
-
+              {/* </div> */}
               <CountdownTimer targetTime={targetTime} />
             </div>
           </div>
 
-          <>
-            {data.map((i) => (
+          <div className="w-full">
+            <p className="text-xs text-[#4E2774] py-3 font-bold">
+              Priority task
+            </p>
+            {priorityTask.map((i) => (
               <Todo
                 key={i.id}
                 score={i.score}
@@ -134,11 +138,31 @@ const Dashboard = () => {
                 priority={i.priority}
                 taskTitle={i.taskTitle}
                 approximateTime={i.approximateTime}
+              />
+            ))}
+          </div>
+
+          <div className="w-full">
+            <p className="text-xs text-[#4E2774] pt-5 pb-3 font-bold">
+              To do List
+            </p>
+            {todo.map((i) => (
+              <Todo
+                key={i.id}
+                score={i.score}
+                reward={i.reward}
+                taskTitle={i.taskTitle}
+                approximateTime={i.approximateTime}
                 ratings={i.ratings}
                 ratingsLevel={i.ratingsLevel}
               />
             ))}
-          </>
+          </div>
+
+          {/* <div className="flex-grow flex flex-row gap-3"> */}
+          <Survey />
+          {/* <Survey /> */}
+          {/* </div> */}
         </div>
 
         <Transition appear show={isOpen} as={Fragment}>

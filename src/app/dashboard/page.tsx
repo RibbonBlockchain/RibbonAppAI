@@ -6,15 +6,14 @@ import {
 } from "react-circular-progressbar";
 import Link from "next/link";
 import Image from "next/image";
-import Lottie from "lottie-react";
-import Todo from "@/components/todo";
 import { EyeOff } from "lucide-react";
-import Survey from "@/components/survey";
+import Todo from "@/containers/dashboard/todo";
 import React, { Fragment, useState } from "react";
 import CoinSVG from "../../../public/images/coin";
+import Survey from "@/containers/dashboard/survey";
 import { Dialog, Transition } from "@headlessui/react";
-import CountdownTimer from "@/components/countdown-timer";
-import { priorityTask, todo } from "../lib/values/mockData";
+import { todo, priorityTask } from "@/lib/values/mockData";
+import CountdownTimer from "@/containers/dashboard/countdown-timer";
 import backgroundImage from "../../../public/images/background-1.svg";
 
 const Dashboard = () => {

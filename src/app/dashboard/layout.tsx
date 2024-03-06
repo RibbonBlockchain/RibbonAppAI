@@ -1,5 +1,5 @@
 import React from "react";
-import FooterNav from "@/components/footer-nav";
+import FooterNav from "@/containers/dashboard/footer-nav";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (

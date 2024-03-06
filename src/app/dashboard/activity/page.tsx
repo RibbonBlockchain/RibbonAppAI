@@ -3,7 +3,6 @@
 import React from "react";
 import InProgress from "./in-progress";
 import CompletedTasks from "./completed-tasks";
-import DashboardLayout from "../layout";
 
 const Activity = () => {
   const [activeTab, setActiveTab] = React.useState("in-progress");

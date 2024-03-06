@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { countries } from "../values/countries";
+import { countries } from "@/lib/values/countries";
 
 export const mobileOnboardAtom = atom({
   pin: "",

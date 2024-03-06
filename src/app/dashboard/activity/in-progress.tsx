@@ -1,6 +1,6 @@
-import { priorityTask, todo } from "@/app/lib/values/mockData";
-import Todo from "@/components/todo";
 import React from "react";
+import Todo from "@/containers/dashboard/todo";
+import { priorityTask, todo } from "@/lib/values/mockData";
 
 const InProgress = () => {
   return (

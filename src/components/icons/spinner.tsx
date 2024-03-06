@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/app/lib/helpers";
+import { cn } from "@/lib/utils";
 
 type Props = React.SVGAttributes<{}>;
 

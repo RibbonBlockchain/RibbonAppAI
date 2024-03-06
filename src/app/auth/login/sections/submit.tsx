@@ -2,29 +2,42 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
+import { usePhoneAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { mobileOnboardAtom } from "@/app/lib/atoms";
-import { useOnboardOTPRequest } from "@/app/api/auth";
+import { authAtom } from "@/lib/atoms/auth.atom";
+import { TPhoneAuthResponse } from "@/api/auth/types";
+import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
-  const form = useAtomValue(mobileOnboardAtom);
-  const { mutate: request, isPending, isSuccess } = useOnboardOTPRequest();
+  const form = useAtomValue(authAtom);
+  const { isPending, isSuccess, mutate: request } = usePhoneAuth();
 
   const isLoading = isPending || isSuccess;
 
-  const onSuccess = () => {
-    router.push("/auth/verify");
+  const isValidPhoneNumber =
+    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
+
+  const isFormInvalid = !isValidPhoneNumber;
+  const isSubmitDisabled = isLoading || isFormInvalid;
+
+  const onSuccess = (data: TPhoneAuthResponse) => {
+    const url = data?.exists ? "/auth/pin" : "/auth/verify";
+    router.push(url);
   };
 
   const handleSubmit = () => {
-    if (!form.phoneNumber || isPending) return;
+    if (isSubmitDisabled) return;
     request({ phone: form.phoneNumber }, { onSuccess });
   };
 
   return (
     <div className="flex items-center justify-center w-full pb-6">
-      <Button loading={isLoading} onClick={handleSubmit}>
+      <Button
+        loading={isLoading}
+        onClick={handleSubmit}
+        disabled={isSubmitDisabled}
+      >
         Continue
       </Button>
     </div>

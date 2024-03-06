@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { CircleUser, History, Home } from "lucide-react";
+import clsx from "clsx";
 
 const items = [
   {
@@ -29,12 +30,12 @@ const items = [
 ];
 
 const FooterNav = () => {
-  const [activeItem, setActiveItem] = React.useState("home");
   const router = useRouter();
+  const [activeItem, setActiveItem] = React.useState("home");
 
   return (
-    <div className="fixed bottom-0 w-full max-w-[500px] bg-[#FEFEFE] text-xs font-extrabold text-white">
-      <div className="container mx-auto grid grid-cols-3 items-center justify-around p-4 sm:p-6 sm:py-5">
+    <div className="fixed bottom-0 w-full z-50 max-w-[500px] bg-white h-auto text-xs font-extrabold text-white">
+      <div className="flex items-center justify-around p-4 sm:p-6 sm:py-5">
         {items.map((i) => (
           <a
             key={i.value}
@@ -42,12 +43,11 @@ const FooterNav = () => {
             onClick={() => {
               router.push(i.href), setActiveItem(i.value);
             }}
-            className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center  ${
-              activeItem === i.value
-                ? "bg-gradient-to-b from-[#334272] to-[#871785]"
-                : ""
-            }
-          `}
+            className={clsx(
+              `flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center`,
+              activeItem === i.value &&
+                "bg-gradient-to-b from-[#334272] to-[#871785]"
+            )}
           >
             {activeItem === i.value ? i.icon : i.iconFilled}
             {activeItem === i.value ? <>{i.text}</> : <></>}

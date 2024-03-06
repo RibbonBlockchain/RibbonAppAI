@@ -1,4 +1,3 @@
-import { time } from "console";
 import React, { useState, useEffect } from "react";
 
 interface CountdownTimerProps {

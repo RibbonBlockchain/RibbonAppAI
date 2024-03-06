@@ -1,12 +1,12 @@
 import { useAtom } from "jotai";
-import OtpInput from "@/components/otp-input";
-import { mobileOnboardAtom } from "@/app/lib/atoms";
-import { useOnboardOTPRequest } from "@/app/api/auth";
+import { usePhoneAuth } from "@/api/auth";
+import { authAtom } from "@/lib/atoms/auth.atom";
+import OtpInput from "@/components/input/otp-input";
 import { SpinnerIcon } from "@/components/icons/spinner";
 
 const FormInput = () => {
-  const [state, setState] = useAtom(mobileOnboardAtom);
-  const { mutate: request, isPending: isRequesting } = useOnboardOTPRequest();
+  const [state, setState] = useAtom(authAtom);
+  const { mutate: request, isPending: isRequesting } = usePhoneAuth();
 
   const setOtp = (code: string) => setState((prev) => ({ ...prev, code }));
 
@@ -17,7 +17,7 @@ const FormInput = () => {
 
   return (
     <>
-      <OtpInput value={state.code} setValue={setOtp} />
+      <OtpInput numInputs={6} value={state.code} setValue={setOtp} />
       <p className="flex items-center gap-2 text-sm text-slate-600">
         <span>I didn&apos;t get a code!</span>{" "}
         <span

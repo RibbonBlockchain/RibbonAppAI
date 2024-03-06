@@ -1,3 +1,5 @@
+export type TCountry = { name: string; code: string; phone: number };
+
 export const countries = [
   { name: "Afghanistan", code: "AF", phone: 93 },
   { name: "Aland Islands", code: "AX", phone: 358 },

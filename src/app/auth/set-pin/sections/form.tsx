@@ -1,12 +1,12 @@
 import { useAtom } from "jotai";
 import CreatePin from "@/components/create-pin";
+import { useOnboardOTPVerify } from "@/api/auth";
 import { mobileOnboardAtom } from "@/app/lib/atoms";
-import { useOnboardOTPRequest } from "@/app/api/auth";
 import { SpinnerIcon } from "@/components/icons/spinner";
 
 const FormInput = () => {
   const [state, setState] = useAtom(mobileOnboardAtom);
-  const { mutate: request, isPending: isRequesting } = useOnboardOTPRequest();
+  const { mutate: request, isPending: isRequesting } = useOnboardOTPVerify();
 
   const setPin = (pin: string) => setState((prev) => ({ ...prev, pin }));
   const confirmPin = (confirmPin: string) =>

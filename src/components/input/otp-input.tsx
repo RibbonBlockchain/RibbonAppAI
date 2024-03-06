@@ -10,20 +10,6 @@ type Props = Pick<OTPInputProps, "numInputs" | "inputType"> & {
   separatorClassName?: ClassValue;
 };
 
-const Separator = ({ className }: any) => (
-  <span className={cn("mr-1 min-[336px]:mr-2", className)}> </span>
-);
-
-const FieldInput = ({ className, ...props }: any) => (
-  <input
-    {...props}
-    className={cn(
-      "outline-none bg-transparent border-[1px] !w-11 !h-11 rounded-xl:bg-transparent rounded-xl",
-      className
-    )}
-  />
-);
-
 const OtpInput = ({
   value,
   setValue,
@@ -43,8 +29,18 @@ const OtpInput = ({
       onChange={setValue}
       onPaste={handlePaste}
       containerStyle={{ display: "flex", alignItems: "center" }}
-      renderSeparator={() => <Separator className={separatorClassName} />}
-      renderInput={(p) => <FieldInput {...p} className={fieldClassName} />}
+      renderSeparator={() => (
+        <span className={cn("mr-1 min-[336px]:mr-2", separatorClassName)} />
+      )}
+      renderInput={(p) => (
+        <input
+          {...p}
+          className={cn(
+            "outline-none bg-transparent border-[1px] !w-11 !h-11 rounded-xl:bg-transparent rounded-xl",
+            fieldClassName
+          )}
+        />
+      )}
       {...props}
     />
   );

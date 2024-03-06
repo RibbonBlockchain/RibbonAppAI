@@ -3,8 +3,8 @@
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
+import { useOnboardOTPVerify } from "@/api/auth";
 import { mobileOnboardAtom } from "@/app/lib/atoms";
-import { useOnboardOTPVerify } from "@/app/api/auth";
 
 const Submit = () => {
   const router = useRouter();

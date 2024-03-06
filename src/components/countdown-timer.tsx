@@ -1,3 +1,4 @@
+import { time } from "console";
 import React, { useState, useEffect } from "react";
 
 interface CountdownTimerProps {
@@ -13,7 +14,7 @@ interface TimeLeft {
 const CountdownBox = ({ value }: { value: number }) => {
   return (
     <p
-      className={`text-xs font-normal w-[31px] text-black p-1.5 border-custom`}
+      className={`text-xs font-normal w-[30px] text-black p-1.5 border-custom`}
     >
       {value}
     </p>

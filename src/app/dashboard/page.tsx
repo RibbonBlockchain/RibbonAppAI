@@ -16,17 +16,18 @@ import { Dialog, Transition } from "@headlessui/react";
 import CountdownTimer from "@/components/countdown-timer";
 import { priorityTask, todo } from "../lib/values/mockData";
 import backgroundImage from "../../../public/images/background-1.svg";
-import animationData from "../../../public/images/trophy-animation.json";
 
 const Dashboard = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  let points = 350;
-  let targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+  let points = 155;
+  let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+  let completedTime = targetTime - new Date().getTime();
+
   let WorldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
   let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
   let user = false;
@@ -128,7 +129,7 @@ const Dashboard = () => {
               </div>
 
               <p className="text-center text-sm font-semibold text-[#939393] flex flex-col gap-1">
-                Next token <span>reward 10 WLD</span>
+                500 points to <span>next withdrawal</span>
               </p>
             </div>
 
@@ -148,19 +149,30 @@ const Dashboard = () => {
           <div className="mx-auto">
             <div className="w-full mt-5 mb-3 mx-auto border-gradient-parent rounded-full">
               <div
-                className={`w-full max-w-[320px] z-10 mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-[2px] text-black bg-white border-gradient rounded-full `}
+                className={`w-full gap-2 max-w-[320px] z-10 mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-[2px] text-black bg-white border-gradient rounded-full `}
               >
                 Claim daily reward
-                <div className="w-[42px] h-[42px] ">
-                  <Lottie loop={true} animationData={animationData} />
-                </div>
-                <CountdownTimer targetTime={targetTime} />
+                <Image
+                  width={30}
+                  height={30}
+                  alt="trophy"
+                  className=""
+                  src="/images/trophy.gif"
+                />
+                {completedTime == 0 ? (
+                  <div className="text-gradient flex flex-row gap-2 items-center justify-center text-[22px] font-bold">
+                    <CoinSVG fill="#6200EE" />
+                    25 WLD
+                  </div>
+                ) : (
+                  <CountdownTimer targetTime={targetTime} />
+                )}
               </div>
             </div>
           </div>
 
           <div className="w-full">
-            <p className="text-xs text-[#4E2774] py-3 font-bold">
+            <p className="text-xs text-gradient py-3 font-bold">
               Priority task
             </p>
             {priorityTask.map((i) => (

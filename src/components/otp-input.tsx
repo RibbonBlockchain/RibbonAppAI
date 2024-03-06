@@ -1,33 +1,53 @@
-import ReactOtpInput from "react-otp-input";
+import React from "react";
+import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
+import ReactOtpInput, { OTPInputProps } from "react-otp-input";
 
-type Props = { value: string; setValue: (v: string) => void };
+type Props = Pick<OTPInputProps, "numInputs" | "inputType"> & {
+  value: string;
+  fieldClassName?: ClassValue;
+  setValue: (v: string) => void;
+  separatorClassName?: ClassValue;
+};
 
-const OtpInput = ({ value, setValue }: Props) => (
-  <ReactOtpInput
-    value={value}
-    numInputs={6}
-    onChange={setValue}
-    containerStyle={{
-      display: "flex",
-      paddingTop: "14px",
-      alignItems: "center",
-      paddingBottom: "14px",
-      justifyContent: "start",
-    }}
-    inputStyle={{
-      gap: "10px",
-      width: "40px",
-      height: "40px",
-      outline: "none",
-      fontSize: "16px",
-      textAlign: "center",
-      borderRadius: "5px",
-      borderColor: "#007bff",
-      border: "1px solid #3b3b3b",
-    }}
-    renderSeparator={<span className="mr-3"> </span>}
-    renderInput={(props) => <input {...props} />}
+const Separator = ({ className }: any) => (
+  <span className={cn("mr-1 min-[336px]:mr-2", className)}> </span>
+);
+
+const FieldInput = ({ className, ...props }: any) => (
+  <input
+    {...props}
+    className={cn(
+      "outline-none bg-transparent border-[1px] !w-11 !h-11 rounded-xl:bg-transparent rounded-xl",
+      className
+    )}
   />
 );
+
+const OtpInput = ({
+  value,
+  setValue,
+  fieldClassName,
+  separatorClassName,
+  ...props
+}: Props) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    const data = e.clipboardData.getData("text");
+    if (!data) return;
+    setValue(data);
+  };
+
+  return (
+    <ReactOtpInput
+      value={value}
+      onChange={setValue}
+      onPaste={handlePaste}
+      containerStyle={{ display: "flex", alignItems: "center" }}
+      renderSeparator={() => <Separator className={separatorClassName} />}
+      renderInput={(p) => <FieldInput {...p} className={fieldClassName} />}
+      {...props}
+    />
+  );
+};
 
 export default OtpInput;

@@ -2,34 +2,36 @@
 
 import ReactSelect from "react-select";
 import ReactCountryFlag from "react-country-flag";
-import { countries } from "@/app/lib/values/countries";
+import { TCountry, countries } from "@/lib/values/countries";
 
-type Props = { setValue: (v: string) => void };
+type Props = { value: string; setValue: (v: string) => void };
 
-const options = countries.map((c) => ({
-  value: JSON.stringify(c),
+const getOption = (value: TCountry) => ({
+  value: JSON.stringify(value),
   label: (
     <div className="p-3 rounded-xl flex gap-4 items-center">
       <ReactCountryFlag
         svg
-        countryCode={c.code}
+        countryCode={value.code}
         className="!w-7 !h-7 rounded-full object-cover"
       />
 
-      <span className="text-slate-700 text-md">{c.name}</span>
+      <span className="text-slate-700 text-md">{value.name}</span>
     </div>
   ),
-}));
+});
 
-const CountrySelect = ({ setValue }: Props) => {
+const options = countries.map((value: TCountry) => getOption(value));
+
+const CountrySelect = ({ value, setValue }: Props) => {
   return (
     <ReactSelect
       unstyled
       isSearchable
       options={options}
-      defaultValue={options?.[0]}
       instanceId="auth-country-select"
-      onChange={(v) => setValue(JSON.parse(v!.value)?.code)}
+      value={getOption(JSON.parse(value))}
+      onChange={(option) => setValue(option?.value!)}
       classNames={{
         option: () => ``,
         input: () => `pl-14`,

@@ -1,9 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import { Phone } from "lucide-react";
-import { signIn } from "next-auth/react";
 import LinkButton from "@/components/button/link";
+import { SignInWithWorldIdButton } from "./auth/landing/components";
 
 const Home = () => {
   return (
@@ -27,20 +25,7 @@ const Home = () => {
       </div>
 
       <div className="w-full flex flex-col gap-3 pb-6">
-        <span
-          onClick={() => {
-            signIn("worldcoin");
-          }}
-          className="cursor-pointer text-white bg-black border-black w-full py-4 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
-        >
-          Signin with World ID
-          <Image
-            width={24}
-            height={24}
-            alt="world-coin"
-            src="/images/world-coin.svg"
-          />
-        </span>
+        <SignInWithWorldIdButton />
 
         <LinkButton
           href="/auth/login"

@@ -2,14 +2,14 @@
 
 import { useAtom } from "jotai";
 import PhoneInput from "@/components/phone-input";
-import { mobileOnboardAtom } from "@/app/lib/atoms";
+import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
 import CountrySelect from "@/components/country-select";
 
 const FormInput = () => {
-  const [state, setState] = useAtom(mobileOnboardAtom);
+  const [state, setState] = useAtom(phoneAuthAtom);
 
-  const setCountryCode = (countryCode: string) =>
-    setState((prev) => ({ ...prev, countryCode }));
+  const setCountry = (country: string) =>
+    setState((prev) => ({ ...prev, country }));
 
   const setPhoneNumber = (phone: string) => {
     const phoneNumber = phone?.startsWith("+") ? phone : `+${phone}`;
@@ -18,11 +18,11 @@ const FormInput = () => {
 
   return (
     <>
-      <CountrySelect setValue={setCountryCode} />
+      <CountrySelect value={state.country} setValue={setCountry} />
       <PhoneInput
         value={state.phoneNumber}
         setValue={setPhoneNumber}
-        countryCode={state.countryCode}
+        country={JSON.parse(state.country)?.code}
       />
     </>
   );

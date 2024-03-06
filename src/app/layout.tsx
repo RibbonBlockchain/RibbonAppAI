@@ -1,4 +1,4 @@
-import "./ui/globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import ReactQueryProvider from "@/provider/react-query-provider";

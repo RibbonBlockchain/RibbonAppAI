@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -11,6 +12,8 @@ const ReactQueryProvider = ({ children }: React.PropsWithChildren) => {
     <QueryClientProvider client={client}>
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
+
+      <Toaster />
     </QueryClientProvider>
   );
 };

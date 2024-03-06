@@ -29,7 +29,7 @@ const Dashboard = () => {
   let targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
   let WorldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
   let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
-  let user = true;
+  let user = false;
 
   return (
     <>

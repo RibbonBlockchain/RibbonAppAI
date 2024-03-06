@@ -6,18 +6,16 @@ import {
 } from "react-circular-progressbar";
 import Link from "next/link";
 import Image from "next/image";
+import Lottie from "lottie-react";
 import Todo from "@/components/todo";
 import { EyeOff } from "lucide-react";
 import Survey from "@/components/survey";
-import styles from "../ui/border.module.scss";
 import React, { Fragment, useState } from "react";
-import DashboardLayout from "../dashboard-layout";
 import CoinSVG from "../../../public/images/coin";
 import { Dialog, Transition } from "@headlessui/react";
 import CountdownTimer from "@/components/countdown-timer";
 import { priorityTask, todo } from "../lib/values/mockData";
 import backgroundImage from "../../../public/images/background-1.svg";
-import Lottie from "lottie-react";
 import animationData from "../../../public/images/trophy-animation.json";
 
 const Dashboard = () => {
@@ -27,11 +25,14 @@ const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  const points = 350;
-  const targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+  let points = 350;
+  let targetTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+  let WorldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
+  let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
+  let user = true;
 
   return (
-    <DashboardLayout>
+    <>
       <div className="w-full h-auto text-white bg-[#F5F5F5]">
         <Image
           src={backgroundImage}
@@ -53,26 +54,59 @@ const Dashboard = () => {
               {hideBalance ? "25 WLD" : "*****"}
             </div>
           </div>
-          <div className="w-full flex flex-row gap-3">
-            <Link
-              href={`/`}
-              className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
-            >
-              <Image
-                width={24}
-                height={24}
-                alt="world-coin"
-                src="/images/world-coin-purple.svg"
-              />
-              Link WorldID
-            </Link>
-            <Link
-              href="/dashboard"
-              className="w-full text-white bg-[#4285F4] border-[#4285F4] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
-            >
-              Connect Wallet
-            </Link>
-          </div>
+
+          {user ? (
+            <div className="w-full flex flex-row items-center justify-around">
+              <div className="w-full flex flex-col max-w-[120px]">
+                <div className="flex flex-row gap-1 text-[12px] font-bold items-center justify-start ">
+                  <Image
+                    width={20}
+                    height={20}
+                    alt="world-coin"
+                    src="/images/world-coin-active.svg"
+                  />
+                  World ID
+                </div>
+                <h1 className="truncate ...">{WorldID}</h1>
+              </div>
+
+              <div className="w-full flex flex-col max-w-[120px] ">
+                <div className="flex flex-row gap-1 text-[12px] font-bold items-center justify-start ">
+                  <Image
+                    width={17}
+                    height={17}
+                    alt="world-coin"
+                    src="/images/ethereum-active.svg"
+                  />
+                  Wallet
+                </div>
+                <h1 className="truncate .... ">{walletID}</h1>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full flex flex-row gap-3">
+              <Link
+                href={`/`}
+                className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
+              >
+                <Image
+                  width={24}
+                  height={24}
+                  alt="world-coin"
+                  src="/images/world-coin-purple.svg"
+                />
+                Link WorldID
+              </Link>
+
+              <Link
+                href="/dashboard"
+                className="w-full text-white bg-[#4285F4] border-[#4285F4] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+              >
+                Connect Wallet
+              </Link>
+            </div>
+          )}
+
           <div className="w-full flex flex-row gap-3 mt-6">
             <div className="bg-white border-white w-full py-5 flex flex-col self-center items-center justify-center text-center text-base font-semibold rounded-xl border-2">
               <div className="w-[91px] sm:w-[91px] flex flex-col justify-center mb-3">
@@ -111,18 +145,17 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="w-full mt-5 mb-3 mx-auto ">
-            <div
-              // className={`w-full flex flex-row items-center justify-between text-[14px] font-semibold px-2 py-1.5 text-black bg-white ${styles["border"]} `}
-              className={`w-full max-w-[320px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-1.5 text-black bg-white border-2 border-[#4285F4] rounded-full `}
-            >
-              {/* <div className="flex flex-row gap-1 items-center justify-center"> */}
-              Claim daily reward
-              <div className="w-[42px] h-[42px] ">
-                <Lottie loop={true} animationData={animationData} />
+          <div className="mx-auto">
+            <div className="w-full mt-5 mb-3 mx-auto border-gradient-parent rounded-full">
+              <div
+                className={`w-full max-w-[320px] z-10 mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-[2px] text-black bg-white border-gradient rounded-full `}
+              >
+                Claim daily reward
+                <div className="w-[42px] h-[42px] ">
+                  <Lottie loop={true} animationData={animationData} />
+                </div>
+                <CountdownTimer targetTime={targetTime} />
               </div>
-              {/* </div> */}
-              <CountdownTimer targetTime={targetTime} />
             </div>
           </div>
 
@@ -159,10 +192,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* <div className="flex-grow flex flex-row gap-3"> */}
           <Survey />
-          {/* <Survey /> */}
-          {/* </div> */}
         </div>
 
         <Transition appear show={isOpen} as={Fragment}>
@@ -222,7 +252,7 @@ const Dashboard = () => {
           </Dialog>
         </Transition>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

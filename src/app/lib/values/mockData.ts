@@ -7,6 +7,7 @@ export const priorityTask = [
     bgColor: "bg-[#D8EBFF]",
     taskTitle: "Complete your profile",
     priority: 1,
+    completed: true,
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const priorityTask = [
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
     priority: 2,
+    completed: true,
   },
 ];
 
@@ -29,6 +31,7 @@ export const todo = [
     taskTitle: "Employment Task",
     ratings: 675,
     ratingsLevel: "/images/ratings.svg",
+    completed: true,
   },
   {
     id: 4,
@@ -39,6 +42,7 @@ export const todo = [
     taskTitle: "Lifestyle Task",
     ratings: 675,
     ratingsLevel: "/images/ratings.svg",
+    completed: true,
   },
 ];
 
@@ -52,6 +56,7 @@ export const surveys = [
     surveyTitle: "HEALTH SURVEYS",
     surveyDescription: "Complete 5 surveys and Earn more tokens",
     priority: 1,
+    completed: true,
   },
   {
     id: 2,
@@ -61,5 +66,6 @@ export const surveys = [
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
     priority: 2,
+    completed: true,
   },
 ];

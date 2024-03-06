@@ -4,16 +4,21 @@ import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { usePhoneAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
+import { authAtom } from "@/lib/atoms/auth.atom";
 import { TPhoneAuthResponse } from "@/api/auth/types";
+import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
-  const form = useAtomValue(phoneAuthAtom);
+  const form = useAtomValue(authAtom);
   const { isPending, isSuccess, mutate: request } = usePhoneAuth();
 
   const isLoading = isPending || isSuccess;
-  const isFormInvalid = !form.phoneNumber.trim();
+
+  const isValidPhoneNumber =
+    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
+
+  const isFormInvalid = !isValidPhoneNumber;
   const isSubmitDisabled = isLoading || isFormInvalid;
 
   const onSuccess = (data: TPhoneAuthResponse) => {

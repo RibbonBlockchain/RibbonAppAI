@@ -1,4 +1,4 @@
-import styles from "../app/ui/border.module.scss";
+import styles from "@/app/ui/border.module.scss";
 import React, { useState, useEffect } from "react";
 
 interface CountdownTimerProps {

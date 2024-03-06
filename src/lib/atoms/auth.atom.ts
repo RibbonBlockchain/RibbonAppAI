@@ -18,9 +18,12 @@ export const prepareRequestHeader = (token: string) => {
 };
 
 const initialState = {
-  isOpen: false,
+  pin: "",
+  code: "",
+  phoneNumber: "",
   token: getToken(),
   isLoggedIn: !!getToken(),
+  country: JSON.stringify(countries?.[0]),
 };
 
 const checkIsLoggedIn = () => {
@@ -30,19 +33,15 @@ const checkIsLoggedIn = () => {
 };
 
 export const authAtom = atom({
-  isOpen: false,
+  pin: "",
+  code: "",
+  phoneNumber: "",
   token: getToken(),
   isLoggedIn: checkIsLoggedIn(),
+  country: JSON.stringify(countries?.[0]),
 });
 
 export const logoutAtom = atom(null, (_, set, _u) => {
   removeToken();
   return set(authAtom, initialState);
-});
-
-export const phoneAuthAtom = atom({
-  pin: "",
-  code: "",
-  phoneNumber: "",
-  country: JSON.stringify(countries?.[0]),
 });

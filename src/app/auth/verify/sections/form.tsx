@@ -1,11 +1,11 @@
 import { useAtom } from "jotai";
 import { usePhoneAuth } from "@/api/auth";
-import OtpInput from "@/components/otp-input";
-import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
+import { authAtom } from "@/lib/atoms/auth.atom";
+import OtpInput from "@/components/input/otp-input";
 import { SpinnerIcon } from "@/components/icons/spinner";
 
 const FormInput = () => {
-  const [state, setState] = useAtom(phoneAuthAtom);
+  const [state, setState] = useAtom(authAtom);
   const { mutate: request, isPending: isRequesting } = usePhoneAuth();
 
   const setOtp = (code: string) => setState((prev) => ({ ...prev, code }));

@@ -2,7 +2,29 @@
 
 import ReactSelect from "react-select";
 import ReactCountryFlag from "react-country-flag";
+import { FixedSizeList as List } from "react-window";
 import { TCountry, countries } from "@/lib/values/countries";
+
+const CustomMenuList = (props: any) => {
+  const itemHeight = 52;
+  const { options, children, maxHeight, getValue } = props;
+  const [value] = getValue();
+  const initialOffset = options.indexOf(value) * itemHeight;
+
+  return (
+    <div>
+      <List
+        width="full"
+        height={maxHeight}
+        itemCount={children.length}
+        itemSize={itemHeight}
+        initialScrollOffset={initialOffset}
+      >
+        {({ index, style }) => <div style={style}>{children[index]}</div>}
+      </List>
+    </div>
+  );
+};
 
 type Props = { value: string; setValue: (v: string) => void };
 
@@ -31,6 +53,7 @@ const CountrySelect = ({ value, setValue }: Props) => {
       options={options}
       instanceId="auth-country-select"
       value={getOption(JSON.parse(value))}
+      components={{ MenuList: CustomMenuList }}
       onChange={(option) => setValue(option?.value!)}
       classNames={{
         option: () => ``,

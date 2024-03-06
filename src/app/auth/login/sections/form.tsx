@@ -1,12 +1,12 @@
 "use client";
 
 import { useAtom } from "jotai";
-import PhoneInput from "@/components/phone-input";
-import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
-import CountrySelect from "@/components/country-select";
+import { authAtom } from "@/lib/atoms/auth.atom";
+import PhoneInput from "@/components/input/phone-input";
+import CountrySelect from "@/components/select/country-select";
 
 const FormInput = () => {
-  const [state, setState] = useAtom(phoneAuthAtom);
+  const [state, setState] = useAtom(authAtom);
 
   const setCountry = (country: string) =>
     setState((prev) => ({ ...prev, country }));

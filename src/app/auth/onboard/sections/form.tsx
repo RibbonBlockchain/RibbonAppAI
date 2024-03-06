@@ -1,11 +1,11 @@
 "use client";
 
 import { useAtom } from "jotai";
-import OtpInput from "@/components/otp-input";
-import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
+import { authAtom } from "@/lib/atoms/auth.atom";
+import OtpInput from "@/components/input/otp-input";
 
 const FormInput = () => {
-  const [state, setState] = useAtom(phoneAuthAtom);
+  const [state, setState] = useAtom(authAtom);
 
   const setPin = (pin: string) => {
     setState((prev) => ({ ...prev, pin }));

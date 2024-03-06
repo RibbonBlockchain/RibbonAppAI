@@ -1,5 +1,3 @@
-import { TResponse } from "../api-client";
-
 export type TPhoneAuthBody = { phone: string };
 export type TVerifyAuthPinBody = { phone: string; pin: string };
 export type TVerifyPhoneAuthBody = { phone: string; code: string };

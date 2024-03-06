@@ -4,11 +4,11 @@ import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useVerifyAuthPin } from "@/api/auth";
-import { phoneAuthAtom } from "@/lib/atoms/auth.atom";
+import { authAtom } from "@/lib/atoms/auth.atom";
 
 const Submit = () => {
   const router = useRouter();
-  const form = useAtomValue(phoneAuthAtom);
+  const form = useAtomValue(authAtom);
   const { isPending, isSuccess, mutate: request } = useVerifyAuthPin();
 
   const isLoading = isPending || isSuccess;

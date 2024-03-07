@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import NumberLine from "../dashboard/number-line";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const CoompletedSurvey = () => {
   return (
@@ -12,13 +14,18 @@ const CoompletedSurvey = () => {
             <p className="text-base font-extrabold leading-7">
               Complete 5 surveys and Earn more 7 WLD
             </p>
-            <Image
-              width={180}
-              height={25}
-              alt="health-survey"
-              src="/images/survey-steps.svg"
-              className=""
-            />
+            <div className="w-full">
+              <ProgressBar
+                height="15px"
+                width="auto"
+                completed={5}
+                labelSize="10px"
+                maxCompleted={5}
+                isLabelVisible={false}
+                completedClassName="barCompleted"
+              />
+              <NumberLine />
+            </div>
           </div>
 
           <Image

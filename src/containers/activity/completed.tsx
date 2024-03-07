@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import { Clock4, Coins } from "lucide-react";
+import { Clock4 } from "lucide-react";
 import ProgressBar from "@ramonak/react-progress-bar";
-import CoinSVG from "../../public/images/coin";
+import CoinSVG from "../../../public/images/coin";
 
 type Props = {
   score: number;

@@ -1,4 +1,4 @@
-# RIBBONPROTOCOL
+# RIBBON PROTOCOL
 
 ## Overview
 

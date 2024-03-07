@@ -6,18 +6,17 @@ import {
 } from "react-circular-progressbar";
 import Link from "next/link";
 import Image from "next/image";
-import { EyeOff } from "lucide-react";
 import Todo from "@/containers/dashboard/todo";
 import React, { Fragment, useState } from "react";
 import CoinSVG from "../../../public/images/coin";
 import Survey from "@/containers/dashboard/survey";
+import { Bell, EyeOff, Sun, X } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import { todo, priorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
-import backgroundImage from "../../../public/images/background-1.svg";
 
 const Dashboard = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const closeModal = () => setIsOpen(false);
 
   const [hideBalance, setHideBalance] = useState(false);
@@ -35,24 +34,31 @@ const Dashboard = () => {
     <>
       <div className="w-full h-auto text-white bg-[#F5F5F5]">
         <Image
-          src={backgroundImage}
-          alt="Picture of the author"
+          priority
+          width={300}
+          height={300}
+          alt="bg-image"
+          src="/images/background.svg"
           className="absolute z-0 w-full max-w-[500px]"
         />
         <div className="relative p-4 sm:p-6 mx-auto flex flex-col items-center justify-center content-center">
-          <div className="flex flex-col items-center gap-1 text-center py-1 mt-2 mb-10">
-            <div className="flex flex-row gap-2 items-center text-sm font-medium  ">
-              Total Balance
-              {hideBalance ? (
-                <EyeOff onClick={toggleHideBalance} size={16} />
-              ) : (
-                <EyeOff onClick={toggleHideBalance} fill="white" size={16} />
-              )}
+          <div className="w-full flex flex-row mt-2 py-1 items-start justify-between">
+            <Bell fill="white" />
+            <div className="flex flex-col items-center gap-1 text-center mb-10">
+              <div className="flex flex-row gap-2 items-center text-sm font-medium  ">
+                Total Balance
+                {hideBalance ? (
+                  <EyeOff onClick={toggleHideBalance} size={16} />
+                ) : (
+                  <EyeOff onClick={toggleHideBalance} fill="white" size={16} />
+                )}
+              </div>
+              <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
+                <CoinSVG />
+                {hideBalance ? "25 WLD" : "*****"}
+              </div>
             </div>
-            <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
-              <CoinSVG />
-              {hideBalance ? "25 WLD" : "*****"}
-            </div>
+            <Sun fill="white" />
           </div>
 
           {user ? (
@@ -86,7 +92,7 @@ const Dashboard = () => {
           ) : (
             <div className="w-full flex flex-row gap-3">
               <Link
-                href={`/`}
+                href={`#`}
                 className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
               >
                 <Image
@@ -99,7 +105,7 @@ const Dashboard = () => {
               </Link>
 
               <Link
-                href="/dashboard"
+                href="#"
                 className="w-full text-white bg-[#4285F4] border-[#4285F4] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
               >
                 Connect Wallet
@@ -136,6 +142,7 @@ const Dashboard = () => {
               <p className="text-[#A81DA6] text-lg ">Withdraw</p>
               <p className="text-[#939393] ">Spend tokens</p>
               <Image
+                priority
                 width={70}
                 height={81}
                 alt="withdraw"
@@ -148,7 +155,7 @@ const Dashboard = () => {
           <div className="mx-auto">
             <div className="w-full mt-5 mb-3 mx-auto border-gradient-parent rounded-full">
               <div
-                className={`w-full gap-2 max-w-[320px] z-10 mx-auto flex flex-row items-center justify-between text-[14px] font-semibold px-2 sm:px-3 py-[2px] text-black bg-white border-gradient rounded-full `}
+                className={`w-full gap-2 max-w-[320px] z-10 mx-auto flex flex-row items-center justify-between text-[14px] sm:text-[14px] font-semibold px-2 sm:px-3 text-black bg-white border-gradient rounded-full `}
               >
                 Claim daily reward
                 <Image
@@ -156,6 +163,7 @@ const Dashboard = () => {
                   height={30}
                   alt="trophy"
                   className=""
+                  loading="lazy"
                   src="/images/trophy.gif"
                 />
                 {completedTime == 0 ? (
@@ -219,32 +227,34 @@ const Dashboard = () => {
                   leaveFrom="opacity-100 scale-100"
                   leaveTo="opacity-0 scale-95"
                 >
-                  <Dialog.Panel className="w-full max-w-[370px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Panel className="w-full max-w-[320px] transform overflow-hidden rounded-2xl bg-white p-5 text-left align-middle shadow-xl transition-all">
+                    <X className="absolute right-6" onClick={closeModal} />
                     <Image
+                      priority
                       width={120}
                       height={100}
                       alt="adobe-stock"
-                      src="/images/adobe-stock.svg"
                       className="m-auto"
+                      src="/images/message-logo.png"
                     />
 
                     <Dialog.Title
                       as="h3"
-                      className="text-xl font-bold text-center py-3"
+                      className="text-xl font-bold text-center py-1"
                     >
                       Link your World ID to continue using Ribbon Protocol{" "}
                     </Dialog.Title>
 
-                    <div onClick={closeModal} className="py-4">
+                    <div onClick={closeModal} className="py-2">
                       <button
                         type="submit"
-                        className="w-full text-sm font-semibold text-center p-4 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+                        className="w-full text-sm font-semibold text-center p-3 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
                       >
                         Link your World ID now
                       </button>
                     </div>
 
-                    <div className="flex flex-row gap-2 mt-4">
+                    <div className="flex flex-row gap-2 mt-2">
                       <Image
                         alt="info"
                         width={27}

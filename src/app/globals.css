@@ -8,6 +8,11 @@
 }
 
 @layer utilities {
+  .barCompleted {
+    background-color: lightblue;
+    width: 80%;
+  }
+
   .text-gradient {
     background: linear-gradient(90deg, #6200ee, #a81da6);
     -webkit-background-clip: text;

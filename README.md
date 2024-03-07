@@ -10,7 +10,7 @@ Staging: [ribbon-app.vercel.app/](https://ribbon-app.vercel.app)
 
 Production: [ribbon-app.vercel.app/](https://ribbon-app.vercel.app)
 
-[![RibbonProtocol](https://d33wubrfki0l68.cloudfront.net/acc4bad7b8baf69c0a595a8887e51c474aeb5491/998d2/img/logo.png)](https://ribbon-app.vercel.app)
+[![RibbonProtocol](<a href="https://ibb.co/pfpWc5b"><img src="https://i.ibb.co/8rVzqtN/ribbon-app-logo-copy.png" alt="ribbon-app-logo-copy" border="0"></a>)](https://ribbon-app.vercel.app)
 
 ---
 

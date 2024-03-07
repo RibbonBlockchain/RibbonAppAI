@@ -1,7 +1,7 @@
 import React from "react";
-import Completed from "@/components/completed";
+import Completed from "@/containers/activity/completed";
 import { priorityTask, todo } from "@/lib/values/mockData";
-import CoompletedSurvey from "@/components/completed-survey";
+import CoompletedSurvey from "@/containers/activity/completed-survey";
 
 const CompletedTasks = () => {
   return (

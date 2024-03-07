@@ -13,7 +13,7 @@ interface TimeLeft {
 const CountdownBox = ({ value }: { value: number }) => {
   return (
     <p
-      className={`text-xs font-normal w-[30px] text-black p-1.5 border-custom`}
+      className={`text-xs font-normal p-1 w-[27px] h-[27px] text-black border-custom`}
     >
       {value}
     </p>

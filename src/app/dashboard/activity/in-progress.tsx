@@ -1,6 +1,7 @@
 import React from "react";
 import Todo from "@/containers/dashboard/todo";
 import { priorityTask, todo } from "@/lib/values/mockData";
+import Survey from "@/containers/dashboard/survey";
 
 const InProgress = () => {
   return (
@@ -32,6 +33,15 @@ const InProgress = () => {
             ratingsLevel={i.ratingsLevel}
           />
         ))}
+      </div>
+
+      <div className="w-full">
+        <p className="text-xs text-[#4E2774] pt-5 pb-3 font-bold">
+          Exclusive Surveys
+        </p>
+        <Survey />
+        <Survey />
+        <Survey />
       </div>
     </div>
   );

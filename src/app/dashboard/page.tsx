@@ -211,7 +211,14 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <Survey />
+          <div className="w-full">
+            <p className="text-xs text-[#4E2774] pt-5 pb-3 font-bold">
+              Exclusive Surveys
+            </p>
+            <Survey />
+            <Survey />
+            <Survey />
+          </div>
         </div>
 
         <Transition appear show={isOpen} as={Fragment}>

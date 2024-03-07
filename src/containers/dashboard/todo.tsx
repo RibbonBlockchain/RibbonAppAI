@@ -54,12 +54,20 @@ const Todo = (props: Props) => {
             </div>
           )}
         </div>
+
         <div className="flex items-center gap-[3px] text-[10px]">
           <Clock4 size={10} />~
           <p className="font-extrabold">
             {props.approximateTime} <span className="font-normal">mins</span>
           </p>
         </div>
+
+        {/* {props.completed && (
+          <div className="flex items-center text-[#F59E0B] gap-[3px] text-[10px]">
+            <Clock4 size={10} stroke="#F59E0B" strokeWidth={"4px"} />~
+            <p className="font-extrabold ">pending</p>
+          </div>
+        )} */}
       </div>
       <div className="flex flex-col gap-[3px]">
         <p className="text-[#626262] text-xs font-medium self-end">Reward</p>

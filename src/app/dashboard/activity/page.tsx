@@ -20,8 +20,8 @@ const Activity = () => {
             <div
               className={
                 activeTab === "in-progress"
-                  ? "text-[#6200EE] font-extrabold flex flex-col items-center justify-center text-sm"
-                  : "text-[#939393] font-extrabold flex flex-col items-center justify-center text-sm"
+                  ? "text-[#6200EE] font-bold flex flex-col items-center justify-center text-sm"
+                  : "text-[#939393] font-bold flex flex-col items-center justify-center text-sm"
               }
               onClick={() => handleTabClick("in-progress")}
             >
@@ -35,12 +35,12 @@ const Activity = () => {
             <div
               className={
                 activeTab === "completed"
-                  ? "text-[#6200EE] font-extrabold flex flex-col items-center justify-center text-sm"
-                  : "text-[#939393] font-extrabold flex flex-col items-center justify-center text-sm"
+                  ? "text-[#6200EE] font-bold flex flex-col items-center justify-center text-sm"
+                  : "text-[#939393] font-bold flex flex-col items-center justify-center text-sm"
               }
               onClick={() => handleTabClick("completed")}
             >
-              Completed
+              Completed tasks
               {activeTab === "completed" ? (
                 <hr className="h-[5px] rounded-full bg-[#6200EE] w-[40px] mt-[6px] align-middle"></hr>
               ) : (

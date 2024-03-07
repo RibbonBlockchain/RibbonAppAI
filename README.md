@@ -10,8 +10,7 @@ Staging: [ribbon-app.vercel.app/](https://ribbon-app.vercel.app)
 
 Production: [ribbon-app.vercel.app/](https://ribbon-app.vercel.app)
 
-[![RibbonProtocol](<a href="https://ibb.co/pfpWc5b"><img src="https://i.ibb.co/8rVzqtN/ribbon-app-logo-copy.png" alt="ribbon-app-logo-copy" border="0"></a>)](https://ribbon-app.vercel.app)
-
+[RibbonProtocol <a href="https://ibb.co/pfpWc5b"><img src="https://i.ibb.co/8rVzqtN/ribbon-app-logo-copy.png" alt="ribbon-app-logo-copy" border="0"></a>](https://ribbon-app.vercel.app)
 ---
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](/LICENSE)

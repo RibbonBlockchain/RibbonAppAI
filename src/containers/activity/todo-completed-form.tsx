@@ -16,7 +16,7 @@ type Props = {
   ratingsLevel?: string;
 };
 
-const Completed = (props: Props) => {
+const TodoCompletedForm = (props: Props) => {
   return (
     <div
       className={`bg-[#E8E8E8] text-[#626262] w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
@@ -74,4 +74,4 @@ const Completed = (props: Props) => {
   );
 };
 
-export default Completed;
+export default TodoCompletedForm;

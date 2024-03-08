@@ -20,6 +20,13 @@
     background-clip: text;
   }
 
+  .text-gradient-2 {
+    background: linear-gradient(90deg, #a81da6, #380088);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .border-custom {
     border-radius: 6px;
     background-color: white;

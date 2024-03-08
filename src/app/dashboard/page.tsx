@@ -22,9 +22,12 @@ const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
+  const [balance, setBalance] = useState(25);
+
+  const [reward, setReward] = useState(true);
+
   let points = 155;
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
-  let completedTime = targetTime - new Date().getTime();
 
   let WorldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
   let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
@@ -55,7 +58,7 @@ const Dashboard = () => {
               </div>
               <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
                 <CoinSVG />
-                {hideBalance ? "25 WLD" : "*****"}
+                {hideBalance ? `${balance} WLD` : "*****"}
               </div>
             </div>
             <Sun fill="white" />
@@ -73,7 +76,7 @@ const Dashboard = () => {
                   />
                   World ID
                 </div>
-                <h1 className="truncate ...">{WorldID}</h1>
+                <h1 className="truncate ... text-base font-bold">{WorldID}</h1>
               </div>
 
               <div className="w-full flex flex-col max-w-[120px] ">
@@ -86,7 +89,9 @@ const Dashboard = () => {
                   />
                   Wallet
                 </div>
-                <h1 className="truncate .... ">{walletID}</h1>
+                <h1 className="truncate ....  text-base font-bold">
+                  {walletID}
+                </h1>
               </div>
             </div>
           ) : (
@@ -106,7 +111,7 @@ const Dashboard = () => {
 
               <Link
                 href="#"
-                className="w-full text-white bg-[#4285F4] border-[#4285F4] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+                className="w-full text-white bg-[#6200EE] border-[#6200EE] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
               >
                 Connect Wallet
               </Link>
@@ -166,10 +171,14 @@ const Dashboard = () => {
                   loading="lazy"
                   src="/images/trophy.gif"
                 />
-                {completedTime == 0 ? (
-                  <div className="text-gradient flex flex-row gap-2 items-center justify-center text-[22px] font-bold">
-                    <CoinSVG fill="#6200EE" />
-                    25 WLD
+                {reward ? (
+                  <div
+                    onClick={() => {
+                      setReward(false), setBalance(balance + 5);
+                    }}
+                    className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
+                  >
+                    <CoinSVG fill="#6200EE" />5 WLD
                   </div>
                 ) : (
                   <CountdownTimer targetTime={targetTime} />
@@ -179,7 +188,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full">
-            <p className="text-xs text-gradient py-3 font-bold">
+            <p className="text-xs text-gradient-2 py-3 font-bold">
               Priority task
             </p>
             {priorityTask.map((i) => (
@@ -195,7 +204,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full">
-            <p className="text-xs text-[#4E2774] pt-5 pb-3 font-bold">
+            <p className="text-xs text-gradient-2 pt-5 pb-3 font-bold">
               To do List
             </p>
             {todo.map((i) => (
@@ -212,7 +221,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full">
-            <p className="text-xs text-[#4E2774] pt-5 pb-3 font-bold">
+            <p className="text-xs text-gradient-2 pt-5 pb-3 font-bold">
               Exclusive Surveys
             </p>
             <Survey />

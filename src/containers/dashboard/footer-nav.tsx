@@ -2,28 +2,25 @@
 
 import clsx from "clsx";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CircleUser, History, Home } from "lucide-react";
 
 const items = [
   {
-    href: "/dashboard",
-    text: "Home",
-    value: "home",
+    route: "/dashboard",
+    name: "Home",
     icon: <Home />,
     iconFilled: <Home fill="#B6B6B6" />,
   },
   {
-    href: "/dashboard/activity",
-    text: "Activity",
-    value: "activity",
+    route: "/activity",
+    name: "Activity",
     icon: <History />,
     iconFilled: <History fill="#B6B6B6" />,
   },
   {
-    href: "/dashboard/account",
-    text: "Account",
-    value: "account",
+    route: "/account",
+    name: "Account",
     icon: <CircleUser />,
     iconFilled: <CircleUser fill="#B6B6B6" />,
   },
@@ -31,77 +28,27 @@ const items = [
 
 const FooterNav = () => {
   const router = useRouter();
-  const [activeItem, setActiveItem] = React.useState("home");
+  const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 w-full z-50 max-w-[500px] bg-white h-auto text-xs font-extrabold text-white">
+    <div className="fixed bottom-0 w-full z-50 max-w-[500px] h-auto text-xs font-extrabold text-white rounded-t-[24px] bg-[#FDFDFD] bg-opacity-95">
       <div className="flex items-center justify-around p-4 sm:p-6 sm:py-5">
-        {items.map((i) => (
+        {items.map(({ route, name, icon, iconFilled }) => (
           <a
-            key={i.value}
+            key={name}
             href="#"
             onClick={() => {
-              router.push(i.href), setActiveItem(i.value);
+              router.push(route);
             }}
             className={clsx(
               `flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center`,
-              activeItem === i.value &&
-                "bg-gradient-to-b from-[#334272] to-[#871785]"
+              pathname.includes(route) && "bg-[#6200EE]"
             )}
           >
-            {activeItem === i.value ? i.icon : i.iconFilled}
-            {activeItem === i.value ? <>{i.text}</> : <></>}
+            {pathname.includes(route) ? icon : iconFilled}
+            {pathname.includes(route) ? <>{name}</> : <></>}
           </a>
         ))}
-        {/* <a
-          href="#"
-          onClick={() => {
-            router.push("/dashboard"), setActiveItem("home");
-          }}
-          className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center  ${
-            activeItem === "home"
-              ? "bg-gradient-to-b from-[#334272] to-[#871785]"
-              : ""
-          }
-          `}
-        >
-          {activeItem === "home" ? <Home /> : <Home fill="#D9D9D9" />}
-          {activeItem === "home" ? <>Home</> : <></>}
-        </a>
-        <a
-          href="#"
-          onClick={() => {
-            router.push("/dashboard/activity"), setActiveItem("activity");
-          }}
-          className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center ${
-            activeItem === "activity"
-              ? "bg-gradient-to-b from-[#334272] to-[#871785]"
-              : ""
-          }
-         `}
-        >
-          {activeItem === "home" ? <History /> : <History fill="#D9D9D9" />}
-          {activeItem === "activity" ? <>Activity</> : <></>}
-        </a>
-        <a
-          href="#"
-          onClick={() => {
-            router.push("/dashboard/account"), setActiveItem("account");
-          }}
-          className={`flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center ${
-            activeItem === "account"
-              ? "bg-gradient-to-b from-[#334272] to-[#871785]"
-              : ""
-          }
-          `}
-        >
-          {activeItem === "account" ? (
-            <CircleUser />
-          ) : (
-            <CircleUser fill="#D9D9D9" />
-          )}
-          {activeItem === "account" ? <>Account</> : <></>}
-        </a> */}
       </div>
     </div>
   );

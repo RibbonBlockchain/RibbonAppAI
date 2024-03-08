@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import InProgress from "./in-progress";
-import CompletedTasks from "./completed-tasks";
+import InProgress from "../../containers/activity/in-progress";
+import CompletedTasks from "../../containers/activity/completed-tasks";
 
 const Activity = () => {
   const [activeTab, setActiveTab] = React.useState("in-progress");
@@ -14,9 +14,9 @@ const Activity = () => {
   return (
     <>
       <div className="bg-[#F9F9F9] min-h-screen">
-        <div className="bg-white p-4 sm:p-6">
+        <div className="bg-white pt-4 sm:pt-6   px-4 sm:px-6">
           <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
-          <div className="flex mx-auto mt-4 pb-2 items-center justify-center gap-8">
+          <div className="flex mx-auto mt-4 items-center justify-center gap-8">
             <div
               className={
                 activeTab === "in-progress"

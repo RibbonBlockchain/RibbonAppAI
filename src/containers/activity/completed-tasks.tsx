@@ -1,7 +1,7 @@
 import React from "react";
-import Completed from "@/containers/activity/completed";
 import { priorityTask, todo } from "@/lib/values/mockData";
 import CoompletedSurvey from "@/containers/activity/completed-survey";
+import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 
 const CompletedTasks = () => {
   return (
@@ -9,7 +9,7 @@ const CompletedTasks = () => {
       <div className="">
         <p className="text-xs text-[#141414] py-3 font-bold">Today, 3:30 pm</p>
         {priorityTask.map((i) => (
-          <Completed
+          <TodoCompletedForm
             key={i.id}
             score={i.score}
             reward={i.reward}
@@ -19,7 +19,7 @@ const CompletedTasks = () => {
           />
         ))}
         {todo.map((i) => (
-          <Completed
+          <TodoCompletedForm
             key={i.id}
             score={i.score}
             reward={i.reward}

@@ -23,12 +23,16 @@ const Login = () => {
         </div>
 
         <div className="mt-4">
-          <p className="text-sm text-slate-600">Enter your 4 digit pin</p>
+          <p className="text-sm text-slate-600 font-semibold mb-3">
+            Enter your 4 digit pin
+          </p>
           <FormInput />
         </div>
 
         <div className="mt-4">
-          <p className="text-sm text-slate-600">Re-enter your 4 digit pin</p>
+          <p className="text-sm text-slate-600 font-semibold mb-3">
+            Re-enter your 4 digit pin
+          </p>
           <FormInput />
         </div>
       </div>

@@ -26,7 +26,7 @@ const Login = () => {
         </div>
 
         <Link
-          href="/auth/reset-pin"
+          href="/auth/forgot-pin/reset-pin"
           className="text-sm text-end text-[#6200EE] underline mt-5"
         >
           Forgot Pin?

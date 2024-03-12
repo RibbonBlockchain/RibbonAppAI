@@ -2,34 +2,26 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
-import { usePhoneAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { useOnboardOTPVerify } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import { TPhoneAuthResponse } from "@/api/auth/types";
-import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: request } = usePhoneAuth();
+  const { mutate: verify, isPending, isSuccess } = useOnboardOTPVerify();
 
   const isLoading = isPending || isSuccess;
+  const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
+  const isSubmitDisabled = isFormInvalid || isLoading;
 
-  const isValidPhoneNumber =
-    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
-
-  const isFormInvalid = !isValidPhoneNumber;
-  const isSubmitDisabled = isLoading || isFormInvalid;
-
-  const onSuccess = (data: TPhoneAuthResponse) => {
-    if (data?.exists) {
-      router.push("/auth/reset-pin");
-    }
+  const onSuccess = () => {
+    router.push("/auth/forgot-pin/create-new-pin");
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    request({ phone: form.phoneNumber }, { onSuccess });
+    verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
   };
 
   return (

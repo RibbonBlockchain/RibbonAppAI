@@ -21,9 +21,11 @@ const Todo = (props: Props) => {
     <div
       className={`${
         props.priority === 1
-          ? "bg-[#D8EBFF]"
+          ? "bg-[#FFD2CF]"
           : props.priority === 2
-          ? "bg-[#FFE9E7]"
+          ? "bg-[#D8EBFF]"
+          : props.priority === 3
+          ? "bg-[#EAF7ED]"
           : props.completed
           ? "bg-[#E8E8E8]"
           : "bg-white"
@@ -31,7 +33,7 @@ const Todo = (props: Props) => {
     >
       <div className="flex flex-row items-start justify-start text-black gap-1">
         <div className="flex flex-col text-xs gap-[3px]">
-          <p className="font-extrabold">{props.taskTitle}</p>
+          <p className="font-extrabold bre">{props.taskTitle}</p>
           <div className="flex flex-row items-center">
             <p className="text-[#626262] mr-1.5">Score +{props.score} pts</p>
             <ProgressBar

@@ -12,7 +12,7 @@ export const SignInWithWorldIdButton = () => {
       onClick={handleClick}
       className="bg-gray-900 border-gray-900 flex flex-row items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
     >
-      <span>Signin with World ID</span>
+      <span>Sign in with World ID</span>
       <Image
         width={24}
         height={24}

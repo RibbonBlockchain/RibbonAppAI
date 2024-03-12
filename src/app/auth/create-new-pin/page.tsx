@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Submit from "./sections/submit";
+import FormInput from "./sections/form";
 import { ArrowLeft } from "lucide-react";
-import PinFormInput from "./sections/form";
 
 const Login = () => {
   return (
@@ -14,23 +14,23 @@ const Login = () => {
 
         <div className="flex flex-col gap-2">
           <h1 className="text-slate-700 font-extrabold text-3xl">
-            Enter your pin!
+            Create your new Pin
           </h1>
           <p className="text-sm text-slate-600">
-            Welcome back. Enter your pin access your dashboard.
+            Create your new 4-digit pin. We will ask you for this pin whenever
+            you want to login!
           </p>
         </div>
 
         <div className="mt-4">
-          <PinFormInput />
+          <p className="text-sm text-slate-600">Enter your 4 digit pin</p>
+          <FormInput />
         </div>
 
-        <Link
-          href="/auth/reset-pin"
-          className="text-sm text-end text-[#6200EE] underline mt-5"
-        >
-          Forgot Pin?
-        </Link>
+        <div className="mt-4">
+          <p className="text-sm text-slate-600">Re-enter your 4 digit pin</p>
+          <FormInput />
+        </div>
       </div>
 
       <Submit />

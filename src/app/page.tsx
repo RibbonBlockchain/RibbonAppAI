@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Phone } from "lucide-react";
 import LinkButton from "@/components/button/link";
@@ -18,21 +19,29 @@ const Home = () => {
           <h1 className="text-slate-700 text-2xl font-extrabold">
             Welcome to Ribbon Protocol
           </h1>
-          <p className="text-base font-normal text-slate-500 text-center">
+          <p className="text-base font-normal text-slate-600 text-center">
             Earn tokenized Universal Basic Income
           </p>
         </div>
       </div>
 
-      <div className="w-full flex flex-col gap-3 pb-6">
+      <div className="w-full flex flex-col gap-3 pb-12">
         <SignInWithWorldIdButton />
 
         <LinkButton
-          href="/auth/login"
+          href="/auth/signup"
           className="flex flex-row items-center justify-center gap-3"
         >
-          Continue with Mobile Number <Phone />
+          Sign Up with mobile number <Phone />
         </LinkButton>
+
+        <Link
+          href="/auth/login"
+          className="text-sm font-normal text-[#141414] text-center"
+        >
+          Already an existing user?{" "}
+          <span className="text-[#6200EE] font-semibold">Sign In</span>
+        </Link>
       </div>
     </div>
   );

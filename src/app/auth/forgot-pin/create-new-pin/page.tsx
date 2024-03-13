@@ -14,15 +14,25 @@ const Login = () => {
 
         <div className="flex flex-col gap-2">
           <h1 className="text-slate-700 font-extrabold text-3xl">
-            Create your pin
+            Create your new Pin
           </h1>
           <p className="text-sm text-slate-600">
-            Finish setting up your account by creating a 4-digit pin. You will
-            use this pin to login to your account{" "}
+            Create your new 4-digit pin. We will ask you for this pin whenever
+            you want to login!
           </p>
         </div>
 
         <div className="mt-4">
+          <p className="text-sm text-slate-600 font-semibold mb-3">
+            Enter your 4 digit pin
+          </p>
+          <FormInput />
+        </div>
+
+        <div className="mt-4">
+          <p className="text-sm text-slate-600 font-semibold mb-3">
+            Re-enter your 4 digit pin
+          </p>
           <FormInput />
         </div>
       </div>

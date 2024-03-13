@@ -1,3 +1,26 @@
+export const highPriorityTask = [
+  {
+    id: 1,
+    score: 55,
+    reward: 3,
+    approximateTime: 2,
+    bgColor: "bg-[#FFD2CF]",
+    taskTitle: "Verify your phone number",
+    priority: 1,
+    completed: true,
+  },
+  {
+    id: 2,
+    score: 35,
+    reward: 2,
+    approximateTime: 1,
+    bgColor: "bg-[#FFD2CF]",
+    taskTitle: "Set up your pin",
+    priority: 1,
+    completed: true,
+  },
+];
+
 export const priorityTask = [
   {
     id: 1,
@@ -6,7 +29,7 @@ export const priorityTask = [
     approximateTime: 5,
     bgColor: "bg-[#D8EBFF]",
     taskTitle: "Complete your profile",
-    priority: 1,
+    priority: 2,
     completed: true,
   },
   {
@@ -16,7 +39,7 @@ export const priorityTask = [
     approximateTime: 8,
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
-    priority: 2,
+    priority: 3,
     completed: true,
   },
 ];

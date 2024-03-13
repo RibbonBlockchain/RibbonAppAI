@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Submit from "./sections/submit";
-import FormInput from "./sections/form";
 import { ArrowLeft } from "lucide-react";
+import PinFormInput from "./sections/form";
 
 const Login = () => {
   return (
@@ -14,7 +14,7 @@ const Login = () => {
 
         <div className="flex flex-col gap-2">
           <h1 className="text-slate-700 font-extrabold text-3xl">
-            Welcome Back!
+            Enter your pin!
           </h1>
           <p className="text-sm text-slate-600">
             Welcome back. Enter your pin access your dashboard.
@@ -22,8 +22,15 @@ const Login = () => {
         </div>
 
         <div className="mt-4">
-          <FormInput />
+          <PinFormInput />
         </div>
+
+        <Link
+          href="/auth/forgot-pin/reset-pin"
+          className="text-sm text-end text-[#6200EE] underline mt-5"
+        >
+          Forgot Pin?
+        </Link>
       </div>
 
       <Submit />

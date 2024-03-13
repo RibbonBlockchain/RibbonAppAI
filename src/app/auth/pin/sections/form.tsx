@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import OtpInput from "@/components/input/otp-input";
 
-const FormInput = () => {
+const PinFormInput = () => {
   const [state, setState] = useAtom(authAtom);
 
   const setPin = (pin: string) => {
@@ -22,4 +22,4 @@ const FormInput = () => {
   );
 };
 
-export default FormInput;
+export default PinFormInput;

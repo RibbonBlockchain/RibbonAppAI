@@ -4,15 +4,17 @@ import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
+import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
 import React, { Fragment, useState } from "react";
 import CoinSVG from "../../../public/images/coin";
 import Survey from "@/containers/dashboard/survey";
 import { Bell, EyeOff, Sun, X } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
-import { todo, priorityTask } from "@/lib/values/mockData";
+import { todo, priorityTask, highPriorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
 
 const Dashboard = () => {
@@ -29,9 +31,13 @@ const Dashboard = () => {
   let points = 155;
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
 
-  let WorldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
-  let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
-  let user = false;
+  // let worldID = "TuJJxlmNlksTYsd4YhdOsy628-&sdfknWTks";
+  // let walletID = "gNmopkklit-83-sujknbjh-TYsd4YhdOsy628";
+  let worldID = null;
+  let walletID = null;
+
+  // link worldID
+  const handleClick = () => signIn("worldcoin");
 
   return (
     <>
@@ -58,16 +64,20 @@ const Dashboard = () => {
               </div>
               <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
                 <CoinSVG />
-                {hideBalance ? `${balance} WLD` : "*****"}
+                {hideBalance ? "*****" : `${balance} WLD`}
               </div>
             </div>
             <Sun fill="white" />
           </div>
 
-          {user ? (
-            <div className="w-full flex flex-row items-center justify-around">
-              <div className="w-full flex flex-col max-w-[120px]">
-                <div className="flex flex-row gap-1 text-[12px] font-bold items-center justify-start ">
+          <div
+            className={clsx(
+              `w-full grid grid-cols-2 items-center justify-center gap-3`
+            )}
+          >
+            {worldID != null ? (
+              <div className="w-full flex flex-col max-w-[120px] mx-auto">
+                <div className="flex flex-row gap-1 text-[12px] font-bold items-center justify-star">
                   <Image
                     width={20}
                     height={20}
@@ -76,10 +86,25 @@ const Dashboard = () => {
                   />
                   World ID
                 </div>
-                <h1 className="truncate ... text-base font-bold">{WorldID}</h1>
+                <h1 className="truncate ... text-base font-bold">{worldID}</h1>
               </div>
+            ) : (
+              <div
+                onClick={handleClick}
+                className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
+              >
+                <Image
+                  width={24}
+                  height={24}
+                  alt="world-coin"
+                  src="/images/world-coin-purple.svg"
+                />
+                Link WorldID
+              </div>
+            )}
 
-              <div className="w-full flex flex-col max-w-[120px] ">
+            {walletID != null ? (
+              <div className="w-full flex flex-col max-w-[120px] mx-auto">
                 <div className="flex flex-row gap-1 text-[12px] font-bold items-center justify-start ">
                   <Image
                     width={17}
@@ -93,30 +118,12 @@ const Dashboard = () => {
                   {walletID}
                 </h1>
               </div>
-            </div>
-          ) : (
-            <div className="w-full flex flex-row gap-3">
-              <Link
-                href={`#`}
-                className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
-              >
-                <Image
-                  width={24}
-                  height={24}
-                  alt="world-coin"
-                  src="/images/world-coin-purple.svg"
-                />
-                Link WorldID
-              </Link>
-
-              <Link
-                href="#"
-                className="w-full text-white bg-[#6200EE] border-[#6200EE] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
-              >
+            ) : (
+              <div className="w-full text-white bg-[#6200EE] border-[#6200EE] py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2">
                 Connect Wallet
-              </Link>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
           <div className="w-full flex flex-row gap-3 mt-6">
             <div className="bg-white border-white w-full py-5 flex flex-col self-center items-center justify-center text-center text-base font-semibold rounded-xl border-2">
@@ -189,6 +196,22 @@ const Dashboard = () => {
 
           <div className="w-full">
             <p className="text-xs text-gradient-2 py-3 font-bold">
+              High Priority task
+            </p>
+            {highPriorityTask.map((i) => (
+              <Todo
+                key={i.id}
+                score={i.score}
+                reward={i.reward}
+                priority={i.priority}
+                taskTitle={i.taskTitle}
+                approximateTime={i.approximateTime}
+              />
+            ))}
+          </div>
+
+          <div className="w-full">
+            <p className="text-xs text-gradient-2 py-3 font-bold">
               Priority task
             </p>
             {priorityTask.map((i) => (
@@ -230,7 +253,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Transition appear show={isOpen} as={Fragment}>
+        {/* <Transition appear show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
             <div className="fixed inset-0 overflow-y-auto bg-black bg-opacity-70">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
@@ -254,21 +277,45 @@ const Dashboard = () => {
                       src="/images/message-logo.png"
                     />
 
-                    <Dialog.Title
-                      as="h3"
-                      className="text-xl font-bold text-center py-1"
-                    >
-                      Link your World ID to continue using Ribbon Protocol{" "}
-                    </Dialog.Title>
+                    {worldID != null ? (
+                      <div>
+                        <Dialog.Title
+                          as="h3"
+                          className="text-xl font-bold text-center py-1"
+                        >
+                          Link your Phone number to continue using Ribbon
+                          Protocol
+                        </Dialog.Title>
 
-                    <div onClick={closeModal} className="py-2">
-                      <button
-                        type="submit"
-                        className="w-full text-sm font-semibold text-center p-3 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
-                      >
-                        Link your World ID now
-                      </button>
-                    </div>
+                        <div onClick={closeModal} className="py-2">
+                          <button
+                            type="submit"
+                            className="w-full text-sm font-semibold text-center p-3 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+                          >
+                            Link your phone number now
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <Dialog.Title
+                          as="h3"
+                          className="text-xl font-bold text-center py-1"
+                        >
+                          Link your World ID to continue using Ribbon Protocol
+                        </Dialog.Title>
+
+                        <div onClick={closeModal} className="py-2">
+                          <button
+                            type="submit"
+                            onClick={handleClick}
+                            className="w-full text-sm font-semibold text-center p-3 rounded-xl border-solid border-blue-500 border-2 transition-colors duration-100 focus-visible:duration-0 bg-blue-500 text-white hover:bg-blue-600 focus-visible:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+                          >
+                            Link your World ID now
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex flex-row gap-2 mt-2">
                       <Image
@@ -287,7 +334,7 @@ const Dashboard = () => {
               </div>
             </div>
           </Dialog>
-        </Transition>
+        </Transition> */}
       </div>
     </>
   );

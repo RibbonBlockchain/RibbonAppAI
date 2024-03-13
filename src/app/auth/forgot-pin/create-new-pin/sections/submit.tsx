@@ -3,16 +3,18 @@
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { useVerifyAuthPin } from "@/api/auth";
+import { usePhoneOnboard } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: request } = useVerifyAuthPin();
+  const { isPending, isSuccess, mutate: request } = usePhoneOnboard();
 
   const isLoading = isPending || isSuccess;
-  const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
+  const isFormInvalid =
+    !form.phoneNumber.trim() || !form.pin.trim() || !form.code;
+
   const isSubmitDisabled = isLoading || isFormInvalid;
 
   const onSuccess = () => {
@@ -21,7 +23,10 @@ const Submit = () => {
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    request({ pin: form.pin, phone: form.phoneNumber }, { onSuccess });
+    request(
+      { pin: form.pin, phone: form.phoneNumber, code: form.code },
+      { onSuccess }
+    );
   };
 
   return (
@@ -31,7 +36,7 @@ const Submit = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Sign In
+        Continue
       </Button>
     </div>
   );

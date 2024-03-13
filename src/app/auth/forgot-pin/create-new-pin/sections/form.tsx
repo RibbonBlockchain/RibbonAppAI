@@ -13,9 +13,6 @@ const FormInput = () => {
 
   return (
     <div>
-      <p className="text-sm text-slate-600 font-semibold mb-3">
-        Enter your 4 digit pin
-      </p>
       <OtpInput
         value={state.pin}
         setValue={setPin}

@@ -1,6 +1,6 @@
 export const highPriorityTask = [
   {
-    id: 1,
+    id: "verify-phone",
     score: 55,
     reward: 3,
     approximateTime: 2,
@@ -10,7 +10,7 @@ export const highPriorityTask = [
     completed: true,
   },
   {
-    id: 2,
+    id: "set-pin",
     score: 35,
     reward: 2,
     approximateTime: 1,
@@ -23,7 +23,7 @@ export const highPriorityTask = [
 
 export const priorityTask = [
   {
-    id: 1,
+    id: "complete-profile",
     score: 45,
     reward: 5,
     approximateTime: 5,
@@ -33,7 +33,7 @@ export const priorityTask = [
     completed: true,
   },
   {
-    id: 2,
+    id: "verify-identity",
     score: 55,
     reward: 7,
     approximateTime: 8,
@@ -46,7 +46,7 @@ export const priorityTask = [
 
 export const todo = [
   {
-    id: 3,
+    id: "emplyment-task",
     score: 15,
     reward: 5,
     approximateTime: 8,
@@ -57,7 +57,7 @@ export const todo = [
     completed: true,
   },
   {
-    id: 4,
+    id: "lifestyle-task",
     score: 70,
     reward: 5,
     approximateTime: 8,
@@ -71,7 +71,7 @@ export const todo = [
 
 export const surveys = [
   {
-    id: 1,
+    id: "health-survey",
     score: 45,
     reward: 5,
     approximateTime: 5,
@@ -82,7 +82,7 @@ export const surveys = [
     completed: true,
   },
   {
-    id: 2,
+    id: "verify-identity",
     score: 55,
     reward: 7,
     approximateTime: 8,

@@ -8,6 +8,7 @@ export type TResponse<T> = { data: T; message: string };
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const client = axios.create({ baseURL: `${baseURL}/v1` });
+console.log(client, "client here");
 
 export const onError = (error: any) => {
   const err = error.response?.data?.message;

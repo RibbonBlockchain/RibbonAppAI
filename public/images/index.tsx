@@ -7,5 +7,6 @@ import Bank from "./bank.svg";
 import Balance from "./cup.svg";
 import Profile from "./profile.svg";
 import Wallets from "./empty-wallet.svg";
+import MessageQuestion from "./message-question.svg";
 
-export { Profile, Wallets, Balance, Bank, Key };
+export { Profile, Wallets, Balance, Bank, Key, MessageQuestion };

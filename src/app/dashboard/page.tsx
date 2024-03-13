@@ -16,6 +16,7 @@ import { Bell, EyeOff, Sun, X } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import { todo, priorityTask, highPriorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
+import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -39,9 +40,13 @@ const Dashboard = () => {
   // link worldID
   const handleClick = () => signIn("worldcoin");
 
+  const is_walkthrough_open = true;
+
   return (
     <>
       <div className="w-full h-auto text-white bg-[#F5F5F5]">
+        {is_walkthrough_open && <UserWalkthrough />}
+
         <Image
           priority
           width={300}
@@ -90,6 +95,7 @@ const Dashboard = () => {
               </div>
             ) : (
               <div
+                id="link-worldID"
                 onClick={handleClick}
                 className="text-[#A81DA6] bg-white border-white w-full py-2.5 flex flex-row self-center items-center justify-center text-center text-base font-semibold gap-2 rounded-xl border-2"
               >
@@ -198,16 +204,19 @@ const Dashboard = () => {
             <p className="text-xs text-gradient-2 py-3 font-bold">
               High Priority task
             </p>
-            {highPriorityTask.map((i) => (
-              <Todo
-                key={i.id}
-                score={i.score}
-                reward={i.reward}
-                priority={i.priority}
-                taskTitle={i.taskTitle}
-                approximateTime={i.approximateTime}
-              />
-            ))}
+            <div>
+              {highPriorityTask.map((i) => (
+                <Todo
+                  key={i.id}
+                  id={i.id}
+                  score={i.score}
+                  reward={i.reward}
+                  priority={i.priority}
+                  taskTitle={i.taskTitle}
+                  approximateTime={i.approximateTime}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="w-full">

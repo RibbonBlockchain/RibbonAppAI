@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import FooterNav from "@/containers/dashboard/footer-nav";
 import { usePathname } from "next/navigation";
+import FooterNav from "@/containers/dashboard/footer-nav";
 
 const CustomLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();

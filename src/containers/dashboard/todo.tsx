@@ -1,16 +1,18 @@
 import React from "react";
 import Image from "next/image";
-import { Clock4, Coins } from "lucide-react";
+import { Clock4 } from "lucide-react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import CoinSVG from "../../../public/images/coin";
+import { GroupSVG } from "../../../public/images";
 
 type Props = {
   score: number;
   reward: number;
   taskTitle: string;
-  priority?: number;
+  priority?: boolean;
   approximateTime: number;
   completed?: boolean;
+  icon: string | undefined;
 
   ratings?: number;
   ratingsLevel?: string;
@@ -20,22 +22,21 @@ const Todo = (props: Props) => {
   return (
     <div
       className={`${
-        props.priority === 1
-          ? "bg-[#FFD2CF]"
-          : props.priority === 2
-          ? "bg-[#D8EBFF]"
-          : props.priority === 3
-          ? "bg-[#EAF7ED]"
-          : props.completed
-          ? "bg-[#E8E8E8]"
-          : "bg-white"
+        props.priority
+          ? "bg-[#EDE8F5]"
+          : "bg-white border-[1px] border-[#E8E8E8]"
       }   w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
     >
       <div className="flex flex-row items-start justify-start text-black gap-1">
+        {props.icon === undefined && <></>}
+        {props.icon && (
+          <Image src={props.icon} alt="icons" height={32} width={32} />
+        )}
+
         <div className="flex flex-col text-xs gap-[3px]">
           <p className="font-extrabold bre">{props.taskTitle}</p>
           <div className="flex flex-row items-center">
-            <p className="text-[#626262] mr-1.5">Score +{props.score} pts</p>
+            <p className="text-[#434343] mr-1.5">Score +{props.score} pts</p>
             <ProgressBar
               height="7px"
               width="60px"
@@ -63,26 +64,13 @@ const Todo = (props: Props) => {
             {props.approximateTime} <span className="font-normal">mins</span>
           </p>
         </div>
-
-        {/* {props.completed && (
-          <div className="flex items-center text-[#F59E0B] gap-[3px] text-[10px]">
-            <Clock4 size={10} stroke="#F59E0B" strokeWidth={"4px"} />~
-            <p className="font-extrabold ">pending</p>
-          </div>
-        )} */}
       </div>
       <div className="flex flex-col gap-[3px]">
         <p className="text-[#626262] text-xs font-medium self-end">Reward</p>
         <div
-          className={`${
-            props.priority ? "text-[#4385F5]" : "text-[#A81DA6]"
-          } flex flex-row gap-1 items-center self-end text-sm font-black`}
+          className={`text-[#4B199C] flex flex-row gap-1 items-center self-end text-sm font-black`}
         >
-          <CoinSVG
-            width={12}
-            height={13}
-            fill={`${props.priority ? "#4385F5" : "#A81DA6"}`}
-          />
+          <CoinSVG width={12} height={13} fill={`#4B199C`} />
           {props.reward} WLD
         </div>
         {props.ratings && (

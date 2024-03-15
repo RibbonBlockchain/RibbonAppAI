@@ -5,9 +5,9 @@ import Survey from "@/containers/dashboard/survey";
 
 const InProgress = () => {
   return (
-    <div className="p-4 sm:p-6 ">
+    <div className="p-4 sm:p-6">
       <div className="w-full">
-        <p className="text-xs text-gradient-2 py-3 font-bold">Priority task</p>
+        <p className="text-xs py-3 font-bold">Priority task</p>
         {priorityTask.map((i) => (
           <Todo
             key={i.id}
@@ -16,14 +16,13 @@ const InProgress = () => {
             priority={i.priority}
             taskTitle={i.taskTitle}
             approximateTime={i.approximateTime}
+            icon={""}
           />
         ))}
       </div>
 
       <div className="w-full">
-        <p className="text-xs text-gradient-2 pt-5 pb-3 font-bold">
-          To do List
-        </p>
+        <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
         {todo.map((i) => (
           <Todo
             key={i.id}
@@ -33,14 +32,13 @@ const InProgress = () => {
             approximateTime={i.approximateTime}
             ratings={i.ratings}
             ratingsLevel={i.ratingsLevel}
+            icon={""}
           />
         ))}
       </div>
 
       <div className="w-full">
-        <p className="text-xs text-gradient-2 pt-5 pb-3 font-bold">
-          Exclusive Surveys
-        </p>
+        <p className="text-xs pt-5 pb-3 font-bold">Exclusive Surveys</p>
         <Survey />
         <Survey />
         <Survey />

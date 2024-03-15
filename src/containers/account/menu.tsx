@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { ChevronRight, Sun } from "lucide-react";
-import { Balance, Bank, Key, Profile, Wallets } from "../../../public/images";
+import {
+  Key,
+  Bank,
+  FAQs,
+  Balance,
+  Profile,
+  Wallets,
+  Feedback,
+  ContactUs,
+  PrivacyPolicy,
+  TermsOfService,
+} from "../../../public/images";
 
 export const ProfileDetails = [
   {
@@ -31,10 +42,33 @@ export const Settings = [
     description: "Link bank account",
     logo: <Bank />,
   },
+];
+
+export const Support = [
   {
     href: "#",
-    description: "Dark Mode",
-    logo: <Sun />,
+    description: "Contact Us",
+    logo: <ContactUs />,
+  },
+  {
+    href: "#",
+    description: "Feedback",
+    logo: <Feedback />,
+  },
+  {
+    href: "#",
+    description: "FAQs",
+    logo: <FAQs />,
+  },
+  {
+    href: "#",
+    description: "Terms of Service",
+    logo: <TermsOfService />,
+  },
+  {
+    href: "#",
+    description: "Privacy Policy",
+    logo: <PrivacyPolicy />,
   },
 ];
 

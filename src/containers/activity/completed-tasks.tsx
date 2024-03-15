@@ -68,7 +68,7 @@ const CompletedTasks = () => {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
 
   return (
-    <div className="p-4 sm:p-6 ">
+    <div className="p-4 sm:p-6">
       <div className="flex flex-col mb-6 max-w-[320px]">
         <div className="my-2 py-2 flex flex-row items-end justify-between">
           <div className="flex flex-col relative">

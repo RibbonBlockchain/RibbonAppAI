@@ -42,7 +42,7 @@ const FooterNav = () => {
             }}
             className={clsx(
               `flex flex-row gap-3 py-3 px-3 sm:px-5 rounded-full items-center justify-center`,
-              pathname.includes(route) && "bg-[#6200EE]"
+              pathname.includes(route) && "bg-[#080808]"
             )}
           >
             {pathname.includes(route) ? icon : iconFilled}

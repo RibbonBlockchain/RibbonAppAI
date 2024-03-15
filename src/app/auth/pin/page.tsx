@@ -17,7 +17,7 @@ const Login = () => {
             Enter your pin!
           </h1>
           <p className="text-sm text-slate-600">
-            Welcome back. Enter your pin access your dashboard.
+            Enter your pin access your dashboard.
           </p>
         </div>
 
@@ -27,7 +27,7 @@ const Login = () => {
 
         <Link
           href="/auth/forgot-pin/reset-pin"
-          className="text-sm text-end text-[#6200EE] underline mt-5"
+          className="text-sm text-end text-[#6200EE] underline mt-5 mr-10"
         >
           Forgot Pin?
         </Link>

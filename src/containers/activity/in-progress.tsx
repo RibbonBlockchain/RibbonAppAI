@@ -5,7 +5,7 @@ import Survey from "@/containers/dashboard/survey";
 
 const InProgress = () => {
   return (
-    <div className="p-4 sm:p-6 ">
+    <div className="p-4 sm:p-6">
       <div className="w-full">
         <p className="text-xs py-3 font-bold">Priority task</p>
         {priorityTask.map((i) => (

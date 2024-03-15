@@ -4,6 +4,7 @@ import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
+import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 import Todo from "@/containers/dashboard/todo";
@@ -27,16 +28,18 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="w-full h-auto text-[#080808] bg-[#fffefe]">
-        <div className="relative p-4 sm:p-6 mx-auto flex flex-col items-center justify-center content-center">
+      <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
+        <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <div className="w-full flex flex-row mt-2 py-1 items-start justify-between">
             <RibbonLight />
             <div className="flex flex-row items-center justify-center gap-3">
-              <Bell
-                fill="black"
-                stroke="black"
-                className="bg-[#EDE8F5] rounded-full p-[2px]"
-              />
+              <Link href="/dashboard/notifications">
+                <Bell
+                  fill="black"
+                  stroke="black"
+                  className="bg-[#EDE8F5] rounded-full p-[2px]"
+                />
+              </Link>
               <Moon
                 fill="black"
                 stroke="black"

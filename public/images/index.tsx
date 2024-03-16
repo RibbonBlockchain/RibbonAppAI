@@ -16,6 +16,7 @@ import RibbonLight from "./ribbon-light.svg";
 import PrivacyPolicy from "./privacy-policy.svg";
 import NotificationsIcon from "./notifications.svg";
 import TermsOfService from "./terms-of-service.svg";
+import MessageQuestion from "./message-question.svg";
 
 export {
   Key,
@@ -31,5 +32,6 @@ export {
   RibbonLight,
   PrivacyPolicy,
   TermsOfService,
+  MessageQuestion,
   NotificationsIcon,
 };

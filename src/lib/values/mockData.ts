@@ -1,19 +1,19 @@
 export const priorityTask = [
   {
-    id: 1,
+    id: "complete-profile",
     score: 45,
     reward: 5,
     approximateTime: 5,
     bgColor: "bg-[#D8EBFF]",
-    taskTitle: "Complete your profile",
+    taskTitle: "Complete profile",
     priority: true,
     completed: true,
     icon: "/images/complete-profile-d.svg",
   },
   {
-    id: 2,
+    id: "verify-identity",
     score: 55,
-    reward: 7,
+    reward: 5,
     approximateTime: 8,
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
@@ -25,7 +25,7 @@ export const priorityTask = [
 
 export const todo = [
   {
-    id: 3,
+    id: "emplyment-task",
     score: 15,
     reward: 5,
     approximateTime: 8,
@@ -36,7 +36,7 @@ export const todo = [
     completed: true,
   },
   {
-    id: 4,
+    id: "lifestyle-task",
     score: 70,
     reward: 5,
     approximateTime: 8,
@@ -50,7 +50,7 @@ export const todo = [
 
 export const surveys = [
   {
-    id: 1,
+    id: "health-survey",
     score: 45,
     reward: 5,
     approximateTime: 5,
@@ -61,12 +61,13 @@ export const surveys = [
     completed: true,
   },
   {
-    id: 2,
-    score: 55,
-    reward: 7,
-    approximateTime: 8,
-    bgColor: "bg-[#FFE9E7]",
-    taskTitle: "Verify your identity",
+    id: "health-survey",
+    score: 45,
+    reward: 5,
+    approximateTime: 5,
+    bgColor: "bg-[#D8EBFF]",
+    surveyTitle: "HEALTH SURVEYS",
+    surveyDescription: "Complete 5 surveys and Earn more tokens",
     priority: false,
     completed: true,
   },

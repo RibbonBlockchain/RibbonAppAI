@@ -14,6 +14,7 @@ import Survey from "@/containers/dashboard/survey";
 import Topbar from "@/containers/dashboard/top-bar";
 import { todo, priorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
+import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
@@ -22,13 +23,17 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(25);
   const [reward, setReward] = useState(true);
 
+  const is_walkthrough_open = true;
+
   let points = 155;
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
 
   return (
     <>
-      <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
+      <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-[14px] sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
+          {is_walkthrough_open && <UserWalkthrough />}
+
           <Topbar />
           <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-6 flex flex-col">
             <div className="flex flex-row items-center justify-between">
@@ -40,7 +45,7 @@ const Dashboard = () => {
                   ) : (
                     <EyeOff
                       onClick={toggleHideBalance}
-                      fill="black"
+                      fill="white"
                       size={16}
                     />
                   )}
@@ -50,7 +55,10 @@ const Dashboard = () => {
                   {hideBalance ? "*****" : `${balance} WLD`}
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center">
+              <div
+                id="withdraw-tokens"
+                className="flex flex-col items-center justify-center"
+              >
                 <div className="w-[71px] sm:w-[71px] flex flex-col justify-center mb-2">
                   <CircularProgressbarWithChildren
                     styles={buildStyles({
@@ -118,6 +126,7 @@ const Dashboard = () => {
                 priority={i.priority}
                 taskTitle={i.taskTitle}
                 approximateTime={i.approximateTime}
+                id={i.id}
               />
             ))}
           </div>
@@ -136,6 +145,7 @@ const Dashboard = () => {
                 approximateTime={i.approximateTime}
                 ratings={i.ratings}
                 ratingsLevel={i.ratingsLevel}
+                id={i.id}
               />
             ))}
           </div>

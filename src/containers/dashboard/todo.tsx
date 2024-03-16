@@ -7,6 +7,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 type Props = {
   score: number;
   reward: number;
+  id: string;
   taskTitle: string;
   priority?: boolean;
   approximateTime: number;
@@ -20,6 +21,7 @@ type Props = {
 const Todo = (props: Props) => {
   return (
     <div
+      id={props.id}
       className={`${
         props.priority
           ? "bg-[#EDE8F5]"

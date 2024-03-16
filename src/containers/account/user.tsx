@@ -4,17 +4,8 @@ import CoinSVG from "../../../public/images/coin";
 
 const User = () => {
   return (
-    <div className="bg-gradient-to-br from-[#EFE4FF] to-[#FFFFFF] flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
-      <Image
-        priority
-        width={1}
-        height={1}
-        alt="avatar"
-        src="/images/left-adobe.jpg"
-        className="self-end"
-      />
-
-      <div className="flex flex-col items-center justify-center gap-1">
+    <div className="bg-account bg-cover flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
+      <div className="flex flex-col mx-auto items-center justify-center gap-1">
         <div className="relative flex flex-row">
           <Image
             priority
@@ -38,14 +29,6 @@ const User = () => {
           25 WLD
         </div>
       </div>
-
-      <Image
-        priority
-        width={1}
-        height={1}
-        alt="avatar"
-        src="/images/right-adobe.jpg"
-      />
     </div>
   );
 };

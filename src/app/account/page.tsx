@@ -1,3 +1,5 @@
+"use client";
+
 import Menu, {
   Support,
   Settings,
@@ -6,15 +8,17 @@ import Menu, {
 import React from "react";
 import User from "@/containers/account/user";
 import { LogOut } from "../../../public/images";
-import { ChevronRight, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import InviteFriends from "@/containers/account/invite-friends";
+import SwitchButton from "@/containers/account/switch-button";
 
 const Account = () => {
+  const [theme, setTheme] = React.useState(false);
+
   return (
     <div className="bg-white min-h-screen p-4 sm:p-6">
       <h1 className="text-2xl font-extrabold mt-3">My Account</h1>
       <User />
-
       <InviteFriends />
 
       <div className="mt-2 flex flex-col gap-[2px]">
@@ -42,13 +46,25 @@ const Account = () => {
           />
         ))}
         <div>
-          <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
-            <div className="flex flex-row items-center justify-center gap-3">
-              <Sun />
-              <p className="text-base font-medium">Dark Mode</p>
-            </div>
-            <ChevronRight stroke="#6200EE" />
+          <div
+            onClick={() => setTheme(!theme)}
+            className="flex flex-row items-center justify-between py-3 px-[6px] "
+          >
+            {theme ? (
+              <div className="flex flex-row items-center justify-center gap-3">
+                <Sun />
+                <p className="text-base font-medium">Dark Mode</p>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-center gap-3">
+                <Moon />
+                <p className="text-base font-medium">Light Mode</p>
+              </div>
+            )}
+
+            <SwitchButton />
           </div>
+
           <hr />
         </div>
       </div>

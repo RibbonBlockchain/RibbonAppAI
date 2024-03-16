@@ -12,7 +12,7 @@ const FormInput = () => {
 
   const handleRequest = () => {
     if (isRequesting) return;
-    request({ phone: state.phoneNumber } as any);
+    // request({ phone: state.phoneNumber });
   };
 
   return (

@@ -3,32 +3,25 @@
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { usePhoneSignUpPin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import phoneValidator from "validator/lib/isMobilePhone";
+import { useVerifyPhoneSignUp } from "@/api/auth";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: request } = usePhoneSignUpPin();
+  const { mutate: verify, isPending, isSuccess } = useVerifyPhoneSignUp();
 
   const isLoading = isPending || isSuccess;
+  const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
+  const isSubmitDisabled = isFormInvalid || isLoading;
 
-  const isValidPhoneNumber =
-    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
-
-  const isFormInvalid = !isValidPhoneNumber;
-  const isSubmitDisabled = isLoading || isFormInvalid;
-
-  const onSuccess = (data: any) => {
-    if (data?.exists) {
-      router.push("/auth/forgot-pin/verify");
-    }
+  const onSuccess = () => {
+    router.push("/auth/signup/pin");
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    request({ phone: form.phoneNumber } as any, { onSuccess });
+    verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
   };
 
   return (

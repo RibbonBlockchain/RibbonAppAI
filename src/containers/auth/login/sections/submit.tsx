@@ -2,15 +2,15 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
+import { useCheckPhone } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { usePhoneSignUpPin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: request } = usePhoneSignUpPin();
+  const { mutate: check, isPending, isSuccess } = useCheckPhone();
 
   const isLoading = isPending || isSuccess;
 
@@ -20,15 +20,11 @@ const Submit = () => {
   const isFormInvalid = !isValidPhoneNumber;
   const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = (data: any) => {
-    if (data?.exists) {
-      router.push("/auth/forgot-pin/verify");
-    }
-  };
+  const onSuccess = () => router.push("/auth/pin");
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    request({ phone: form.phoneNumber } as any, { onSuccess });
+    check({ phone: form.phoneNumber }, { onSuccess });
   };
 
   return (

@@ -8,12 +8,13 @@ import Image from "next/image";
 import { EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import Todo from "@/containers/dashboard/todo";
-import CoinSVG from "../../../public/images/coin";
 import LinkButton from "@/components/button/link";
 import Survey from "@/containers/dashboard/survey";
 import Topbar from "@/containers/dashboard/top-bar";
+import CoinSVG from "../../../../public/images/coin";
 import { todo, priorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
@@ -26,7 +27,7 @@ const Dashboard = () => {
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
 
   return (
-    <>
+    <AuthNavLayout>
       <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
@@ -150,7 +151,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </>
+    </AuthNavLayout>
   );
 };
 

@@ -1,3 +1,4 @@
+export type TGetAuth = { enabled?: boolean };
 export type TCheckPhoneBody = { phone: string };
 export type TPhoneSignUpRequestBody = { phone: string };
 export type TPhoneLoginBody = { phone: string; pin: string };

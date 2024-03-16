@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import InProgress from "../../containers/activity/in-progress";
-import CompletedTasks from "../../containers/activity/completed-tasks";
+import InProgress from "@/containers/activity/in-progress";
+import CompletedTasks from "@/containers/activity/completed-tasks";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Activity = () => {
   const [activeTab, setActiveTab] = React.useState("in-progress");
@@ -12,7 +13,7 @@ const Activity = () => {
   };
 
   return (
-    <>
+    <AuthNavLayout>
       <div className="bg-[#F9F9F9] min-h-screen">
         <div className="bg-white  p-4 sm:p-6">
           <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
@@ -52,7 +53,7 @@ const Activity = () => {
 
         {activeTab === "completed" ? <CompletedTasks /> : <InProgress />}
       </div>
-    </>
+    </AuthNavLayout>
   );
 };
 

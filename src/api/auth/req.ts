@@ -2,13 +2,23 @@ import {
   TPhoneLoginBody,
   TCheckPhoneBody,
   TCheckPhoneResponse,
+  TPhoneSignPinUpBody,
   TPhoneLoginResponse,
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
   TPhoneSignUpRequestResponse,
-  TPhoneSignPinUpBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
+
+export const getAuth = async () => {
+  const res = await client.get<TResponse<any>>("/auth");
+  return res.data.data;
+};
+
+export const logout = async () => {
+  const res = await client.post("/auth/logout");
+  return res.data.data;
+};
 
 export const checkPhone = async (body: TCheckPhoneBody) => {
   const res = await client.post<TResponse<TCheckPhoneResponse>>(

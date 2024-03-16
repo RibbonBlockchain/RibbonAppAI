@@ -28,7 +28,7 @@ const PublicAuthLayout = ({ children }: Props) => {
   React.useEffect(() => {
     if (isLoading || noToken) return;
     if (data?.id) router.push("/dashboard");
-  }, [data?.id, router]);
+  }, [data?.id, router, noToken, isLoading]);
 
   if (!hasMounted || isServer || isLoggedIn || isLoading) return <PageLoader />;
 

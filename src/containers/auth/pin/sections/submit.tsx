@@ -2,33 +2,26 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
+import { usePhoneLogin } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { usePhoneSignUpPin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: request } = usePhoneSignUpPin();
+  const { isPending, isSuccess, mutate: login } = usePhoneLogin();
 
   const isLoading = isPending || isSuccess;
-
-  const isValidPhoneNumber =
-    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
-
-  const isFormInvalid = !isValidPhoneNumber;
+  const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
   const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = (data: any) => {
-    if (data?.exists) {
-      router.push("/auth/forgot-pin/verify");
-    }
+  const onSuccess = () => {
+    router.push("/dashboard");
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    request({ phone: form.phoneNumber } as any, { onSuccess });
+    login({ pin: form.pin, phone: form.phoneNumber }, { onSuccess });
   };
 
   return (
@@ -38,7 +31,7 @@ const Submit = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Continue
+        Sign In
       </Button>
     </div>
   );

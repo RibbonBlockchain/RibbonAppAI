@@ -1,5 +1,5 @@
 import React from "react";
-import BackArrow from "@/app/auth/login/sections/back";
+import BackArrowButton from "@/components/button/back-arrow";
 import NoNotification from "@/containers/notifications/no-notification";
 
 const Notifications = () => {
@@ -8,7 +8,7 @@ const Notifications = () => {
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-row items-center justify-start">
-        <BackArrow />
+        <BackArrowButton />
         <h1 className="flex text-2xl font-bold self-center ml-6">
           Notifications
         </h1>

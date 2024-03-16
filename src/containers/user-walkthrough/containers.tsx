@@ -53,12 +53,15 @@ export const WorldID = () => {
           Humanity helped launch Worldcoin, and currently serve as advisors to
           the Foundation and operators of the World App.
         </h2>
+        <a href="#" className="py-2 text-gradient-2  underline">
+          Link World ID
+        </a>
       </div>
     </div>
   );
 };
 
-export const VerifyPhone = () => {
+export const CompleteProfile = () => {
   return (
     <div className="flex flex-col items-center w-auto max-w-[320px] mx-auto">
       <div className="h-auto rounded-md ">
@@ -67,7 +70,7 @@ export const VerifyPhone = () => {
           height={90}
           alt="verify-phone"
           className="w-auto"
-          src="/images/verify-phone.svg"
+          src="/images/complete-profile.svg"
         />
       </div>
 
@@ -76,14 +79,15 @@ export const VerifyPhone = () => {
           Quick tips <MessageQuestion />
         </h1>
         <h2 className="text-xs font-normal text-center">
-          Complete high priority task to unlock more rewards
+          You need to complete your profile to unlock more rewards & tasks to
+          claim tokens
         </h2>
       </div>
     </div>
   );
 };
 
-export const SetPin = () => {
+export const VerifyIdentity = () => {
   return (
     <div className="flex flex-col items-center w-auto max-w-[320px] mx-auto">
       <div className="h-auto rounded-md flex flex-row gap-2">
@@ -92,7 +96,7 @@ export const SetPin = () => {
           height={90}
           alt="verify-phone"
           className="w-auto"
-          src="/images/set-pin.svg"
+          src="/images/verify-identity.svg"
         />
       </div>
 
@@ -101,7 +105,33 @@ export const SetPin = () => {
           Quick tips <MessageQuestion />
         </h1>
         <h2 className="text-xs font-normal text-center">
-          Complete high priority task to unlock more rewards
+          You need to verify your identity to unlock more rewards & tasks to
+          claim tokens
+        </h2>
+      </div>
+    </div>
+  );
+};
+
+export const WithdrawTokens = () => {
+  return (
+    <div className="flex flex-col items-center w-auto max-w-[320px] mx-auto">
+      <div className="h-auto rounded-md flex flex-row gap-2">
+        <Image
+          width={2400}
+          height={90}
+          alt="verify-phone"
+          className="w-auto"
+          src="/images/withdraw-tokens.svg"
+        />
+      </div>
+
+      <div className="flex flex-col text-start gap-2 mt-2">
+        <h1 className="text-base text-center font-bold flex flex-row items-center justify-center gap-1">
+          Quick tips <MessageQuestion />
+        </h1>
+        <h2 className="text-xs font-normal text-center">
+          You need to reach 1000 points to be able to withdraw your tokens{" "}
         </h2>
       </div>
     </div>
@@ -110,7 +140,7 @@ export const SetPin = () => {
 
 export const LetsGoBtn = () => {
   return (
-    <strong className="w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-[#6200EE] py-2 px-3  text-sm  rounded-md">
+    <strong className="w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-2 px-3  text-sm  rounded-md">
       Let&apos;s go
     </strong>
   );
@@ -126,7 +156,7 @@ export const Previous = () => {
 
 export const Next = () => {
   return (
-    <strong className=" w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-[#6200EE] py-2 px-3  text-sm rounded-md   ">
+    <strong className=" w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-2 px-3  text-sm rounded-md   ">
       Next
     </strong>
   );
@@ -147,9 +177,9 @@ export const GetStarted = () => {
   return (
     <strong
       onClick={() => {}}
-      className=" w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-[#6200EE] py-2 px-3  text-sm rounded-md   "
+      className=" w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-2 px-3  text-sm rounded-md   "
     >
-      Get Started
+      Do it later
     </strong>
   );
 };

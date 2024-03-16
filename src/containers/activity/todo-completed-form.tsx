@@ -8,7 +8,7 @@ type Props = {
   score: number;
   reward: number;
   taskTitle: string;
-  priority?: number;
+  priority?: boolean;
   approximateTime: number;
   completed?: boolean;
 

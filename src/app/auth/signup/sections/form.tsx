@@ -16,13 +16,15 @@ const FormInput = () => {
     setState((prev) => ({ ...prev, phoneNumber }));
   };
 
+  const country = state.country ? JSON.parse(state.country)?.code : null;
+
   return (
     <>
       <CountrySelect value={state.country} setValue={setCountry} />
       <PhoneInput
         value={state.phoneNumber}
         setValue={setPhoneNumber}
-        country={JSON.parse(state.country)?.code}
+        country={country}
       />
     </>
   );

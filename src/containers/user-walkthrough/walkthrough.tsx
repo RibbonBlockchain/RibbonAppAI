@@ -1,16 +1,17 @@
-import dynamic from "next/dynamic";
-import { Step } from "react-joyride";
 import {
-  GetStarted,
-  LetsGoBtn,
   Next,
-  Previous,
-  SetPin,
   Skip,
-  VerifyPhone,
   Welcome,
   WorldID,
+  Previous,
+  LetsGoBtn,
+  GetStarted,
+  VerifyIdentity,
+  CompleteProfile,
+  WithdrawTokens,
 } from "./containers";
+import dynamic from "next/dynamic";
+import { Step } from "react-joyride";
 
 // using dynamic import for ReactJoyride to prevent hydration issues
 const ReactJoyride = dynamic(() => import("react-joyride"), { ssr: false });
@@ -27,24 +28,34 @@ export const steps: Step[] = [
   },
 
   {
-    content: <VerifyPhone />,
+    content: <CompleteProfile />,
     locale: {
       skip: "",
       next: <Next />,
       back: <Previous />,
     },
-    target: "#verify-phone",
+    target: "#complete-profile",
     placement: "bottom",
   },
 
   {
-    content: <SetPin />,
+    content: <VerifyIdentity />,
     locale: {
       skip: "",
       next: <Next />,
       back: <Previous />,
     },
-    target: "#set-pin",
+    target: "#verify-identity",
+    placement: "bottom",
+  },
+  {
+    content: <WithdrawTokens />,
+    locale: {
+      skip: "",
+      next: <Next />,
+      back: <Previous />,
+    },
+    target: "#withdraw-tokens",
     placement: "bottom",
   },
   {
@@ -53,8 +64,8 @@ export const steps: Step[] = [
       back: <Previous />,
       last: <GetStarted />,
     },
-    target: "#link-worldID",
-    placement: "bottom",
+    target: "body",
+    placement: "center",
   },
 ];
 
@@ -68,7 +79,7 @@ export const UserWalkthrough = () => {
       hideCloseButton
       scrollToFirstStep
       callback={() => {}}
-      showProgress={false}
+      showProgress={true}
       styles={{
         options: {
           arrowColor: "transparent",

@@ -1,6 +1,8 @@
+"use client";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import BackArrowButton from "@/components/button/back-arrow";
 
 export default function Questionnaire() {
   return (
@@ -16,9 +18,10 @@ export default function Questionnaire() {
       </div>
 
       {/* main */}
-      <div>
-        <ArrowLeft />
-        <div className="flex justify-center">
+      <div className="relative">
+        <BackArrowButton />
+
+        <div className="flex justify-center relative">
           <Image
             src="/images/questionnaire/questions.svg"
             alt="question"
@@ -103,8 +106,8 @@ export default function Questionnaire() {
         </div>
       </div>
 
-      <div className="mt-10 w-full bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg">
-        <Link href="/questuinnaire/sign-in" className="">
+      <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-4">
+        <Link href="/dashboard/questionnaire/sign-in" className="">
           Start Questionnaire
         </Link>
       </div>

@@ -1,26 +1,3 @@
-export const highPriorityTask = [
-  {
-    id: 1,
-    score: 55,
-    reward: 3,
-    approximateTime: 2,
-    bgColor: "bg-[#FFD2CF]",
-    taskTitle: "Verify your phone number",
-    priority: 1,
-    completed: true,
-  },
-  {
-    id: 2,
-    score: 35,
-    reward: 2,
-    approximateTime: 1,
-    bgColor: "bg-[#FFD2CF]",
-    taskTitle: "Set up your pin",
-    priority: 1,
-    completed: true,
-  },
-];
-
 export const priorityTask = [
   {
     id: 1,
@@ -29,8 +6,9 @@ export const priorityTask = [
     approximateTime: 5,
     bgColor: "bg-[#D8EBFF]",
     taskTitle: "Complete your profile",
-    priority: 2,
+    priority: true,
     completed: true,
+    icon: "/images/complete-profile-d.svg",
   },
   {
     id: 2,
@@ -39,8 +17,9 @@ export const priorityTask = [
     approximateTime: 8,
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
-    priority: 3,
+    priority: true,
     completed: true,
+    icon: "/images/group.svg",
   },
 ];
 
@@ -78,7 +57,7 @@ export const surveys = [
     bgColor: "bg-[#D8EBFF]",
     surveyTitle: "HEALTH SURVEYS",
     surveyDescription: "Complete 5 surveys and Earn more tokens",
-    priority: 1,
+    priority: false,
     completed: true,
   },
   {
@@ -88,7 +67,7 @@ export const surveys = [
     approximateTime: 8,
     bgColor: "bg-[#FFE9E7]",
     taskTitle: "Verify your identity",
-    priority: 2,
+    priority: false,
     completed: true,
   },
 ];

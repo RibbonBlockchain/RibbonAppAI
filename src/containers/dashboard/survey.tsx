@@ -8,7 +8,7 @@ const Survey = () => {
   let completed = "1";
 
   return (
-    <div className="bg-[#FFE9E7] w-full text-black p-4 flex flex-row gap-3 self-start items-center justify-between rounded-lg mb-3">
+    <div className="bg-[#FFF] border-[1px] border-[#E8E8E8] w-full text-black p-4 flex flex-row gap-3 self-start items-center justify-between rounded-lg mb-3">
       <div className="flex flex-col gap-3">
         <div className="flex flex-row gap-6">
           <p className="text-xs font-medium"> HEALTH SURVEYS</p>

@@ -34,11 +34,11 @@ const getOption = (value: TCountry) => ({
     <div className="p-3 rounded-xl flex gap-4 items-center">
       <ReactCountryFlag
         svg
-        countryCode={value.code}
+        countryCode={value?.code}
         className="!w-7 !h-7 rounded-full object-cover"
       />
 
-      <span className="text-slate-700 text-md">{value.name}</span>
+      <span className="text-slate-700 text-md">{value?.name}</span>
     </div>
   ),
 });
@@ -46,13 +46,14 @@ const getOption = (value: TCountry) => ({
 const options = countries.map((value: TCountry) => getOption(value));
 
 const CountrySelect = ({ value, setValue }: Props) => {
+  const parsedValue = value ? JSON.parse(value) : null;
   return (
     <ReactSelect
       unstyled
       isSearchable
       options={options}
       instanceId="auth-country-select"
-      value={getOption(JSON.parse(value))}
+      value={getOption(parsedValue)}
       components={{ MenuList: CustomMenuList }}
       onChange={(option) => setValue(option?.value!)}
       classNames={{

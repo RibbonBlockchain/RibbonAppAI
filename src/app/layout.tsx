@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import RootProvider from "@/provider";
 import localFont from "next/font/local";
-import CustomLayout from "./layout-custom";
 
 export const metadata: Metadata = {
   title: "Ribbon Protocol",
@@ -24,7 +23,7 @@ const RootLayout = async ({
       <body className="h-full">
         <RootProvider>
           <main className="w-full max-w-[500px] h-[inherit] mx-auto">
-            <CustomLayout>{children}</CustomLayout>
+            {children}
           </main>
         </RootProvider>
       </body>

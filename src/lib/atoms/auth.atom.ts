@@ -41,7 +41,7 @@ export const authAtom = atom({
   country: JSON.stringify(countries?.[0]),
 });
 
-export const logoutAtom = atom(null, (_, set, _u) => {
+export const logoutAtom = atom(null, (_, set) => {
   removeToken();
   return set(authAtom, initialState);
 });

@@ -48,7 +48,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetTime }) => {
 
   return (
     <>
-      <div className="flex flex-row gap-1 items-center justify-center ">
+      <div className="flex flex-row text-black gap-1 items-center justify-center ">
         <CountdownBox value={timeLeft.hours} />
         :
         <CountdownBox value={timeLeft.minutes} />

@@ -15,6 +15,7 @@ const OtpInput = ({
   setValue,
   fieldClassName,
   separatorClassName,
+  inputType = "number",
   ...props
 }: Props) => {
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
@@ -27,6 +28,7 @@ const OtpInput = ({
     <ReactOtpInput
       value={value}
       onChange={setValue}
+      inputType={inputType}
       onPaste={handlePaste}
       containerStyle={{ display: "flex", alignItems: "center" }}
       renderSeparator={() => (

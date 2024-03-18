@@ -1,37 +1,88 @@
 import {
-  TPhoneAuthBody,
-  TPhoneOnboardBody,
-  TVerifyAuthPinBody,
-  TVerifyPhoneAuthBody,
+  logout,
+  getAuth,
+  checkPhone,
+  phoneLogin,
+  phoneSignUpPin,
+  verifyPhoneSignUp,
+  phoneSignUpRequest,
+} from "./req";
+
+import {
+  TGetAuth,
+  TCheckPhoneBody,
+  TPhoneLoginBody,
+  TPhoneSignPinUpBody,
+  TVerifyPhoneSignUpBody,
+  TPhoneSignUpRequestBody,
 } from "./types";
-import { useAtom } from "jotai";
+
+import {
+  authAtom,
+  logoutAtom,
+  prepareRequestHeader,
+} from "@/lib/atoms/auth.atom";
+import { useAtom, useAtomValue } from "jotai";
 import toast from "react-hot-toast";
-import { onError } from "../api-client";
-import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { onError, onSuccess } from "../api-client";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { SUCCESS, TOKEN_KEY } from "@/lib/values/constants";
-import { phoneAuth, phoneOnboard, verifyAuthPin, verifyPhoneAuth } from "./req";
-import { authAtom, prepareRequestHeader } from "@/lib/atoms/auth.atom";
 
-export const usePhoneAuth = () => {
+export const useGetAuth = ({ enabled }: TGetAuth = { enabled: false }) => {
+  return useQuery({ enabled, queryKey: ["auth"], queryFn: () => getAuth() });
+};
+
+export const useLogout = () => {
+  const id = "auth";
+  const router = useRouter();
+  const [_, removeToken] = useAtom(logoutAtom);
+
+  const handleLogout = () => {
+    removeToken();
+    router.push("/");
+  };
+
   return useMutation({
-    onError,
-    mutationFn: (body: TPhoneAuthBody) => phoneAuth(body),
+    mutationFn: logout,
+    onError: () => {
+      onError(null);
+      handleLogout();
+    },
+    onSuccess: () => {
+      onSuccess(id);
+      handleLogout();
+    },
   });
 };
 
-export const useOnboardOTPVerify = () => {
+export const useCheckPhone = () => {
   return useMutation({
     onError,
-    mutationFn: (body: TVerifyPhoneAuthBody) => verifyPhoneAuth(body),
+    mutationFn: (body: TCheckPhoneBody) => checkPhone(body),
   });
 };
 
-export const useVerifyAuthPin = () => {
+export const usePhoneSignUpRequest = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TPhoneSignUpRequestBody) => phoneSignUpRequest(body),
+  });
+};
+
+export const useVerifyPhoneSignUp = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TVerifyPhoneSignUpBody) => verifyPhoneSignUp(body),
+  });
+};
+
+export const usePhoneSignUpPin = () => {
   const [_, setAuth] = useAtom(authAtom);
 
   return useMutation({
     onError,
-    mutationFn: (body: TVerifyAuthPinBody) => verifyAuthPin(body),
+    mutationFn: (body: TPhoneSignPinUpBody) => phoneSignUpPin(body),
     onSuccess: (data) => {
       const msg = data?.message || SUCCESS;
       const token = data?.data?.accessToken;
@@ -44,12 +95,12 @@ export const useVerifyAuthPin = () => {
   });
 };
 
-export const usePhoneOnboard = () => {
+export const usePhoneLogin = () => {
   const [_, setAuth] = useAtom(authAtom);
 
   return useMutation({
     onError,
-    mutationFn: (body: TPhoneOnboardBody) => phoneOnboard(body),
+    mutationFn: (body: TPhoneLoginBody) => phoneLogin(body),
     onSuccess: (data) => {
       const msg = data?.message || SUCCESS;
       const token = data?.data?.accessToken;

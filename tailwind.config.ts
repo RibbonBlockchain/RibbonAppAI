@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: "#7C56FE",
+      },
       backgroundImage: {
         account: "url('/images/user-bg.png')",
       },

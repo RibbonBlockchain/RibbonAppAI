@@ -106,7 +106,7 @@ export default function Questionnaire() {
         </div>
       </div>
 
-      <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-4">
+      <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-5">
         <Link href="/dashboard/questionnaire/sign-in" className="">
           Start Questionnaire
         </Link>

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Signup = () => {
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
+    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-5 sm:p-6">
       <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
         <BackArrow />
 
@@ -23,7 +23,7 @@ const Signup = () => {
       </div>
 
       {/* <Submit /> */}
-      <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-4">
+      <div className="bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-5">
         <Link href="/dashboard/questionnaire/verify" className="">
           Send OTP
         </Link>

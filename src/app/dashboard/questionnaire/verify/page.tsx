@@ -8,10 +8,24 @@ import {
   SubHeading,
   BackArrow,
 } from "@/containers/auth/signup/verify/sections/components";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Verify = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleConfimation = () => {
+    setIsLoading(true);
+  };
+
+  setTimeout(() => {
+    // Navigate to the confirmation page after 3 seconds
+    router.push("/dashboard/questionnaire/confirmation");
+  }, 3000);
+
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
+    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-5 sm:p-6">
       <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
         <BackArrow />
 
@@ -34,10 +48,8 @@ x items-center justify-center w-full pb-6"
       </div> */}
 
       {/*  */}
-      <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-4">
-        <Link href="/dashboard/questionnaire/verify" className="">
-          Confirm
-        </Link>
+      <div className="bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-5">
+        <button onClick={handleConfimation}>Confirm</button>
       </div>
     </div>
   );

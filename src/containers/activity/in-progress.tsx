@@ -10,14 +10,15 @@ const InProgress = () => {
         <p className="text-xs py-3 font-bold">Priority task</p>
         {priorityTask.map((i) => (
           <Todo
+            icon={""}
+            id={i.id}
             key={i.id}
             score={i.score}
             reward={i.reward}
             priority={i.priority}
             taskTitle={i.taskTitle}
             approximateTime={i.approximateTime}
-            icon={""}
-            id={i.id}
+            href={"#"}
           />
         ))}
       </div>
@@ -35,16 +36,17 @@ const InProgress = () => {
             ratingsLevel={i.ratingsLevel}
             icon={""}
             id={i.id}
+            href={"#"}
           />
         ))}
       </div>
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs pt-5 pb-3 font-bold">Exclusive Surveys</p>
         <Survey />
         <Survey />
         <Survey />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -9,7 +9,7 @@ const InputBox = ({
   value: any;
   label: string;
   required: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: any) => void;
 }) => {
   return (
     <div key={label} className="mb-4 text-[#080808]">

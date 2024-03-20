@@ -20,7 +20,7 @@ const Verify = () => {
   };
 
   if (isLoading) {
-    router.push("/dashboard/questionnaire/confirmation");
+    router.push("/dashboard/questionnaire/claim");
   }
 
   // setTimeout(() => {

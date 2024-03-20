@@ -3,15 +3,17 @@ import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
 import ProgressBar from "@ramonak/react-progress-bar";
+import Link from "next/link";
 
 type Props = {
+  id: string;
+  href: string;
   score: number;
   reward: number;
-  id: string;
   taskTitle: string;
   priority?: boolean;
-  approximateTime: number;
   completed?: boolean;
+  approximateTime: number;
   icon: string | undefined;
 
   ratings?: number;
@@ -35,13 +37,14 @@ const Todo = (props: Props) => {
         )}
 
         <div className="flex flex-col text-xs gap-[3px]">
-          <p
+          <Link
+            href={props.href}
             className={`font-extrabold ${
               props.priority ? "text-black" : "text-gradient-2"
             }`}
           >
             {props.taskTitle}
-          </p>
+          </Link>
           <div className="flex flex-row items-center">
             <p className="text-[#434343] mr-1.5">Score +{props.score} pts</p>
 

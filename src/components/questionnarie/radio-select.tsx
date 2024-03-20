@@ -7,6 +7,8 @@ const RadioSelect = ({ options }: { options: string[] }) => {
     setSelected(e.target.value);
   };
 
+  console.log(selected, "option selected");
+
   return (
     <div className="w-full flex flex-col items-center justify-center gap-6 border-md">
       {options.map((text, index) => (

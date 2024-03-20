@@ -128,6 +128,7 @@ const Dashboard = () => {
                 taskTitle={i.taskTitle}
                 approximateTime={i.approximateTime}
                 id={i.id}
+                href={i.href}
               />
             ))}
           </div>
@@ -147,18 +148,19 @@ const Dashboard = () => {
                 ratings={i.ratings}
                 ratingsLevel={i.ratingsLevel}
                 id={i.id}
+                href={"#"}
               />
             ))}
           </div>
 
-          <div className="w-full">
+          {/* <div className="w-full">
             <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
               Exclusive Surveys
             </p>
             <Survey />
             <Survey />
             <Survey />
-          </div>
+          </div> */}
         </div>
       </div>
     </AuthNavLayout>

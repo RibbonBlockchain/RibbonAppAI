@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-
 import Link from "next/link";
-import { BackArrow } from "@/containers/auth/signup/verify/sections/components";
 import Image from "next/image";
+import { BackArrow } from "@/containers/auth/signup/verify/sections/components";
 
 export default function Confirmation() {
   return (

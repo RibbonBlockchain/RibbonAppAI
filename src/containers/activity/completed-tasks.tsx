@@ -138,12 +138,12 @@ const CompletedTasks = () => {
         ))}
       </div>
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">
           Yesterday, 8:30 am
         </p>
         <CoompletedSurvey />
-      </div>
+      </div> */}
     </div>
   );
 };

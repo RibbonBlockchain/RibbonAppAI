@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import CoinSVG from "../../../../public/images/coin";
 
 const Activity = () => {
   const [activeTab, setActiveTab] = React.useState("pending");
@@ -17,7 +17,7 @@ const Activity = () => {
     <AuthNavLayout>
       <div className="bg-[#F9F9F9] min-h-screen">
         <div className="p-4 sm:p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between py-3">
             <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
             <div className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold">
               <CoinSVG width={12} height={12} fill="#6200EE" />
@@ -25,7 +25,7 @@ const Activity = () => {
             </div>
           </div>
 
-          <div className="flex mx-auto mt-8 items-center justify-start gap-4">
+          <div className="flex mx-auto mt-4 items-center justify-start gap-4">
             <div
               className={
                 activeTab === "pending"

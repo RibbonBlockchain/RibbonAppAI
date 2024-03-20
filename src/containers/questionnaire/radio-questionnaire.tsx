@@ -1,80 +1,77 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import LinkButton from "@/components/button/link";
+import { InfoIcon } from "lucide-react";
+import ProgressBar from "@ramonak/react-progress-bar";
 import { Check, RibbonLight } from "../../../public/images";
-import BackArrowButton from "@/components/button/back-arrow";
-import RadioSelect from "@/components/questionnarie/radio-select";
+import BgEffect from "@/components/questionnarie/bg-effect";
+import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
 
-const RadioQuestionnaire = ({
-  options,
+const OptionSelectQuestionnarie = ({
+  step,
+  onclick,
   question,
+  prevPage,
+  children,
   instruction,
+  no_of_steps,
 }: {
+  step: number;
   question: string;
-  options: string[];
+  no_of_steps: number;
+  onclick: () => void;
   instruction?: string;
+  prevPage: () => void;
+  children: React.ReactElement;
 }) => {
-  //   const options = [
-  //     "Yes, I smoke",
-  //     "No, I don’t smoke",
-  //     "Yes, but i smoke occassionally",
-  //   ];
-
   return (
-    <div className="relative flex flex-col h-[inherit] items-start justify-between p-4 sm:p-6">
-      <Image
-        src="/images/questionnaire/i1.png"
-        alt="q1"
-        width={178}
-        height={178}
-        className="absolute top-0 left-10"
-      />
+    <div className="relative flex flex-col min-h-[95vh] items-start justify-between p-4 sm:p-6">
+      <BgEffect />
 
-      <div className="flex flex-col">
-        <div className="w-full flex flex-row gap-20 items-center justify-start">
-          <BackArrowButton />
+      <div className="flex flex-col w-full">
+        <div className="flex flex-row gap-20 items-center justify-start">
+          <PrevQuestionnairePageButton onClick={prevPage} />
           <RibbonLight />
         </div>
 
-        <div className="py-6">000000000000000000000</div>
+        <div className="mt-6 mb-4 flex flex-row gap-2 items-center justify-center">
+          <p className="text-xs text-[#939393]">
+            {step}/{no_of_steps}
+          </p>
+          <div className="w-full">
+            <ProgressBar
+              height="3px"
+              completed={step}
+              labelSize="10px"
+              isLabelVisible={false}
+              maxCompleted={no_of_steps}
+            />
+          </div>
+        </div>
+        <div className="mb-10 flex flex-row items-center justify-center gap-2 p-2 text-[11px] font-normal bg-[#F2EEFF] rounded-md">
+          <InfoIcon stroke="#7C56FE" width={32} height={32} />
+          Answering these questions and completing your profile will help us
+          with finding the right surveys for you.
+        </div>
 
-        <div className="">
-          <h1 className="font-semibold text-[22px] leading-9 text-start">
-            {question}
-          </h1>
-          <p className="leading-9 font-normal text-[16px]">{instruction}</p>
+        <div className="flex flex-col items-center justify-center gap-3">
+          <h1 className="font-normal text-lg">{question}</h1>
+          <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
+            {instruction}
+          </p>
         </div>
-        <div className="mt-14">
-          <RadioSelect options={options} />
-        </div>
+
+        <div className="mt-14">{children}</div>
       </div>
 
-      <Image
-        src="/images/questionnaire/i1.png"
-        alt="q1"
-        width={178}
-        height={178}
-        className="absolute self-end justify-center top-[37vh]"
-      />
-
-      <LinkButton
-        href={"#"}
-        className="w-[50%] self-center flex items-center justify-center text-white mb-6 bg-gradient-to-r from-[#714EE7] to-[#A81DA6]"
+      <div
+        onClick={onclick}
+        className="w-full flex items-center justify-center text-white mb-2 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-sm font-semibold p-4 rounded-xl border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
       >
         <Check />
-      </LinkButton>
-
-      <Image
-        src="/images/questionnaire/i1.png"
-        alt="q1"
-        width={178}
-        height={178}
-        className="absolute self-start justify-start left-5 bottom-28"
-      />
+      </div>
     </div>
   );
 };
 
-export default RadioQuestionnaire;
+export default OptionSelectQuestionnarie;

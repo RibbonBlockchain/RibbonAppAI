@@ -23,7 +23,9 @@ const Verify = () => {
           <SubHeading />
         </div>
 
-        <p className="text-sm text-slate-600 font-extrabold -mb-4">Enter OTP</p>
+        <p className="text-sm text-slate-600 font-extrabold mt-3 -mb-2">
+          Enter OTP
+        </p>
         <FormInput />
       </div>
 

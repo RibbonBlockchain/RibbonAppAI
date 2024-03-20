@@ -17,6 +17,7 @@ const InProgress = () => {
             taskTitle={i.taskTitle}
             approximateTime={i.approximateTime}
             icon={""}
+            id={i.id}
           />
         ))}
       </div>
@@ -33,6 +34,7 @@ const InProgress = () => {
             ratings={i.ratings}
             ratingsLevel={i.ratingsLevel}
             icon={""}
+            id={i.id}
           />
         ))}
       </div>

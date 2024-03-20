@@ -1,45 +1,14 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import clsx from "clsx";
+import { format } from "date-fns";
+import "react-day-picker/dist/style.css";
+import { DayPicker } from "react-day-picker";
+import { CalendarDays, ChevronDown } from "lucide-react";
 import { priorityTask, todo } from "@/lib/values/mockData";
 import CoompletedSurvey from "@/containers/activity/completed-survey";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
-import clsx from "clsx";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
-import "react-day-picker/dist/style.css";
-
-const date = [
-  {
-    day: "Sunday",
-    date: 3,
-  },
-  {
-    day: "Monday",
-    date: 4,
-  },
-  {
-    day: "Tuesday",
-    date: 5,
-  },
-  {
-    day: "Wednesday",
-    date: 6,
-  },
-  {
-    day: "Thursday",
-    date: 7,
-  },
-  {
-    day: "Friday",
-    date: 8,
-  },
-  {
-    day: "Saturday",
-    date: 9,
-  },
-];
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -61,10 +30,27 @@ const css = `
 `;
 
 const CompletedTasks = () => {
-  const [activeDate, setActiveDate] = React.useState("Monday");
-  const [showCalender, setShowCalender] = React.useState(false);
-
   const today = new Date();
+  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  const endOfWeek = new Date(
+    today.setDate(today.getDate() - today.getDay() + 6)
+  );
+
+  const todayDate = new Date();
+  const currentDay = todayDate.toDateString().split(" ")[0];
+  const currentMonth = todayDate.toDateString().split(" ")[1];
+  const startOfWeekDate = startOfWeek.toDateString().split(" ")[2];
+  const endOfWeekDate = endOfWeek.toDateString().split(" ")[2];
+
+  const weekDates = [];
+  for (let i = 0; i < 7; i++) {
+    const currentDate = new Date(startOfWeek);
+    currentDate.setDate(startOfWeek.getDate() + i);
+    weekDates.push(currentDate);
+  }
+
+  const [activeDate, setActiveDate] = React.useState(currentDay);
+  const [showCalender, setShowCalender] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
 
   return (
@@ -72,16 +58,17 @@ const CompletedTasks = () => {
       <div className="flex flex-col mb-6 max-w-[320px]">
         <div className="my-2 py-2 flex flex-row items-end justify-between">
           <div className="flex flex-col relative">
-            <Image
-              alt="cal"
-              width={125}
-              height={34}
-              className=""
+            <div
               onClick={() => {
                 setShowCalender(!showCalender);
               }}
-              src="/images/calender.png"
-            />
+              className="flex flex-row items-center justify-center text-xs text-[#714EE7] gap-2"
+            >
+              <CalendarDays size={18} stroke="#7C56FE" />
+              {currentMonth} {startOfWeekDate} - {endOfWeekDate}
+              <ChevronDown size={18} stroke="#7C56FE" />
+            </div>
+
             {showCalender && (
               <div className="absolute top-10 bg-white -m-3 border-2 border-[#6200EE] rounded-2xl">
                 <style>{css}</style>
@@ -104,18 +91,23 @@ const CompletedTasks = () => {
             {format(selectedDay as Date, "PPP")}
           </p>
         </div>
-        <div className="flex flex-row items-center justify-around text-base">
-          {date.map(({ day, date }) => (
+        <div className="flex flex-row items-center justify-around text-base border-t-[1px] border-[#E8E8E8] pt-3">
+          {weekDates.map((date, index) => (
             <div
-              key={day}
-              onClick={() => setActiveDate(day)}
+              key={index}
               className={clsx(
                 `px-3 py-2 flex flex-col gap-1 rounded-full`,
-                activeDate === day && "bg-[#6200EE]"
+                activeDate === date.toDateString().split(" ")[0] &&
+                  "bg-[#6200EE]"
               )}
+              // onClick={() => setActiveDate(date.toDateString().split(" ")[0])}
             >
-              <p className="text-[#939393] font-medium">{day[0]}</p>
-              <p className="text-[#5C105B] font-semibold">{date}</p>
+              <p className="text-[#939393] font-medium">
+                {date.toDateString()[0]}
+              </p>
+              <p className="text-[#5C105B] font-semibold">
+                {date.toDateString().split(" ")[2]}
+              </p>
             </div>
           ))}
         </div>

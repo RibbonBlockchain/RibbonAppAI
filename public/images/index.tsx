@@ -5,6 +5,7 @@
 import Key from "./key.svg";
 import Bank from "./bank.svg";
 import FAQs from "./faqs.svg";
+import Check from "./check.svg";
 import Balance from "./cup.svg";
 import LogOut from "./logout.svg";
 import GroupSVG from "./group.svg";
@@ -22,6 +23,7 @@ export {
   Key,
   Bank,
   FAQs,
+  Check,
   LogOut,
   Profile,
   Wallets,

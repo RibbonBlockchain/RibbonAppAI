@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-
 import Image from "next/image";
 
 export default function Claim() {
@@ -65,7 +64,7 @@ export default function Claim() {
       </div>
       <div className="mt-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-5">
         <Link
-          href={"/dashboard/questionnaire/claim"}
+          href={"/dashboard"}
           className="flex items-center justify-center gap-2"
         >
           Return home

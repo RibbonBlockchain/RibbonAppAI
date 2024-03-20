@@ -4,9 +4,10 @@ import React from "react";
 import InProgress from "@/containers/activity/in-progress";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import CoinSVG from "../../../../public/images/coin";
 
 const Activity = () => {
-  const [activeTab, setActiveTab] = React.useState("in-progress");
+  const [activeTab, setActiveTab] = React.useState("pending");
 
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
@@ -15,38 +16,42 @@ const Activity = () => {
   return (
     <AuthNavLayout>
       <div className="bg-[#F9F9F9] min-h-screen">
-        <div className="bg-white  p-4 sm:p-6">
-          <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
-          <div className="flex mx-auto mt-4 items-center justify-center gap-8">
+        <div className="p-4 sm:p-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
+            <div className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold">
+              <CoinSVG width={12} height={12} fill="#6200EE" />
+              25 WLD
+            </div>
+          </div>
+
+          <div className="flex mx-auto mt-8 items-center justify-start gap-4">
             <div
               className={
-                activeTab === "in-progress"
-                  ? "text-[#6200EE] font-bold flex flex-col items-center justify-center text-sm"
-                  : "text-[#939393] font-bold flex flex-col items-center justify-center text-sm"
+                activeTab === "pending"
+                  ? "flex flex-row items-center gap-2 text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-sm"
+                  : "flex flex-row items-center gap-2 text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-4 rounded-full text-sm"
               }
-              onClick={() => handleTabClick("in-progress")}
+              onClick={() => handleTabClick("pending")}
             >
-              In-progress
-              {activeTab === "in-progress" ? (
-                <hr className="h-[5px] rounded-full bg-[#6200EE] w-[40px] mt-2 align-middle"></hr>
+              Pending
+              {activeTab === "pending" ? (
+                <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
+                  4
+                </p>
               ) : (
-                <hr className="h-[5px] rounded-full bg-[#939393] w-[40px] mt-2 align-middle"></hr>
+                ""
               )}
             </div>
             <div
               className={
                 activeTab === "completed"
-                  ? "text-[#6200EE] font-bold flex flex-col items-center justify-center text-sm"
-                  : "text-[#939393] font-bold flex flex-col items-center justify-center text-sm"
+                  ? "text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-sm"
+                  : "text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-4 rounded-full text-sm"
               }
               onClick={() => handleTabClick("completed")}
             >
               Completed tasks
-              {activeTab === "completed" ? (
-                <hr className="h-[5px] rounded-full bg-[#6200EE] w-[40px] mt-[6px] align-middle"></hr>
-              ) : (
-                <hr className="h-[5px] rounded-full bg-[#939393] w-[40px] mt-[6px] align-middle"></hr>
-              )}
             </div>
           </div>
         </div>

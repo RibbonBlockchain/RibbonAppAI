@@ -1,11 +1,13 @@
 import React from "react";
 
 const InputBox = ({
+  name,
   label,
   value,
   required,
   onChange,
 }: {
+  name: any;
   value: any;
   label: string;
   required: boolean;
@@ -24,6 +26,7 @@ const InputBox = ({
       <input
         id="input"
         type="text"
+        name={name}
         value={value}
         onChange={onChange}
         placeholder="Ribbon Protocol"

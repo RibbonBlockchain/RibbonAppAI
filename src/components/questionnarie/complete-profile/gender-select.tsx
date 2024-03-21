@@ -1,10 +1,12 @@
 import React from "react";
 import RadioSelect from "../radio-select";
 
-const GenderSelect = () => {
-  const genderOptions = ["Male", "Female", "Other"];
+const GenderSelect = ({ value, onChange }: any) => {
+  const genderOptions = ["MALE", "FEMALE", "OTHER"];
 
-  return <RadioSelect options={genderOptions} />;
+  return (
+    <RadioSelect value={value} onChange={onChange} options={genderOptions} />
+  );
 };
 
 export default GenderSelect;

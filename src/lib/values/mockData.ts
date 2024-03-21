@@ -1,28 +1,30 @@
+export const verifyPhoneTask = {
+  id: "verify-phone",
+  href: "/questionnaire/verify-phone",
+  score: 55,
+  reward: 5,
+  approximateTime: 8,
+  bgColor: "bg-[#FFE9E7]",
+  taskTitle: "Verify phone number",
+  priority: true,
+  completed: true,
+  icon: "/images/group.png",
+};
+
+export const completeProfileTask = {
+  id: "complete-profile",
+  href: "/questionnaire/complete-profile",
+  score: 45,
+  reward: 5,
+  approximateTime: 5,
+  bgColor: "bg-[#D8EBFF]",
+  taskTitle: "Complete profile",
+  priority: true,
+  completed: true,
+  icon: "/images/complete-profile.png",
+};
+
 export const priorityTask = [
-  {
-    id: "complete-profile",
-    href: "/questionnaire/complete-profile",
-    score: 45,
-    reward: 5,
-    approximateTime: 5,
-    bgColor: "bg-[#D8EBFF]",
-    taskTitle: "Complete profile",
-    priority: true,
-    completed: true,
-    icon: "/images/complete-profile.png",
-  },
-  {
-    id: "verify-phone",
-    href: "/questionnaire/verify-phone",
-    score: 55,
-    reward: 5,
-    approximateTime: 8,
-    bgColor: "bg-[#FFE9E7]",
-    taskTitle: "Verify phone number",
-    priority: true,
-    completed: true,
-    icon: "/images/group.png",
-  },
   // {
   //   id: "verify-identity",
   //   href: "#",
@@ -35,7 +37,7 @@ export const priorityTask = [
   //   completed: true,
   //   icon: "/images/group.png",
   // },
-];
+] as any[];
 
 export const todo = [
   {

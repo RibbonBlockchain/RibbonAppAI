@@ -8,8 +8,21 @@ import UserNames from "@/components/questionnarie/complete-profile/user-names";
 import UserSocials from "@/components/questionnarie/complete-profile/user-socials";
 import GenderSelect from "@/components/questionnarie/complete-profile/gender-select";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
+import { useUpdateProfile } from "@/api/user";
+import Claim from "@/containers/questionnaire/success";
 
 const CompleteProfile = () => {
+  const [step, setStep] = React.useState(0);
+  const { mutate: update } = useUpdateProfile();
+
+  const [state, setState] = React.useState({
+    firstName: "",
+    lastName: "",
+    otherNames: "",
+    socials: { x: "", linkedIn: "", discord: "", instagram: "" },
+    gender: undefined,
+  });
+
   const question = {
     reward: "5",
     rewardPoints: "45",
@@ -28,9 +41,15 @@ const CompleteProfile = () => {
     },
   };
 
-  const [step, setStep] = React.useState(0);
   const handleClick = () => {
-    setStep(step + 1);
+    if (step < 1) return setStep(step + 1);
+
+    update(state, {
+      onSuccess: () => {
+        console.log(step);
+        setStep(step + 1);
+      },
+    });
   };
 
   const handlePrevPageClick = () => {
@@ -59,7 +78,7 @@ const CompleteProfile = () => {
           instruction={question.personalInfo.instruction}
           isProfile={true}
         >
-          <UserNames />
+          <UserNames state={state} setState={setState} />
         </FillInfo>
       ) : step === 2 ? (
         <OptionSelectQuestionnarie
@@ -71,7 +90,12 @@ const CompleteProfile = () => {
           question={"Select your gender"}
           isProfile={true}
         >
-          <GenderSelect />
+          <GenderSelect
+            value={state.gender}
+            onChange={(gender: any) =>
+              setState((prev) => ({ ...prev, gender }))
+            }
+          />
         </OptionSelectQuestionnarie>
       ) : step === 3 ? (
         <OptionSelectQuestionnarie
@@ -82,9 +106,11 @@ const CompleteProfile = () => {
           question={"What is your birthdate"}
           isProfile={true}
         >
-          <Birthdate />
+          <Birthdate
+            setValue={(dob: any) => setState((prev) => ({ ...prev, dob }))}
+          />
         </OptionSelectQuestionnarie>
-      ) : (
+      ) : step === 4 ? (
         <FillInfo
           step={4}
           no_of_steps={4}
@@ -94,8 +120,10 @@ const CompleteProfile = () => {
           instruction={question.personalInfo.instruction}
           isProfile={true}
         >
-          <UserSocials />
+          <UserSocials state={state} setState={setState} />
         </FillInfo>
+      ) : (
+        <Claim />
       )}
     </div>
   );

@@ -1,48 +1,50 @@
 import React from "react";
 import InputBox from "../input-box";
 
-const UserSocials = () => {
-  const [value, setValue] = React.useState({
-    email: "",
-    discord: "",
-    instagram: "",
-    twitter: "",
-    linkedIn: "",
-  });
-
+const UserSocials = ({ state, setState }: any) => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setValue(e.target.value);
+    setState((prev: any) => ({
+      ...prev,
+      socials: { ...prev.socials, [name]: value },
+    }));
   };
 
   return (
     <div>
       <InputBox
-        value={value.email}
-        label={"Email address"}
+        name="email"
         required={true}
-        onChange={handleChange}
+        value={state.email}
+        label={"Email address"}
+        onChange={(e: any) =>
+          setState((prev: any) => ({ ...prev, email: e.target.value }))
+        }
       />
       <InputBox
-        value={value.discord}
+        name="discord"
+        value={state.socials.discord}
         label={"Discord"}
         required={true}
         onChange={handleChange}
       />
       <InputBox
-        value={value.instagram}
+        name="instagram"
+        value={state.socials.instagram}
         label={"Instagram Username"}
         required={false}
         onChange={handleChange}
       />
       <InputBox
-        value={value.twitter}
+        name="x"
+        value={state.socials.x}
         label={"X/Twitter Username"}
         required={false}
         onChange={handleChange}
       />{" "}
       <InputBox
-        value={value.linkedIn}
+        name="linkedIn"
+        value={state.socials.linkedIn}
         label={"LinkedIn"}
         required={false}
         onChange={handleChange}

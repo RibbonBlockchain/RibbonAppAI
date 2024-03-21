@@ -11,10 +11,16 @@ import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import Topbar from "@/containers/dashboard/top-bar";
 import CoinSVG from "../../../../public/images/coin";
-import { todo, priorityTask } from "@/lib/values/mockData";
+import {
+  todo,
+  priorityTask,
+  verifyPhoneTask,
+  completeProfileTask,
+} from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import {
+  useGetAuth,
   useGetCompletedTasks,
   useGetTaskByID,
   useGetTasksInProgress,
@@ -24,6 +30,7 @@ import {
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const { data: user } = useGetAuth({ enabled: true });
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
@@ -36,6 +43,16 @@ const Dashboard = () => {
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
 
   const [disabled, setDisabled] = useState(false);
+
+  React.useEffect(() => {
+    if (user?.id && !user?.phone) {
+      priorityTask.push(verifyPhoneTask);
+    }
+
+    if (user?.id && !user?.email) {
+      priorityTask.push(completeProfileTask);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     const lastClickedTimestamp = localStorage.getItem("lastClickedTimestamp");

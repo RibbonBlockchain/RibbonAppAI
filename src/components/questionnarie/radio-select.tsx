@@ -5,18 +5,19 @@ interface RadioSelectProps {
   thirdOptionText?: string;
 }
 
-const RadioSelect = ({ options, thirdOptionText }: RadioSelectProps) => {
+const RadioSelect = ({ value, onChange, options, thirdOptionText }: any) => {
   const [selected, setSelected] = React.useState("");
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
+    onChange(e.target.value);
   };
 
   console.log(selected, "option selected");
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-6 border-md">
-      {options.map((text, index) => (
+      {options.map((text: any, index: any) => (
         <div
           key={index}
           className={`bg-white border-[0.5px] shadow-lg w-full py-2 rounded-md px-3 ${

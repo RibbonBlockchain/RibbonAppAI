@@ -1,34 +1,31 @@
 import React from "react";
 import InputBox from "../input-box";
 
-const UserNames = () => {
-  const [value, setValue] = React.useState({
-    firstName: "",
-    lastName: "",
-    otherNames: "",
-  });
-
+const UserNames = ({ state, setState }: any) => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setValue(e.target.value);
+    setState((prev: any) => ({ ...prev, [name]: value }));
   };
 
   return (
     <div>
       <InputBox
-        value={value.firstName}
+        name="firstName"
+        required={true}
         label={"First Name"}
-        required={true}
+        value={state.firstName}
         onChange={handleChange}
       />
       <InputBox
-        value={value.lastName}
+        name="lastName"
+        value={state.lastName}
+        required={true}
         label={"Last Name"}
-        required={true}
         onChange={handleChange}
       />
       <InputBox
-        value={value.otherNames}
+        name="otherNames"
+        value={state.otherNames}
         label={"Other Names"}
         required={false}
         onChange={handleChange}

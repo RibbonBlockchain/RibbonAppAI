@@ -6,28 +6,53 @@ import {
 } from "react-circular-progressbar";
 import Image from "next/image";
 import { EyeOff } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
-import Survey from "@/containers/dashboard/survey";
 import Topbar from "@/containers/dashboard/top-bar";
 import CoinSVG from "../../../../public/images/coin";
 import { todo, priorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { useGetQuestionnaires } from "@/api/auth";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  const [balance, setBalance] = useState(25);
-  const [reward, setReward] = useState(true);
+  const [balance, setBalance] = useState(0);
+  // const [reward, setReward] = useState(true);
 
   const is_walkthrough_open = true;
-
   let points = 155;
+  let dailyReward = 3;
   let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    const lastClickedTimestamp = localStorage.getItem("lastClickedTimestamp");
+    if (lastClickedTimestamp) {
+      const twentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000;
+      const currentTime = new Date().getTime();
+      if (
+        currentTime - Number(lastClickedTimestamp) <
+        twentyFourHoursInMilliseconds
+      ) {
+        setDisabled(true);
+      }
+    }
+  }, []);
+
+  const handleClick = () => {
+    setBalance(balance + dailyReward);
+    localStorage.setItem(
+      "lastClickedTimestamp",
+      new Date().getTime().toLocaleString()
+    );
+    setDisabled(true);
+  };
 
   return (
     <AuthNavLayout>
@@ -99,7 +124,7 @@ const Dashboard = () => {
                 loading="lazy"
                 src="/images/trophy.gif"
               />
-              {reward ? (
+              {/* {reward ? (
                 <div
                   onClick={() => {
                     setReward(false), setBalance(balance + 5);
@@ -110,7 +135,15 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <CountdownTimer targetTime={targetTime} />
-              )}
+              )} */}
+              <button
+                onClick={handleClick}
+                disabled={disabled}
+                className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
+              >
+                <CoinSVG fill="#4B199C" />
+                {dailyReward} WLD
+              </button>
             </div>
           </div>
 

@@ -1,21 +1,21 @@
 "use client";
+
 import { useState } from "react";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
-import SelectOptions from "@/containers/questionnaire/select-options";
-import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
 import YesOrNo from "@/containers/questionnaire/YesOrNo";
+import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
 
 export default function Environment() {
   const question = {
     reward: "5",
     rewardPoints: "45",
     completionTime: "1",
-    description: "Complete your profile",
-    rewardPointText: "completing your profile",
+    description: "Environment Questionnaires",
+    rewardPointText: "completing this environment questionnaire",
     imageUrl: "/images/questionnaire/environment.svg",
     personalInfo: {
       task: "Does the House you live in pose any risk to you or your family's Health?",
-      instruction: "PLEASE WRITE IN THE BOX",
+      instruction: "Select One",
       userDetails: [
         { label: "First Name", required: true, value: "" },
         { label: "Last Name", required: true, value: "" },

@@ -31,7 +31,7 @@ const Submit = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Continue
+        Verify
       </Button>
     </div>
   );

@@ -10,7 +10,7 @@ const InviteFriends = () => {
           width={52}
           height={54}
           alt="avatar"
-          src="/images/group.svg"
+          src="/images/group.png"
         />
         <div className="flex flex-col">
           <p className="text-base font-semibold">Invite friends</p>

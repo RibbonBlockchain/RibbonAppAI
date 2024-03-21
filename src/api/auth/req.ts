@@ -5,6 +5,7 @@ import {
   TPhoneSignPinUpBody,
   TPhoneLoginResponse,
   TVerifyPhoneSignUpBody,
+  TVerifyPhoneUpdateBody,
   TPhoneSignUpRequestBody,
   TPhoneSignUpRequestResponse,
 } from "./types";
@@ -51,5 +52,23 @@ export const verifyPhoneSignUp = async (body: TVerifyPhoneSignUpBody) => {
 
 export const phoneSignUpPin = async (body: TPhoneSignPinUpBody) => {
   const res = await client.post("/auth/signup/phone/pin", body);
+  return res.data;
+};
+
+export const updatePhone = async (body: TCheckPhoneBody) => {
+  const res = await client.post<TResponse<TCheckPhoneResponse>>(
+    "/user/phone/change",
+    body
+  );
+  return res.data.data;
+};
+
+export const verifyPhoneUpdate = async (body: TVerifyPhoneUpdateBody) => {
+  const res = await client.post("/user/phone/verify", body);
+  return res.data;
+};
+
+export const getQuestionnaires = async () => {
+  const res = await client.get<TResponse<any>>("/task");
   return res.data;
 };

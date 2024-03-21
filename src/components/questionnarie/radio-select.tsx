@@ -1,6 +1,11 @@
 import React from "react";
 
-const RadioSelect = ({ options }: { options: string[] }) => {
+interface RadioSelectProps {
+  options: string[];
+  thirdOptionText?: string;
+}
+
+const RadioSelect = ({ options, thirdOptionText }: RadioSelectProps) => {
   const [selected, setSelected] = React.useState("");
 
   const handleOptionChange = (e: any) => {
@@ -14,7 +19,9 @@ const RadioSelect = ({ options }: { options: string[] }) => {
       {options.map((text, index) => (
         <div
           key={index}
-          className={` bg-white border-[0.5px] shadow-lg w-full py-2 rounded-md px-3`}
+          className={`bg-white border-[0.5px] shadow-lg w-full py-2 rounded-md px-3 ${
+            selected === text && "bg-[#F2EEFF]"
+          }`}
         >
           <input
             type="radio"
@@ -29,6 +36,25 @@ const RadioSelect = ({ options }: { options: string[] }) => {
           </label>
         </div>
       ))}
+      {thirdOptionText && (
+        <div
+          className={`bg-white border-[0.5px] shadow-lg w-full py-2 rounded-md px-3 ${
+            selected === thirdOptionText && "bg-[#F2EEFF]"
+          }`}
+        >
+          <input
+            type="radio"
+            id={thirdOptionText}
+            name="options"
+            value={thirdOptionText}
+            checked={selected === thirdOptionText}
+            onChange={handleOptionChange}
+          />
+          <label htmlFor={thirdOptionText} className="text-sm ml-3">
+            {thirdOptionText}
+          </label>
+        </div>
+      )}
     </div>
   );
 };

@@ -57,6 +57,7 @@ const CompleteProfile = () => {
           prevPage={handlePrevPageClick}
           task={question.personalInfo.task}
           instruction={question.personalInfo.instruction}
+          isProfile={true}
         >
           <UserNames />
         </FillInfo>
@@ -68,6 +69,7 @@ const CompleteProfile = () => {
           instruction="Choose one"
           prevPage={handlePrevPageClick}
           question={"Select your gender"}
+          isProfile={true}
         >
           <GenderSelect />
         </OptionSelectQuestionnarie>
@@ -78,6 +80,7 @@ const CompleteProfile = () => {
           onclick={handleClick}
           prevPage={handlePrevPageClick}
           question={"What is your birthdate"}
+          isProfile={true}
         >
           <Birthdate />
         </OptionSelectQuestionnarie>
@@ -89,6 +92,7 @@ const CompleteProfile = () => {
           prevPage={handlePrevPageClick}
           task={question.personalInfo.task}
           instruction={question.personalInfo.instruction}
+          isProfile={true}
         >
           <UserSocials />
         </FillInfo>

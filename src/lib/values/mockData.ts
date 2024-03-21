@@ -1,7 +1,7 @@
 export const priorityTask = [
   {
     id: "complete-profile",
-    href: "/complete-profile",
+    href: "/questionnaire/complete-profile",
     score: 45,
     reward: 5,
     approximateTime: 5,
@@ -9,11 +9,11 @@ export const priorityTask = [
     taskTitle: "Complete profile",
     priority: true,
     completed: true,
-    icon: "/images/complete-profile-d.svg",
+    icon: "/images/complete-profile.png",
   },
   {
     id: "verify-phone",
-    href: "/dashboard/questionnaire",
+    href: "/questionnaire/verify-phone",
     score: 55,
     reward: 5,
     approximateTime: 8,
@@ -21,7 +21,7 @@ export const priorityTask = [
     taskTitle: "Verify phone number",
     priority: true,
     completed: true,
-    icon: "/images/group.svg",
+    icon: "/images/group.png",
   },
   // {
   //   id: "verify-identity",
@@ -33,7 +33,7 @@ export const priorityTask = [
   //   taskTitle: "Verify your identity",
   //   priority: true,
   //   completed: true,
-  //   icon: "/images/group.svg",
+  //   icon: "/images/group.png",
   // },
 ];
 

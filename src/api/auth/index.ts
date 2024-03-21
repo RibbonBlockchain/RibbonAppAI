@@ -3,9 +3,12 @@ import {
   getAuth,
   checkPhone,
   phoneLogin,
+  updatePhone,
   phoneSignUpPin,
   verifyPhoneSignUp,
+  verifyPhoneUpdate,
   phoneSignUpRequest,
+  getQuestionnaires,
 } from "./req";
 
 import {
@@ -15,6 +18,7 @@ import {
   TPhoneSignPinUpBody,
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
+  TGetQuestionnaires,
 } from "./types";
 
 import {
@@ -31,6 +35,16 @@ import { SUCCESS, TOKEN_KEY } from "@/lib/values/constants";
 
 export const useGetAuth = ({ enabled }: TGetAuth = { enabled: false }) => {
   return useQuery({ enabled, queryKey: ["auth"], queryFn: () => getAuth() });
+};
+
+export const useGetQuestionnaires = (
+  { enabled }: TGetQuestionnaires = { enabled: false }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["questionnaires"],
+    queryFn: () => getQuestionnaires(),
+  });
 };
 
 export const useLogout = () => {
@@ -110,5 +124,19 @@ export const usePhoneLogin = () => {
       setAuth((prev) => ({ ...prev, token }));
       sessionStorage.setItem(TOKEN_KEY, token);
     },
+  });
+};
+
+export const useUpdatePhone = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCheckPhoneBody) => updatePhone(body),
+  });
+};
+
+export const useVerifyPhoneUpdate = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TVerifyPhoneSignUpBody) => verifyPhoneUpdate(body),
   });
 };

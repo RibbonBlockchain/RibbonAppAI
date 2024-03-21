@@ -1,30 +1,29 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
-import { useCheckPhone } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import phoneValidator from "validator/lib/isMobilePhone";
+import { useVerifyPhoneUpdate } from "@/api/auth";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { mutate: check, isPending, isSuccess } = useCheckPhone();
+  const { mutate: verify, isPending, isSuccess } = useVerifyPhoneUpdate();
 
   const isLoading = isPending || isSuccess;
+  const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
+  const isSubmitDisabled = isFormInvalid || isLoading;
 
-  const isValidPhoneNumber =
-    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
-
-  const isFormInvalid = !isValidPhoneNumber;
-  const isSubmitDisabled = isLoading || isFormInvalid;
-
-  const onSuccess = () => router.push("/dashboard/questionnaire/verify");
+  const onSuccess = () => {
+    toast("Phone number verification successful");
+    router.push("/questionnaire/verify-phone/confirmation");
+  };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    check({ phone: form.phoneNumber }, { onSuccess });
+    verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
   };
 
   return (
@@ -33,11 +32,8 @@ const Submit = () => {
         loading={isLoading}
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
-        className={`${
-          isSubmitDisabled ? "" : "bg-gradient-to-r from-[#714EE7] to-[#A81DA6]"
-        }`}
       >
-        Send OTP
+        Confirm
       </Button>
     </div>
   );

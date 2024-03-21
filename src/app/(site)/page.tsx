@@ -17,7 +17,7 @@ const Home = () => {
 
         <div className="text-center">
           <h1 className="text-slate-700 text-2xl font-extrabold">
-            Welcome to Ribbon Protocol
+            Welcome to <span className="text-gradient">Ribbon</span> Protocol
           </h1>
           <p className="text-base font-normal text-slate-600 text-center">
             Earn tokenized Universal Basic Income

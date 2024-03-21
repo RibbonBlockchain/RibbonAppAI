@@ -2,26 +2,29 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
+import { useUpdatePhone } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import { useVerifyPhoneSignUp } from "@/api/auth";
+import phoneValidator from "validator/lib/isMobilePhone";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { mutate: verify, isPending, isSuccess } = useVerifyPhoneSignUp();
+  const { mutate: check, isPending, isSuccess } = useUpdatePhone();
 
   const isLoading = isPending || isSuccess;
-  const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
-  const isSubmitDisabled = isFormInvalid || isLoading;
 
-  const onSuccess = () => {
-    router.push("/dashboard/questionnaire/confirmation");
-  };
+  const isValidPhoneNumber =
+    !!form.phoneNumber.trim() && phoneValidator(form.phoneNumber);
+
+  const isFormInvalid = !isValidPhoneNumber;
+  const isSubmitDisabled = isLoading || isFormInvalid;
+
+  const onSuccess = () => router.push("/questionnaire/verify-phone/verify");
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
+    check({ phone: form.phoneNumber }, { onSuccess });
   };
 
   return (
@@ -30,11 +33,11 @@ const Submit = () => {
         loading={isLoading}
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
-        // className={`${
-        //   isSubmitDisabled ? "bg-gradient-to-r from-[#714EE7] to-[#A81DA6]" : ""
-        // }`}
+        className={`${
+          isSubmitDisabled ? "" : "bg-gradient-to-r from-[#714EE7] to-[#A81DA6]"
+        }`}
       >
-        Confirm
+        Send OTP
       </Button>
     </div>
   );

@@ -4,8 +4,6 @@ import React from "react";
 import { InfoIcon } from "lucide-react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { Check, RibbonLight } from "../../../public/images";
-import BackArrowButton from "@/components/button/back-arrow";
-import InputBox from "@/components/questionnarie/input-box";
 import BgFffect from "@/components/questionnarie/bg-effect";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
 

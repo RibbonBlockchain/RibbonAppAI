@@ -7,12 +7,12 @@ import { BackArrow } from "@/containers/auth/signup/verify/sections/components";
 
 export default function Confirmation() {
   return (
-    <div className="px-5 relative min-h-screen">
-      <div className="h-full">
+    <div className="p-4 sm:p-6 min-h-screen flex flex-col w-full items-center justify-between ">
+      <div className="h-full flex  self-start justify-start">
         <BackArrow />
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <div>
             <Image
@@ -29,7 +29,7 @@ export default function Confirmation() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg fixed bottom-4 left-0 right-0 mx-4">
+      <div className="bg-gradient-to-r from-[#714EE7] to-[#A81DA6] w-full mb-4 text-white text-center py-3.5 font-semibold rounded-lg">
         <Link
           href={"/dashboard/questionnaire/claim"}
           className="flex items-center justify-center gap-2"

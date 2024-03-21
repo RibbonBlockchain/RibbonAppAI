@@ -15,7 +15,7 @@ const BackArrowButton = ({ onClick }: Props) => {
 
   return (
     <div className="flex py-4 w-[40px] cursor-pointer" onClick={handleBack}>
-      <ArrowLeft className="text-slate-700" />
+      <ArrowLeft className="text-[]" />
     </div>
   );
 };

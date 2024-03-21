@@ -1,5 +1,5 @@
 export type TGetAuth = { enabled?: boolean };
-export type TGetQuestionnaires = { enabled?: boolean };
+export type TGetResponse = { enabled?: boolean };
 
 export type TCheckPhoneBody = { phone: string };
 export type TPhoneSignUpRequestBody = { phone: string };

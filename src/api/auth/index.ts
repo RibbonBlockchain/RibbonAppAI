@@ -8,7 +8,13 @@ import {
   verifyPhoneSignUp,
   verifyPhoneUpdate,
   phoneSignUpRequest,
-  getQuestionnaires,
+  getTaskByID,
+  getTasks,
+  getTasksInProgress,
+  getUncompletedTasks,
+  getCompletedTasks,
+  getUserActivities,
+  getUserActivityById,
 } from "./req";
 
 import {
@@ -18,7 +24,7 @@ import {
   TPhoneSignPinUpBody,
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
-  TGetQuestionnaires,
+  TGetResponse,
 } from "./types";
 
 import {
@@ -35,16 +41,6 @@ import { SUCCESS, TOKEN_KEY } from "@/lib/values/constants";
 
 export const useGetAuth = ({ enabled }: TGetAuth = { enabled: false }) => {
   return useQuery({ enabled, queryKey: ["auth"], queryFn: () => getAuth() });
-};
-
-export const useGetQuestionnaires = (
-  { enabled }: TGetQuestionnaires = { enabled: false }
-) => {
-  return useQuery({
-    enabled,
-    queryKey: ["questionnaires"],
-    queryFn: () => getQuestionnaires(),
-  });
 };
 
 export const useLogout = () => {
@@ -138,5 +134,67 @@ export const useVerifyPhoneUpdate = () => {
   return useMutation({
     onError,
     mutationFn: (body: TVerifyPhoneSignUpBody) => verifyPhoneUpdate(body),
+  });
+};
+
+export const useGetTasks = ({ enabled }: TGetResponse = { enabled: true }) => {
+  return useQuery({
+    enabled,
+    queryKey: ["tasks"],
+    queryFn: () => getTasks(),
+  });
+};
+
+export const useGetTasksInProgress = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["task-inProgress"],
+    queryFn: () => getTasksInProgress(),
+  });
+};
+
+export const useGetUncompletedTasks = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["task-uncompleted"],
+    queryFn: () => getUncompletedTasks(),
+  });
+};
+
+export const useGetCompletedTasks = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["task-completed"],
+    queryFn: () => getCompletedTasks(),
+  });
+};
+
+export const useGetTaskByID = ({ id }: { id: string }) => {
+  return useQuery({
+    queryKey: ["single-task"],
+    queryFn: () => getTaskByID(id),
+  });
+};
+
+export const useGetUserActivities = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["activities"],
+    queryFn: () => getUserActivities(),
+  });
+};
+
+export const useGetUserActivityById = ({ id }: { id: string }) => {
+  return useQuery({
+    queryKey: ["single-activity"],
+    queryFn: () => getUserActivityById(id),
   });
 };

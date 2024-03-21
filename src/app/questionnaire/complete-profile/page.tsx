@@ -8,8 +8,6 @@ import UserNames from "@/components/questionnarie/complete-profile/user-names";
 import UserSocials from "@/components/questionnarie/complete-profile/user-socials";
 import GenderSelect from "@/components/questionnarie/complete-profile/gender-select";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
-import { useGetAuth, useGetQuestionnaires } from "@/api/auth";
-import { getToken } from "@/lib/atoms/auth.atom";
 
 const CompleteProfile = () => {
   const question = {
@@ -29,15 +27,6 @@ const CompleteProfile = () => {
       ],
     },
   };
-
-  // const { data, isPending } = useGetQuestionnaires();
-  // console.log(data?.data, "questionnaire data here");
-
-  // const token = getToken();
-  // const { data: user, isPending: userIsPending } = useGetAuth({
-  //   enabled: !!token,
-  // });
-  // console.log(user, "user here");
 
   const [step, setStep] = React.useState(0);
   const handleClick = () => {

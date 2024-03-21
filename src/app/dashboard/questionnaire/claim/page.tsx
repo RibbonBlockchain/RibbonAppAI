@@ -50,7 +50,7 @@ export default function Claim() {
 
           <Image
             src="/images/questionnaire/coins.png"
-            alt="cup"
+            alt="cup" 
             width={35}
             height={28}
           />

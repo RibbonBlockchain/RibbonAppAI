@@ -14,7 +14,13 @@ import CoinSVG from "../../../../public/images/coin";
 import { todo, priorityTask } from "@/lib/values/mockData";
 import CountdownTimer from "@/containers/dashboard/countdown-timer";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { useGetQuestionnaires } from "@/api/auth";
+import {
+  useGetCompletedTasks,
+  useGetTaskByID,
+  useGetTasksInProgress,
+  useGetUncompletedTasks,
+  useGetUserActivities,
+} from "@/api/auth";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {

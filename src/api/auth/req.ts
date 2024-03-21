@@ -68,7 +68,37 @@ export const verifyPhoneUpdate = async (body: TVerifyPhoneUpdateBody) => {
   return res.data;
 };
 
-export const getQuestionnaires = async () => {
+export const getTasks = async () => {
   const res = await client.get<TResponse<any>>("/task");
+  return res.data;
+};
+
+export const getTaskByID = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/task/${id}`);
+  return res.data;
+};
+
+export const getTasksInProgress = async () => {
+  const res = await client.get<TResponse<any>>("/task/user/processing");
+  return res.data;
+};
+
+export const getUncompletedTasks = async () => {
+  const res = await client.get<TResponse<any>>("/task/user/uncompleted");
+  return res.data;
+};
+
+export const getCompletedTasks = async () => {
+  const res = await client.get<TResponse<any>>("/task/user/completed");
+  return res.data;
+};
+
+export const getUserActivities = async () => {
+  const res = await client.get<TResponse<any>>("/task/user/activity");
+  return res.data;
+};
+
+export const getUserActivityById = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/task/user/activity/${id}`);
   return res.data;
 };

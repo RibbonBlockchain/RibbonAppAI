@@ -3,7 +3,7 @@
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { usePhoneSignUpPin, usePhoneSignUpRequest } from "@/api/auth";
+import { usePhoneSignUpRequest } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import phoneValidator from "validator/lib/isMobilePhone";
 

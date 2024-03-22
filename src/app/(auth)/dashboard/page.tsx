@@ -22,6 +22,7 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const { data: user } = useGetAuth({ enabled: true });
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -35,13 +36,27 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
-      priorityTask.push(verifyPhoneTask);
+      setPriorityTask((prev: any) => {
+        const newState = [...prev];
+        const found = newState.findIndex((t: any) => t.id === "verify-phone");
+
+        if (found === -1) newState.push(verifyPhoneTask as any);
+        return newState;
+      });
     }
 
     if (user?.id && !user?.email) {
-      priorityTask.push(completeProfileTask);
+      setPriorityTask((prev: any) => {
+        const newState = [...prev];
+        const found = priorityTask.findIndex(
+          (t: any) => t.id === "complete-profile"
+        );
+
+        if (found === -1) newState.push(completeProfileTask as any);
+        return newState;
+      });
     }
-  }, [user?.id]);
+  }, [user?.id, user?.email]);
 
   useEffect(() => {
     const lastClickedTimestamp = localStorage.getItem("lastClickedTimestamp");
@@ -163,7 +178,7 @@ const Dashboard = () => {
             <p className="text-[#34246B] text-xs py-3 font-bold">
               Priority task
             </p>
-            {priorityTask.map((i) => (
+            {priorityTask.map((i: any) => (
               <Todo
                 key={i.id}
                 icon={i.icon}

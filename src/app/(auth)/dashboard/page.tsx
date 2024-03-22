@@ -12,7 +12,7 @@ import {
 } from "react-circular-progressbar";
 import Image from "next/image";
 import { EyeOff } from "lucide-react";
-import { useGetAuth } from "@/api/auth";
+import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
@@ -22,12 +22,15 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const [priorityTask, setPriorityTask] = React.useState<any>([]);
+
   const { data: user } = useGetAuth({ enabled: true });
+  const [balance, setBalance] = useState(user?.wallet.balance);
+
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  const [balance, setBalance] = useState(0);
-
+  const { data: todo } = useGetUncompletedTasks();
   let points = 155;
   let dailyReward = 3;
 
@@ -182,18 +185,30 @@ const Dashboard = () => {
             <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
               To do List
             </p>
+<<<<<<< Updated upstream
             {todo.map((i) => (
+=======
+            {todo?.data?.map((i: any) => (
+>>>>>>> Stashed changes
               <Todo
+                id={i.id}
                 key={i.id}
                 score={i.score}
                 icon={undefined}
                 reward={i.reward}
+<<<<<<< Updated upstream
                 taskTitle={i.taskTitle}
                 approximateTime={i.approximateTime}
                 ratings={i.ratings}
                 ratingsLevel={i.ratingsLevel}
                 id={i.id}
                 href={"#"}
+=======
+                taskTitle={i.description || i.name}
+                approximateTime={i.duration / 60}
+                ratingsLevel="/images/ratings.svg"
+                href={`/dashboard/task/${i.id}`}
+>>>>>>> Stashed changes
               />
             ))}
           </div>

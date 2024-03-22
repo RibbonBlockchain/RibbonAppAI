@@ -31,7 +31,7 @@ const User = () => {
         </p>
         <div className="text-gradient flex flex-row gap-2 items-center justify-center text-sm font-bold">
           <CoinSVG fill="#6200EE" />
-          25 WLD
+          {user?.wallet.balance} WLD
         </div>
       </div>
     </div>

@@ -1,8 +1,6 @@
 import React from "react";
 import Todo from "@/containers/dashboard/todo";
-import Survey from "@/containers/dashboard/survey";
 import { useGetTasksInProgress } from "@/api/auth";
-import { priorityTask, todo } from "@/lib/values/mockData";
 import NoInProgressTask from "./no-inprogress";
 
 const InProgress = () => {
@@ -30,19 +28,19 @@ const InProgress = () => {
 
       <div className="w-full">
         <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
-        {!data?.length && <NoInProgressTask />}
-        {data?.map((i: any) => (
+        {!data?.data.length && <NoInProgressTask />}
+        {data?.data.map((i: any) => (
           <Todo
-            key={i?.id}
-            score={i?.score}
-            reward={i?.reward}
-            taskTitle={i?.taskTitle}
-            approximateTime={i?.approximateTime}
-            ratings={i?.ratings}
-            ratingsLevel={i?.ratingsLevel}
-            icon={""}
             id={i?.id}
             href={"#"}
+            key={i?.id}
+            score={i?.score}
+            icon={undefined}
+            reward={i?.reward}
+            taskTitle={i?.name}
+            ratings={i?.ratings}
+            ratingsLevel={i?.ratingsLevel}
+            approximateTime={i?.approximateTime}
           />
         ))}
       </div>

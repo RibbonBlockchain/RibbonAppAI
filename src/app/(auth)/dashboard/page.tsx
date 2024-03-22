@@ -23,12 +23,12 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const { data: user } = useGetAuth({ enabled: true });
+  const [balance, setBalance] = useState(user?.wallet.balance);
+
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
   const { data: todo } = useGetUncompletedTasks();
-
-  const [balance, setBalance] = useState(0);
 
   let points = 155;
   let dailyReward = 3;
@@ -206,7 +206,7 @@ const Dashboard = () => {
                 icon={undefined}
                 reward={i.reward}
                 taskTitle={i.name}
-                approximateTime={i.duration}
+                approximateTime={i.duration / 60}
                 ratingsLevel="/images/ratings.svg"
                 id={i.id}
                 href={`/dashboard/task/${i.id}`}

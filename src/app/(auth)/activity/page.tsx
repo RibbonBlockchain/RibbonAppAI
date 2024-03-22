@@ -5,11 +5,15 @@ import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { usePathname, useRouter } from "next/navigation";
+import { useGetAuth, useGetTasks, useGetTasksInProgress } from "@/api/auth";
 
 const Activity = () => {
-  const [activeTab, setActiveTab] = React.useState(null);
+  const { data: user } = useGetAuth({ enabled: true });
+  const { data, isSuccess } = useGetTasksInProgress();
 
+  console.log(data?.data?.length, "in progress");
+
+  const [activeTab, setActiveTab] = React.useState(null);
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };
@@ -22,7 +26,7 @@ const Activity = () => {
             <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
             <div className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold">
               <CoinSVG width={12} height={12} fill="#6200EE" />
-              25 WLD
+              {user?.wallet.balance} WLD
             </div>
           </div>
 
@@ -38,7 +42,7 @@ const Activity = () => {
               Pending
               {activeTab === "pending" && (
                 <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
-                  4
+                  {data?.data?.length}
                 </p>
               )}
             </div>

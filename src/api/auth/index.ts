@@ -155,13 +155,10 @@ export const useGetTasksInProgress = (
   });
 };
 
-export const useGetUncompletedTasks = (
-  { enabled }: TGetResponse = { enabled: true }
-) => {
+export const useGetUncompletedTasks = () => {
   return useQuery({
-    enabled,
     queryKey: ["task-uncompleted"],
-    queryFn: () => getUncompletedTasks(),
+    queryFn: getUncompletedTasks,
   });
 };
 

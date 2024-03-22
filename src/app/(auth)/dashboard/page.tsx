@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  todo,
   priorityTask,
   verifyPhoneTask,
   completeProfileTask,
@@ -23,7 +22,6 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
-
   const { data: user } = useGetAuth({ enabled: true });
   const [balance, setBalance] = useState(user?.wallet.balance);
 
@@ -31,6 +29,7 @@ const Dashboard = () => {
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
   const { data: todo } = useGetUncompletedTasks();
+
   let points = 155;
   let dailyReward = 3;
 
@@ -38,13 +37,27 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
-      priorityTask.push(verifyPhoneTask);
+      setPriorityTask((prev: any) => {
+        const newState = [...prev];
+        const found = newState.findIndex((t: any) => t.id === "verify-phone");
+
+        if (found === -1) newState.push(verifyPhoneTask as any);
+        return newState;
+      });
     }
 
     if (user?.id && !user?.email) {
-      priorityTask.push(completeProfileTask);
+      setPriorityTask((prev: any) => {
+        const newState = [...prev];
+        const found = priorityTask.findIndex(
+          (t: any) => t.id === "complete-profile"
+        );
+
+        if (found === -1) newState.push(completeProfileTask as any);
+        return newState;
+      });
     }
-  }, [user?.id]);
+  }, [user?.id, user?.email]);
 
   useEffect(() => {
     const lastClickedTimestamp = localStorage.getItem("lastClickedTimestamp");
@@ -166,7 +179,7 @@ const Dashboard = () => {
             <p className="text-[#34246B] text-xs py-3 font-bold">
               Priority task
             </p>
-            {priorityTask.map((i) => (
+            {priorityTask.map((i: any) => (
               <Todo
                 key={i.id}
                 icon={i.icon}
@@ -185,30 +198,18 @@ const Dashboard = () => {
             <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
               To do List
             </p>
-<<<<<<< Updated upstream
-            {todo.map((i) => (
-=======
-            {todo?.data?.map((i: any) => (
->>>>>>> Stashed changes
+            {todo?.map((i: any) => (
               <Todo
-                id={i.id}
                 key={i.id}
-                score={i.score}
+                ratings={675}
+                score={i.point}
                 icon={undefined}
                 reward={i.reward}
-<<<<<<< Updated upstream
-                taskTitle={i.taskTitle}
-                approximateTime={i.approximateTime}
-                ratings={i.ratings}
-                ratingsLevel={i.ratingsLevel}
-                id={i.id}
-                href={"#"}
-=======
-                taskTitle={i.description || i.name}
+                taskTitle={i.name}
                 approximateTime={i.duration / 60}
                 ratingsLevel="/images/ratings.svg"
+                id={i.id}
                 href={`/dashboard/task/${i.id}`}
->>>>>>> Stashed changes
               />
             ))}
           </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import Todo from "@/containers/dashboard/todo";
 import { useGetTasksInProgress } from "@/api/auth";
+import NoInProgressTask from "./no-inprogress";
 
 const InProgress = () => {
   const { data, isSuccess } = useGetTasksInProgress();
@@ -27,7 +28,7 @@ const InProgress = () => {
 
       <div className="w-full">
         <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
-        {!data?.data.length && <></>}
+        {!data?.data.length && <NoInProgressTask />}
         {data?.data.map((i: any) => (
           <Todo
             id={i?.id}

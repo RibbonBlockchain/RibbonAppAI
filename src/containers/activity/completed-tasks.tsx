@@ -5,9 +5,9 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { DayPicker } from "react-day-picker";
+import NoCompltedTask from "./no-complted-task";
+import { useGetCompletedTasks } from "@/api/auth";
 import { CalendarDays, ChevronDown } from "lucide-react";
-import { priorityTask, todo } from "@/lib/values/mockData";
-import CoompletedSurvey from "@/containers/activity/completed-survey";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 
 const css = `
@@ -52,6 +52,9 @@ const CompletedTasks = () => {
   const [activeDate, setActiveDate] = React.useState(currentDay);
   const [showCalender, setShowCalender] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
+
+  const { data, isSuccess } = useGetCompletedTasks();
+  console.log(data, "data here");
 
   return (
     <div className="p-4 sm:p-6">
@@ -113,30 +116,34 @@ const CompletedTasks = () => {
         </div>
       </div>
 
-      <div className="">
-        <p className="text-xs text-[#141414] py-3 font-bold">Today, 3:30 pm</p>
-        {priorityTask.map((i) => (
-          <TodoCompletedForm
-            key={i.id}
-            score={i.score}
-            reward={i.reward}
-            priority={i.priority}
-            taskTitle={i.taskTitle}
-            approximateTime={i.approximateTime}
-          />
-        ))}
-        {todo.map((i) => (
-          <TodoCompletedForm
-            key={i.id}
-            score={i.score}
-            reward={i.reward}
-            taskTitle={i.taskTitle}
-            approximateTime={i.approximateTime}
-            ratings={i.ratings}
-            ratingsLevel={i.ratingsLevel}
-          />
-        ))}
-      </div>
+      {data?.data.length >= 1 ? (
+        <div className="">
+          <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
+          {data?.data?.map((i: any) => (
+            <TodoCompletedForm
+              key={i.id}
+              score={i.score}
+              reward={i.reward}
+              priority={i.priority}
+              taskTitle={i.taskTitle}
+              approximateTime={i.approximateTime}
+            />
+          ))}
+          {data?.data?.map((i: any) => (
+            <TodoCompletedForm
+              key={i.id}
+              score={i.score}
+              reward={i.reward}
+              taskTitle={i.taskTitle}
+              approximateTime={i.approximateTime}
+              ratings={i.ratings}
+              ratingsLevel={i.ratingsLevel}
+            />
+          ))}
+        </div>
+      ) : (
+        <NoCompltedTask />
+      )}
 
       {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">

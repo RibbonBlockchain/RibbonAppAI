@@ -5,9 +5,10 @@ import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { usePathname, useRouter } from "next/navigation";
 
 const Activity = () => {
-  const [activeTab, setActiveTab] = React.useState("pending");
+  const [activeTab, setActiveTab] = React.useState(null);
 
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
@@ -35,12 +36,10 @@ const Activity = () => {
               onClick={() => handleTabClick("pending")}
             >
               Pending
-              {activeTab === "pending" ? (
+              {activeTab === "pending" && (
                 <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
                   4
                 </p>
-              ) : (
-                ""
               )}
             </div>
             <div

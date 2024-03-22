@@ -1,32 +1,24 @@
 "use client";
 
 import {
-  buildStyles,
-  CircularProgressbarWithChildren,
-} from "react-circular-progressbar";
-import Image from "next/image";
-import { EyeOff } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import Todo from "@/containers/dashboard/todo";
-import LinkButton from "@/components/button/link";
-import Topbar from "@/containers/dashboard/top-bar";
-import CoinSVG from "../../../../public/images/coin";
-import {
   todo,
   priorityTask,
   verifyPhoneTask,
   completeProfileTask,
 } from "@/lib/values/mockData";
-import CountdownTimer from "@/containers/dashboard/countdown-timer";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import {
-  useGetAuth,
-  useGetCompletedTasks,
-  useGetTaskByID,
-  useGetTasksInProgress,
-  useGetUncompletedTasks,
-  useGetUserActivities,
-} from "@/api/auth";
+  buildStyles,
+  CircularProgressbarWithChildren,
+} from "react-circular-progressbar";
+import Image from "next/image";
+import { EyeOff } from "lucide-react";
+import { useGetAuth } from "@/api/auth";
+import Todo from "@/containers/dashboard/todo";
+import LinkButton from "@/components/button/link";
+import React, { useEffect, useState } from "react";
+import Topbar from "@/containers/dashboard/top-bar";
+import CoinSVG from "../../../../public/images/coin";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
@@ -35,12 +27,9 @@ const Dashboard = () => {
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
   const [balance, setBalance] = useState(0);
-  // const [reward, setReward] = useState(true);
 
-  const is_walkthrough_open = true;
   let points = 155;
   let dailyReward = 3;
-  let targetTime = new Date().getTime() + 24 * 60 * 60 * 1000;
 
   const [disabled, setDisabled] = useState(false);
 

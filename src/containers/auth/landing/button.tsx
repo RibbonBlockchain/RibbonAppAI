@@ -11,9 +11,10 @@ export const WorldIdButton = ({ children }: Props) => {
   const handleClick = () => signIn("worldcoin");
 
   return (
-    <Button
+    <button
       onClick={handleClick}
-      className="bg-gray-900 border-gray-900 flex flex-row items-center justify-center text-center text-base font-semibold gap-3 rounded-xl border-2"
+      className="
+      flex gap-3 items-center justify-center w-full text-sm font-semibold text-center p-4 rounded-xl border-2 shadow-sm transition-colors duration-100 disabled:cursor-not-allowed bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white disabled:border-stone-300 disabled:bg-stone-400/50  flex-row"
     >
       <span>{children}</span>
       <Image
@@ -22,6 +23,6 @@ export const WorldIdButton = ({ children }: Props) => {
         alt="world-coin"
         src="/images/world-coin.svg"
       />
-    </Button>
+    </button>
   );
 };

@@ -26,14 +26,14 @@ const Home = () => {
       </div>
 
       <div className="w-full flex flex-col gap-3 pb-12">
-        <WorldIdButton>Sign Up with World ID</WorldIdButton>
-
         <LinkButton
           href="/auth/signup"
-          className="flex flex-row items-center justify-center gap-3"
+          className="flex bg-[#F6E8F6] flex-row items-center justify-center gap-3"
         >
           Sign Up with mobile number <Phone />
         </LinkButton>
+
+        <WorldIdButton>Sign Up with World ID</WorldIdButton>
 
         <Link
           href="/auth/login"

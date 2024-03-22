@@ -1,6 +1,6 @@
 export const verifyPhoneTask = {
   id: "verify-phone",
-  href: "/questionnaire/verify-phone",
+  href: "/dashboard/questionnaire/verify-phone",
   score: 55,
   reward: 5,
   approximateTime: 8,
@@ -13,7 +13,7 @@ export const verifyPhoneTask = {
 
 export const completeProfileTask = {
   id: "complete-profile",
-  href: "/questionnaire/complete-profile",
+  href: "/dashboard/questionnaire/complete-profile",
   score: 45,
   reward: 5,
   approximateTime: 5,
@@ -40,6 +40,17 @@ export const priorityTask = [
 ] as any[];
 
 export const todo = [
+  {
+    id: "environment-task",
+    score: 15,
+    reward: 5,
+    approximateTime: 8,
+    bgColor: "bg-white",
+    taskTitle: "Environment Task",
+    ratings: 675,
+    ratingsLevel: "/images/ratings.svg",
+    completed: false,
+  },
   {
     id: "emplyment-task",
     score: 15,

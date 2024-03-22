@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  todo,
   priorityTask,
   verifyPhoneTask,
   completeProfileTask,
@@ -12,7 +11,7 @@ import {
 } from "react-circular-progressbar";
 import Image from "next/image";
 import { EyeOff } from "lucide-react";
-import { useGetAuth } from "@/api/auth";
+import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
@@ -26,6 +25,8 @@ const Dashboard = () => {
   const { data: user } = useGetAuth({ enabled: true });
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
+
+  const { data: todo } = useGetUncompletedTasks();
 
   const [balance, setBalance] = useState(0);
 
@@ -197,18 +198,18 @@ const Dashboard = () => {
             <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
               To do List
             </p>
-            {todo.map((i) => (
+            {todo?.map((i: any) => (
               <Todo
                 key={i.id}
-                score={i.score}
+                ratings={675}
+                score={i.point}
                 icon={undefined}
                 reward={i.reward}
-                taskTitle={i.taskTitle}
-                approximateTime={i.approximateTime}
-                ratings={i.ratings}
-                ratingsLevel={i.ratingsLevel}
+                taskTitle={i.name}
+                approximateTime={i.duration}
+                ratingsLevel="/images/ratings.svg"
                 id={i.id}
-                href={"#"}
+                href={`/dashboard/task/${i.id}`}
               />
             ))}
           </div>

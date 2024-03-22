@@ -75,7 +75,7 @@ export const getTasks = async () => {
 
 export const getTaskByID = async (id: string) => {
   const res = await client.get<TResponse<any>>(`/task/${id}`);
-  return res.data;
+  return res.data.data;
 };
 
 export const getTasksInProgress = async () => {
@@ -85,7 +85,7 @@ export const getTasksInProgress = async () => {
 
 export const getUncompletedTasks = async () => {
   const res = await client.get<TResponse<any>>("/task/user/uncompleted");
-  return res.data;
+  return res.data.data;
 };
 
 export const getCompletedTasks = async () => {

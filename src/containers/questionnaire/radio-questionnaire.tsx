@@ -16,6 +16,7 @@ const OptionSelectQuestionnarie = ({
   instruction,
   no_of_steps,
   isProfile = false,
+  openModal,
 }: {
   step: number;
   question: string;
@@ -25,6 +26,7 @@ const OptionSelectQuestionnarie = ({
   prevPage: () => void;
   isProfile?: boolean;
   children: React.ReactElement;
+  openModal?: () => void;
 }) => {
   return (
     <div className="relative flex flex-col min-h-[100vh] items-start justify-between p-4 sm:p-6">

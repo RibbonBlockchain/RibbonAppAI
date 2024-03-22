@@ -4,6 +4,8 @@ import { useState } from "react";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
 import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
+import Modal from "@/components/modal";
+import { useRouter } from "next/navigation";
 
 export default function Environment() {
   const question = {
@@ -25,9 +27,29 @@ export default function Environment() {
   };
 
   const [step, setStep] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showClaimedPage, setShowClaimedPage] = useState(false);
+
+  const router = useRouter();
+
+  const handleOpenModal = () => {
+    {
+      setShowSuccessModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+    setShowClaimedPage(true);
+    router.push("/questionnaire/claim");
+  };
 
   const handleClick = () => {
-    setStep(step + 1);
+    if (step < 6) {
+      setStep(step + 1);
+    } else {
+      handleOpenModal();
+    }
   };
 
   const handlePrevPageClick = () => {
@@ -112,6 +134,9 @@ export default function Environment() {
           <YesOrNo thirdOptionText="Sometimes" />
         </OptionSelectQuestionnarie>
       )}
+
+      {showClaimedPage && <div className="bg-red-500 !z-50">Hellow world</div>}
+      <Modal isOpen={showSuccessModal} onClose={handleCloseModal} />
     </div>
   );
 }

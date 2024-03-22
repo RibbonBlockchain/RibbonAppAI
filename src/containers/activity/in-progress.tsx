@@ -3,6 +3,7 @@ import Todo from "@/containers/dashboard/todo";
 import Survey from "@/containers/dashboard/survey";
 import { useGetTasksInProgress } from "@/api/auth";
 import { priorityTask, todo } from "@/lib/values/mockData";
+import NoInProgressTask from "./no-inprogress";
 
 const InProgress = () => {
   const { data, isSuccess } = useGetTasksInProgress();
@@ -10,7 +11,7 @@ const InProgress = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <div className="w-full">
+      {/* <div className="w-full">
         <p className="text-xs py-3 font-bold">Priority task</p>
         {priorityTask.map((i) => (
           <Todo
@@ -25,21 +26,22 @@ const InProgress = () => {
             href={"#"}
           />
         ))}
-      </div>
+      </div> */}
 
       <div className="w-full">
         <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
-        {todo.map((i) => (
+        {!data?.length && <NoInProgressTask />}
+        {data?.map((i: any) => (
           <Todo
-            key={i.id}
-            score={i.score}
-            reward={i.reward}
-            taskTitle={i.taskTitle}
-            approximateTime={i.approximateTime}
-            ratings={i.ratings}
-            ratingsLevel={i.ratingsLevel}
+            key={i?.id}
+            score={i?.score}
+            reward={i?.reward}
+            taskTitle={i?.taskTitle}
+            approximateTime={i?.approximateTime}
+            ratings={i?.ratings}
+            ratingsLevel={i?.ratingsLevel}
             icon={""}
-            id={i.id}
+            id={i?.id}
             href={"#"}
           />
         ))}

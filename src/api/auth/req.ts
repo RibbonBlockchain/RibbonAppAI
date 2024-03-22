@@ -80,7 +80,7 @@ export const getTaskByID = async (id: string) => {
 
 export const getTasksInProgress = async () => {
   const res = await client.get<TResponse<any>>("/task/user/processing");
-  return res.data;
+  return res.data.data;
 };
 
 export const getUncompletedTasks = async () => {

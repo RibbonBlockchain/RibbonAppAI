@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 
 interface RadioSelectProps {
   options: string[];
@@ -10,10 +11,12 @@ const RadioSelect = ({ value, onChange, options, thirdOptionText }: any) => {
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
-    onChange(e.target.value);
+    // onChange(e.target.value);
   };
 
-  console.log(selected, "option selected");
+  if (!selected) {
+    console.log("nothing selected");
+  }
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-6 border-md">

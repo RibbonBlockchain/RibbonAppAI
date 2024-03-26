@@ -25,7 +25,7 @@ const Login = () => {
 
         <Link
           href="/auth/forgot-pin/reset-pin"
-          className="text-sm text-end text-[#6200EE] underline mt-5 mr-10"
+          className="text-sm self-end text-[#6200EE] underline mt-5 mr-10"
         >
           Forgot Pin?
         </Link>

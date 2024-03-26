@@ -24,6 +24,7 @@ import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 
 const Dashboard = () => {
 	const [priorityTask, setPriorityTask] = React.useState<any>([]);
+	const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 	const { data: user } = useGetAuth({ enabled: true });
 	const [balance, setBalance] = useState(user?.wallet.balance);
 
@@ -155,8 +156,12 @@ const Dashboard = () => {
 						</LinkButton>
 					</div>
 
-					<div className="mx-auto border-[#4B199C] border-1 mb-5 mt-2">
-						<div
+					<button
+						disabled={disabled}
+						onClick={() => setShowDailyRewardModal(true)}
+						className="mx-auto border-[#4B199C] border-1 mb-5 mt-2"
+					>
+						<span
 							className={`w-full gap-2 max-w-[320px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold py-1.5 px-2 sm:px-3 text-gradient bg-white border-[#4B199C] border-[2px] rounded-full `}
 						>
 							Claim daily reward
@@ -180,16 +185,16 @@ const Dashboard = () => {
               ) : (
                 <CountdownTimer targetTime={targetTime} />
               )} */}
-							<button
-								onClick={handleClick}
-								disabled={disabled}
+							<span
+								// onClick={handleClick}
+								// disabled={disabled}
 								className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
 							>
 								<CoinSVG fill="#4B199C" />
 								{dailyReward} WLD
-							</button>
-						</div>
-					</div>
+							</span>
+						</span>
+					</button>
 
 					<div className="w-full">
 						<p className="text-[#34246B] text-xs py-3 font-bold">
@@ -241,7 +246,10 @@ const Dashboard = () => {
 				</div>
 			</div>
 
-			<ClaimDailyRewardModal isOpen={false} closeModal={() => {}} />
+			<ClaimDailyRewardModal
+				isOpen={showDailyRewardModal}
+				closeModal={() => setShowDailyRewardModal(false)}
+			/>
 		</AuthNavLayout>
 	);
 };

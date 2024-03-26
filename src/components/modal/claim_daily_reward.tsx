@@ -70,7 +70,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
 									<ul className="mt-6 flex flex-wrap justify-center place-items-center gap-x-2 gap-y-4">
 										{Array.from({ length: 7 }).map(
 											(_, i) => (
-												<li>
+												<li key={i}>
 													<figure
 														className={cn(
 															"bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",

@@ -28,8 +28,8 @@ const InProgress = () => {
 
       <div className="w-full">
         <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
-        {!data?.data.length && <NoInProgressTask />}
-        {data?.data.map((i: any) => (
+        {!data?.data?.length && <NoInProgressTask />}
+        {data?.data?.map((i: any) => (
           <Todo
             id={i?.id}
             href={"#"}

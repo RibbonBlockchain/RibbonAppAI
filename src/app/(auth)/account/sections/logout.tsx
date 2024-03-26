@@ -3,6 +3,7 @@
 import { useLogout } from "@/api/auth";
 import PageLoader from "@/components/loader";
 import { LogOut } from "../../../../../public/images";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
 const Logout = () => {
   const { mutate: logout, isPending, isSuccess } = useLogout();
@@ -14,7 +15,7 @@ const Logout = () => {
     logout();
   };
 
-  if (isLoading) return <PageLoader />;
+  if (isLoading) return <SpinnerIcon />;
 
   return (
     <div

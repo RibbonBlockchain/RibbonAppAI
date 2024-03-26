@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import CoinSVG from "../../../public/images/coin";
 import { useGetAuth } from "@/api/auth";
 
 const User = () => {
@@ -29,9 +28,8 @@ const User = () => {
         <p className="text-lg font-semibold">
           {user?.firstName} {user?.lastName}
         </p>
-        <div className="text-gradient flex flex-row gap-2 items-center justify-center text-sm font-bold">
-          <CoinSVG fill="#6200EE" />
-          {user?.wallet.balance} WLD
+        <div className="text-gradient flex flex-row gap-2 items-center justify-center text-base font-extrabold">
+          SES Score: {user?.wallet.balance * 5000}
         </div>
       </div>
     </div>

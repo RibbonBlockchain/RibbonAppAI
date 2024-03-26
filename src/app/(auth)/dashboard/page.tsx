@@ -11,13 +11,14 @@ import {
 } from "react-circular-progressbar";
 import Image from "next/image";
 import { EyeOff } from "lucide-react";
-import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import CoinSVG from "../../../../public/images/coin";
+import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { SwapIcon } from "../../../../public/images";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
@@ -108,6 +109,11 @@ const Dashboard = () => {
                   <CoinSVG />
                   {hideBalance ? "*****" : `${balance} WLD`}
                 </div>
+                {
+                  <div className="flex flex-row items-center justify-center gap-2 text-xs">
+                    <SwapIcon /> <p> 125,000 points</p>
+                  </div>
+                }
               </div>
               <div
                 id="withdraw-tokens"

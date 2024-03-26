@@ -7,6 +7,7 @@ import {
   Balance,
   Profile,
   Wallets,
+  WorldID,
   Feedback,
   ContactUs,
   PrivacyPolicy,
@@ -14,6 +15,11 @@ import {
 } from "../../../public/images";
 
 export const ProfileDetails = [
+  {
+    href: "#",
+    description: "Link World ID",
+    logo: <WorldID />,
+  },
   {
     href: "#",
     description: "Personal Details",

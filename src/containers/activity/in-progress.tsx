@@ -1,7 +1,7 @@
 import React from "react";
 import Todo from "@/containers/dashboard/todo";
-import { useGetTasksInProgress } from "@/api/auth";
 import NoInProgressTask from "./no-inprogress";
+import { useGetTasksInProgress } from "@/api/auth";
 
 const InProgress = () => {
   const { data, isSuccess } = useGetTasksInProgress();

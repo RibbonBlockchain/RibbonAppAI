@@ -2,7 +2,7 @@ import React from "react";
 import toast from "react-hot-toast";
 
 const YesOrNo = () => {
-  const options = ["😜 Yes", "😢 No"];
+  const options = ["😄 Yes", "😢 No"];
 
   const [selected, setSelected] = React.useState("");
 

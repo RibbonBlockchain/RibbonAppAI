@@ -6,13 +6,12 @@ const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     {
-      idToken: true,
       type: "oauth",
       id: "worldcoin",
       name: "Worldcoin",
       clientId: process.env.WLD_CLIENT_ID,
       clientSecret: process.env.WLD_CLIENT_SECRET,
-      authorization: { params: { scope: "openid" } },
+      authorization: { params: { scope: "email profile openid" } },
       wellKnown: "https://id.worldcoin.org/.well-known/openid-configuration",
 
       profile(profile) {

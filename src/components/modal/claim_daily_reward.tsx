@@ -1,10 +1,10 @@
+import Image from "next/image";
+import Button from "../button";
+import React, { Fragment } from "react";
+import Coin from "@/public/images/coin.webp";
+import GiftBox from "@/public/images/gift_box.webp";
 import { cn, getOrdinalIndicator } from "@/lib/utils";
 import { Transition, Dialog } from "@headlessui/react";
-import Image from "next/image";
-import React, { Fragment } from "react";
-import GiftBox from "@/public/images/gift_box.webp";
-import Coin from "@/public/images/coin.webp";
-import Button from "../button";
 
 type Props = {
   isOpen: boolean;
@@ -66,6 +66,9 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     {Array.from({ length: 7 }).map((_, i) => (
                       <li key={i}>
                         <figure
+                          onClick={() =>
+                            console.log(`claim ${1000 * (i + 1)} coins`)
+                          }
                           className={cn(
                             "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
                             {
@@ -80,7 +83,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             className="max-w-8 mx-auto"
                           />
                           <figcaption className="text-center text-nowrap text-primary font-semibold text-xs">
-                            {1000 * i} pts
+                            {1000 * (i + 1)} pts
                           </figcaption>
                         </figure>
 

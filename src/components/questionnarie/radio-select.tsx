@@ -19,7 +19,7 @@ const RadioSelect = ({ value, onChange, options, thirdOptionText }: any) => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-6 border-md">
+    <div className="w-full z-10 flex flex-col items-center justify-center gap-6 border-md">
       {options.map((text: any, index: any) => (
         <div
           key={index}

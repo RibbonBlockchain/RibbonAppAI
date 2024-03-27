@@ -3,17 +3,15 @@
 import React from "react";
 import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
+import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { useGetAuth, useGetTasks, useGetTasksInProgress } from "@/api/auth";
 
 const Activity = () => {
   const { data: user } = useGetAuth({ enabled: true });
-  const { data, isSuccess } = useGetTasksInProgress();
+  const { data, isSuccess } = useGetUncompletedTasks();
 
-  console.log(data?.data?.length, "in progress");
-
-  const [activeTab, setActiveTab] = React.useState(null);
+  const [activeTab, setActiveTab] = React.useState("pending");
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };
@@ -42,7 +40,7 @@ const Activity = () => {
               Pending
               {activeTab === "pending" && (
                 <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
-                  {data?.data?.length}
+                  {data?.length}
                 </p>
               )}
             </div>

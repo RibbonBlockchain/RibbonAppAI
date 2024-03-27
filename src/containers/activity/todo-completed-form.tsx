@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
-import ProgressBar from "@ramonak/react-progress-bar";
 import CoinSVG from "../../../public/images/coin";
 
 type Props = {
@@ -25,18 +24,7 @@ const TodoCompletedForm = (props: Props) => {
         <div className="flex flex-col text-xs gap-[3px]">
           <p className="font-extrabold">{props.taskTitle}</p>
           <div className="flex flex-row items-center">
-            <p className="mr-1.5">Score +{props.score} pts</p>
-            <ProgressBar
-              height="7px"
-              width="60px"
-              completed={100}
-              labelSize="10px"
-              bgColor="#939393"
-              maxCompleted={100}
-              baseBgColor="#939393"
-              isLabelVisible={false}
-              className="rounded-md"
-            />
+            <p className="mr-1.5">Earned {props.reward * 5000} points</p>
           </div>
           {props.ratingsLevel && (
             <div>
@@ -49,13 +37,15 @@ const TodoCompletedForm = (props: Props) => {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-[3px] text-[10px]">
-          <Clock4 size={10} />~
-          <p className="font-extrabold">
-            {props.approximateTime} <span className="font-normal">mins</span>
-          </p>
-        </div>
       </div>
+
+      <div className="flex items-center justify-start self-start gap-[3px] text-[10px]">
+        <Clock4 size={10} />~
+        <p className="font-extrabold">
+          {props.approximateTime} <span className="font-normal">mins</span>
+        </p>
+      </div>
+
       <div className="flex flex-col gap-[3px]">
         <p className="text-[#626262] text-xs font-medium self-end">Reward</p>
         <div

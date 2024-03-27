@@ -125,19 +125,8 @@ const CompletedTasks = () => {
               score={i.score}
               reward={i.reward}
               priority={i.priority}
-              taskTitle={i.taskTitle}
-              approximateTime={i.approximateTime}
-            />
-          ))}
-          {data?.data?.map((i: any) => (
-            <TodoCompletedForm
-              key={i.id}
-              score={i.score}
-              reward={i.reward}
-              taskTitle={i.taskTitle}
-              approximateTime={i.approximateTime}
-              ratings={i.ratings}
-              ratingsLevel={i.ratingsLevel}
+              taskTitle={i.description}
+              approximateTime={i.duration / 60}
             />
           ))}
         </div>

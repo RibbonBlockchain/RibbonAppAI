@@ -94,5 +94,14 @@ We happily await your pull requests and/or involvement in our [issues page](http
 
 To get a full idea of what RibbonProtocol is about, be sure to take a look at these other resources
 
-1. [Website](https://ribbon-app-ten.vercel.app)
-2. [Twitter]()
+1.  [Website](https://ribbon-app-ten.vercel.app)
+2.  [Twitter](https://twitter.com/ribbonprotocol)
+3.  [Telegram Announcements](https://t.me/RibbonProtocol)
+4.  [Telegram Community Group](https://t.me/+JbmcP2EjVqYwMjRk)
+5.  [Discord](https://discord.com/invite/HWa2b9H3qy)
+6.  [Blog](https://medium.com/@RibbonProtocol)
+7.  [Instagram](https://www.instagram.com/ribbonprotocol)
+8.  [Facebook](https://www.facebook.com/ribbonprotocol/)
+9.  [YouTube](https://www.youtube.com/@ribbonprotocol)
+10. [TikTok](https://www.tiktok.com/@ribbonprotocol)
+11. [LinkedIn](https://www.linkedin.com/company/ribbonprotocol/)

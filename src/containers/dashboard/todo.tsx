@@ -47,7 +47,7 @@ const Todo = (props: Props) => {
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">
-            <p className="text-[#434343]">Claim {props.score * 5000} points</p>
+            <p className="text-[#434343]">Claim {props.reward * 5000} points</p>
 
             {/* {props.priority ? (
               <> </>

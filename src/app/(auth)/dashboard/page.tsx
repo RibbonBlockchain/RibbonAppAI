@@ -184,9 +184,12 @@ const Dashboard = () => {
           </button>
 
           <div className="w-full">
-            <p className="text-[#34246B] text-xs py-3 font-bold">
-              Priority task
-            </p>
+            {priorityTask?.length >= 1 && (
+              <p className="text-[#34246B] text-xs py-3 font-bold">
+                Priority task
+              </p>
+            )}
+
             {priorityTask.map((i: any) => (
               <Todo
                 key={i.id}

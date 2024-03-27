@@ -54,7 +54,9 @@ const CompletedTasks = () => {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
 
   const { data, isSuccess } = useGetCompletedTasks();
-  console.log(data, "data here");
+
+  const closeCalender = () => setShowCalender(false);
+  const openCalender = () => setShowCalender(true);
 
   return (
     <div className="p-4 sm:p-6">
@@ -65,7 +67,7 @@ const CompletedTasks = () => {
               onClick={() => {
                 setShowCalender(!showCalender);
               }}
-              className="flex flex-row items-center justify-center text-xs text-[#714EE7] gap-2"
+              className="flex flex-row items-center  justify-center text-xs text-[#714EE7] gap-2"
             >
               <CalendarDays size={18} stroke="#7C56FE" />
               {currentMonth} {startOfWeekDate} - {endOfWeekDate}
@@ -73,7 +75,10 @@ const CompletedTasks = () => {
             </div>
 
             {showCalender && (
-              <div className="absolute top-10 bg-white -m-3 border-2 border-[#6200EE] rounded-2xl">
+              <div
+                onClick={closeCalender}
+                className="absolute top-10 bg-white -m-3 border-2 border-[#6200EE] rounded-2xl"
+              >
                 <style>{css}</style>
                 <DayPicker
                   mode="single"

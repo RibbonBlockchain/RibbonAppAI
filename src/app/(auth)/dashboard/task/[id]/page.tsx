@@ -1,10 +1,11 @@
 "use client";
 
 import clsx from "clsx";
-import React from "react";
+import React, { useState } from "react";
 import { useGetTaskByID } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import ProgressBar from "@ramonak/react-progress-bar";
+import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import BgEffect from "@/components/questionnarie/bg-effect";
 import RadioSelect from "@/components/questionnarie/radio-select";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
@@ -16,11 +17,17 @@ const TaskPage = ({ params }: any) => {
   const [step, setStep] = React.useState(0);
   const [claim, setClaim] = React.useState(false);
   const { data, isLoading } = useGetTaskByID({ id: String(params.id) });
+  // console.log(data, ">>>data");
+
+  const YesorNoOptions = ["😜 Yes", "😢 No"];
 
   const router = useRouter();
 
   const onclick = () => {
     setStep((x) => x + 1);
+    if (step === data?.questions?.length) {
+      setStep(data?.questions?.length);
+    }
   };
   const prevPage = () => {
     setStep((x) => x - 1);
@@ -93,49 +100,60 @@ const TaskPage = ({ params }: any) => {
                     <input className="text-base border-[#7C56FE] border-[1px] w-full rounded-md py-3 px-2 self-start mt-10" />
                   )} */}
 
-                      {/* {q?.type === "BOOLEAN" && (
-                    <div className="flex flex-row w-full mt-14">
-                      <RadioSelect
-                        options={q?.options?.map((o: any) => o?.text)}
-                      />
-                    </div>
-                  )} */}
-
                       {q?.type && (
                         <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
                           Select One
                         </p>
                       )}
 
-                      <div className="flex flex-row w-full mt-14">
-                        <RadioSelect
-                          options={q?.options?.map((o: any) => o?.text)}
-                        />
-                      </div>
+                      {q?.type === "BOOLEAN" ? (
+                        <div
+                          onClick={onclick}
+                          className="flex items-center justify-center flex-row w-full mt-14"
+                        >
+                          <YesOrNo options={YesorNoOptions} />
+                        </div>
+                      ) : (
+                        <div className="flex flex-row w-full mt-10 mb-20">
+                          <RadioSelect
+                            options={q?.options?.map((o: any) => (
+                              <div
+                                key={o.id}
+                                onClick={() => {
+                                  setStep((x) => x + 1);
+                                  if (step === data?.questions?.length) {
+                                    setStep(data?.questions?.length);
+                                  }
+                                  console.log(o.text, "<<<selected");
+                                }}
+                              >
+                                {o?.text}
+                              </div>
+                            ))}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div
                       className={clsx(
-                        "justify-center w-full mb-2 mt-10",
+                        "justify-center w-full ",
                         step <= 0 ? "hidden" : "flex"
                       )}
                     >
                       <button
-                        // onClick={onclick}
                         onClick={() => {
-                          setStep((x) => x + 1);
                           if (step === data?.questions?.length) {
                             setStep(data?.questions?.length);
                             setClaim(!claim);
-                            // router.push("/dashboard");
                           }
                         }}
                         className={clsx(
-                          `w-[12rem] items-center justify-center text-white bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-sm font-semibold p-4 rounded-[35px] border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300`,
-                          step <= 0 ? "hidden" : "flex"
+                          `w-[12rem] items-center gap-2 justify-center mb-16 text-white bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-base font-semibold p-4 rounded-[35px] border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300`,
+                          step !== data?.questions?.length ? "hidden" : "flex"
                         )}
                       >
-                        <Check />
+                        Submit <Check />
                       </button>
                     </div>
                   </>

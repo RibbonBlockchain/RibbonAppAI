@@ -102,7 +102,7 @@ const BeginQuestionnaire = ({
 
         <div
           onClick={onclick}
-          className="w-full text-white mb-2 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-sm font-semibold text-center p-4 rounded-xl border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
+          className="w-full text-white bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-sm font-semibold text-center p-4 rounded-xl border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 bg-gray-100 hover:bg-gray-300 focus-visible:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300"
         >
           Start Questionnaire
         </div>

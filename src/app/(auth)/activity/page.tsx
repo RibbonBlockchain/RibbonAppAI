@@ -1,17 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
-import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
+import { useGetAuth, useGetTasksInProgress } from "@/api/auth";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Activity = () => {
   const { data: user } = useGetAuth({ enabled: true });
-  const { data, isSuccess } = useGetUncompletedTasks();
+  const { data, isSuccess } = useGetTasksInProgress();
 
-  const [activeTab, setActiveTab] = React.useState("pending");
+  const [activeTab, setActiveTab] = React.useState("");
+
+  useEffect(() => {
+    const pending = localStorage.getItem("activeActivityTab");
+    if (pending === "pending") {
+      setActiveTab("pending");
+    } else if (pending === "completed") {
+      setActiveTab("completed");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("activeActivityTab", activeTab);
+  }, [activeTab]);
+
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };

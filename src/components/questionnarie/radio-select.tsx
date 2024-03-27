@@ -11,32 +11,29 @@ const RadioSelect = ({ value, onChange, options, thirdOptionText }: any) => {
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
-    // onChange(e.target.value);
   };
 
   if (!selected) {
-    console.log("nothing selected");
+    // console.log("nothing selected");
   }
 
   return (
     <div className="w-full z-10 flex flex-col items-center justify-center gap-6 border-md">
-      {options.map((text: any, index: any) => (
+      {options.map((value: any, index: any) => (
         <div
           key={index}
-          className={`bg-white border-[0.5px] shadow-lg w-full py-2 rounded-md px-3 ${
-            selected === text && "bg-[#F2EEFF]"
-          }`}
+          className={`bg-white flex flex-row items-center py-4 border-[0.5px] shadow-lg w-full rounded-md px-3 `}
         >
           <input
             type="radio"
             id={`option${index}`}
             name="options"
-            value={text}
-            checked={selected === text}
+            value={value}
+            checked={selected === value}
             onChange={handleOptionChange}
           />
-          <label htmlFor={`option${index}`} className="text-sm ml-3">
-            {text}
+          <label htmlFor={`option${index}`} className="text-sm ml-3 w-full">
+            {value}
           </label>
         </div>
       ))}

@@ -38,7 +38,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white bg-[url('/images/claim_daily_reward_bg.webp')] bg-cover  text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
                   className={cn(
@@ -96,7 +96,12 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     ))}
                   </ul>
 
-                  <Button className="rounded-full mt-6 mb-4">Claim</Button>
+                  <Button
+                    onClick={props.closeModal}
+                    className="rounded-full mt-6 mb-4"
+                  >
+                    Claim
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

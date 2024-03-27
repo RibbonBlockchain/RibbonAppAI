@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  priorityTask,
-  verifyPhoneTask,
-  completeProfileTask,
-} from "@/lib/values/mockData";
+import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import {
   buildStyles,
   CircularProgressbarWithChildren,
@@ -16,9 +12,10 @@ import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import CoinSVG from "../../../../public/images/coin";
+import { SwapIcon } from "../../../../public/images";
 import { useGetAuth, useGetUncompletedTasks } from "@/api/auth";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { SwapIcon } from "../../../../public/images";
+import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
@@ -230,6 +227,8 @@ const Dashboard = () => {
           </div> */}
         </div>
       </div>
+
+      <ClaimDailyRewardModal isOpen={false} closeModal={() => {}} />
     </AuthNavLayout>
   );
 };

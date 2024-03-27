@@ -89,7 +89,7 @@ export const getUncompletedTasks = async () => {
 };
 
 export const getCompletedTasks = async () => {
-  const res = await client.get<TResponse<any>>("/task/completed");
+  const res = await client.get<TResponse<any>>("/task/user/completed");
   return res.data;
 };
 

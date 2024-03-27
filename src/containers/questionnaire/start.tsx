@@ -36,7 +36,7 @@ const BeginQuestionnaire = ({
           />
         </div>
 
-        <h1 className="flex flex-row gap-2 font-bold text-[26px] text-center text-[#714EE7]">
+        <h1 className="flex flex-col text-center gap-2 font-bold text-[26px] text-[#714EE7]">
           {description} <p className="text-black">Questionnaire</p>
         </h1>
 

@@ -1,9 +1,9 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
 import ProgressBar from "@ramonak/react-progress-bar";
-import Link from "next/link";
 
 type Props = {
   id: string;
@@ -47,7 +47,7 @@ const Todo = (props: Props) => {
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">
-            <p className="text-[#434343]">Claim {props.score * 5000} points</p>
+            <p className="text-[#434343]">Claim {props.reward * 5000} points</p>
 
             {/* {props.priority ? (
               <> </>

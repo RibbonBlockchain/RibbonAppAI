@@ -27,27 +27,27 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
           <div className="fixed inset-0 bg-black/25" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className={cn(
-                    "text-base text-center px-6 py-4 font-medium  text-white",
-                    "bg-gradient-to-r from-[#7C56FE] to-[#A81DA6]"
-                  )}
-                >
-                  Daily rewards
-                </Dialog.Title>
+				<div className="fixed inset-0 overflow-y-auto">
+					<div className="flex min-h-full items-center justify-center p-4 text-center">
+						<Transition.Child
+							as={Fragment}
+							enter="ease-out duration-300"
+							enterFrom="opacity-0 scale-95"
+							enterTo="opacity-100 scale-100"
+							leave="ease-in duration-200"
+							leaveFrom="opacity-100 scale-100"
+							leaveTo="opacity-0 scale-95"
+						>
+							<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white bg-[url('/images/claim_daily_reward_bg.webp')] bg-cover  text-left align-middle shadow-xl transition-all">
+								<Dialog.Title
+									as="h3"
+									className={cn(
+										"text-base text-center px-6 py-4 font-medium  text-white",
+										"bg-gradient-to-r from-[#7C56FE] to-[#A81DA6]"
+									)}
+								>
+									Daily rewards
+								</Dialog.Title>
 
                 <div className="mt-2 p-4">
                   <figure className="space-y-4">
@@ -62,6 +62,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     />
                   </figure>
 
+<<<<<<< HEAD
                   <ul className="mt-6 flex flex-wrap justify-center place-items-center gap-x-2 gap-y-4">
                     {Array.from({ length: 7 }).map((_, i) => (
                       <li key={i}>
@@ -83,6 +84,30 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             {1000 * i} pts
                           </figcaption>
                         </figure>
+=======
+									<ul className="mt-6 flex flex-wrap justify-center place-items-center gap-x-2 gap-y-4">
+										{Array.from({ length: 7 }).map(
+											(_, i) => (
+												<li key={i}>
+													<figure
+														className={cn(
+															"bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
+															{
+																"border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]":
+																	i < 4,
+															}
+														)}
+													>
+														<Image
+															src={Coin}
+															alt="coin"
+															className="max-w-8 mx-auto"
+														/>
+														<figcaption className="text-center text-nowrap text-primary font-semibold text-xs">
+															{1000 * i} pts
+														</figcaption>
+													</figure>
+>>>>>>> claim-daily-reward
 
                         <p
                           className={cn(
@@ -96,6 +121,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     ))}
                   </ul>
 
+<<<<<<< HEAD
                   <Button className="rounded-full mt-6 mb-4">Claim</Button>
                 </div>
               </Dialog.Panel>
@@ -105,6 +131,22 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
       </Dialog>
     </Transition>
   );
+=======
+									<Button
+										onClick={props.closeModal}
+										className="rounded-full mt-6 mb-4"
+									>
+										Claim
+									</Button>
+								</div>
+							</Dialog.Panel>
+						</Transition.Child>
+					</div>
+				</div>
+			</Dialog>
+		</Transition>
+	);
+>>>>>>> claim-daily-reward
 };
 
 export default ClaimDailyRewardModal;

@@ -37,7 +37,7 @@ const authOptions: NextAuthOptions = {
 
     async redirect({ baseUrl, url }) {
       console.log("baseurl", baseUrl, url);
-      return "https://ribbon-app.vercel.app/dashboard";
+      return "https://ribbon-app-ten.vercel.app/dashboard";
     },
 
     async jwt({ token }) {

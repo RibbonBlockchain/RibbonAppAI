@@ -17,6 +17,7 @@ import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import PageLoader from "@/components/loader";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
@@ -28,7 +29,7 @@ const Dashboard = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
-  const { data: todo } = useGetUncompletedTasks();
+  const { data: todo, isLoading } = useGetUncompletedTasks();
 
   let points = 155;
   let dailyReward = 3;
@@ -82,6 +83,8 @@ const Dashboard = () => {
     setDisabled(true);
   };
 
+  isLoading && <PageLoader />;
+
   return (
     <AuthNavLayout>
       <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
@@ -106,11 +109,11 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
                   <CoinSVG />
-                  {hideBalance ? "*****" : `${balance} WLD`}
+                  {hideBalance ? "*****" : `${user?.wallet.balance} WLD`}
                 </div>
                 {
                   <div className="flex flex-row items-center justify-center gap-2 text-xs">
-                    <SwapIcon /> <p> {balance * 5000} points</p>
+                    <SwapIcon /> <p> {user?.wallet.balance * 5000} points</p>
                   </div>
                 }
               </div>

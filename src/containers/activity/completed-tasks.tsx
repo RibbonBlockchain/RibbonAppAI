@@ -9,6 +9,7 @@ import NoCompletedTask from "./no-completed-task";
 import { useGetCompletedTasks } from "@/api/user";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
+import PageLoader from "@/components/loader";
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -53,7 +54,8 @@ const CompletedTasks = () => {
   const [showCalender, setShowCalender] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
 
-  const { data, isSuccess } = useGetCompletedTasks();
+  const { data, isSuccess, isLoading } = useGetCompletedTasks();
+  isLoading && <PageLoader />;
 
   const closeCalender = () => setShowCalender(false);
   const openCalender = () => setShowCalender(true);

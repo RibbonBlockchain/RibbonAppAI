@@ -1,10 +1,17 @@
+import { HappyEmoji, SadEmoji } from "@/public/images";
 import React from "react";
 
-const YesOrNo = ({
-  options,
-}: {
-  options: { id: string; text: string; icon: React.ReactNode }[];
-}) => {
+type TOptions = {
+  id: number;
+  text: string;
+};
+
+interface YesorNoOptionsProps {
+  options: TOptions[];
+  onOptionSelect: (id: number) => void;
+}
+
+const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
   const [selected, setSelected] = React.useState("");
 
   return (
@@ -13,13 +20,15 @@ const YesOrNo = ({
         <div
           key={i.id}
           onClick={() => {
-            setSelected(i.text), console.log(i.text, "<<<<selected");
+            setSelected(i.id),
+              onOptionSelect(i.id),
+              console.log(i.text, "selected");
           }}
           className={`bg-white flex mx-auto items-center justify-center border-[0.5px] border-[#7C56FE] shadow-lg w-full py-2 rounded-full px-3 ${
-            selected === i.text && "bg-[#5035a7] hover:bg-[#6f4be6]"
+            selected === i.id && "bg-[#5035a7] hover:bg-[#6f4be6]"
           }`}
         >
-          {i.icon}
+          {i.text === "Yes" ? <HappyEmoji /> : <SadEmoji />}
           <div className="flex flex-row text-nowrap py-1.5 px-2">{i.text}</div>
         </div>
       ))}

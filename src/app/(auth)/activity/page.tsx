@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useGetAuth } from "@/api/auth";
+import { useGetTasksInProgress } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
-import { useGetAuth, useGetTasksInProgress } from "@/api/auth";
 import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 

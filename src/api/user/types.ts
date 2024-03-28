@@ -12,3 +12,9 @@ export type TUpdateProfileBody = {
     instagram?: string;
   };
 };
+
+export type TSubmitTaskBody = {
+  questionId: number;
+  taskId: number;
+  optionId: number;
+};

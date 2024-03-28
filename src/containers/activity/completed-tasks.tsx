@@ -5,8 +5,8 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { DayPicker } from "react-day-picker";
-import { useGetCompletedTasks } from "@/api/auth";
 import NoCompletedTask from "./no-completed-task";
+import { useGetCompletedTasks } from "@/api/user";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 

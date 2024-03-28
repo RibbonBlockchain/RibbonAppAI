@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 import toast from "react-hot-toast";
 
@@ -6,33 +7,38 @@ interface RadioSelectProps {
   thirdOptionText?: string;
 }
 
-const RadioSelect = ({ value, onChange, options, thirdOptionText }: any) => {
+const RadioSelect = ({ value, options, thirdOptionText }: any) => {
   const [selected, setSelected] = React.useState("");
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
+    console.log(e.target.value, "target value her");
   };
 
-  if (!selected) {
-    // console.log("nothing selected");
-  }
+  console.log(selected !== value, "value here");
+  console.log(value, "value here");
 
   return (
     <div className="w-full z-10 flex flex-col items-center justify-center gap-6 border-md">
       {options.map((value: any, index: any) => (
         <div
           key={index}
-          className={`bg-white flex flex-row items-center py-4 border-[0.5px] shadow-lg w-full rounded-md px-3 `}
+          className={clsx(
+            "bg-white flex flex-row items-center py-4 border-[0.5px] shadow-lg w-full rounded-md px-3"
+          )}
         >
           <input
             type="radio"
-            id={`option${index}`}
-            name="options"
             value={value}
+            name="options"
+            id={`option${index}`}
             checked={selected === value}
             onChange={handleOptionChange}
           />
-          <label htmlFor={`option${index}`} className="text-sm ml-3 w-full">
+          <label
+            htmlFor={`option${index}`}
+            className={clsx("text-sm ml-3 w-full")}
+          >
             {value}
           </label>
         </div>

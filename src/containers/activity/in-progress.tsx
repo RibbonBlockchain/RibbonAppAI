@@ -1,11 +1,10 @@
 import React from "react";
 import Todo from "@/containers/dashboard/todo";
 import NoInProgressTask from "./no-inprogress";
-import { useGetTasksInProgress } from "@/api/auth";
+import { useGetTasksInProgress } from "@/api/user";
 
 const InProgress = () => {
   const { data, isSuccess } = useGetTasksInProgress();
-  console.log(data, "in progress");
 
   return (
     <div className="p-4 sm:p-6">
@@ -27,12 +26,11 @@ const InProgress = () => {
       </div> */}
 
       <div className="w-full">
-        <p className="text-xs pt-5 pb-3 font-bold">To do List</p>
+        <p className="text-xs pt-5 pb-3 font-bold">In Progress</p>
         {!data?.length && <NoInProgressTask />}
         {data?.map((i: any) => (
           <Todo
             id={i?.id}
-            href={"#"}
             key={i?.id}
             score={i?.score}
             icon={undefined}
@@ -41,6 +39,7 @@ const InProgress = () => {
             ratings={i?.ratings}
             ratingsLevel={i?.ratingsLevel}
             approximateTime={i?.duration / 60}
+            href={`/dashboard/task/${i.id}`}
           />
         ))}
       </div>

@@ -2,9 +2,12 @@ import React from "react";
 import Todo from "@/containers/dashboard/todo";
 import NoInProgressTask from "./no-inprogress";
 import { useGetTasksInProgress } from "@/api/user";
+import PageLoader from "@/components/loader";
 
 const InProgress = () => {
-  const { data, isSuccess } = useGetTasksInProgress();
+  const { data, isSuccess, isLoading } = useGetTasksInProgress();
+
+  isLoading && <PageLoader />;
 
   return (
     <div className="p-4 sm:p-6">

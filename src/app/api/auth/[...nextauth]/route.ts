@@ -36,7 +36,7 @@ const authOptions: NextAuthOptions = {
     },
 
     async redirect({ baseUrl }) {
-      return `${baseUrl}/authg/world-id`;
+      return `${baseUrl}/auth/world-id`;
     },
 
     async jwt({ token }) {

@@ -6,6 +6,7 @@ const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     {
+      idToken: true,
       type: "oauth",
       id: "worldcoin",
       name: "Worldcoin",
@@ -27,23 +28,23 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ account, user, credentials, email, profile }) {
       console.log("account", account, user, credentials, email, profile);
+      user.accessToken = "tokenFromMyServer";
       return true;
     },
 
     async session({ session, newSession, token, trigger, user }) {
       console.log("session", session, newSession, token, trigger, user);
+      session.accessToken = "not seeing token here";
       return session;
     },
 
     async redirect({ baseUrl }) {
-      return `${baseUrl}/auth/world-id`;
+      return `${baseUrl}/dashboard`;
     },
 
-    async jwt({ token }) {
-      console.log("token", token);
-
-      token.userRole = "admin";
-      return token;
+    async jwt({ token, user, account, profile, session, trigger }) {
+      console.log("jwt", token, user, account, profile, session, trigger);
+      return { accessToken: user.accessToken };
     },
   },
 };

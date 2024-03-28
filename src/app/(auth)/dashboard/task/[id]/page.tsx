@@ -132,19 +132,19 @@ const TaskPage = ({ params }: any) => {
                                 if (step === data?.questions?.length) {
                                   setStep(data?.questions?.length);
                                 }
-                                // submitTask({
-                                //   questionId: q?.id,
-                                //   optionId: o?.id,
-                                //   taskId: data?.id,
-                                // });
+                                submitTask({
+                                  questionId: q?.id,
+                                  optionId: o?.id,
+                                  taskId: data?.id,
+                                });
 
-                                console.log(q?.id, "<<< questionId");
-                                console.log(
-                                  o?.id,
-                                  o?.text,
-                                  "<<< selected option ID"
-                                );
-                                console.log(data?.id, ">>> taskID here");
+                                // console.log(q?.id, "<<< questionId");
+                                // console.log(
+                                //   o?.id,
+                                //   o?.text,
+                                //   "<<< selected option ID"
+                                // );
+                                // console.log(data?.id, ">>> taskID here");
                               }}
                             >
                               {o?.text}
@@ -211,10 +211,3 @@ const TaskPage = ({ params }: any) => {
 };
 
 export default TaskPage;
-
-// POST: "/user/respond"
-// {
-//   "questionId": 23,
-//   "taskId": 14,
-//   "optionId": 112
-// }

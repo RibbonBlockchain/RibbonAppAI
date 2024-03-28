@@ -7,16 +7,13 @@ interface RadioSelectProps {
   thirdOptionText?: string;
 }
 
-const RadioSelect = ({ value, options, thirdOptionText }: any) => {
+const RadioSelect = ({ options, thirdOptionText }: any) => {
   const [selected, setSelected] = React.useState("");
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
     console.log(e.target.value, "target value her");
   };
-
-  console.log(selected !== value, "value here");
-  console.log(value, "value here");
 
   return (
     <div className="w-full z-10 flex flex-col items-center justify-center gap-6 border-md">

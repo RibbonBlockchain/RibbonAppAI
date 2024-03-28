@@ -35,9 +35,8 @@ const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async redirect({ baseUrl, url }) {
-      console.log("baseurl", baseUrl, url);
-      return "https://ribbon-app-ten.vercel.app/dashboard";
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/authg/world-id`;
     },
 
     async jwt({ token }) {

@@ -19,6 +19,7 @@ const authOptions: NextAuthOptions = {
         return {
           id: profile.sub,
           name: profile.sub,
+          accessToken: "",
           credentialType:
             profile["https://id.worldcoin.org/beta"].credential_type,
         };

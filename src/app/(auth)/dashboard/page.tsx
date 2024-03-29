@@ -18,13 +18,17 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import PageLoader from "@/components/loader";
+import { useSession } from "next-auth/react";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const session = useSession();
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
   const { data: user } = useGetAuth({ enabled: true });
   const [balance, setBalance] = useState(user?.wallet.balance);
+
+  console.log(session);
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);

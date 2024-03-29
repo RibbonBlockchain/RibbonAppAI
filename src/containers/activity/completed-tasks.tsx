@@ -30,6 +30,12 @@ const css = `
     }
 `;
 
+const convertDateFormat = (dateString: string) => {
+  const parts = dateString.split("/");
+  const newDateString = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  return newDateString;
+};
+
 const CompletedTasks = () => {
   const today = new Date();
   const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
@@ -53,6 +59,11 @@ const CompletedTasks = () => {
   const [activeDate, setActiveDate] = React.useState(currentDay);
   const [showCalender, setShowCalender] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
+
+  // console.log(
+  //   convertDateFormat(selectedDay?.toLocaleDateString() as string),
+  //   "fetch completed task on this date"
+  // );
 
   const { data, isSuccess, isLoading } = useGetCompletedTasks();
   isLoading && <PageLoader />;
@@ -106,16 +117,31 @@ const CompletedTasks = () => {
             <div
               key={index}
               className={clsx(
-                `px-3 py-2 flex flex-col gap-1 rounded-full`,
+                `px-3 py-2 flex flex-col gap-1 rounded-full text-center`,
                 activeDate === date.toDateString().split(" ")[0] &&
-                  "bg-[#6200EE]"
+                  "bg-[#7C56FE] text-white"
               )}
-              // onClick={() => setActiveDate(date.toDateString().split(" ")[0])}
+              onClick={() => {
+                setActiveDate(date.toDateString().split(" ")[0]);
+                // console.log(date.toDateString());
+              }}
             >
-              <p className="text-[#939393] font-medium">
+              <p
+                className={clsx(
+                  "text-[#939393] font-medium",
+                  activeDate === date.toDateString().split(" ")[0] &&
+                    " text-white"
+                )}
+              >
                 {date.toDateString()[0]}
               </p>
-              <p className="text-[#5C105B] font-semibold">
+              <p
+                className={clsx(
+                  "text-[#7C56FE] font-semibold",
+                  activeDate === date.toDateString().split(" ")[0] &&
+                    "bg-[#7C56FE] text-white"
+                )}
+              >
                 {date.toDateString().split(" ")[2]}
               </p>
             </div>

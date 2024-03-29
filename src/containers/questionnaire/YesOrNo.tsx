@@ -15,17 +15,6 @@ interface YesorNoOptionsProps {
 const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
   const [selected, setSelected] = React.useState("");
 
-  useEffect(() => {
-    const highlightSelected = localStorage.getItem("chosenOption");
-    if (highlightSelected) {
-      setSelected(selected);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("chosenOption", selected);
-  }, [selected]);
-
   return (
     <div className="flex flex-row gap-12">
       {options.map((i: any) => (

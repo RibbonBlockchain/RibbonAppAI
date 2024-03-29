@@ -14,6 +14,37 @@ import { TGetResponse } from "../auth/types";
 import { TSubmitTaskBody, TUpdateProfileBody } from "./types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+const initialQuestionnaireState = {
+  id: "",
+  image: "",
+  name: "",
+  slug: "",
+  description: "",
+  type: "",
+  reward: 0,
+  point: 0,
+  duration: 0,
+  questions: [] as QuestionsType[],
+};
+
+export type OptionType = {
+  id: number;
+  point: number;
+  text: string;
+  createdAt: string;
+  questionId: number;
+};
+
+export type QuestionsType = {
+  id: number;
+  text: string;
+  type: string;
+  isFirst: true;
+  isLast: false;
+  taskId: 15;
+  options: OptionType[];
+};
+
 export const useUpdateProfile = () => {
   return useMutation({
     onError,

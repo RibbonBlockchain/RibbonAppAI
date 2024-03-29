@@ -22,6 +22,8 @@ import { useSession } from "next-auth/react";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const session = useSession();
+  console.log(session);
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
   const { data: user } = useGetAuth({ enabled: true });

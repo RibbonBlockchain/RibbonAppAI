@@ -155,7 +155,7 @@ const CompletedTasks = () => {
         </div>
       </div>
 
-      {/* {data?.data.length >= 1 ? (
+      {data?.data.length >= 1 ? (
         <div className="">
           <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
           {data?.data?.map((i: any) => (
@@ -171,10 +171,8 @@ const CompletedTasks = () => {
         </div>
       ) : (
         <NoCompletedTask />
-      )} */}
-
-      {}
-
+      )}
+      {/* 
       {activityData?.data.length >= 1 ? (
         <div className="">
           <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
@@ -197,7 +195,7 @@ const CompletedTasks = () => {
         </div>
       ) : (
         <NoCompletedTask />
-      )}
+      )} */}
 
       {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">

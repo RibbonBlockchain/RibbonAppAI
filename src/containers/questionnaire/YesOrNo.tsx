@@ -1,5 +1,6 @@
 import { HappyEmoji, SadEmoji } from "@/public/images";
-import React from "react";
+import clsx from "clsx";
+import React, { useEffect } from "react";
 
 type TOptions = {
   id: number;
@@ -14,22 +15,33 @@ interface YesorNoOptionsProps {
 const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
   const [selected, setSelected] = React.useState("");
 
+  useEffect(() => {
+    const highlightSelected = localStorage.getItem("chosenOption");
+    if (highlightSelected) {
+      setSelected(selected);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("chosenOption", selected);
+  }, [selected]);
+
   return (
     <div className="flex flex-row gap-12">
       {options.map((i: any) => (
         <div
           key={i.id}
           onClick={() => {
-            setSelected(i.id),
-              onOptionSelect(i.id),
-              console.log(i.text, "selected");
+            setSelected(i.id), onOptionSelect(i.id);
           }}
-          className={`bg-white flex mx-auto items-center justify-center border-[0.5px] border-[#7C56FE] shadow-lg w-full py-2 rounded-full px-3 ${
-            selected === i.id && "bg-[#5035a7] hover:bg-[#6f4be6]"
+          className={`flex mx-auto items-center justify-center border-[0.5px] border-[#7C56FE] shadow-lg w-full py-2 rounded-full px-3 ${
+            selected === i.id ? "bg-purple-600" : "bg-white"
           }`}
         >
           {i.text === "Yes" ? <HappyEmoji /> : <SadEmoji />}
-          <div className="flex flex-row text-nowrap py-1.5 px-2">{i.text}</div>
+          <div className={clsx("flex flex-row text-nowrap py-1.5 px-2")}>
+            {i.text}
+          </div>
         </div>
       ))}
     </div>

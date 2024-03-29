@@ -19,9 +19,7 @@ const TaskPage = ({ params }: any) => {
   const [claim, setClaim] = React.useState(false);
 
   const { data, isLoading } = useGetTaskByID({ id: String(params.id) });
-  const questionIds = data.questions.map((question: any) => question.id);
-
-  isLoading && <SpinnerIcon />;
+  const questionIds = data?.questions?.map((question: any) => question.id);
 
   const { mutate: submitTask, isPending } = useSubmitTask();
   isPending && <SpinnerIcon />;
@@ -94,8 +92,8 @@ const TaskPage = ({ params }: any) => {
             reward={data?.reward}
             onclick={() => setStep(1)}
             rewardPoints={data?.reward * 5000}
-            imageUrl={"/images/ribbon.svg"}
-            description={data?.name}
+            imageUrl={data?.image || "/images/ribbon.svg"}
+            description={data?.description}
             completionTime={data?.duration / 60}
           />
         ) : (

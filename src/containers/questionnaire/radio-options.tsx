@@ -26,8 +26,8 @@ const RadioOptions = ({ options, onOptionSelect }: RadioOptionsProps) => {
           key={index}
           onClick={() => setSelected(option.id)}
           className={clsx(
-            selected === option?.id && "bg-[#e5e4eb]",
-            "flex flex-row bg-white gap-2 py-3 items-center border-[0.5px] w-full rounded-md px-3"
+            selected === option?.id ? "bg-slate-100" : "bg-white",
+            "flex flex-row  gap-2 py-3 items-center border-[0.5px] w-full rounded-md px-3"
           )}
         >
           <input
@@ -40,7 +40,7 @@ const RadioOptions = ({ options, onOptionSelect }: RadioOptionsProps) => {
           />
           <label
             className={clsx(
-              selected === option?.id && "text-[#7C56FE]",
+              selected === option?.id ? "text-[#7C56FE]" : "",
               "w-full"
             )}
             htmlFor={`option${option.id}`}

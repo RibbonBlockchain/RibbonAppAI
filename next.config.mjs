@@ -11,7 +11,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["robohash.org"],
+    domains: ["robohash.org", "i.ibb.co"],
   },
   sassOptions: {
     includePaths: [path.join(process.cwd(), "styles")],

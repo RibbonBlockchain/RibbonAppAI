@@ -45,7 +45,8 @@ const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, account, profile, session, trigger }) {
       console.log("jwt", token, user, account, profile, session, trigger);
-      return { accessToken: user?.accessToken };
+      token.accessToken = user?.accessToken;
+      return token;
     },
   },
 };

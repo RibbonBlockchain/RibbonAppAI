@@ -31,31 +31,31 @@ const TaskPage = ({ params }: any) => {
     step === 0 && router.push("/dashboard");
   };
 
-  const [_, setSelectedOptionId] = useState<number>();
-  const [__, setYesorNoId] = useState<number>();
+  const [optionId, setSelectedOptionId] = useState<number>();
+  const [YesOrNoId, setYesorNoId] = useState<number>();
 
   const handleOptionSelect = (id: number) => {
     setSelectedOptionId(id);
-    submitTask({
-      questionId: questionIds[step - 1],
-      optionId: id,
-      taskId: data?.id,
-    });
-    // console.log(id, "YesOrNo id here");
-    // console.log(data?.id, "taskId");
-    // console.log(questionIds[step - 1], "questionID");
+
+    if (step !== data?.questions?.length) {
+      submitTask({
+        questionId: questionIds[step - 1],
+        optionId: id,
+        taskId: data?.id,
+      });
+    }
   };
 
   const handleYesOrNoOptionSelect = (id: number) => {
     setYesorNoId(id);
-    submitTask({
-      questionId: questionIds[step - 1],
-      optionId: id,
-      taskId: data?.id,
-    });
-    // console.log(id, "YesOrNo id here");
-    // console.log(data?.id, "taskId");
-    // console.log(questionIds[step - 1], "questionID");
+
+    if (step !== data?.questions?.length) {
+      submitTask({
+        questionId: questionIds[step - 1],
+        optionId: id,
+        taskId: data?.id,
+      });
+    }
   };
 
   return (
@@ -140,6 +140,12 @@ const TaskPage = ({ params }: any) => {
                           if (step === data?.questions?.length) {
                             setStep(data?.questions?.length);
                             setClaim(!claim);
+                            submitTask({
+                              questionId:
+                                questionIds[data?.questions?.length - 1],
+                              optionId: YesOrNoId || optionId || 0,
+                              taskId: data?.id,
+                            });
                           }
                         }}
                         className={clsx(

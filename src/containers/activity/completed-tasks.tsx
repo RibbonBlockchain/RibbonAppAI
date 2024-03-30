@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
@@ -8,8 +8,8 @@ import { DayPicker } from "react-day-picker";
 import NoCompletedTask from "./no-completed-task";
 import {
   useGetCompletedTasks,
-  useGetCompletedTasksByDate,
   useGetUserActivities,
+  useGetCompletedTasksByDate,
 } from "@/api/user";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";

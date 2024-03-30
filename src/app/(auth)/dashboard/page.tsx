@@ -8,6 +8,7 @@ import Image from "next/image";
 import { EyeOff } from "lucide-react";
 import { useGetAuth } from "@/api/auth";
 import PageLoader from "@/components/loader";
+import { useSession } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
@@ -21,11 +22,15 @@ import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
+  const session = useSession();
+  console.log(session);
+
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
   const { data: user } = useGetAuth({ enabled: true });
   const [balance, setBalance] = useState(user?.wallet.balance);
+  const pointBalance = user?.wallet.balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -110,7 +115,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-row gap-2 items-center justify-center text-lg font-bold">
                   <CoinSVG />
-                  {hideBalance ? "*****" : `${user?.wallet.balance * 5000}`}
+                  {hideBalance ? "*****" : pointBalance.toLocaleString()}
                   <p className="text-xs">points</p>
                 </div>
                 {

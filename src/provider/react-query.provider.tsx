@@ -1,17 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
+
+const OfflineMessage = () => (
+  <div style={{ backgroundColor: "red", color: "white", padding: "10px" }}>
+    Check your internet connection.
+  </div>
+);
 
 const ReactQueryProvider = ({ children }: React.PropsWithChildren) => {
   const [client] = useState(new QueryClient());
 
-  return (
+  const [online, setOnline] = useState(true);
+
+  useEffect(() => {
+    const handleOnlineStatus = () => {
+      setOnline(navigator.onLine);
+    };
+
+    window.addEventListener("online", handleOnlineStatus);
+    window.addEventListener("offline", handleOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+      window.removeEventListener("offline", handleOnlineStatus);
+    };
+  }, []);
+
+  return online ? (
     <QueryClientProvider client={client}>
-      {children}
+      <SessionProvider>{children}</SessionProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
+  ) : (
+    <OfflineMessage />
   );
 };
 

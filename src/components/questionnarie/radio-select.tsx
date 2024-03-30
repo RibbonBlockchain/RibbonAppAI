@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import React from "react";
-import toast from "react-hot-toast";
 
 interface RadioSelectProps {
   options: string[];
@@ -12,7 +11,6 @@ const RadioSelect = ({ options, thirdOptionText }: any) => {
 
   const handleOptionChange = (e: any) => {
     setSelected(e.target.value);
-    console.log(e.target.value, "target value her");
   };
 
   return (

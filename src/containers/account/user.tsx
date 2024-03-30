@@ -4,6 +4,7 @@ import { useGetAuth } from "@/api/auth";
 
 const User = () => {
   const { data: user } = useGetAuth({ enabled: true });
+  const SES_Score = user?.wallet.balance * 5000;
 
   return (
     <div className="bg-account bg-cover flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
@@ -29,7 +30,7 @@ const User = () => {
           {user?.firstName} {user?.lastName}
         </p>
         <div className="text-gradient flex flex-row gap-2 items-center justify-center text-base font-extrabold">
-          SES Score: {user?.wallet.balance * 5000}
+          SES Score: {SES_Score.toLocaleString()}
         </div>
       </div>
     </div>

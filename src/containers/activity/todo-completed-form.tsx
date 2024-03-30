@@ -16,6 +16,8 @@ type Props = {
 };
 
 const TodoCompletedForm = (props: Props) => {
+  const rewardPoints = props.reward * 5000;
+
   return (
     <div
       className={`bg-[#E8E8E8] text-[#626262] w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
@@ -24,7 +26,9 @@ const TodoCompletedForm = (props: Props) => {
         <div className="flex flex-col text-xs gap-[3px]">
           <p className="font-extrabold">{props.taskTitle}</p>
           <div className="flex flex-row items-center">
-            <p className="mr-1.5">Earned {props.reward * 5000} points</p>
+            <p className="mr-1.5">
+              Earned {rewardPoints.toLocaleString()} points
+            </p>
           </div>
           {props.ratingsLevel && (
             <div>

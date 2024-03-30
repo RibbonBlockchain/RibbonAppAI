@@ -21,8 +21,8 @@ const Birthdate = ({ setValue }: any) => {
   React.useEffect(() => {
     if (state.day && state.month && state.year) {
       const date = `${state.month}/${state.day}/${state.year}`;
-      console.log(date, "<<<<<dob");
-      console.log(new Date(date).toISOString());
+      // console.log(date, "<<<<<dob");
+      // console.log(new Date(date).toISOString());
       setValue(
         new Date(`${state.month}/${state.day}/${state.year}`).toISOString()
       );

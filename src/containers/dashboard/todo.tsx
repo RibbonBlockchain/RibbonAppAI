@@ -21,6 +21,8 @@ type Props = {
 };
 
 const Todo = (props: Props) => {
+  const rewardPoints = props.reward * 5000;
+
   return (
     <div
       id={props.id}
@@ -47,7 +49,9 @@ const Todo = (props: Props) => {
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">
-            <p className="text-[#434343]">Claim {props.reward * 5000} points</p>
+            <p className="text-[#434343]">
+              Claim {rewardPoints.toLocaleString()} points
+            </p>
 
             {/* {props.priority ? (
               <> </>

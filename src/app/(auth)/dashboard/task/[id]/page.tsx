@@ -10,8 +10,8 @@ import { useGetTaskByID, useSubmitTask } from "@/api/user";
 import BgEffect from "@/components/questionnarie/bg-effect";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
 import ClaimTaskReward from "@/components/modal/claim_task_reward";
-import { Check, RibbonLight } from "../../../../../../public/images";
 import RadioOptions from "@/containers/questionnaire/radio-options";
+import { Check, RibbonLight } from "../../../../../../public/images";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
 
 const TaskPage = ({ params }: any) => {
@@ -33,29 +33,32 @@ const TaskPage = ({ params }: any) => {
 
   const [optionId, setSelectedOptionId] = useState<number>();
   const [YesOrNoId, setYesorNoId] = useState<number>();
+  const [buttonDisable, setButtonDisable] = useState<boolean>(true);
 
   const handleOptionSelect = (id: number) => {
     setSelectedOptionId(id);
+    setButtonDisable(false);
 
-    if (step !== data?.questions?.length) {
-      submitTask({
-        questionId: questionIds[step - 1],
-        optionId: id,
-        taskId: data?.id,
-      });
-    }
+    // if (step !== data?.questions?.length) {
+    //   submitTask({
+    //     questionId: questionIds[step - 1],
+    //     optionId: id,
+    //     taskId: data?.id,
+    //   });
+    // }
   };
 
   const handleYesOrNoOptionSelect = (id: number) => {
     setYesorNoId(id);
+    setButtonDisable(false);
 
-    if (step !== data?.questions?.length) {
-      submitTask({
-        questionId: questionIds[step - 1],
-        optionId: id,
-        taskId: data?.id,
-      });
-    }
+    // if (step !== data?.questions?.length) {
+    //   submitTask({
+    //     questionId: questionIds[step - 1],
+    //     optionId: id,
+    //     taskId: data?.id,
+    //   });
+    // }
   };
 
   return (
@@ -135,8 +138,21 @@ const TaskPage = ({ params }: any) => {
 
                     <div className={clsx("flex justify-center w-full")}>
                       <button
+                        disabled={buttonDisable}
                         onClick={() => {
                           setStep((x) => x + 1);
+                          setButtonDisable(!buttonDisable);
+
+                          // submit each question
+                          if (step !== data?.questions?.length) {
+                            submitTask({
+                              questionId: questionIds[step - 1],
+                              optionId: YesOrNoId || optionId || 0,
+                              taskId: data?.id,
+                            });
+                          }
+
+                          // submit last question here
                           if (step === data?.questions?.length) {
                             setStep(data?.questions?.length);
                             setClaim(!claim);
@@ -147,9 +163,20 @@ const TaskPage = ({ params }: any) => {
                               taskId: data?.id,
                             });
                           }
+
+                          // console.log("questionId", questionIds[step - 1]);
+                          // console.log(
+                          //   "questionId last?",
+                          //   questionIds[data?.questions?.length - 1]
+                          // );
+                          // console.log("optionId", YesOrNoId || optionId || 0);
+                          // console.log("taskId", data?.id);
                         }}
                         className={clsx(
-                          `flex w-[12rem] items-center gap-2 justify-center mb-16 text-white text-base bg-gradient-to-r from-[#714EE7] to-[#A81DA6] font-semibold p-4 rounded-[35px] border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300`
+                          buttonDisable
+                            ? "bg-slate-300"
+                            : "bg-gradient-to-r from-[#714EE7] to-[#A81DA6]",
+                          `flex w-[12rem] items-center gap-2 justify-center mb-16 text-white text-base font-semibold p-4 rounded-[35px] border-solid border-gray-300 border-2 transition-colors duration-100 focus-visible:duration-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-gray-300`
                         )}
                       >
                         Submit <Check />

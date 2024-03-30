@@ -8,6 +8,7 @@ import {
   getTasksInProgress,
   getUncompletedTasks,
   getUserActivityById,
+  getCompletedTasksByDate,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -98,6 +99,13 @@ export const useGetTaskByID = ({ id }: { id: string }) => {
   return useQuery({
     queryKey: ["single-task"],
     queryFn: () => getTaskByID(id),
+  });
+};
+
+export const useGetCompletedTasksByDate = ({ slug }: { slug: string }) => {
+  return useQuery({
+    queryKey: ["single-task-date"],
+    queryFn: () => getCompletedTasksByDate(slug),
   });
 };
 

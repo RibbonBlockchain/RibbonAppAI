@@ -6,7 +6,11 @@ import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { DayPicker } from "react-day-picker";
 import NoCompletedTask from "./no-completed-task";
-import { useGetCompletedTasks } from "@/api/user";
+import {
+  useGetCompletedTasks,
+  useGetUserActivities,
+  useGetCompletedTasksByDate,
+} from "@/api/user";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import PageLoader from "@/components/loader";
@@ -56,20 +60,22 @@ const CompletedTasks = () => {
     weekDates.push(currentDate);
   }
 
+  // state management
   const [activeDate, setActiveDate] = React.useState(currentDay);
   const [showCalender, setShowCalender] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
 
-  // console.log(
-  //   convertDateFormat(selectedDay?.toLocaleDateString() as string),
-  //   "fetch completed task on this date"
-  // );
-
-  const { data, isSuccess, isLoading } = useGetCompletedTasks();
-  isLoading && <PageLoader />;
-
   const closeCalender = () => setShowCalender(false);
   const openCalender = () => setShowCalender(true);
+
+  // api calls
+  const { data, isSuccess, isLoading } = useGetCompletedTasks();
+  console.log(data, "data data");
+
+  const { data: activityData } = useGetUserActivities();
+  console.log(activityData, "actiivyt data");
+
+  isLoading && <PageLoader />;
 
   return (
     <div className="p-4 sm:p-6">
@@ -123,7 +129,7 @@ const CompletedTasks = () => {
               )}
               onClick={() => {
                 setActiveDate(date.toDateString().split(" ")[0]);
-                // console.log(date.toDateString());
+                console.log(date.toDateString(), "");
               }}
             >
               <p
@@ -166,6 +172,30 @@ const CompletedTasks = () => {
       ) : (
         <NoCompletedTask />
       )}
+      {/* 
+      {activityData?.data.length >= 1 ? (
+        <div className="">
+          <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
+          {activityData?.data?.map((i: any) => (
+            <>
+              <p className="text-xs text-[#141414] py-3 font-bold">
+                {i.completedDate}
+              </p>
+
+              <TodoCompletedForm
+                key={i.id}
+                score={i.score}
+                reward={i.reward}
+                priority={i.priority}
+                taskTitle={i.description}
+                approximateTime={i.duration / 60}
+              />
+            </>
+          ))}
+        </div>
+      ) : (
+        <NoCompletedTask />
+      )} */}
 
       {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">

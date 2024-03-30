@@ -7,6 +7,8 @@ import {
 import Image from "next/image";
 import { EyeOff } from "lucide-react";
 import { useGetAuth } from "@/api/auth";
+import PageLoader from "@/components/loader";
+import { useSession } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
@@ -17,17 +19,18 @@ import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import PageLoader from "@/components/loader";
-import { useSession } from "next-auth/react";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
   const session = useSession();
   console.log(session);
+
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
+
   const { data: user } = useGetAuth({ enabled: true });
   const [balance, setBalance] = useState(user?.wallet.balance);
+  const pointBalance = user?.wallet.balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -110,13 +113,14 @@ const Dashboard = () => {
                     />
                   )}
                 </div>
-                <div className="flex flex-row gap-2 items-center justify-center text-3xl font-bold">
+                <div className="flex flex-row gap-2 items-center justify-center text-lg font-bold">
                   <CoinSVG />
-                  {hideBalance ? "*****" : `${user?.wallet.balance} WLD`}
+                  {hideBalance ? "*****" : pointBalance.toLocaleString()}
+                  <p className="text-xs">points</p>
                 </div>
                 {
                   <div className="flex flex-row items-center justify-center gap-2 text-xs">
-                    <SwapIcon /> <p> {user?.wallet.balance * 5000} points</p>
+                    <SwapIcon /> <p> {user?.wallet.balance} WLD</p>
                   </div>
                 }
               </div>

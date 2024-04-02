@@ -68,7 +68,7 @@ const TaskPage = ({ params }: any) => {
       <div className="flex flex-col w-full">
         <div className="flex flex-row gap-20 items-center justify-start">
           <PrevQuestionnairePageButton onClick={prevPage} />
-          <RibbonLight />
+          {step > 0 && <RibbonLight />}
         </div>
 
         {step > 0 && (

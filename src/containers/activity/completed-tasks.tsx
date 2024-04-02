@@ -14,6 +14,7 @@ import {
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import PageLoader from "@/components/loader";
+import { formatDate } from "@/lib/utils/format-date";
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -33,12 +34,6 @@ const css = `
       width: 280px
     }
 `;
-
-const convertDateFormat = (dateString: string) => {
-  const parts = dateString.split("/");
-  const newDateString = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  return newDateString;
-};
 
 const CompletedTasks = () => {
   const today = new Date();
@@ -61,19 +56,35 @@ const CompletedTasks = () => {
   }
 
   // state management
-  const [activeDate, setActiveDate] = React.useState(currentDay);
   const [showCalender, setShowCalender] = React.useState(false);
-  const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(today);
-
   const closeCalender = () => setShowCalender(false);
-  const openCalender = () => setShowCalender(true);
+
+  const CloseCalender = () => (
+    <div className="text-end" onClick={closeCalender}>
+      Close
+    </div>
+  );
+
+  const [activeDate, setActiveDate] = React.useState(currentDay);
+  const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(
+    todayDate
+  );
+
+  console.log(selectedDay, "selected day from calender");
+  // console.log(formatDate(activeDate), "selected day from tab");
 
   // api calls
   const { data, isSuccess, isLoading } = useGetCompletedTasks();
-  console.log(data, "data data");
+  console.log(data, "uncompleted data");
 
   const { data: activityData } = useGetUserActivities();
-  console.log(activityData, "actiivyt data");
+  // console.log(activityData, "actiivyt data");
+  const filteredData = activityData?.data?.filter(
+    (item: any) =>
+      item.completedDate !== null &&
+      item.completedDate === formatDate(selectedDay)
+  );
+  // console.log(filteredData, "filtered data");
 
   isLoading && <PageLoader />;
 
@@ -94,23 +105,23 @@ const CompletedTasks = () => {
             </div>
 
             {showCalender && (
-              <div
-                onClick={closeCalender}
-                className="absolute top-10 bg-white -m-3 border-2 border-[#6200EE] rounded-2xl"
-              >
-                <style>{css}</style>
-                <DayPicker
-                  mode="single"
-                  required
-                  selected={selectedDay}
-                  onSelect={setSelectedDay}
-                  modifiersClassNames={{
-                    selected: "my-selected",
-                    today: "my-today",
-                    conainer: "container",
-                  }}
-                />
-              </div>
+              <>
+                <div className="absolute top-10 bg-white -m-3 border-2 border-[#6200EE] rounded-2xl">
+                  <style>{css}</style>
+                  <DayPicker
+                    mode="single"
+                    required
+                    selected={selectedDay}
+                    onSelect={setSelectedDay}
+                    modifiersClassNames={{
+                      selected: "my-selected",
+                      today: "my-today",
+                      conainer: "container",
+                    }}
+                    footer={<CloseCalender />}
+                  />
+                </div>
+              </>
             )}
           </div>
 
@@ -128,8 +139,8 @@ const CompletedTasks = () => {
                   "bg-[#7C56FE] text-white"
               )}
               onClick={() => {
-                setActiveDate(date.toDateString().split(" ")[0]);
-                console.log(date.toDateString(), "");
+                setActiveDate(date.toDateString());
+                // console.log(date.toDateString(), "selected day from tab");
               }}
             >
               <p
@@ -157,7 +168,9 @@ const CompletedTasks = () => {
 
       {data?.data.length >= 1 ? (
         <div className="">
-          <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
+          <p className="text-xs text-[#141414] py-3 font-bold">
+            {format(selectedDay as Date, "PPP")}
+          </p>
           {data?.data?.map((i: any) => (
             <TodoCompletedForm
               key={i.id}
@@ -172,27 +185,23 @@ const CompletedTasks = () => {
       ) : (
         <NoCompletedTask />
       )}
-      {/* 
-      {activityData?.data.length >= 1 ? (
-        <div className="">
-          <p className="text-xs text-[#141414] py-3 font-bold">{}</p>
-          {activityData?.data?.map((i: any) => (
-            <>
-              <p className="text-xs text-[#141414] py-3 font-bold">
-                {i.completedDate}
-              </p>
 
+      {/* {filteredData?.length >= 1 ? (
+        <>
+          <p className="py-3 text-xs font-semibold text-[#626262]">
+            {formatDate(selectedDay)}
+          </p>
+          <div>
+            {filteredData?.map((i: any) => (
               <TodoCompletedForm
-                key={i.id}
                 score={i.score}
                 reward={i.reward}
-                priority={i.priority}
-                taskTitle={i.description}
+                taskTitle={i.name}
                 approximateTime={i.duration / 60}
               />
-            </>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       ) : (
         <NoCompletedTask />
       )} */}

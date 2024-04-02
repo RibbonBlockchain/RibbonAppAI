@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
 
 const OfflineMessage = () => (
   <div style={{ backgroundColor: "red", color: "white", padding: "10px" }}>

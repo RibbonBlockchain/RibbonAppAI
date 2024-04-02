@@ -16,7 +16,7 @@ export default function Claim() {
             height={21}
             className=""
           />
-          Win 4 WLD
+          Win 5 WLD
         </div>
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -46,7 +46,7 @@ export default function Claim() {
             height={31}
           />
 
-          <span>+ 15 points</span>
+          <span>+ 25,000 points</span>
 
           <Image
             src="/images/questionnaire/coins.png"
@@ -55,7 +55,7 @@ export default function Claim() {
             height={28}
           />
 
-          <span>2 WLD</span>
+          <span>5 WLD</span>
         </div>
 
         <h3 className="text-2xl text-primary font-extrabold mt-10">

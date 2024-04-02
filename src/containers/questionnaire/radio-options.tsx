@@ -36,8 +36,9 @@ const RadioOptions = ({ options, onOptionSelect }: RadioOptionsProps) => {
             name="options"
             value={option?.id}
             onChange={() => onOptionSelect(option.id)}
-            className="bg-white border rounded-full w-3.5 h-3 border-gray-400 checked:bg-[#7C56FE] checked:border-gray-900 focus:outline-2px solid green-500"
+            className="bg-white border rounded-full w-3.5 h-3 "
           />
+
           <label
             className={clsx(
               selected === option?.id ? "text-[#7C56FE]" : "",

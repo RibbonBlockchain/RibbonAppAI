@@ -79,8 +79,8 @@ export const CompleteProfile = () => {
           Quick tips <MessageQuestion />
         </h1>
         <h2 className="text-xs font-normal text-center">
-          You need to complete your profile to unlock more rewards & tasks to
-          claim tokens
+          You need to complete your profile to be able to answer questionnaires,
+          unlock more rewards & tasks to claim tokens
         </h2>
       </div>
     </div>

@@ -6,11 +6,11 @@ import {
   useGetCompletedTasksByDate,
 } from "@/api/user";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect } from "react";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { DayPicker } from "react-day-picker";
-import NoCompletedTask from "./no-completed-task";
+import NoCompletedTask, { NoCompletedTaskOnDate } from "./no-completed-task";
 import { formatDate } from "@/lib/utils/format-date";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
@@ -69,16 +69,35 @@ const CompletedTasks = () => {
     todayDate
   );
 
-  // api calls
-  const { data } = useGetCompletedTasks();
+  useEffect(() => {
+    const useDate = localStorage.getItem("selectedDate");
+    if (useDate === formatDate(selectedDay)) {
+      setSelectedDay(todayDate);
+    } else {
+      setSelectedDay(selectedDay);
+    }
+  }, []);
 
-  const { data: activityData } = useGetUserActivities();
-  const filteredData = activityData?.data?.filter(
-    (item: any) =>
-      item.completedDate !== null &&
-      item.completedDate === formatDate(selectedDay)
-  );
-  console.log(activityData);
+  useEffect(() => {
+    localStorage.setItem("selectedDate", formatDate(selectedDay) as string);
+  }, [selectedDay]);
+
+  const handleUseDateClick = (date: any) => {
+    setSelectedDay(date);
+  };
+
+  // api calls
+  console.log(formatDate(selectedDay), "date here");
+  // const { data } = useGetCompletedTasks();
+  const { data } = useGetCompletedTasksByDate(formatDate(selectedDay));
+
+  // const { data: activityData } = useGetUserActivities();
+  // const filteredData = activityData?.data?.filter(
+  //   (item: any) =>
+  //     item.completedDate !== null &&
+  //     item.completedDate === formatDate(selectedDay)
+  // );
+  // console.log(activityData);
 
   return (
     <div className="p-4 sm:p-6">
@@ -104,7 +123,7 @@ const CompletedTasks = () => {
                     mode="single"
                     required
                     selected={selectedDay}
-                    onSelect={setSelectedDay}
+                    onSelect={handleUseDateClick}
                     modifiersClassNames={{
                       selected: "my-selected",
                       today: "my-today",
@@ -161,7 +180,8 @@ const CompletedTasks = () => {
         {data?.data.length >= 1 ? (
           <div className="">
             <p className="text-xs text-[#141414] py-3 font-bold">
-              {format(selectedDay as Date, "PPP")}
+              {/* {format(selectedDay as Date, "PPP")} */}
+              {formatDate(selectedDay)}
             </p>
             {data?.data?.map((i: any) => (
               <TodoCompletedForm
@@ -175,7 +195,7 @@ const CompletedTasks = () => {
             ))}
           </div>
         ) : (
-          <NoCompletedTask />
+          <NoCompletedTaskOnDate />
         )}{" "}
       </div>
 

@@ -21,26 +21,27 @@ const BeginQuestionnaire = ({
   completionTime: string | number;
 }) => {
   return (
-    <div className="relative flex flex-col h-[inherit] items-start justify-center p-4 sm:p-6">
+    <div className="relative flex -mt-2 flex-col h-[inherit] items-start justify-center p-4 sm:p-6">
       <BgFffect />
 
-      <div className="flex flex-col items-center justify-between w-full min-h-[85vh]">
-        <div className="w-full flex flex-col items-start gap-4 mt-10 justify-center">
+      <div className="flex flex-col items-center justify-around w-full min-h-[85vh]">
+        <div className="w-full flex flex-col items-start justify-center">
           {/* <BackArrowButton /> */}
           <Image
-            width={234}
-            height={241}
+            width={150}
+            height={150}
             src={imageUrl}
             alt="question"
             className="mx-auto flex items-center self-center justify-center"
           />
         </div>
 
-        <h1 className="flex flex-col text-center gap-2 font-bold text-[26px] text-[#714EE7]">
-          {description} <p className="text-black">Questionnaire</p>
+        <h1 className="flex flex-wrap w-screen items-center justify-center text-center gap-2 font-bold text-[22px] text-[#714EE7] ">
+          <p className="whitespace-nowrap">{description}</p>{" "}
+          <p className="text-black">Questionnaire</p>
         </h1>
 
-        <div className="grid gap-y-10 self-start">
+        <div className="grid gap-y-7 self-start">
           <div className="flex items-center gap-x-2">
             <div className="border rounded-full w-10 h-10 flex justify-center items-center border-[#A78EFE] relative">
               <Image
@@ -52,8 +53,8 @@ const BeginQuestionnaire = ({
               />
             </div>
             <div>
-              <h3 className="text-primary font-bold text-xl">{reward} WLD</h3>
-              <p className="text-[#434343] text-[0.75rem] mt-1">
+              <h3 className="text-primary font-bold text-lg">{reward} WLD</h3>
+              <p className="text-[#434343] text-[11px]">
                 Complete the survey to earn a token of {reward} WLD
               </p>
             </div>
@@ -70,10 +71,10 @@ const BeginQuestionnaire = ({
               />
             </div>
             <div>
-              <h3 className="text-primary font-bold text-xl">
+              <h3 className="text-primary font-bold text-lg">
                 + {rewardPoints} points
               </h3>
-              <p className="text-[#434343] text-[0.75rem] mt-1">
+              <p className="text-[#434343] text-[11px]">
                 Earn {rewardPoints} points by completing this {description}{" "}
                 survey
               </p>
@@ -90,10 +91,10 @@ const BeginQuestionnaire = ({
               />
             </div>
             <div>
-              <h3 className="text-primary font-bold text-xl">
+              <h3 className="text-primary font-bold text-lg">
                 {completionTime} minute(s)
               </h3>{" "}
-              <p className="text-[#434343] text-[0.75rem] mt-1">
+              <p className="text-[#434343] text-[11px]">
                 Complete this task in just {completionTime} minute(s)
               </p>
             </div>

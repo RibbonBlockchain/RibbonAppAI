@@ -102,10 +102,10 @@ export const useGetTaskByID = ({ id }: { id: string }) => {
   });
 };
 
-export const useGetCompletedTasksByDate = ({ slug }: { slug: string }) => {
+export const useGetCompletedTasksByDate = (date: string) => {
   return useQuery({
     queryKey: ["single-task-date"],
-    queryFn: () => getCompletedTasksByDate(slug),
+    queryFn: () => getCompletedTasksByDate(date),
   });
 };
 

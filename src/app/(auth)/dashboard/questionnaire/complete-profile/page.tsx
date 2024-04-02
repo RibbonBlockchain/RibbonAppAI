@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useUpdateProfile } from "@/api/user";
+import Claim from "@/containers/questionnaire/success";
 import FillInfo from "@/containers/questionnaire/fill-info";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
 import Birthdate from "@/components/questionnarie/complete-profile/birthdate";
@@ -8,8 +10,6 @@ import UserNames from "@/components/questionnarie/complete-profile/user-names";
 import UserSocials from "@/components/questionnarie/complete-profile/user-socials";
 import GenderSelect from "@/components/questionnarie/complete-profile/gender-select";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
-import { useUpdateProfile } from "@/api/user";
-import Claim from "@/containers/questionnaire/success";
 
 const CompleteProfile = () => {
   const [step, setStep] = React.useState(0);

@@ -27,7 +27,7 @@ const OptionSelectQuestionnarie = ({
   children: React.ReactElement;
 }) => {
   return (
-    <div className="relative flex flex-col min-h-[100vh] items-start justify-between p-4 sm:p-6">
+    <div className="relative z-10 flex flex-col min-h-[100vh] items-start justify-between p-4 sm:p-6">
       <BgEffect />
 
       <div className="flex flex-col w-full">

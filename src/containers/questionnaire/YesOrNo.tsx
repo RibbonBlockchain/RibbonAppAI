@@ -16,7 +16,7 @@ const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
   const [selected, setSelected] = React.useState("");
 
   return (
-    <div className="flex flex-row gap-12">
+    <div className="flex z-10 flex-row gap-12">
       {options.map((i: any) => (
         <div
           key={i.id}

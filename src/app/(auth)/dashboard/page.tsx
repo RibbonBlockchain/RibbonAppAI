@@ -98,7 +98,7 @@ const Dashboard = () => {
           {/* {is_walkthrough_open && <UserWalkthrough />} */}
 
           <Topbar />
-          <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-6 flex flex-col">
+          <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-2 flex flex-col">
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-col items-start gap-1 text-center">
                 <div className="flex flex-row gap-2 items-center text-sm font-medium">

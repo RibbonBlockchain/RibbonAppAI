@@ -1,20 +1,19 @@
 "use client";
 
-import React from "react";
-import clsx from "clsx";
-import { format } from "date-fns";
-import "react-day-picker/dist/style.css";
-import { DayPicker } from "react-day-picker";
-import NoCompletedTask from "./no-completed-task";
 import {
   useGetCompletedTasks,
   useGetUserActivities,
   useGetCompletedTasksByDate,
 } from "@/api/user";
+import clsx from "clsx";
+import React from "react";
+import { format } from "date-fns";
+import "react-day-picker/dist/style.css";
+import { DayPicker } from "react-day-picker";
+import NoCompletedTask from "./no-completed-task";
+import { formatDate } from "@/lib/utils/format-date";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
-import PageLoader from "@/components/loader";
-import { formatDate } from "@/lib/utils/format-date";
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -43,7 +42,7 @@ const CompletedTasks = () => {
   );
 
   const todayDate = new Date();
-  const currentDay = todayDate.toDateString().split(" ")[0];
+  const currentDay = todayDate.toDateString();
   const currentMonth = todayDate.toDateString().split(" ")[1];
   const startOfWeekDate = startOfWeek.toDateString().split(" ")[2];
   const endOfWeekDate = endOfWeek.toDateString().split(" ")[2];
@@ -70,23 +69,16 @@ const CompletedTasks = () => {
     todayDate
   );
 
-  console.log(selectedDay, "selected day from calender");
-  // console.log(formatDate(activeDate), "selected day from tab");
-
   // api calls
-  const { data, isSuccess, isLoading } = useGetCompletedTasks();
-  console.log(data, "uncompleted data");
+  const { data } = useGetCompletedTasks();
 
   const { data: activityData } = useGetUserActivities();
-  // console.log(activityData, "actiivyt data");
   const filteredData = activityData?.data?.filter(
     (item: any) =>
       item.completedDate !== null &&
       item.completedDate === formatDate(selectedDay)
   );
-  // console.log(filteredData, "filtered data");
-
-  isLoading && <PageLoader />;
+  console.log(activityData);
 
   return (
     <div className="p-4 sm:p-6">
@@ -140,7 +132,6 @@ const CompletedTasks = () => {
               )}
               onClick={() => {
                 setActiveDate(date.toDateString());
-                // console.log(date.toDateString(), "selected day from tab");
               }}
             >
               <p
@@ -166,45 +157,84 @@ const CompletedTasks = () => {
         </div>
       </div>
 
-      {data?.data.length >= 1 ? (
-        <div className="">
-          <p className="text-xs text-[#141414] py-3 font-bold">
-            {format(selectedDay as Date, "PPP")}
-          </p>
-          {data?.data?.map((i: any) => (
-            <TodoCompletedForm
-              key={i.id}
-              score={i.score}
-              reward={i.reward}
-              priority={i.priority}
-              taskTitle={i.description}
-              approximateTime={i.duration / 60}
-            />
-          ))}
-        </div>
-      ) : (
-        <NoCompletedTask />
-      )}
-
-      {/* {filteredData?.length >= 1 ? (
-        <>
-          <p className="py-3 text-xs font-semibold text-[#626262]">
-            {formatDate(selectedDay)}
-          </p>
-          <div>
-            {filteredData?.map((i: any) => (
+      <div>
+        {data?.data.length >= 1 ? (
+          <div className="">
+            <p className="text-xs text-[#141414] py-3 font-bold">
+              {format(selectedDay as Date, "PPP")}
+            </p>
+            {data?.data?.map((i: any) => (
               <TodoCompletedForm
+                key={i.id}
                 score={i.score}
                 reward={i.reward}
-                taskTitle={i.name}
+                priority={i.priority}
+                taskTitle={i.description}
                 approximateTime={i.duration / 60}
               />
             ))}
           </div>
-        </>
+        ) : (
+          <NoCompletedTask />
+        )}{" "}
+      </div>
+
+      {/* 
+      {selectedDay !== todayDate ? (
+        <div>
+          {filteredData?.length >= 1 ? (
+            <>
+              <p className="py-3 text-xs font-semibold text-[#626262]">
+                {formatDate(selectedDay)}
+              </p>
+              <div>
+                {filteredData?.map((i: any) => (
+                  <TodoCompletedForm
+                    key={i.id}
+                    score={i.score}
+                    reward={i.reward}
+                    taskTitle={i.name}
+                    approximateTime={i.duration / 60}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="py-3 text-xs font-semibold text-[#626262]">
+                {formatDate(selectedDay)}
+              </p>
+              <NoCompletedTaskOnDate />
+            </>
+          )}{" "}
+        </div>
       ) : (
-        <NoCompletedTask />
+        <div>
+          {data?.data.length >= 1 ? (
+            <div className="">
+              <p className="text-xs text-[#141414] py-3 font-bold">
+                {format(selectedDay as Date, "PPP")}
+              </p>
+              {data?.data?.map((i: any) => (
+                <TodoCompletedForm
+                  key={i.id}
+                  score={i.score}
+                  reward={i.reward}
+                  priority={i.priority}
+                  taskTitle={i.description}
+                  approximateTime={i.duration / 60}
+                />
+              ))}
+            </div>
+          ) : (
+            <NoCompletedTask />
+          )}{" "}
+        </div>
       )} */}
+
+      {/* <div>
+        <TaskListByDate />
+      </div> */}
 
       {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">

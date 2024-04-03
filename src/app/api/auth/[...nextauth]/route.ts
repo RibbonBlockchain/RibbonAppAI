@@ -28,9 +28,9 @@ const authOptions: NextAuthOptions = {
     },
   ],
   callbacks: {
-    async signIn({ account, user, credentials, email, profile }) {
-      console.log("account", account, user, credentials, email, profile);
+    async signIn({ user }) {
       const token = await worldIDLogin({ id: user.id })
+      console.log('token from server', token)
       user.accessToken = token.data.accessToken
       return true;
     },

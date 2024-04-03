@@ -1,3 +1,4 @@
+import { worldIDLogin } from "@/api/auth/req";
 import NextAuth, { NextAuthOptions } from "next-auth";
 
 // For more information on each option (and a full list of options) go to
@@ -29,7 +30,8 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ account, user, credentials, email, profile }) {
       console.log("account", account, user, credentials, email, profile);
-      user.accessToken = "tokenFromMyServer";
+      const token = await worldIDLogin({ id: user.id })
+      user.accessToken = token.data.accessToken
       return true;
     },
 
@@ -43,8 +45,7 @@ const authOptions: NextAuthOptions = {
       return `${baseUrl}/dashboard`;
     },
 
-    async jwt({ token, user, account, profile, session, trigger }) {
-      console.log("jwt", token, user, account, profile, session, trigger);
+    async jwt({ user, token }) {
       token.accessToken = user?.accessToken;
       return token;
     },

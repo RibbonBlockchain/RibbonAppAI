@@ -1,9 +1,11 @@
 import {
   TPhoneLoginBody,
   TCheckPhoneBody,
+  TWorldIDLoginBody,
   TCheckPhoneResponse,
   TPhoneSignPinUpBody,
   TPhoneLoginResponse,
+  TWorldIDLoginResponse,
   TVerifyPhoneSignUpBody,
   TVerifyPhoneUpdateBody,
   TPhoneSignUpRequestBody,
@@ -32,6 +34,14 @@ export const checkPhone = async (body: TCheckPhoneBody) => {
 export const phoneLogin = async (body: TPhoneLoginBody) => {
   const res = await client.post<TResponse<TPhoneLoginResponse>>(
     "/auth/login/phone",
+    body
+  );
+  return res.data;
+};
+
+export const worldIDLogin = async (body: TWorldIDLoginBody) => {
+  const res = await client.post<TResponse<TWorldIDLoginResponse>>(
+    "/auth/login/world-id",
     body
   );
   return res.data;

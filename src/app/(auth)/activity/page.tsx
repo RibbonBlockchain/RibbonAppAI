@@ -50,7 +50,7 @@ const Activity = () => {
             </div>
           </div>
 
-          <div className="flex mx-auto mt-4 items-center justify-start gap-4">
+          <div className="flex cursor-pointer mx-auto mt-4 items-center justify-start gap-4">
             <div
               className={
                 activeTab === "pending"

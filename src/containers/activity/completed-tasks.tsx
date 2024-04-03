@@ -2,12 +2,13 @@
 
 import clsx from "clsx";
 import React from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
-import { DayPicker, DateRange } from "react-day-picker";
+import { DayPicker } from "react-day-picker";
+import { formatDate } from "@/lib/utils/format-date";
 import { CalendarDays, ChevronDown } from "lucide-react";
+import { SpinnerIcon } from "@/components/icons/spinner";
 import { NoCompletedTaskOnDate } from "./no-completed-task";
-import { formatActiveDate, formatDate } from "@/lib/utils/format-date";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import { useGetCompletedTasks, useGetCompletedTasksByDate } from "@/api/user";
 
@@ -55,7 +56,7 @@ const CompletedTasks = () => {
   const closeCalender = () => setShowCalender(false);
 
   const CloseCalender = () => (
-    <div className="text-end" onClick={closeCalender}>
+    <div className="text-end cursor-pointer" onClick={closeCalender}>
       Close
     </div>
   );
@@ -65,11 +66,13 @@ const CompletedTasks = () => {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(
     todayDate
   );
+  const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(true);
 
   // api calls
-  const { data } = useGetCompletedTasksByDate(
-    formatDate(selectedDay) || formatActiveDate(activeDate)
+  const { data, isLoading } = useGetCompletedTasksByDate(
+    formatDate(selectedDay)
   );
+  const { data: allCompleted, isLoading: allLoading } = useGetCompletedTasks();
 
   return (
     <div className="p-4 sm:p-6">
@@ -120,18 +123,16 @@ const CompletedTasks = () => {
               key={index}
               className={clsx(
                 `px-3 py-2 flex flex-col gap-1 rounded-full text-center`,
-                activeDate === date.toDateString().split(" ")[0] &&
-                  "bg-[#7C56FE] text-white"
+                activeDate === date.toDateString() && "bg-[#7C56FE] text-white"
               )}
-              onClick={() => {
-                setActiveDate(date.toDateString());
-              }}
+              // onClick={() => {
+              //   setActiveDate(date.toDateString());
+              // }}
             >
               <p
                 className={clsx(
                   "text-[#939393] font-medium",
-                  activeDate === date.toDateString().split(" ")[0] &&
-                    " text-white"
+                  activeDate === date.toDateString() && " text-white"
                 )}
               >
                 {date.toDateString()[0]}
@@ -139,7 +140,7 @@ const CompletedTasks = () => {
               <p
                 className={clsx(
                   "text-[#7C56FE] font-semibold",
-                  activeDate === date.toDateString().split(" ")[0] &&
+                  activeDate === date.toDateString() &&
                     "bg-[#7C56FE] text-white"
                 )}
               >
@@ -150,28 +151,64 @@ const CompletedTasks = () => {
         </div>
       </div>
 
-      <div>
-        {data?.data.length >= 1 ? (
-          <div className="">
-            <p className="text-xs text-[#141414] py-3 font-bold">
-              {/* {format(selectedDay as Date, "PPP")} */}
-              {formatDate(selectedDay)}
-            </p>
-            {data?.data?.map((i: any) => (
-              <TodoCompletedForm
-                key={i.id}
-                score={i.score}
-                reward={i.reward}
-                priority={i.priority}
-                taskTitle={i.description}
-                approximateTime={i.duration / 60}
-              />
-            ))}
-          </div>
+      <div onClick={() => setSeeAllTasks(!seeAllTasks)}>
+        {seeAllTasks ? (
+          <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
+            View tasks by date
+          </p>
         ) : (
-          <NoCompletedTaskOnDate />
+          <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
+            View all completed tasks
+          </p>
         )}
       </div>
+
+      {seeAllTasks ? (
+        <div>
+          {allCompleted?.data.length >= 1 ? (
+            <div className="py-3">
+              {allCompleted?.data?.map((i: any) => (
+                <TodoCompletedForm
+                  key={i.id}
+                  score={i.score}
+                  reward={i.reward}
+                  priority={i.priority}
+                  taskTitle={i.description}
+                  approximateTime={i.duration / 60}
+                />
+              ))}
+            </div>
+          ) : allLoading ? (
+            <SpinnerIcon />
+          ) : (
+            <NoCompletedTaskOnDate />
+          )}
+        </div>
+      ) : (
+        <div>
+          {data?.data.length >= 1 ? (
+            <div className="">
+              <p className="text-xs text-[#141414] py-3 font-bold">
+                {formatDate(selectedDay)}
+              </p>
+              {data?.data?.map((i: any) => (
+                <TodoCompletedForm
+                  key={i.id}
+                  score={i.score}
+                  reward={i.reward}
+                  priority={i.priority}
+                  taskTitle={i.description}
+                  approximateTime={i.duration / 60}
+                />
+              ))}
+            </div>
+          ) : isLoading ? (
+            <SpinnerIcon />
+          ) : (
+            <NoCompletedTaskOnDate />
+          )}
+        </div>
+      )}
 
       {/* <div className="w-full">
         <p className="text-xs text-[#141414] py-3 font-bold">

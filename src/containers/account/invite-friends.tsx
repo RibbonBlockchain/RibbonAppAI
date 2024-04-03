@@ -1,9 +1,15 @@
+import clsx from "clsx";
 import React from "react";
 import Image from "next/image";
 
-const InviteFriends = () => {
+const InviteFriends = ({ className }: { className: string }) => {
   return (
-    <div className="bg-[#EAF7ED] my-6 p-2 flex items-center justify-between rounded-md">
+    <div
+      className={clsx(
+        "my-2 p-2 flex items-center justify-between rounded-md",
+        className
+      )}
+    >
       <div className="flex flex-row gap-3 items-center justify-center">
         <Image
           priority

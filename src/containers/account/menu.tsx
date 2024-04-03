@@ -32,7 +32,7 @@ export const ProfileDetails = [
     logo: <Wallets />,
   },
   {
-    href: "#",
+    href: "/account/balance&points",
     description: "Balance & Points",
     logo: <Balance />,
   },

@@ -1,0 +1,69 @@
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import { useGetAuth } from "@/api/auth";
+import ProgressBar from "@ramonak/react-progress-bar";
+import BackArrowButton from "@/components/button/back-arrow";
+import InviteFriends from "@/containers/account/invite-friends";
+import CompleteTasks from "@/containers/account/complete-tasks";
+import UserBalanceAndPoints from "@/containers/account/user-balance&points";
+
+const BalanceAndPoints = () => {
+  const { data: user } = useGetAuth({ enabled: true });
+
+  return (
+    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-[inherit] flex flex-col">
+      <div className="mb-6">
+        <BackArrowButton stroke="#583DB4" />
+        <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
+          Balance & Points
+        </div>
+      </div>
+
+      <UserBalanceAndPoints />
+
+      <div className="bg-white rounded-2xl p-3 flex flex-row gap-2 items-center justify-center my-5">
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold">Unlock Withdrawals</p>
+          <div className="flex flex-col gap-1">
+            <p className="text-[#626262]">
+              <span className="text-xl text-black font-bold">
+                {user?.wallet.balance * 5000}
+              </span>{" "}
+              /10,000 points
+            </p>
+            <div className="w-full">
+              <ProgressBar
+                height="3px"
+                labelSize="10px"
+                maxCompleted={10000}
+                isLabelVisible={false}
+                completed={user?.wallet.balance * 5000}
+              />
+            </div>
+          </div>
+          <p className="text-xs font-medium">
+            Complete more tasks and unlock token withdrawals
+          </p>
+        </div>
+        <div>
+          <Image
+            src="/images/unlock-more.png"
+            alt=""
+            width={100}
+            height={136}
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="text-[#080808] text-[14px]">Earn more points</p>
+        <InviteFriends className="bg-[#FFFFFF]" />
+        <CompleteTasks />
+      </div>
+    </div>
+  );
+};
+
+export default BalanceAndPoints;

@@ -1,6 +1,6 @@
-import { HappyEmoji, SadEmoji } from "@/public/images";
 import clsx from "clsx";
-import React, { useEffect } from "react";
+import React from "react";
+import { HappyEmoji, SadEmoji } from "@/public/images";
 
 type TOptions = {
   id: number;
@@ -28,7 +28,12 @@ const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
           }`}
         >
           {i.text === "Yes" ? <HappyEmoji /> : <SadEmoji />}
-          <div className={clsx("flex flex-row text-nowrap py-1.5 px-2")}>
+          <div
+            className={clsx(
+              selected === i.id ? "text-white" : "text-black",
+              "flex flex-row text-nowrap py-1.5 px-2"
+            )}
+          >
             {i.text}
           </div>
         </div>

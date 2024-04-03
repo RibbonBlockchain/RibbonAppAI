@@ -36,7 +36,7 @@ export const getCompletedTasks = async () => {
   return res.data;
 };
 
-export const getCompletedTasksByDate = async (date: any) => {
+export const getCompletedTasksByDate = async (date?: any) => {
   const res = await client.get<TResponse<any>>(
     `/task/user/completed?completedDate=${date}`
   );

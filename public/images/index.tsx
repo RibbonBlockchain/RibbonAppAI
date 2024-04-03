@@ -18,6 +18,7 @@ import Wallets from "./empty-wallet.svg";
 import ContactUs from "./contact-us.svg";
 import HappyEmoji from "./yes-emoji.svg";
 import RibbonLight from "./ribbon-light.svg";
+import SwapIconGray from "./arrow-swap-gray.svg";
 import PrivacyPolicy from "./privacy-policy.svg";
 import SwapIcon from "./arrow-swap-horizontal.svg";
 import NotificationsIcon from "./notifications.svg";
@@ -42,6 +43,7 @@ export {
   ContactUs,
   HappyEmoji,
   RibbonLight,
+  SwapIconGray,
   PrivacyPolicy,
   TermsOfService,
   MessageQuestion,

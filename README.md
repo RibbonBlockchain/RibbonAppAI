@@ -1,9 +1,3 @@
-API CI:
-
-Front End CI production:
-
-Front End CI staging:
-
 Home page: [ribbon-app-ten.vercel.app](https://ribbon-app-ten.vercel.app)
 
 Staging: [ribbon-app-ten.vercel.app/](https://ribbon-app-ten.vercel.app)

@@ -23,7 +23,10 @@ const Account = () => {
       <div className="bg-white min-h-screen p-4 sm:p-6">
         <h1 className="text-2xl font-extrabold mt-3">My Account</h1>
         <User />
-        <InviteFriends />
+
+        <div className="my-4">
+          <InviteFriends className="bg-[#EAF7ED]" />
+        </div>
 
         <div className="mt-2 flex flex-col gap-[2px]">
           <p className="text-xs font-bold text-[#434343]">ACCOUNT</p>

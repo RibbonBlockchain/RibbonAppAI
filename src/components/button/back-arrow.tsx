@@ -1,11 +1,12 @@
 "use client";
 
+import clsx from "clsx";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type Props = { onClick?: () => void };
+type Props = { onClick?: () => void; stroke?: string; className?: string };
 
-const BackArrowButton = ({ onClick }: Props) => {
+const BackArrowButton = ({ onClick, stroke, className }: Props) => {
   const router = useRouter();
 
   const handleBack = () => {
@@ -14,8 +15,11 @@ const BackArrowButton = ({ onClick }: Props) => {
   };
 
   return (
-    <div className="flex py-4 w-[40px] cursor-pointer" onClick={handleBack}>
-      <ArrowLeft className="text-[]" />
+    <div
+      className={clsx(className, "flex py-4 w-[40px] cursor-pointer")}
+      onClick={handleBack}
+    >
+      <ArrowLeft stroke={stroke} />
     </div>
   );
 };

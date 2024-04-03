@@ -6,8 +6,9 @@ import Menu, {
   ProfileDetails,
 } from "@/containers/account/menu";
 import React from "react";
-import Logout from "./sections/logout";
+import Link from "next/link";
 import { Scan } from "@/public/images";
+import Logout from "./sections/logout";
 import User from "@/containers/account/user";
 import { ChevronRight, Moon, Sun } from "lucide-react";
 import SwitchButton from "@/containers/account/switch-button";
@@ -27,11 +28,8 @@ const Account = () => {
         <div className="mt-2 flex flex-col gap-[2px]">
           <p className="text-xs font-bold text-[#434343]">ACCOUNT</p>
 
-          <div>
-            <div
-              onClick={() => console.log("verify your identity")}
-              className="flex flex-row items-center justify-between py-3 px-[6px] "
-            >
+          <Link href="/account/kyc">
+            <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
               <div className="flex flex-row items-center justify-center gap-3">
                 <Scan />
                 <p className="text-base font-medium text-red-500">
@@ -41,7 +39,7 @@ const Account = () => {
 
               <ChevronRight stroke="#6200EE" />
             </div>
-          </div>
+          </Link>
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu

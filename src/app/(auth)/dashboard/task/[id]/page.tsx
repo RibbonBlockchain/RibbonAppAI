@@ -13,10 +13,12 @@ import ClaimTaskReward from "@/components/modal/claim_task_reward";
 import RadioOptions from "@/containers/questionnaire/radio-options";
 import { Check, RibbonLight } from "../../../../../../public/images";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
+import RewardClaimedPage from "@/components/modal/reward-claimed-page";
 
 const TaskPage = ({ params }: any) => {
   const [step, setStep] = React.useState(0);
   const [claim, setClaim] = React.useState(false);
+  const [rewardClaimed, setRewardClaimed] = React.useState(false);
 
   const { data, isLoading } = useGetTaskByID({ id: String(params.id) });
   const questionIds = data?.questions?.map((question: any) => question.id);
@@ -122,6 +124,7 @@ const TaskPage = ({ params }: any) => {
                       {q?.type === "BOOLEAN" ? (
                         <div className="flex items-center justify-center flex-row w-full mt-14">
                           <YesOrNo
+                            key={q?.id}
                             options={q?.options}
                             onOptionSelect={handleYesOrNoOptionSelect}
                           />
@@ -129,6 +132,7 @@ const TaskPage = ({ params }: any) => {
                       ) : (
                         <div className="flex flex-row w-full mt-10 mb-20  ">
                           <RadioOptions
+                            key={q?.id}
                             options={q?.options}
                             onOptionSelect={handleOptionSelect}
                           />
@@ -189,9 +193,18 @@ const TaskPage = ({ params }: any) => {
             {claim && (
               <ClaimTaskReward
                 isOpen={claim}
-                closeModal={() => setClaim(false)}
+                closeModal={() => {
+                  setClaim(false), setRewardClaimed(true);
+                }}
               />
             )}
+
+            {/* {rewardClaimed && (
+              <RewardClaimedPage
+                isOpen={rewardClaimed}
+                closeModal={() => setRewardClaimed(false)}
+              />
+            )} */}
           </div>
         )}
       </div>

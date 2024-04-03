@@ -3,6 +3,7 @@
 /** @format */
 
 import Key from "./key.svg";
+import Scan from "./scan.svg";
 import Bank from "./bank.svg";
 import FAQs from "./faqs.svg";
 import Check from "./check.svg";
@@ -27,6 +28,7 @@ export {
   Key,
   Bank,
   FAQs,
+  Scan,
   Check,
   LogOut,
   Profile,

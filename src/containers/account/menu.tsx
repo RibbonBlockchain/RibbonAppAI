@@ -20,11 +20,7 @@ export const ProfileDetails = [
     description: "Link World ID",
     logo: <WorldID />,
   },
-  {
-    href: "#",
-    description: "Verify Identity (KYC/AML)",
-    logo: <WorldID />,
-  },
+
   {
     href: "#",
     description: "Personal Details",

@@ -104,8 +104,11 @@ export const useGetTaskByID = ({ id }: { id: string }) => {
 
 export const useGetCompletedTasksByDate = (date: string | undefined) => {
   return useQuery({
-    queryKey: ["single-task-date"],
+    queryKey: ["task-completed", date],
     queryFn: () => getCompletedTasksByDate(date),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 };
 

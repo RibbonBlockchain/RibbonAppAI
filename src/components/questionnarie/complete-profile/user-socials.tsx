@@ -11,7 +11,7 @@ const UserSocials = ({ state, setState }: any) => {
   };
 
   return (
-    <div>
+    <div className="z-10">
       <InputBox
         name="email"
         required={true}

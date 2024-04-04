@@ -22,7 +22,7 @@ export const ProfileDetails = [
   },
 
   {
-    href: "#",
+    href: "/account/personal-details",
     description: "Personal Details",
     logo: <Profile />,
   },
@@ -40,7 +40,7 @@ export const ProfileDetails = [
 
 export const Settings = [
   {
-    href: "#",
+    href: "/account/change-pin",
     description: "Change Pin",
     logo: <Key />,
   },

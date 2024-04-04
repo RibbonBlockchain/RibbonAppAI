@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Submit from "./sections/submit";
-import BackArrow from "./sections/back";
 import PinFormInput from "./sections/form";
+import BackArrow from "../login/sections/back";
 
 const Login = () => {
   return (

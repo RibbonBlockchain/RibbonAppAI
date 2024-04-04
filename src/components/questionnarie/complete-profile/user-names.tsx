@@ -8,7 +8,7 @@ const UserNames = ({ state, setState }: any) => {
   };
 
   return (
-    <div>
+    <div className="z-10">
       <InputBox
         name="firstName"
         required={true}

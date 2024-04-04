@@ -17,7 +17,7 @@ const Verify = () => {
 
         <div className="flex flex-col gap-2">
           <h1 className="text-slate-700 font-extrabold text-3xl">
-            Verification required{" "}
+            Verification required
           </h1>
 
           <SubHeading />

@@ -19,7 +19,7 @@ const RadioSelect = ({ options, thirdOptionText }: any) => {
         <div
           key={index}
           className={clsx(
-            "bg-white flex flex-row items-center py-4 border-[0.5px] shadow-lg w-full rounded-md px-3"
+            "bg-white flex z-10 flex-row items-center py-4 border-[0.5px] shadow-lg w-full rounded-md px-3"
           )}
         >
           <input

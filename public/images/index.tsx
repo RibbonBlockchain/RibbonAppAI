@@ -5,15 +5,19 @@
 import Key from "./key.svg";
 import Scan from "./scan.svg";
 import Bank from "./bank.svg";
+import Twitter from "./x.svg";
 import FAQs from "./faqs.svg";
 import Check from "./check.svg";
 import Balance from "./cup.svg";
 import LogOut from "./logout.svg";
 import GroupSVG from "./group.svg";
+import Discord from "./discord.svg";
 import Profile from "./profile.svg";
 import WorldID from "./WorldID.svg";
+import LinkedIn from "./linkedin.svg";
 import Feedback from "./feedback.svg";
 import SadEmoji from "./no-emoji.svg";
+import Instagram from "./instagram.svg";
 import Wallets from "./empty-wallet.svg";
 import ContactUs from "./contact-us.svg";
 import HappyEmoji from "./yes-emoji.svg";
@@ -40,6 +44,7 @@ export {
   GroupSVG,
   Feedback,
   SadEmoji,
+  Discord,
   ContactUs,
   HappyEmoji,
   RibbonLight,
@@ -48,4 +53,7 @@ export {
   TermsOfService,
   MessageQuestion,
   NotificationsIcon,
+  Twitter,
+  Instagram,
+  LinkedIn,
 };

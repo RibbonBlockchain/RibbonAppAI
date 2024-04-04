@@ -4,14 +4,14 @@ import { useAtom } from "jotai";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import BackArrowButton from "@/components/button/back-arrow";
 
-const BackArrow = () => {
+const BackArrow = ({ stroke }: { stroke?: string }) => {
   const [_, setState] = useAtom(authAtom);
 
   const handleClick = () => {
     setState((prev) => ({ ...prev, phoneNumber: "" }));
   };
 
-  return <BackArrowButton onClick={handleClick} />;
+  return <BackArrowButton stroke={"#000"} onClick={handleClick} />;
 };
 
 export default BackArrow;

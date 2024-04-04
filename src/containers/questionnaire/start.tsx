@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import BgFffect from "@/components/questionnarie/bg-effect";
+import BackArrowButton from "@/components/button/back-arrow";
 
 const BeginQuestionnaire = ({
   reward,

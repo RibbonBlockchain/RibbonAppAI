@@ -2,6 +2,7 @@
 
 import React from "react";
 import Button from "@/components/button";
+import { useChangePin } from "@/api/auth";
 import BackArrowButton from "@/components/button/back-arrow";
 import PinResetSuccessful from "@/components/modal/pin-reset-successful";
 
@@ -12,9 +13,22 @@ const ChangePin = () => {
 
   const [successModal, setSuccessModal] = React.useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const { mutate: changePin, isPending, isSuccess } = useChangePin();
+
+  const isLoading = isPending || isSuccess;
+  const isFormInvalid =
+    !currentPin || !newPin || !confirmPin || newPin !== confirmPin;
+
+  const isSubmitDisabled = isLoading || isFormInvalid;
+
+  const onSuccess = () => {
     setSuccessModal(true);
-    console.log("clicked");
+  };
+
+  const handleSubmit = () => {
+    if (isSubmitDisabled) return;
+
+    changePin({ currentPin, newPin }, { onSuccess });
   };
 
   return (
@@ -25,7 +39,8 @@ const ChangePin = () => {
           Change Pin
         </div>
       </div>
-      <div className="w-full flex flex-col mt-5 gap-10">
+      <div className="w-full flex flex-col p-4 sm:p-6 mt-5">
+        <label className="text-xs font-bold mb-1 pl-1">Current pin</label>
         <input
           id="currentPin"
           type={"text"}
@@ -34,38 +49,47 @@ const ChangePin = () => {
           onChange={(e) => setCurrentPin(e.target.value)}
           placeholder="Current Pin"
           className={
-            "text-sm w-full py-4 bg-white p-4 sm:p-6 leading-tight appearance-none border-b focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+            "text-sm w-full py-4 bg-white px-3 rounded-md leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
           }
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col mt-10">
+          <label className="text-xs font-bold mb-1 pl-1">New pin</label>
           <input
-            id="currentPin"
+            id="newPin"
             type={"text"}
-            name={"currentPin"}
+            name={"newPin"}
             value={newPin}
             onChange={(e) => setNewPin(e.target.value)}
             placeholder="Enter new Pin"
             className={
-              "text-sm w-full py-4 p-4 sm:p-6 bg-white leading-tight appearance-none border-b focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+              "text-sm w-full py-4 p-4 sm:p-6 bg-white leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
             }
           />
+
+          <label className="text-xs font-bold mb-1 mt-4 pl-1">
+            Confirm pin
+          </label>
           <input
-            id="currentPin"
+            id="confirmPin"
             type={"text"}
-            name={"currentPin"}
+            name={"confirmPin"}
             value={confirmPin}
             onChange={(e) => setConfirmPin(e.target.value)}
             placeholder="Confirm New Pin"
             className={
-              "text-sm w-full py-4 p-4 sm:p-6 bg-white leading-tight appearance-none border-b focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+              "text-sm w-full py-4 p-4 sm:p-6 bg-white leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
             }
           />
         </div>
       </div>
 
       <div className="flex p-4 sm:p-6 items-center justify-center w-full mt-12">
-        <Button loading={false} onClick={handleSubmit} disabled={false}>
+        <Button
+          loading={false}
+          onClick={handleSubmit}
+          disabled={isSubmitDisabled}
+        >
           Submit
         </Button>
       </div>

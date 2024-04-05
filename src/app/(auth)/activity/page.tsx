@@ -17,10 +17,10 @@ const Activity = () => {
   const pointBalance = user?.wallet.balance * 5000;
 
   useEffect(() => {
-    const pending = localStorage.getItem("activeActivityTab");
-    if (pending === "pending") {
+    const status = localStorage.getItem("activeActivityTab");
+    if (status === "pending") {
       setActiveTab("pending");
-    } else if (pending === "completed") {
+    } else if (status === "completed") {
       setActiveTab("completed");
     }
   }, []);

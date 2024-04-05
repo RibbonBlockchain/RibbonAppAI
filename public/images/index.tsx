@@ -7,6 +7,7 @@ import Scan from "./scan.svg";
 import Bank from "./bank.svg";
 import Twitter from "./x.svg";
 import FAQs from "./faqs.svg";
+import Star from "./star.svg";
 import Check from "./check.svg";
 import Balance from "./cup.svg";
 import LogOut from "./logout.svg";
@@ -32,6 +33,7 @@ import MessageQuestion from "./message-question.svg";
 export {
   Key,
   Bank,
+  Star,
   FAQs,
   Scan,
   Check,
@@ -40,12 +42,15 @@ export {
   Wallets,
   Balance,
   WorldID,
+  Discord,
+  Twitter,
   SwapIcon,
   GroupSVG,
   Feedback,
   SadEmoji,
-  Discord,
+  LinkedIn,
   ContactUs,
+  Instagram,
   HappyEmoji,
   RibbonLight,
   SwapIconGray,
@@ -53,7 +58,4 @@ export {
   TermsOfService,
   MessageQuestion,
   NotificationsIcon,
-  Twitter,
-  Instagram,
-  LinkedIn,
 };

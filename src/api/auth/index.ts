@@ -1,22 +1,28 @@
 import {
   logout,
   getAuth,
+  changePin,
+  forgotPin,
   checkPhone,
   phoneLogin,
   updatePhone,
+  createNewPin,
   phoneSignUpPin,
+  verifyForgotPin,
   verifyPhoneSignUp,
   verifyPhoneUpdate,
   phoneSignUpRequest,
 } from "./req";
 import {
   TGetAuth,
+  TGetResponse,
+  TChangePinBody,
   TCheckPhoneBody,
   TPhoneLoginBody,
+  TCreateNewPinBody,
   TPhoneSignPinUpBody,
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
-  TGetResponse,
 } from "./types";
 import {
   authAtom,
@@ -125,5 +131,34 @@ export const useVerifyPhoneUpdate = () => {
   return useMutation({
     onError,
     mutationFn: (body: TVerifyPhoneSignUpBody) => verifyPhoneUpdate(body),
+  });
+};
+
+export const useChangePin = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TChangePinBody) => changePin(body),
+  });
+};
+
+// forgot pin
+export const useForgotPin = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCheckPhoneBody) => forgotPin(body),
+  });
+};
+
+export const useVerifyPhoneForgotPassword = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TVerifyPhoneSignUpBody) => verifyForgotPin(body),
+  });
+};
+
+export const useCreateNewPin = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCreateNewPinBody) => createNewPin(body),
   });
 };

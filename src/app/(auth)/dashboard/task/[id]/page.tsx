@@ -8,19 +8,19 @@ import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useGetTaskByID, useSubmitTask } from "@/api/user";
 import BgEffect from "@/components/questionnarie/bg-effect";
+import RateTaskModal from "@/components/modal/rate-task-modal";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
 import ClaimTaskReward from "@/components/modal/claim_task_reward";
 import RadioOptions from "@/containers/questionnaire/radio-options";
 import { Check, RibbonLight } from "../../../../../../public/images";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
-import RewardClaimedPage from "@/components/modal/reward-claimed-page";
 
 const TaskPage = ({ params }: any) => {
   const [step, setStep] = React.useState(0);
   const [claim, setClaim] = React.useState(false);
-  const [rewardClaimed, setRewardClaimed] = React.useState(false);
+  const [rateTask, setRateTask] = React.useState(false);
 
-  const { data, isLoading } = useGetTaskByID({ id: String(params.id) });
+  const { data } = useGetTaskByID({ id: String(params.id) });
   const questionIds = data?.questions?.map((question: any) => question.id);
 
   const { mutate: submitTask, isPending } = useSubmitTask();
@@ -40,27 +40,11 @@ const TaskPage = ({ params }: any) => {
   const handleOptionSelect = (id: number) => {
     setSelectedOptionId(id);
     setButtonDisable(false);
-
-    // if (step !== data?.questions?.length) {
-    //   submitTask({
-    //     questionId: questionIds[step - 1],
-    //     optionId: id,
-    //     taskId: data?.id,
-    //   });
-    // }
   };
 
   const handleYesOrNoOptionSelect = (id: number) => {
     setYesorNoId(id);
     setButtonDisable(false);
-
-    // if (step !== data?.questions?.length) {
-    //   submitTask({
-    //     questionId: questionIds[step - 1],
-    //     optionId: id,
-    //     taskId: data?.id,
-    //   });
-    // }
   };
 
   return (
@@ -156,7 +140,7 @@ const TaskPage = ({ params }: any) => {
                             });
                           }
 
-                          // submit last question here
+                          // submit last question
                           if (step === data?.questions?.length) {
                             setStep(data?.questions?.length);
                             setClaim(!claim);
@@ -193,18 +177,25 @@ const TaskPage = ({ params }: any) => {
             {claim && (
               <ClaimTaskReward
                 isOpen={claim}
-                closeModal={() => {
-                  setClaim(false), setRewardClaimed(true);
+                handleClick={() => {
+                  setRateTask(true);
+                  setClaim(false);
                 }}
+                closeModal={() => {}}
               />
             )}
 
-            {/* {rewardClaimed && (
-              <RewardClaimedPage
-                isOpen={rewardClaimed}
-                closeModal={() => setRewardClaimed(false)}
+            {rateTask && (
+              <RateTaskModal
+                isOpen={rateTask}
+                closeModal={() => setRateTask(false)}
+                handleSubmit={() => {
+                  // call rating API here
+                  console.log("call rating endpoint here");
+                  router.push("/dashboard");
+                }}
               />
-            )} */}
+            )}
           </div>
         )}
       </div>

@@ -6,6 +6,7 @@ import UserDetailsInputBox, {
 import React from "react";
 import toast from "react-hot-toast";
 import { useGetAuth } from "@/api/auth";
+import { useUpdateProfile } from "@/api/user";
 import parsePhoneNumber from "libphonenumber-js";
 import BackArrowButton from "@/components/button/back-arrow";
 import { Discord, Instagram, LinkedIn, Twitter } from "@/public/images";
@@ -14,6 +15,8 @@ const PersonalDetails = () => {
   const { data: user } = useGetAuth({ enabled: true });
   const [edit, setEdit] = React.useState(false);
   const [gender, setGender] = React.useState(user?.gender);
+
+  const { mutate: update } = useUpdateProfile();
 
   const phoneNumber = parsePhoneNumber(user?.phone);
   const formattedPhoneNumber = phoneNumber?.formatInternational();
@@ -67,7 +70,8 @@ const PersonalDetails = () => {
   };
 
   const handleSubmitChanges = () => {
-    toast.success("Your changes have been updated successfully");
+    update(userState, gender);
+    toast.success("Profile updated successfully");
   };
 
   return (
@@ -91,21 +95,21 @@ const PersonalDetails = () => {
             required={false}
             label={"First name"}
             onChange={handleChange}
-            value={userState.firstName}
+            value={userState?.firstName}
           />
           <UserDetailsInputBox
             name="lastName"
             required={false}
             label={"Last name"}
             onChange={handleChange}
-            value={userState.lastName}
+            value={userState?.lastName}
           />
           <UserDetailsInputBox
             required={false}
             name="otherNames"
             label={"Other names"}
             onChange={handleChange}
-            value={userState.otherNames}
+            value={userState?.otherNames}
           />
           <div>
             <label
@@ -132,7 +136,7 @@ const PersonalDetails = () => {
             name={"dob"}
             type="date"
             required={false}
-            value={userState.dob}
+            value={userState?.dob}
             label={"Date of Birth"}
             onChange={handleChange}
           />
@@ -146,7 +150,7 @@ const PersonalDetails = () => {
             name="email"
             label={"Email"}
             required={false}
-            value={userState.email}
+            value={userState?.email}
             onChange={handleChange}
           />
           <UserDetailsInputBox
@@ -166,7 +170,7 @@ const PersonalDetails = () => {
             image={<Discord />}
             name={undefined}
             required={false}
-            value={userState.socials.discord}
+            value={userState?.socials?.discord}
             label={"Discord"}
             onChange={(e) =>
               edit && handleSocialChange("discord", e.target.value)
@@ -176,7 +180,7 @@ const PersonalDetails = () => {
             image={<Instagram />}
             name={undefined}
             required={false}
-            value={userState.socials.instagram}
+            value={userState?.socials?.instagram}
             label={"Instagram"}
             onChange={(e) =>
               edit && handleSocialChange("instagram", e.target.value)
@@ -186,7 +190,7 @@ const PersonalDetails = () => {
             image={<Twitter />}
             name={undefined}
             required={false}
-            value={userState.socials.x}
+            value={userState?.socials?.x}
             label={"X-(twitter)"}
             onChange={(e) => edit && handleSocialChange("x", e.target.value)}
           />
@@ -194,7 +198,7 @@ const PersonalDetails = () => {
             image={<LinkedIn />}
             name={undefined}
             required={false}
-            value={userState.socials.linkedIn}
+            value={userState?.socials?.linkedIn}
             label={"LinkedIn"}
             onChange={(e) =>
               edit && handleSocialChange("linkedIn", e.target.value)

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Button from "../button";
 import React, { Fragment } from "react";
@@ -8,6 +10,7 @@ import { Transition, Dialog } from "@headlessui/react";
 
 type Props = {
   isOpen: boolean;
+  disabled: boolean;
   closeModal: () => void;
 };
 
@@ -100,6 +103,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   </ul>
 
                   <Button
+                    disabled={props.disabled}
                     onClick={props.closeModal}
                     className="rounded-full mt-6 mb-4"
                   >

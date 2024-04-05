@@ -57,10 +57,23 @@ const authOptions: NextAuthOptions = {
       return `${baseUrl}/dashboard`;
     },
 
-    async jwt({ user, token }) {
-      if (user.accessToken) token.accessToken = user?.accessToken;
-
-      console.log("returning token", token);
+    async jwt({ user, token, trigger, account, profile, session }) {
+      console.log(
+        "jwt",
+        "trigger",
+        trigger,
+        "user",
+        user,
+        "token",
+        token,
+        "account",
+        account,
+        "profile",
+        profile,
+        "session",
+        session
+      );
+      if (user?.accessToken) token.accessToken = user?.accessToken;
       return token;
     },
   },

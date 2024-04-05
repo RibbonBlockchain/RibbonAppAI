@@ -48,6 +48,7 @@ const authOptions: NextAuthOptions = {
         "user",
         user
       );
+
       session.accessToken = "not seeing token here";
       return session;
     },
@@ -57,8 +58,9 @@ const authOptions: NextAuthOptions = {
     },
 
     async jwt({ user, token }) {
-      console.log("hwtttt", user, token);
-      token.accessToken = user?.accessToken;
+      if (user.accessToken) token.accessToken = user?.accessToken;
+
+      console.log("returning token", token);
       return token;
     },
   },

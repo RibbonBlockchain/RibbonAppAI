@@ -31,9 +31,9 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       console.log("user", user);
-      // const token = await worldIDLogin({ id: user.id })
-      // console.log('token from server', token)
-      // user.email = token.data.accessToken
+      const token = await worldIDLogin({ id: user.id });
+      console.log("token from server", token);
+      user.accessToken = token.data.accessToken;
       return true;
     },
 

@@ -3,13 +3,17 @@
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { usePhoneLogin, useVerifyPhoneSignUp } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
+import { useVerifyPhoneForgotPassword } from "@/api/auth";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { mutate: verify, isPending, isSuccess } = useVerifyPhoneSignUp();
+  const {
+    isPending,
+    isSuccess,
+    mutate: verify,
+  } = useVerifyPhoneForgotPassword();
 
   const isLoading = isPending || isSuccess;
   const isFormInvalid = form.code.length < 6 || !form.phoneNumber;

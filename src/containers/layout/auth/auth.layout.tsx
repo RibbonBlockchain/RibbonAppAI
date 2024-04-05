@@ -4,13 +4,15 @@ import React from "react";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import PageLoader from "@/components/loader";
+import { useSession } from "next-auth/react";
 import { getToken } from "@/lib/atoms/auth.atom";
 
 type Props = { children: React.ReactNode };
 
 const AuthLayout = ({ children }: Props) => {
-  const token = getToken();
   const router = useRouter();
+  const session = useSession();
+  const token = getToken() || session?.data?.accessToken;
   const { data, isPending } = useGetAuth({ enabled: !!token });
 
   const isEnabled = !!token;

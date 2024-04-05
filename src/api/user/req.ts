@@ -11,6 +11,11 @@ export const submitTask = async (body: TSubmitTaskBody) => {
   return res.data;
 };
 
+export const claimDailyReward = async () => {
+  const res = await client.post<TResponse<any>>("/user/claim");
+  return res.data;
+};
+
 export const getTasks = async () => {
   const res = await client.get<TResponse<any>>("/task");
   return res.data;

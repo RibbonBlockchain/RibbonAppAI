@@ -3,6 +3,7 @@ import {
   submitTask,
   getTaskByID,
   updateProfile,
+  claimDailyReward,
   getCompletedTasks,
   getUserActivities,
   getTasksInProgress,
@@ -57,6 +58,13 @@ export const useSubmitTask = () => {
   return useMutation({
     onError,
     mutationFn: (body: TSubmitTaskBody) => submitTask(body),
+  });
+};
+
+export const useClaimDailyRewards = () => {
+  return useMutation({
+    onError,
+    mutationFn: () => claimDailyReward(),
   });
 };
 

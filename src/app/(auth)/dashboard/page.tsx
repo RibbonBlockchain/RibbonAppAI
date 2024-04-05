@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  verifyPhoneTask,
+  verifyIdentityTask,
+  completeProfileTask,
+} from "@/lib/values/mockData";
+import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
@@ -13,12 +18,12 @@ import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
-import { useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { useClaimDailyRewards, useGetUncompletedTasks } from "@/api/user";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
-import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import CountdownTimer from "@/containers/dashboard/countdown-timer";
 // import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 
 const Dashboard = () => {
@@ -28,12 +33,16 @@ const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
+  const { mutate: claimDailyReward } = useClaimDailyRewards();
+
   const { data: user } = useGetAuth({ enabled: true });
   const [balance, setBalance] = useState(user?.wallet.balance);
   const pointBalance = user?.wallet.balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
+
+  const [swapBalance, setSwapBalance] = useState(false);
 
   const { data: todo, isLoading } = useGetUncompletedTasks();
 
@@ -64,29 +73,35 @@ const Dashboard = () => {
         return newState;
       });
     }
+
+    if (user?.id && !user?.email) {
+      setPriorityTask((prev: any) => {
+        const newState = [...prev];
+        const found = priorityTask.findIndex(
+          (t: any) => t.id === "verify-identity"
+        );
+
+        if (found === -1) newState.push(verifyIdentityTask as any);
+        return newState;
+      });
+    }
   }, [user?.id, user?.email]);
 
   useEffect(() => {
-    const lastClickedTimestamp = localStorage.getItem("lastClickedTimestamp");
-    if (lastClickedTimestamp) {
-      const twentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000;
-      const currentTime = new Date().getTime();
-      if (
-        currentTime - Number(lastClickedTimestamp) <
-        twentyFourHoursInMilliseconds
-      ) {
+    const lastClickTime = localStorage.getItem("lastClickTime");
+    if (lastClickTime) {
+      const twelveHoursAgo = Date.now() - 12 * 60 * 60 * 1000;
+      if (parseInt(lastClickTime, 10) > twelveHoursAgo) {
         setDisabled(true);
       }
     }
   }, []);
 
   const handleClick = () => {
-    setBalance(balance + dailyReward);
-    localStorage.setItem(
-      "lastClickedTimestamp",
-      new Date().getTime().toLocaleString()
-    );
     setDisabled(true);
+    claimDailyReward(), setShowDailyRewardModal(false);
+
+    localStorage.setItem("lastClickTime", Date.now().toString());
   };
 
   isLoading && <PageLoader />;
@@ -115,12 +130,35 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-row gap-2 items-center justify-center text-lg font-bold">
                   <CoinSVG />
-                  {hideBalance ? "*****" : pointBalance.toLocaleString()}
-                  <p className="text-xs">points</p>
+                  {hideBalance ? (
+                    <p>***</p>
+                  ) : (
+                    <>
+                      {swapBalance ? (
+                        <p> {pointBalance.toLocaleString()} Points</p>
+                      ) : (
+                        <p> {user?.wallet.balance} WLD</p>
+                      )}
+                    </>
+                  )}
                 </div>
+
                 {
                   <div className="flex flex-row items-center justify-center gap-2 text-xs">
-                    <SwapIcon /> <p> {user?.wallet.balance} WLD</p>
+                    <div onClick={() => setSwapBalance(!swapBalance)}>
+                      <SwapIcon />
+                    </div>{" "}
+                    {hideBalance ? (
+                      <p>***</p>
+                    ) : (
+                      <>
+                        {swapBalance ? (
+                          <p> {user?.wallet.balance} WLD</p>
+                        ) : (
+                          <p> {pointBalance.toLocaleString()} Points</p>
+                        )}
+                      </>
+                    )}
                   </div>
                 }
               </div>
@@ -181,16 +219,16 @@ const Dashboard = () => {
                   <CoinSVG fill="#4B199C" />3 WLD
                 </div>
               ) : (
-                <CountdownTimer targetTime={targetTime} />
+                
               )} */}
-              <span
+              <button
                 // onClick={handleClick}
                 // disabled={disabled}
                 className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
               >
                 <CoinSVG fill="#4B199C" />
                 {dailyReward} WLD
-              </span>
+              </button>
             </span>
           </button>
 
@@ -248,8 +286,9 @@ const Dashboard = () => {
       </div>
 
       <ClaimDailyRewardModal
+        disabled={disabled}
+        closeModal={handleClick}
         isOpen={showDailyRewardModal}
-        closeModal={() => setShowDailyRewardModal(false)}
       />
     </AuthNavLayout>
   );

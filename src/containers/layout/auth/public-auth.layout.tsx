@@ -10,9 +10,9 @@ import { getToken } from "@/lib/atoms/auth.atom";
 type Props = { children: React.ReactNode };
 
 const PublicAuthLayout = ({ children }: Props) => {
-  const token = getToken();
   const router = useRouter();
   const session = useSession();
+  const token = getToken() || session.data?.accessToken;
   const [hasMounted, setHasMounted] = React.useState(false);
   const { data, isPending } = useGetAuth({ enabled: !!token });
 
@@ -22,8 +22,6 @@ const PublicAuthLayout = ({ children }: Props) => {
   const noToken = !isServer && !token;
   const isLoggedIn = token && data?.id;
   const isLoading = isServer || (isEnabled && isPending);
-
-  console.log(session);
 
   React.useEffect(() => {
     setHasMounted(true);

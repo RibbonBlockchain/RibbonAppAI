@@ -24,6 +24,19 @@ export const completeProfileTask = {
   icon: "/images/complete-profile.png",
 };
 
+export const verifyIdentityTask = {
+  id: "verify-identity",
+  href: "/dashboard/verify-identity",
+  score: 45,
+  reward: 5,
+  approximateTime: 5,
+  bgColor: "bg-[#D8EBFF]",
+  taskTitle: "Verify Identity",
+  priority: true,
+  completed: true,
+  icon: "/images/group.png",
+};
+
 export const surveys = [
   {
     id: "health-survey",

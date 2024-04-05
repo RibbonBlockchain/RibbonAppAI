@@ -7,16 +7,19 @@ import { Transition, Dialog } from "@headlessui/react";
 
 type Props = {
   isOpen: boolean;
-  closeModal: () => void;
-  handleClick: () => void;
+  closeModal?: () => void;
 };
 
-const ClaimTaskReward: React.FC<Props> = (props) => {
+const VerifyIdentity: React.FC<Props> = (props) => {
   const router = useRouter();
 
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={() => router.push("/dashboard")}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -26,7 +29,7 @@ const ClaimTaskReward: React.FC<Props> = (props) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/25" />
+          <div className="fixed inset-0 bg-black/5" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -42,30 +45,33 @@ const ClaimTaskReward: React.FC<Props> = (props) => {
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
                 <div className="mt-2 p-4">
+                  <Image
+                    src={"/images/group.png"}
+                    alt="verify-identity"
+                    width={100}
+                    height={100}
+                    className="flex mx-auto"
+                  />
+
                   <Dialog.Title
                     as="h3"
                     className={cn(
                       "text-2xl text-center px-6 py-4 font-bold  text-black"
                     )}
                   >
-                    Successful!
+                    Let’s verify your identity{" "}
                   </Dialog.Title>
 
                   <p className="text-center text-base text-[#434343] font-normal ">
-                    Your questionnaire has been recorded successfully
+                    To keep your account safe, verification is required to
+                    access withdrawals
                   </p>
 
                   <Button
-                    onClick={props.handleClick}
-                    className="rounded-md mt-16 mb-4"
+                    onClick={() => router.push("/account/kyc")}
+                    className="rounded-lg text-base font-bold mt-16 mb-4 "
                   >
-                    Claim your reward
-                    <Image
-                      src="/images/questionnaire/coins.png"
-                      alt="coins"
-                      width={22}
-                      height={18}
-                    />
+                    Verify Identity
                   </Button>
                 </div>
               </Dialog.Panel>
@@ -77,4 +83,4 @@ const ClaimTaskReward: React.FC<Props> = (props) => {
   );
 };
 
-export default ClaimTaskReward;
+export default VerifyIdentity;

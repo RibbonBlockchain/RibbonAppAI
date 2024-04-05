@@ -1,7 +1,9 @@
 import {
+  TChangePinBody,
   TPhoneLoginBody,
   TCheckPhoneBody,
   TWorldIDLoginBody,
+  TCreateNewPinBody,
   TCheckPhoneResponse,
   TPhoneSignPinUpBody,
   TPhoneLoginResponse,
@@ -76,4 +78,28 @@ export const updatePhone = async (body: TCheckPhoneBody) => {
 export const verifyPhoneUpdate = async (body: TVerifyPhoneUpdateBody) => {
   const res = await client.post("/user/phone/verify", body);
   return res.data;
+};
+
+export const changePin = async (body: TChangePinBody) => {
+  const res = await client.patch("/auth/pin", body);
+  return res;
+};
+
+// forgot pin
+export const forgotPin = async (body: TCheckPhoneBody) => {
+  const res = await client.post<TResponse<TCheckPhoneResponse>>(
+    "/auth/pin/forgot",
+    body
+  );
+  return res.data.data;
+};
+
+export const verifyForgotPin = async (body: TVerifyPhoneSignUpBody) => {
+  const res = await client.post("/auth/pin/forgot/verify", body);
+  return res.data;
+};
+
+export const createNewPin = async (body: TCreateNewPinBody) => {
+  const res = await client.post("/auth/pin/reset", body);
+  return res;
 };

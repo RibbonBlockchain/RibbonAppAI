@@ -9,6 +9,7 @@ const authOptions: NextAuthOptions = {
     {
       idToken: true,
       type: "oauth",
+      checks: "nonce",
       id: "worldcoin",
       name: "Worldcoin",
       clientId: process.env.WLD_CLIENT_ID,

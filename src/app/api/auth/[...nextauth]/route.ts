@@ -35,21 +35,8 @@ const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async session({ session, newSession, token, trigger, user }) {
-      console.log(
-        "session",
-        session,
-        "ns",
-        newSession,
-        "token",
-        token,
-        "trigger",
-        trigger,
-        "user",
-        user
-      );
-
-      session.accessToken = "not seeing token here";
+    async session({ session, token }) {
+      session.accessToken = token.accessToken;
       return session;
     },
 
@@ -57,22 +44,7 @@ const authOptions: NextAuthOptions = {
       return `${baseUrl}/dashboard`;
     },
 
-    async jwt({ user, token, trigger, account, profile, session }) {
-      console.log(
-        "jwt",
-        "trigger",
-        trigger,
-        "user",
-        user,
-        "token",
-        token,
-        "account",
-        account,
-        "profile",
-        profile,
-        "session",
-        session
-      );
+    async jwt({ user, token }) {
       if (user?.accessToken) token.accessToken = user?.accessToken;
       return token;
     },

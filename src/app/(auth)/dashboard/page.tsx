@@ -97,8 +97,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  const targetTime = Date.now() - 12 * 60 * 60 * 1000;
-
   const handleClick = () => {
     setDisabled(true);
     claimDailyReward(), setShowDailyRewardModal(false);

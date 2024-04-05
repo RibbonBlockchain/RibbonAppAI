@@ -30,15 +30,24 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      console.log("user", user);
       const token = await worldIDLogin({ id: user.id });
-      console.log("token from server", token);
       user.accessToken = token.data.accessToken;
       return true;
     },
 
     async session({ session, newSession, token, trigger, user }) {
-      console.log("session", session, newSession, token, trigger, user);
+      console.log(
+        "session",
+        session,
+        "ns",
+        newSession,
+        "token",
+        token,
+        "trigger",
+        trigger,
+        "user",
+        user
+      );
       session.accessToken = "not seeing token here";
       return session;
     },
@@ -48,6 +57,7 @@ const authOptions: NextAuthOptions = {
     },
 
     async jwt({ user, token }) {
+      console.log("hwtttt", user, token);
       token.accessToken = user?.accessToken;
       return token;
     },

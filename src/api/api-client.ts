@@ -1,6 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-import { getToken } from "@/lib/atoms/auth.atom";
+import { getTokenAsync } from "@/lib/atoms/auth.atom";
 import { DEFAULT_ERROR_MESSAGE, TOKEN_KEY } from "@/lib/values/constants";
 
 export type TResponse<T> = { data: T; message: string };
@@ -24,8 +24,9 @@ export const onSuccess = (id?: string, msg?: string) => {
   toast.success(msg || "Success", { id });
 };
 
-client.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${getToken()}`;
+client.interceptors.request.use(async (config) => {
+  const token = await getTokenAsync();
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 

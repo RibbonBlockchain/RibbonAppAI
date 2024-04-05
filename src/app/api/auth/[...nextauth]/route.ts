@@ -9,6 +9,7 @@ const authOptions: NextAuthOptions = {
     {
       idToken: true,
       type: "oauth",
+      checks: "nonce",
       id: "worldcoin",
       name: "Worldcoin",
       clientId: process.env.WLD_CLIENT_ID,
@@ -29,16 +30,13 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      console.log('user', user)
-      const token = await worldIDLogin({ id: user.id })
-      console.log('token from server', token)
-      user.email = token.data.accessToken
+      const token = await worldIDLogin({ id: user.id });
+      user.accessToken = token.data.accessToken;
       return true;
     },
 
-    async session({ session, newSession, token, trigger, user }) {
-      console.log("session", session, newSession, token, trigger, user);
-      session.accessToken = "not seeing token here";
+    async session({ session, token }) {
+      session.accessToken = token.accessToken;
       return session;
     },
 
@@ -47,7 +45,7 @@ const authOptions: NextAuthOptions = {
     },
 
     async jwt({ user, token }) {
-      token.accessToken = user?.accessToken;
+      if (user?.accessToken) token.accessToken = user?.accessToken;
       return token;
     },
   },

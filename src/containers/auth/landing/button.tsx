@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import Button from "@/components/button";
 import { signIn } from "next-auth/react";
 
 type Props = { children?: React.ReactNode };

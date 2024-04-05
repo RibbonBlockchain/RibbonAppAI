@@ -2,12 +2,19 @@ import { atom } from "jotai";
 import { client } from "@/api/api-client";
 import { countries } from "../values/countries";
 import { TOKEN_KEY } from "../values/constants";
+import { getSession } from "next-auth/react";
 
 const doNothing = () => {};
 const isClient = typeof window !== "undefined";
 
 export const getToken = () =>
   isClient ? sessionStorage.getItem(TOKEN_KEY) : undefined;
+
+export const getTokenAsync = async () => {
+  const session = await getSession();
+  const token = isClient ? sessionStorage.getItem(TOKEN_KEY) : undefined;
+  return token || session?.accessToken;
+};
 
 export const removeToken = () =>
   isClient ? sessionStorage.removeItem(TOKEN_KEY) : doNothing;

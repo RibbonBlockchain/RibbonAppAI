@@ -2,14 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
+import OfflineMessage from "@/containers/error/offline-message";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const OfflineMessage = () => (
-  <div style={{ backgroundColor: "red", color: "white", padding: "10px" }}>
-    Check your internet connection.
-  </div>
-);
 
 const ReactQueryProvider = ({ children }: React.PropsWithChildren) => {
   const [client] = useState(new QueryClient());

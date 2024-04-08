@@ -17,7 +17,12 @@ const FormInput = () => {
 
   return (
     <>
-      <OtpInput numInputs={6} value={state.code} setValue={setOtp} />
+      <OtpInput
+        inputType="password"
+        numInputs={6}
+        value={state.code}
+        setValue={setOtp}
+      />
       <p className="flex items-center gap-2 text-sm text-slate-600">
         <span>I didn&apos;t get a code!</span>{" "}
         <span

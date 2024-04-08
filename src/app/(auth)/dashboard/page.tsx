@@ -23,8 +23,8 @@ import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { useClaimDailyRewards, useGetUncompletedTasks } from "@/api/user";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
-import CountdownTimer from "@/containers/dashboard/countdown-timer";
-// import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
+import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
+import SimpleCountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 
 const Dashboard = () => {
   const session = useSession();
@@ -33,10 +33,13 @@ const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
+  const [claimed, setClaimed] = useState(false);
   const { mutate: claimDailyReward } = useClaimDailyRewards();
+  const onSuccess = () => {
+    setClaimed(true);
+  };
 
   const { data: user } = useGetAuth({ enabled: true });
-  const [balance, setBalance] = useState(user?.wallet.balance);
   const pointBalance = user?.wallet.balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
@@ -45,9 +48,6 @@ const Dashboard = () => {
   const [swapBalance, setSwapBalance] = useState(false);
 
   const { data: todo, isLoading } = useGetUncompletedTasks();
-
-  let points = 155;
-  let dailyReward = 3;
 
   const [disabled, setDisabled] = useState(false);
 
@@ -73,36 +73,29 @@ const Dashboard = () => {
         return newState;
       });
     }
-
-    if (user?.id && !user?.email) {
-      setPriorityTask((prev: any) => {
-        const newState = [...prev];
-        const found = priorityTask.findIndex(
-          (t: any) => t.id === "verify-identity"
-        );
-
-        if (found === -1) newState.push(verifyIdentityTask as any);
-        return newState;
-      });
-    }
   }, [user?.id, user?.email]);
 
-  useEffect(() => {
-    const lastClickTime = localStorage.getItem("lastClickTime");
-    if (lastClickTime) {
-      const twelveHoursAgo = Date.now() - 12 * 60 * 60 * 1000;
-      if (parseInt(lastClickTime, 10) > twelveHoursAgo) {
-        setDisabled(true);
-      }
-    }
-  }, []);
+  const clickedTime = new Date(user?.lastClaimTime);
+  const twelveHoursLater = new Date(
+    clickedTime.getTime() + 12 * 60 * 60 * 1000
+  );
 
   const handleClick = () => {
+    claimDailyReward();
+    setClaimed(true);
+    setShowDailyRewardModal(false);
     setDisabled(true);
-    claimDailyReward(), setShowDailyRewardModal(false);
-
-    localStorage.setItem("lastClickTime", Date.now().toString());
   };
+
+  const [launch, setLaunch] = useState(false);
+  useEffect(() => {
+    const walkthrough = localStorage.getItem("walkthrough");
+    if (walkthrough === "true") {
+      setLaunch(false);
+    } else {
+      setLaunch(true);
+    }
+  }, []);
 
   isLoading && <PageLoader />;
 
@@ -110,7 +103,7 @@ const Dashboard = () => {
     <AuthNavLayout>
       <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
-          {/* {is_walkthrough_open && <UserWalkthrough />} */}
+          {launch && <UserWalkthrough />}
 
           <Topbar />
           <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-2 flex flex-col">
@@ -172,15 +165,15 @@ const Dashboard = () => {
                       pathColor: `#FFF`,
                       trailColor: `#F6C4D0`,
                     })}
-                    value={(points / 500) * 100}
+                    value={(pointBalance / 50000) * 100}
                     strokeWidth={8}
                   >
-                    <p className="flex flex-col text-lg font-extrabold leading-4">
-                      {points}
+                    <p className="flex flex-col text-base font-extrabold leading-4">
+                      {(pointBalance > 50000 && 50000) || pointBalance || 0}
                     </p>
                   </CircularProgressbarWithChildren>
                 </div>
-                <p className="text-xs font-medium">1000 pts to withdraw</p>
+                <p className="text-xs font-medium">50,000 pts to withdraw</p>
               </div>
             </div>
 
@@ -193,7 +186,6 @@ const Dashboard = () => {
           </div>
 
           <button
-            disabled={disabled}
             onClick={() => setShowDailyRewardModal(true)}
             className="mx-auto border-[#4B199C] border-1 mb-5 mt-2"
           >
@@ -209,26 +201,13 @@ const Dashboard = () => {
                 loading="lazy"
                 src="/images/trophy.gif"
               />
-              {/* {reward ? (
-                <div
-                  onClick={() => {
-                    setReward(false), setBalance(balance + 5);
-                  }}
-                  className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
-                >
-                  <CoinSVG fill="#4B199C" />3 WLD
-                </div>
+              {!!twelveHoursLater ? (
+                <SimpleCountdownTimer />
               ) : (
-                
-              )} */}
-              <button
-                // onClick={handleClick}
-                // disabled={disabled}
-                className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
-              >
-                <CoinSVG fill="#4B199C" />
-                {dailyReward} WLD
-              </button>
+                <button className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold">
+                  <CoinSVG fill="#4B199C" />5 WLD
+                </button>
+              )}
             </span>
           </button>
 
@@ -286,7 +265,7 @@ const Dashboard = () => {
       </div>
 
       <ClaimDailyRewardModal
-        disabled={disabled}
+        disabled={claimed && !!twelveHoursLater}
         closeModal={handleClick}
         isOpen={showDailyRewardModal}
       />

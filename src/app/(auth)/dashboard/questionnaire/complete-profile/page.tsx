@@ -10,8 +10,11 @@ import UserNames from "@/components/questionnarie/complete-profile/user-names";
 import UserSocials from "@/components/questionnarie/complete-profile/user-socials";
 import GenderSelect from "@/components/questionnarie/complete-profile/gender-select";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
+import { useRouter } from "next/navigation";
 
 const CompleteProfile = () => {
+  const router = useRouter();
+
   const [step, setStep] = React.useState(0);
   const { mutate: update } = useUpdateProfile();
 
@@ -25,7 +28,7 @@ const CompleteProfile = () => {
 
   const question = {
     reward: "5",
-    rewardPoints: "45",
+    rewardPoints: "25,000",
     completionTime: "1",
     description: "Complete your profile",
     rewardPointText: "completing your profile",
@@ -123,7 +126,7 @@ const CompleteProfile = () => {
           <UserSocials state={state} setState={setState} />
         </FillInfo>
       ) : (
-        <Claim />
+        <Claim onclick={() => router.push("/dashboard")} />
       )}
     </div>
   );

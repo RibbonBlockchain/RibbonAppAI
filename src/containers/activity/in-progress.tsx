@@ -39,8 +39,8 @@ const InProgress = () => {
             icon={undefined}
             reward={i?.reward}
             taskTitle={i?.name}
-            ratings={i?.ratings}
-            ratingsLevel={i?.ratingsLevel}
+            ratings={i?.ratings || "675"}
+            ratingsLevel={i?.ratingsLevel || "/images/empty-rating.svg"}
             approximateTime={i?.duration / 60}
             href={`/dashboard/task/${i.id}`}
           />

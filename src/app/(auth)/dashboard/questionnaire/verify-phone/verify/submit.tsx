@@ -18,12 +18,12 @@ const Submit = () => {
 
   const onSuccess = () => {
     toast("Phone number verification successful");
-    router.push("/questionnaire/verify-phone/confirmation");
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
     verify({ code: form.code, phone: form.phoneNumber }, { onSuccess });
+    router.push("/dashboard/questionnaire/verify-phone/confirmation");
   };
 
   return (

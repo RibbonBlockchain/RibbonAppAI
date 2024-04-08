@@ -56,8 +56,11 @@ const CompletedTasks = () => {
   const closeCalender = () => setShowCalender(false);
 
   const CloseCalender = () => (
-    <div className="text-end cursor-pointer" onClick={closeCalender}>
-      Close
+    <div
+      className="text-end text-sm cursor-pointer pt-1 text-[#714EE7]"
+      onClick={closeCalender}
+    >
+      See completed tasks
     </div>
   );
 
@@ -66,7 +69,7 @@ const CompletedTasks = () => {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(
     todayDate
   );
-  const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(true);
+  const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(false);
 
   // api calls
   const { data, isLoading } = useGetCompletedTasksByDate(
@@ -113,7 +116,7 @@ const CompletedTasks = () => {
             )}
           </div>
 
-          <p className="text-xs font-semibold text-[#626262]">
+          <p className="text-xs font-semibold text-[#FFF] bg-[#7C56FE] py-2 px-3 rounded-full">
             {format(selectedDay as Date, "PPP")}
           </p>
         </div>
@@ -132,7 +135,7 @@ const CompletedTasks = () => {
               <p
                 className={clsx(
                   "text-[#939393] font-medium",
-                  activeDate === date.toDateString() && " text-white"
+                  activeDate === date.toDateString() && "text-white"
                 )}
               >
                 {date.toDateString()[0]}
@@ -175,6 +178,8 @@ const CompletedTasks = () => {
                   priority={i.priority}
                   taskTitle={i.description}
                   approximateTime={i.duration / 60}
+                  ratings={i.ratings || 675}
+                  ratingsLevel={i.ratingsLevel || "/images/empty-rating.svg"}
                 />
               ))}
             </div>
@@ -199,6 +204,8 @@ const CompletedTasks = () => {
                   priority={i.priority}
                   taskTitle={i.description}
                   approximateTime={i.duration / 60}
+                  ratings={i.ratings || 675}
+                  ratingsLevel={i.ratingsLevel || "/images/empty-rating.svg"}
                 />
               ))}
             </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Button from "../button";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Coin from "@/public/images/coin.webp";
 import GiftBox from "@/public/images/gift_box.webp";
 import { cn, getOrdinalIndicator } from "@/lib/utils";
@@ -15,6 +15,9 @@ type Props = {
 };
 
 const ClaimDailyRewardModal: React.FC<Props> = (props) => {
+  const [day, setDay] = useState(0);
+  console.log(day + 1, "day here");
+
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
@@ -69,15 +72,15 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     {Array.from({ length: 7 }).map((_, i) => (
                       <li key={i}>
                         <figure
-                          onClick={() =>
-                            console.log(`claim ${1000 * (i + 1)} coins`)
-                          }
+                          onClick={() => {
+                            console.log(`claim ${1000 * (i + 1)} coins`);
+                            setDay(i);
+                          }}
                           className={cn(
                             "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
-                            {
-                              "border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]":
-                                i < 4,
-                            }
+                            day === i
+                              ? "border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]"
+                              : ""
                           )}
                         >
                           <Image
@@ -93,7 +96,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                         <p
                           className={cn(
                             "text-center w-full mt-2 text-sm font-medium",
-                            i < 4 ? "text-primary" : "text-[#939393]"
+                            day === i ? "text-primary" : "text-[#939393]"
                           )}
                         >
                           {getOrdinalIndicator(i + 1)} day
@@ -101,10 +104,11 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                       </li>
                     ))}
                   </ul>
-
                   <Button
                     disabled={props.disabled}
-                    onClick={props.closeModal}
+                    onClick={() => {
+                      props.closeModal, setDay(day + 1);
+                    }}
                     className="rounded-full mt-6 mb-4"
                   >
                     Claim

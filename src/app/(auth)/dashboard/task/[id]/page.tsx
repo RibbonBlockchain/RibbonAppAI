@@ -14,10 +14,12 @@ import ClaimTaskReward from "@/components/modal/claim_task_reward";
 import RadioOptions from "@/containers/questionnaire/radio-options";
 import { Check, RibbonLight } from "../../../../../../public/images";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
+import Claimed from "@/components/modal/claimed";
 
 const TaskPage = ({ params }: any) => {
   const [step, setStep] = React.useState(0);
   const [claim, setClaim] = React.useState(false);
+  const [claimPage, setClaimPage] = React.useState(false);
   const [rateTask, setRateTask] = React.useState(false);
 
   const { data } = useGetTaskByID({ id: String(params.id) });
@@ -178,8 +180,18 @@ const TaskPage = ({ params }: any) => {
               <ClaimTaskReward
                 isOpen={claim}
                 handleClick={() => {
-                  setRateTask(true);
+                  setClaimPage(true);
                   setClaim(false);
+                }}
+                closeModal={() => {}}
+              />
+            )}
+
+            {claimPage && (
+              <Claimed
+                isOpen={claimPage}
+                handleClick={() => {
+                  setRateTask(true), setClaimPage(false);
                 }}
                 closeModal={() => {}}
               />
@@ -188,7 +200,9 @@ const TaskPage = ({ params }: any) => {
             {rateTask && (
               <RateTaskModal
                 isOpen={rateTask}
-                closeModal={() => setRateTask(false)}
+                closeModal={() => {
+                  setRateTask(false), router.push("/dashboard");
+                }}
                 handleSubmit={() => {
                   // call rating API here
                   console.log("call rating endpoint here");

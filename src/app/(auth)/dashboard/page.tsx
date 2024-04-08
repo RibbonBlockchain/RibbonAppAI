@@ -75,15 +75,10 @@ const Dashboard = () => {
     }
   }, [user?.id, user?.email]);
 
-  const twelveHoursAgo = Date.now() - 12 * 60 * 60 * 1000;
-  useEffect(() => {
-    const lastClickTime = user?.lastClaimTime;
-    if (lastClickTime) {
-      if (parseInt(lastClickTime, 10) > twelveHoursAgo) {
-        setDisabled(true);
-      }
-    }
-  }, []);
+  const clickedTime = new Date(user?.lastClaimTime);
+  const twelveHoursLater = new Date(
+    clickedTime.getTime() + 12 * 60 * 60 * 1000
+  );
 
   const handleClick = () => {
     claimDailyReward();
@@ -206,7 +201,7 @@ const Dashboard = () => {
                 loading="lazy"
                 src="/images/trophy.gif"
               />
-              {claimed ? (
+              {!!twelveHoursLater ? (
                 <SimpleCountdownTimer />
               ) : (
                 <button className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold">
@@ -270,7 +265,7 @@ const Dashboard = () => {
       </div>
 
       <ClaimDailyRewardModal
-        disabled={claimed && !user?.lastClaimTime}
+        disabled={claimed && !!twelveHoursLater}
         closeModal={handleClick}
         isOpen={showDailyRewardModal}
       />

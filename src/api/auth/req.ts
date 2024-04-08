@@ -13,6 +13,7 @@ import {
   TPhoneSignUpRequestBody,
   TPhoneSignUpRequestResponse,
 } from "./types";
+import { signIn } from "next-auth/react";
 import { TResponse, client } from "../api-client";
 
 export const getAuth = async () => {
@@ -39,6 +40,10 @@ export const phoneLogin = async (body: TPhoneLoginBody) => {
     body
   );
   return res.data;
+};
+
+export const login = async (body: TPhoneLoginBody) => {
+  await signIn("credentials", body);
 };
 
 export const worldIDLogin = async (body: TWorldIDLoginBody) => {

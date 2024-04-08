@@ -7,9 +7,10 @@ import Menu, {
 } from "@/containers/account/menu";
 import React from "react";
 import Link from "next/link";
-import { Scan } from "@/public/images";
 import Logout from "./sections/logout";
+import { signIn } from "next-auth/react";
 import User from "@/containers/account/user";
+import { Scan, WorldID } from "@/public/images";
 import { ChevronRight, Moon, Sun } from "lucide-react";
 import SwitchButton from "@/containers/account/switch-button";
 import InviteFriends from "@/containers/account/invite-friends";
@@ -17,6 +18,7 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Account = () => {
   const [theme, setTheme] = React.useState(false);
+  const handleWorldId = () => signIn("worldcoin");
 
   return (
     <AuthNavLayout>
@@ -43,6 +45,17 @@ const Account = () => {
               <ChevronRight stroke="#6200EE" />
             </div>
           </Link>
+
+          <div className="cursor-pointer" onClick={handleWorldId}>
+            <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
+              <div className="flex flex-row items-center justify-center gap-3">
+                <WorldID />
+                <p className="text-base font-medium">Link World ID</p>
+              </div>
+              <ChevronRight stroke="#6200EE" />
+            </div>
+            <hr />
+          </div>
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu

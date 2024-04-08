@@ -1,6 +1,7 @@
 "use client";
 
 import { useAtomValue } from "jotai";
+import { login } from "@/api/auth/req";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { usePhoneSignUpPin } from "@/api/auth";
@@ -17,7 +18,8 @@ const Submit = () => {
 
   const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = () => {
+  const onSuccess = async () => {
+    await login({ pin: form.pin, phone: form.phoneNumber });
     router.push("/dashboard");
   };
 

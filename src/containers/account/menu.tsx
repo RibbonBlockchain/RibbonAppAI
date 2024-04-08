@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, Sun } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   Key,
   Bank,
@@ -7,7 +7,6 @@ import {
   Balance,
   Profile,
   Wallets,
-  WorldID,
   Feedback,
   ContactUs,
   PrivacyPolicy,
@@ -15,12 +14,6 @@ import {
 } from "../../../public/images";
 
 export const ProfileDetails = [
-  {
-    href: "#",
-    description: "Link World ID",
-    logo: <WorldID />,
-  },
-
   {
     href: "/account/personal-details",
     description: "Personal Details",

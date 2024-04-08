@@ -22,10 +22,7 @@ const Verify = () => {
         <FormInput />
       </div>
 
-      <div
-        className="fleVerify your phone number
-x items-center justify-center w-full pb-6"
-      >
+      <div className="flex items-center justify-center w-full pb-6">
         <Submit />
       </div>
     </div>

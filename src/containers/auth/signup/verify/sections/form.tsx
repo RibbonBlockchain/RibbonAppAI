@@ -1,18 +1,18 @@
 import { useAtom } from "jotai";
-import { usePhoneLogin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
+import { usePhoneSignUpRequest } from "@/api/auth";
 import OtpInput from "@/components/input/otp-input";
 import { SpinnerIcon } from "@/components/icons/spinner";
 
 const FormInput = () => {
   const [state, setState] = useAtom(authAtom);
-  const { mutate: request, isPending: isRequesting } = usePhoneLogin();
+  const { isPending, mutate: request } = usePhoneSignUpRequest();
 
   const setOtp = (code: string) => setState((prev) => ({ ...prev, code }));
 
   const handleRequest = () => {
-    if (isRequesting) return;
-    // request({ phone: state.phoneNumber });
+    if (isPending) return;
+    request({ phone: state.phoneNumber });
   };
 
   return (
@@ -24,7 +24,7 @@ const FormInput = () => {
           onClick={handleRequest}
           className="cursor-pointer text-sm inline-flex font-normal text-[#4285F4]"
         >
-          {isRequesting ? (
+          {isPending ? (
             <SpinnerIcon className="text-blue-500" />
           ) : (
             "Resend Code"

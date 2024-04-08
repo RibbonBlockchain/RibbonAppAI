@@ -22,9 +22,9 @@ const FormInput = () => {
     <>
       <CountrySelect value={state.country} setValue={setCountry} />
       <PhoneInput
+        country={country}
         value={state.phoneNumber}
         setValue={setPhoneNumber}
-        country={country}
       />
     </>
   );

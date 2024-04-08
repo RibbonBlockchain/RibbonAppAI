@@ -20,7 +20,8 @@ const Submit = () => {
   const isFormInvalid = !isValidPhoneNumber;
   const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = () => router.push("/questionnaire/verify-phone/verify");
+  const onSuccess = () =>
+    router.push("/dashboard/questionnaire/verify-phone/verify");
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;

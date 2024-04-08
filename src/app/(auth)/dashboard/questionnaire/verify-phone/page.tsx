@@ -16,7 +16,8 @@ export default function Questionnaire() {
   };
 
   const handleClick = () => {
-    router.push("/questionnaire/verify-phone/verify-phone-number");
+    console.log("route to new page");
+    router.push("/dashboard/questionnaire/verify-phone/phone");
   };
 
   return (

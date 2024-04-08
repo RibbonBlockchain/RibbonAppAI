@@ -23,12 +23,14 @@ import Wallets from "./empty-wallet.svg";
 import ContactUs from "./contact-us.svg";
 import HappyEmoji from "./yes-emoji.svg";
 import RibbonLight from "./ribbon-light.svg";
+import NoInternetSVG from "./no-internet.svg";
 import SwapIconGray from "./arrow-swap-gray.svg";
 import PrivacyPolicy from "./privacy-policy.svg";
 import SwapIcon from "./arrow-swap-horizontal.svg";
 import NotificationsIcon from "./notifications.svg";
 import TermsOfService from "./terms-of-service.svg";
 import MessageQuestion from "./message-question.svg";
+import LoveSmileyEmoji from "./love-smiley-emoji.svg";
 
 export {
   Key,
@@ -54,7 +56,9 @@ export {
   HappyEmoji,
   RibbonLight,
   SwapIconGray,
+  LoveSmileyEmoji,
   PrivacyPolicy,
+  NoInternetSVG,
   TermsOfService,
   MessageQuestion,
   NotificationsIcon,

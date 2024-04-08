@@ -24,14 +24,14 @@ export default function Confirmation() {
           </div>
           <div className="mt-2">
             <h1 className="text-[1.76rem] font-bold">You are all set</h1>
-            <p>Pin created Successfully</p>
+            <p>Phone number verified Successfully</p>
           </div>
         </div>
       </div>
 
       <div className="bg-gradient-to-r from-[#714EE7] to-[#A81DA6] w-full mb-4 text-white text-center py-3.5 font-semibold rounded-lg">
         <Link
-          href={"/dashboard/questionnaire/claim"}
+          href={"/dashboard/questionnaire/verify-phone/claim"}
           className="flex items-center justify-center gap-2"
         >
           Claim your reward

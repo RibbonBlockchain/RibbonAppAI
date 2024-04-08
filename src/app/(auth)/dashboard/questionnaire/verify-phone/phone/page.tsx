@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Submit from "./submit";
 import FormInput from "@/containers/auth/login/sections/form";

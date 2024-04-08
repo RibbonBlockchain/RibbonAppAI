@@ -20,7 +20,7 @@ const TodoCompletedForm = (props: Props) => {
 
   return (
     <div
-      className={`bg-[#E8E8E8] text-[#626262] w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
+      className={`bg-[#FFFFFF] border-[1px] border-[#fcfcfc] text-[#626262] w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
     >
       <div className="flex flex-row items-start justify-start gap-1">
         <div className="flex flex-col text-xs gap-[3px]">

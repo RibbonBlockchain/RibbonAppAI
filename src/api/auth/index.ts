@@ -13,6 +13,7 @@ import {
   verifyPhoneUpdate,
   phoneSignUpRequest,
 } from "./req";
+
 import {
   TGetAuth,
   TGetResponse,
@@ -24,6 +25,7 @@ import {
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
 } from "./types";
+
 import {
   authAtom,
   logoutAtom,
@@ -33,8 +35,8 @@ import { useAtom } from "jotai";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { onError, onSuccess } from "../api-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { SUCCESS, TOKEN_KEY } from "@/lib/values/constants";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetAuth = ({ enabled }: TGetAuth = { enabled: false }) => {
   return useQuery({ enabled, queryKey: ["auth"], queryFn: () => getAuth() });
@@ -114,7 +116,7 @@ export const usePhoneLogin = () => {
 
       toast.success(msg);
       prepareRequestHeader(token);
-      setAuth((prev) => ({ ...prev, token }));
+      //setAuth((prev) => ({ ...prev, token }));
       sessionStorage.setItem(TOKEN_KEY, token);
     },
   });

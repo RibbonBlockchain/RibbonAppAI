@@ -1,35 +1,29 @@
 "use client";
 
 import { useAtomValue } from "jotai";
+import { signIn } from "next-auth/react";
 import Button from "@/components/button";
-import { usePhoneLogin } from "@/api/auth";
-import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 
 const Submit = () => {
-  const router = useRouter();
   const form = useAtomValue(authAtom);
-  const { isPending, isSuccess, mutate: login } = usePhoneLogin();
-
-  const isLoading = isPending || isSuccess;
   const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
-  const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = () => {
-    router.push("/dashboard");
-  };
+  const handleSubmit = async () => {
+    if (isFormInvalid) return;
 
-  const handleSubmit = () => {
-    if (isSubmitDisabled) return;
-    login({ pin: form.pin, phone: form.phoneNumber }, { onSuccess });
+    await signIn("credentials", {
+      pin: form.pin,
+      phone: form.phoneNumber,
+    });
   };
 
   return (
     <div className="flex items-center justify-center w-full pb-6">
       <Button
-        loading={isLoading}
+        //loading={}
         onClick={handleSubmit}
-        disabled={isSubmitDisabled}
+        disabled={isFormInvalid}
       >
         Sign In
       </Button>

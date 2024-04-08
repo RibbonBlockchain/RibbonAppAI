@@ -1,7 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-import { getTokenAsync } from "@/lib/atoms/auth.atom";
-import { DEFAULT_ERROR_MESSAGE, TOKEN_KEY } from "@/lib/values/constants";
+import { getSession } from "next-auth/react";
+import { logout } from "@/lib/atoms/auth.atom";
+import { DEFAULT_ERROR_MESSAGE } from "@/lib/values/constants";
 
 export type TResponse<T> = { data: T; message: string };
 
@@ -25,18 +26,17 @@ export const onSuccess = (id?: string, msg?: string) => {
 };
 
 client.interceptors.request.use(async (config) => {
-  const token = await getTokenAsync();
+  const session = await getSession();
+  const token = session?.accessToken;
+
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 client.interceptors.response.use(
-  (res) => {
-    return res;
-  },
-  (error) => {
+  (res) => res,
+  async (error) => {
     if (error.response.status !== 401) throw error;
-    sessionStorage.removeItem(TOKEN_KEY);
-    location.reload();
+    await logout();
   }
 );

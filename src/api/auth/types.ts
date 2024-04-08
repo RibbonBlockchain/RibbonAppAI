@@ -13,6 +13,6 @@ export type TCreateNewPinBody = { phone: string; code: string; pin: string };
 export type TPhoneSignPinUpBody = { phone: string; code: string; pin: string };
 
 export type TCheckPhoneResponse = { exists: boolean };
-export type TPhoneLoginResponse = { accessToken: string };
 export type TWorldIDLoginResponse = { accessToken: string };
 export type TPhoneSignUpRequestResponse = { exists: boolean };
+export type TPhoneLoginResponse = { id: string; accessToken: string };

@@ -58,10 +58,7 @@ const SelectOptions = ({
             return (
               <div
                 key={text}
-                onClick={() => [
-                  setSelected(text),
-                  // console.log(text, "selected"),
-                ]}
+                onClick={() => [setSelected(text)]}
                 className={`w-fit text-center rounded-full px-3 py-1.5  border-[1px] border-[#7C56FE]`}
               >
                 {text}

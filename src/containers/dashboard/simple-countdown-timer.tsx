@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 const CountdownTimer: React.FC = () => {
   const [countdownTime, setCountdownTime] = useState<Date | null>(null);
   const [remainingTime, setRemainingTime] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const { data: user } = useGetAuth({ enabled: true });
 
@@ -50,8 +51,16 @@ const CountdownTimer: React.FC = () => {
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  const restartCountdown = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+    setCountdownTime(null);
+    setRemainingTime(0);
+  };
+
   return (
-    <div className="w-[80px]">
+    <div onClick={restartCountdown} className="w-[80px]">
       {countdownTime && <p>{formatTime(remainingTime)}</p>}
     </div>
   );

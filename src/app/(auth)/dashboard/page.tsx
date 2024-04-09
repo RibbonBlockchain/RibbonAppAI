@@ -1,11 +1,6 @@
 "use client";
 
 import {
-  verifyPhoneTask,
-  verifyIdentityTask,
-  completeProfileTask,
-} from "@/lib/values/mockData";
-import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
@@ -24,6 +19,7 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { useClaimDailyRewards, useGetUncompletedTasks } from "@/api/user";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
+import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import SimpleCountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 
 const Dashboard = () => {
@@ -35,9 +31,6 @@ const Dashboard = () => {
 
   const [claimed, setClaimed] = useState(false);
   const { mutate: claimDailyReward } = useClaimDailyRewards();
-  const onSuccess = () => {
-    setClaimed(true);
-  };
 
   const { data: user } = useGetAuth({ enabled: true });
   const pointBalance = user?.wallet.balance * 5000;
@@ -265,7 +258,7 @@ const Dashboard = () => {
       </div>
 
       <ClaimDailyRewardModal
-        disabled={claimed && !!twelveHoursLater}
+        disabled={!!twelveHoursLater}
         closeModal={handleClick}
         isOpen={showDailyRewardModal}
       />

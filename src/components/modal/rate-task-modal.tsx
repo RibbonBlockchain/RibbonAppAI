@@ -31,7 +31,7 @@ const RateTaskModal: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-end text-center">
+          <div className="flex min-h-full items-end justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

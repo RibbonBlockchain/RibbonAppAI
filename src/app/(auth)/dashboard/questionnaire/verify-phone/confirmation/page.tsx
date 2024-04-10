@@ -22,8 +22,8 @@ export default function Confirmation() {
               height={80}
             />
           </div>
-          <div className="mt-2">
-            <h1 className="text-[1.76rem] font-bold">You are all set</h1>
+          <div className="mt-2 text-center">
+            <h1 className="text-[1.76rem] font-bold ">You are all set</h1>
             <p>Phone number verified Successfully</p>
           </div>
         </div>

@@ -18,8 +18,13 @@ const PersonalDetails = () => {
 
   const { mutate: update } = useUpdateProfile();
 
-  const phoneNumber = parsePhoneNumber(user?.phone);
-  const formattedPhoneNumber = phoneNumber?.formatInternational();
+  const phoneNumber = user?.phone ? parsePhoneNumber(user.phone) : null;
+  const formattedPhoneNumber = phoneNumber
+    ? phoneNumber.formatInternational()
+    : null;
+
+  console.log(typeof user?.phone);
+  console.log(typeof formattedPhoneNumber);
 
   const [userState, setUserState] = React.useState({
     firstName: "",

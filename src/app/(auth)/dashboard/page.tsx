@@ -13,10 +13,10 @@ import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
+import { useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { useClaimDailyRewards, useGetUncompletedTasks } from "@/api/user";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
@@ -26,11 +26,25 @@ const Dashboard = () => {
   const session = useSession();
   console.log(session);
 
+  // const getCurrentTime = (): any => {
+  //   const currentDate: Date = new Date();
+  //   const options: Intl.DateTimeFormatOptions = {
+  //     weekday: "short",
+  //     month: "short",
+  //     day: "2-digit",
+  //     year: "numeric",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     second: "2-digit",
+  //     timeZoneName: "short",
+  //   };
+  //   return currentDate.toDateString();
+  // };
+
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
-  const [claimed, setClaimed] = useState(false);
-  const { mutate: claimDailyReward } = useClaimDailyRewards();
+  // const [claimed, setClaimed] = useState(false);
 
   const { data: user } = useGetAuth({ enabled: true });
   const pointBalance = user?.wallet.balance * 5000;
@@ -41,8 +55,6 @@ const Dashboard = () => {
   const [swapBalance, setSwapBalance] = useState(false);
 
   const { data: todo, isLoading } = useGetUncompletedTasks();
-
-  const [disabled, setDisabled] = useState(false);
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -68,17 +80,17 @@ const Dashboard = () => {
     }
   }, [user?.id, user?.email]);
 
+  // lastclickTime, currentTime, twelveHoursLater, remainingTime
   const clickedTime = new Date(user?.lastClaimTime);
   const twelveHoursLater = new Date(
     clickedTime.getTime() + 12 * 60 * 60 * 1000
   );
 
-  const handleClick = () => {
-    claimDailyReward();
-    setClaimed(true);
-    setShowDailyRewardModal(false);
-    setDisabled(true);
-  };
+  const currentTime = new Date();
+  const remainingTime = Math.max(
+    Math.floor((twelveHoursLater.getTime() - currentTime.getTime()) / 1000),
+    0
+  );
 
   const [launch, setLaunch] = useState(false);
   useEffect(() => {
@@ -162,7 +174,7 @@ const Dashboard = () => {
                     strokeWidth={8}
                   >
                     <p className="flex flex-col text-base font-extrabold leading-4">
-                      {(pointBalance > 50000 && 50000) || pointBalance || 0}
+                      {0 || (pointBalance > 50000 ? 50000 : pointBalance)}
                     </p>
                   </CircularProgressbarWithChildren>
                 </div>
@@ -194,7 +206,7 @@ const Dashboard = () => {
                 loading="lazy"
                 src="/images/trophy.gif"
               />
-              {!!twelveHoursLater ? (
+              {remainingTime > 0 ? (
                 <SimpleCountdownTimer />
               ) : (
                 <button className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold">
@@ -258,8 +270,12 @@ const Dashboard = () => {
       </div>
 
       <ClaimDailyRewardModal
-        disabled={!!twelveHoursLater}
-        closeModal={handleClick}
+        closeModal={() => {
+          // setClaimed(true);
+          setShowDailyRewardModal(false);
+          // window.location.reload();
+        }}
+        disabled={remainingTime > 0}
         isOpen={showDailyRewardModal}
       />
     </AuthNavLayout>

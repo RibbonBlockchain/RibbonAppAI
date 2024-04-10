@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Button from "../button";
-import React, { Fragment, useState } from "react";
+import { cn } from "@/lib/utils";
 import Coin from "@/public/images/coin.webp";
+import React, { Fragment, useState } from "react";
+import { useClaimDailyRewards } from "@/api/user";
 import GiftBox from "@/public/images/gift_box.webp";
-import { cn, getOrdinalIndicator } from "@/lib/utils";
 import { Transition, Dialog } from "@headlessui/react";
-import DailyRewards from "./my-daily-reward";
 
 type Props = {
   isOpen: boolean;
@@ -23,37 +23,11 @@ const dailyRewardsData = [
   { day: 5, reward: "500 points" },
   { day: 6, reward: "600 points" },
   { day: 7, reward: "700 points" },
-  { day: 8, reward: "800 points" },
-  { day: 9, reward: "900 points" },
-  { day: 10, reward: "1,000 points" },
-  { day: 11, reward: "100 points" },
-  { day: 12, reward: "200 points" },
-  { day: 13, reward: "300 points" },
-  { day: 14, reward: "400 points" },
-  { day: 15, reward: "500 points" },
-  { day: 16, reward: "600 points" },
-  { day: 17, reward: "700 points" },
-  { day: 18, reward: "800 points" },
-  { day: 19, reward: "900 points" },
-  { day: 20, reward: "1,000 points" },
-  { day: 21, reward: "100 points" },
 ];
 
 const ClaimDailyRewardModal: React.FC<Props> = (props) => {
-  const [step, setStep] = useState(1);
-
-  const [page, setPage] = useState(1);
-
-  const startIndex = (page - 1) * 7;
-  const endIndex = Math.min(page * 7, dailyRewardsData.length);
-  const currentPageData = dailyRewardsData.slice(startIndex, endIndex);
-
-  const handlePrevPage = () => {
-    setPage((prevPage) => prevPage - 1);
-  };
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+  const [step, setStep] = useState(0);
+  const { mutate: claimDailyReward } = useClaimDailyRewards();
 
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
@@ -85,16 +59,11 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                 <Dialog.Title
                   as="h3"
                   className={cn(
-                    "text-base text-center px-6 py-4 font-medium  text-white flex items-center justify-between",
+                    "text-base text-center px-6 py-4 font-medium  text-white flex items-center justify-center",
                     "bg-gradient-to-r from-[#7C56FE] to-[#A81DA6]"
                   )}
                 >
-                  {page > 1 && <button onClick={handlePrevPage}>Prev</button>}
-                  {page === 1 && <p className="text-[#7C56FE]">Prev</p>}
                   Daily rewards
-                  <button disabled={page === 3} onClick={handleNextPage}>
-                    Next
-                  </button>
                 </Dialog.Title>
 
                 <div className="mt-2 p-4">
@@ -111,16 +80,12 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   </figure>
 
                   <ul className="mt-6 flex flex-wrap justify-center place-items-center gap-x-2 gap-y-4">
-                    {currentPageData?.map((item, index) => (
+                    {dailyRewardsData?.map((item, index) => (
                       <li key={index}>
                         <figure
-                          onClick={() => {
-                            console.log(`claim ${item.reward} `);
-                            // setDay(i);
-                          }}
                           className={cn(
                             "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
-                            item.day === step
+                            item.day === step + 1
                               ? "border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]"
                               : ""
                           )}
@@ -138,7 +103,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                         <p
                           className={cn(
                             "text-center w-full mt-2 text-sm font-medium",
-                            item.day === step
+                            item.day === step + 1
                               ? "text-primary"
                               : "text-[#939393]"
                           )}
@@ -152,7 +117,10 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   <Button
                     disabled={props.disabled}
                     onClick={() => {
-                      props.closeModal, setStep((prevStep) => prevStep + 1);
+                      props.closeModal, claimDailyReward();
+                      setStep(
+                        (prevStep) => (prevStep + 1) % dailyRewardsData?.length
+                      );
                     }}
                     className="rounded-full mt-6 mb-4"
                   >

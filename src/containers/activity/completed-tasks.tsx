@@ -69,7 +69,7 @@ const CompletedTasks = () => {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(
     todayDate
   );
-  const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(false);
+  const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(true);
 
   // api calls
   const { data, isLoading } = useGetCompletedTasksByDate(

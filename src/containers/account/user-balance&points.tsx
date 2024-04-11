@@ -51,11 +51,16 @@ const UserBalanceAndPoints = () => {
         <SwapIconGray /> <p>{pointBalance.toLocaleString()} points</p>
       </div>
 
-      <div className="grid grid-cols-3 items-center justify-center mt-6">
+      <div className="grid grid-cols-2 items-center justify-center mt-6">
         <BalanceDetails
           value={pointBalance.toLocaleString()}
           text={"Points earned"}
           logo={"/images/points-earned.png"}
+        />
+        <BalanceDetails
+          value={0}
+          text={"Daily rewards claimed"}
+          logo={"/images/tokens-spent.png"}
         />
         <BalanceDetails
           value={tokenSpent}

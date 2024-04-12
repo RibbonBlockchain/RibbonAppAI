@@ -69,7 +69,7 @@ const UserBalanceAndPoints = () => {
         />
         <BalanceDetails
           value={completedTasks?.data.length | 0}
-          text={"Completed task"}
+          text={"Completed activities"}
           logo={"/images/tasks-completed.png"}
         />
       </div>

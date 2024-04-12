@@ -117,7 +117,9 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   <Button
                     disabled={props.disabled}
                     onClick={() => {
-                      props.closeModal, claimDailyReward();
+                      props.closeModal;
+                      claimDailyReward();
+                      window.location.reload();
                       setStep(
                         (prevStep) => (prevStep + 1) % dailyRewardsData?.length
                       );

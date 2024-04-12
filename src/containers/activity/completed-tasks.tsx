@@ -157,11 +157,11 @@ const CompletedTasks = () => {
       <div onClick={() => setSeeAllTasks(!seeAllTasks)}>
         {seeAllTasks ? (
           <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
-            View tasks by date
+            View activities by date
           </p>
         ) : (
           <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
-            View all completed tasks
+            View all completed activities
           </p>
         )}
       </div>

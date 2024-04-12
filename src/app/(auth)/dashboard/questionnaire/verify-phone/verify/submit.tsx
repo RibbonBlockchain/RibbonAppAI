@@ -1,9 +1,11 @@
 "use client";
 
+import React from "react";
 import toast from "react-hot-toast";
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
+import { useUpdateProfile } from "@/api/user";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import { useVerifyPhoneUpdate } from "@/api/auth";
 
@@ -12,12 +14,16 @@ const Submit = () => {
   const form = useAtomValue(authAtom);
   const { mutate: verify, isPending, isSuccess } = useVerifyPhoneUpdate();
 
+  const { mutate: updatePhone } = useUpdateProfile();
+
   const isLoading = isPending || isSuccess;
   const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
   const isSubmitDisabled = isFormInvalid || isLoading;
 
   const onSuccess = () => {
     toast("Phone number verification successful");
+    updatePhone({ phone: form.phoneNumber });
+    console.log(form.phoneNumber, "<<<phone number updated>>>>");
   };
 
   const handleSubmit = () => {

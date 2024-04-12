@@ -26,21 +26,6 @@ const Dashboard = () => {
   const session = useSession();
   console.log(session);
 
-  // const getCurrentTime = (): any => {
-  //   const currentDate: Date = new Date();
-  //   const options: Intl.DateTimeFormatOptions = {
-  //     weekday: "short",
-  //     month: "short",
-  //     day: "2-digit",
-  //     year: "numeric",
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //     second: "2-digit",
-  //     timeZoneName: "short",
-  //   };
-  //   return currentDate.toDateString();
-  // };
-
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
@@ -219,7 +204,7 @@ const Dashboard = () => {
           <div className="w-full">
             {priorityTask?.length >= 1 && (
               <p className="text-[#34246B] text-xs py-3 font-bold">
-                Priority task
+                Priority activity
               </p>
             )}
 
@@ -253,7 +238,7 @@ const Dashboard = () => {
                 approximateTime={i.duration / 60}
                 ratingsLevel="/images/ratings.svg"
                 id={i.id}
-                href={`/dashboard/task/${i.id}`}
+                href={`/dashboard/activity/${i.id}`}
               />
             ))}
           </div>
@@ -273,7 +258,6 @@ const Dashboard = () => {
         closeModal={() => {
           // setClaimed(true);
           setShowDailyRewardModal(false);
-          // window.location.reload();
         }}
         disabled={remainingTime > 0}
         isOpen={showDailyRewardModal}

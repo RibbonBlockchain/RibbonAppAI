@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-import FormInput from "@/containers/auth/signup/verify/sections/form";
 import {
   BackArrow,
   SubHeading,
 } from "@/containers/auth/signup/verify/sections/components";
+import Submit from "./submit";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Submit from "./submit";
+import FormInput from "@/containers/auth/signup/verify/sections/form";
 
 const Verify = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,10 +43,7 @@ const Verify = () => {
         <FormInput />
       </div>
 
-      <div
-        className="fleVerify your phone number
-x items-center justify-center w-full pb-6"
-      >
+      <div className="flex items-center justify-center w-full pb-6">
         <Submit />
       </div>
 

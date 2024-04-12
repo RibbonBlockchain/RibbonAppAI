@@ -33,7 +33,7 @@ const Home = () => {
           Sign Up with mobile number <Phone />
         </LinkButton>
 
-        <WorldIdButton>Sign Up with World ID</WorldIdButton>
+        <WorldIdButton>Sign In with World ID</WorldIdButton>
 
         <Link
           href="/auth/login"

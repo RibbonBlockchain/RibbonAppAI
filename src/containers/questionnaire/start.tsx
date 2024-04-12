@@ -96,7 +96,7 @@ const BeginQuestionnaire = ({
                 {completionTime} minute
               </h3>{" "}
               <p className="text-[#434343] text-[11px]">
-                Complete this task in just {completionTime} minute
+                Complete this activity in just {completionTime} minute
               </p>
             </div>
           </div>

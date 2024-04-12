@@ -44,7 +44,7 @@ const BalanceAndPoints = () => {
             </div>
           </div>
           <p className="text-xs font-medium">
-            Complete more tasks and unlock token withdrawals
+            Complete more activities and unlock token withdrawals
           </p>
         </div>
         <div>

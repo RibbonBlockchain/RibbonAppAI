@@ -23,7 +23,7 @@ const CompleteTasks = () => {
         <div className="flex flex-col">
           <p className="text-base font-semibold">Complete tasks</p>
           <p className="text-xs font-medium text-[#626262]">
-            Complete more tasks and earn more points
+            Complete more activities and earn more points
           </p>
         </div>
       </div>

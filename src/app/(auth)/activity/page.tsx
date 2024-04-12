@@ -50,7 +50,7 @@ const Activity = () => {
             </div>
           </div>
 
-          <div className="flex cursor-pointer mx-auto mt-4 items-center justify-start gap-4">
+          <div className="flex cursor-pointer mx-auto mt-4 items-center justify-start gap-3">
             <div
               className={
                 activeTab === "pending"
@@ -69,12 +69,12 @@ const Activity = () => {
             <div
               className={
                 activeTab === "completed"
-                  ? "text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-sm"
-                  : "text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-4 rounded-full text-sm"
+                  ? "text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-sm"
+                  : "text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-2 rounded-full text-sm"
               }
               onClick={() => handleTabClick("completed")}
             >
-              Completed tasks
+              Completed activities
             </div>
           </div>
         </div>

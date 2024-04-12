@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Claimed from "@/components/modal/claimed";
 import ProgressBar from "@ramonak/react-progress-bar";
 import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import { SpinnerIcon } from "@/components/icons/spinner";
@@ -14,7 +15,6 @@ import ClaimTaskReward from "@/components/modal/claim_task_reward";
 import RadioOptions from "@/containers/questionnaire/radio-options";
 import { Check, RibbonLight } from "../../../../../../public/images";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
-import Claimed from "@/components/modal/claimed";
 
 const TaskPage = ({ params }: any) => {
   const [step, setStep] = React.useState(0);

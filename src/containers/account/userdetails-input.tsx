@@ -78,7 +78,7 @@ const UserDetailsInputBox = ({
         onChange={onChange}
         placeholder="Ribbon Protocol"
         className={clsx(
-          "text-xs w-full py-3 leading-tight appearance-none border-b focus:outline-none focus:border-[#7C56FE] focus:shadow-outline",
+          "text-xs w-full py-3 leading-tight appearance-none border rounded-md pl-2 focus:outline-none focus:border-[#7C56FE] focus:shadow-outline",
           type === "date" && ""
         )}
       />

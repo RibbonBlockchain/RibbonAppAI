@@ -170,6 +170,10 @@ const CompletedTasks = () => {
         <div>
           {allCompleted?.data.length >= 1 ? (
             <div className="py-3">
+              <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
+                <p className="text-xs">Daily rewards</p>
+                <p className="text-sm">1000 pts</p>
+              </div>
               {allCompleted?.data?.map((i: any) => (
                 <TodoCompletedForm
                   key={i.id}
@@ -196,6 +200,10 @@ const CompletedTasks = () => {
               <p className="text-xs text-[#141414] py-3 font-bold">
                 {formatDate(selectedDay)}
               </p>
+              <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
+                <p className="text-xs">Daily rewards</p>
+                <p className="text-sm">1000 pts</p>
+              </div>
               {data?.data?.map((i: any) => (
                 <TodoCompletedForm
                   key={i.id}

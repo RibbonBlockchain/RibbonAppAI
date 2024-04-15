@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
-import ProgressBar from "@ramonak/react-progress-bar";
 
 type Props = {
   id: string;

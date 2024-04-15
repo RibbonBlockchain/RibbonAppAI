@@ -31,6 +31,7 @@ import NotificationsIcon from "./notifications.svg";
 import TermsOfService from "./terms-of-service.svg";
 import MessageQuestion from "./message-question.svg";
 import LoveSmileyEmoji from "./love-smiley-emoji.svg";
+import DailyRewardClaimed from "./daily-rewards-claimed.svg";
 
 export {
   Key,
@@ -62,4 +63,5 @@ export {
   TermsOfService,
   MessageQuestion,
   NotificationsIcon,
+  DailyRewardClaimed,
 };

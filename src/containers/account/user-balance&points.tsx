@@ -60,7 +60,7 @@ const UserBalanceAndPoints = () => {
         <BalanceDetails
           value={0}
           text={"Daily rewards claimed"}
-          logo={"/images/tokens-spent.png"}
+          logo={"/images/daily-rewards-claimed.svg"}
         />
         <BalanceDetails
           value={tokenSpent}
@@ -70,6 +70,16 @@ const UserBalanceAndPoints = () => {
         <BalanceDetails
           value={completedTasks?.data.length | 0}
           text={"Completed activities"}
+          logo={"/images/tasks-completed.png"}
+        />
+        <BalanceDetails
+          value={0}
+          text={"Completed questionnaires"}
+          logo={"/images/tasks-completed.png"}
+        />
+        <BalanceDetails
+          value={0}
+          text={"Completed surveys"}
           logo={"/images/tasks-completed.png"}
         />
       </div>

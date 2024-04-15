@@ -49,7 +49,7 @@ const ChangePin = () => {
           onChange={(e) => setCurrentPin(e.target.value)}
           placeholder="Current Pin"
           className={
-            "text-sm w-full py-4 bg-white px-3 rounded-md leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+            "text-sm w-full py-4 bg-white px-3 rounded-lg leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
           }
         />
 
@@ -63,7 +63,7 @@ const ChangePin = () => {
             onChange={(e) => setNewPin(e.target.value)}
             placeholder="Enter new Pin"
             className={
-              "text-sm w-full py-4 bg-white px-3 rounded-md leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+              "text-sm w-full py-4 bg-white px-3 rounded-lg leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
             }
           />
 
@@ -78,7 +78,7 @@ const ChangePin = () => {
             onChange={(e) => setConfirmPin(e.target.value)}
             placeholder="Confirm New Pin"
             className={
-              "text-sm w-full py-4 bg-white px-3 rounded-md leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+              "text-sm w-full py-4 bg-white px-3 rounded-lg leading-tight appearance-none border focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
             }
           />
         </div>

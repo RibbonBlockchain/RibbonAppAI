@@ -127,7 +127,7 @@ const PersonalDetails = () => {
               <select
                 disabled={edit === false}
                 onChange={handleGenderChange}
-                className="w-full h-full bg-transparent border-b border-[#EDEEEF] text-start -ml-[3px] py-2.5 mb-6 text-sm focus:outline-none focus:border-[#7C56FE] placeholder:text-[#ADADAD]"
+                className="w-full h-full bg-transparent border pl-2 border-[#EDEEEF] text-start -ml-[3px] py-2.5 mb-6 text-sm focus:outline-none focus:border-[#7C56FE] placeholder:text-[#ADADAD]"
               >
                 <option className="text-[#ADADAD] hidden">
                   {gender ? "Male" : "Female"}

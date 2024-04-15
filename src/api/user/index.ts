@@ -65,6 +65,9 @@ export const useClaimDailyRewards = () => {
   return useMutation({
     onError,
     mutationFn: () => claimDailyReward(),
+    onSuccess: () => {
+      window.location.reload();
+    },
   });
 };
 

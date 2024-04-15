@@ -4,10 +4,11 @@ import Image from "next/image";
 import Button from "../button";
 import { cn } from "@/lib/utils";
 import Coin from "@/public/images/coin.webp";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useClaimDailyRewards } from "@/api/user";
 import GiftBox from "@/public/images/gift_box.webp";
 import { Transition, Dialog } from "@headlessui/react";
+import { useGetAuth } from "@/api/auth";
 
 type Props = {
   isOpen: boolean;
@@ -26,8 +27,22 @@ const dailyRewardsData = [
 ];
 
 const ClaimDailyRewardModal: React.FC<Props> = (props) => {
-  const [step, setStep] = useState(0);
+  const { data: user } = useGetAuth();
   const { mutate: claimDailyReward } = useClaimDailyRewards();
+
+  const [step, setStep] = useState(0);
+  const [lastClickedTimestamp, setLastClickedTimestamp] = useState(
+    user?.lastClaimTime
+  );
+
+  useEffect(() => {
+    if (
+      lastClickedTimestamp &&
+      Date.now() - lastClickedTimestamp >= 12 * 60 * 60 * 1000
+    ) {
+      setStep(0);
+    }
+  }, [lastClickedTimestamp]);
 
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
@@ -119,7 +134,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                     onClick={() => {
                       props.closeModal;
                       claimDailyReward();
-                      window.location.reload();
+                      setLastClickedTimestamp(Date.now());
                       setStep(
                         (prevStep) => (prevStep + 1) % dailyRewardsData?.length
                       );

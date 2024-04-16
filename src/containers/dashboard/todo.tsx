@@ -40,30 +40,17 @@ const Todo = (props: Props) => {
         <div className="flex flex-col text-xs gap-[3px]">
           <Link
             href={props.href}
-            className={`font-extrabold ${
+            className={`font-extrabold whitespace-nowrap truncate max-w-[130px] xxs:max-w-[150px] xs:max-w-[170px] ${
               props.priority ? "text-black" : "text-gradient-2"
             }`}
           >
-            {props.taskTitle}
+            {props.taskTitle} questionnaire
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">
             <p className="text-[#434343]">
               Claim {rewardPoints.toLocaleString()} points
             </p>
-
-            {/* {props.priority ? (
-              <> </>
-            ) : (
-              <ProgressBar
-                height="7px"
-                width="60px"
-                labelSize="10px"
-                maxCompleted={100}
-                isLabelVisible={false}
-                completed={props.score}
-              />
-            )} */}
           </div>
           {props.ratingsLevel && (
             <div>

@@ -85,7 +85,7 @@ const PersonalDetails = () => {
         <BackArrowButton stroke="#583DB4" />
         <p>Personal Details</p>
         <div
-          className="w-[40px] p-2 text-end text-[#7C56FE] text-sm font-medium"
+          className="w-[40px] p-2 text-end text-[#7C56FE] text-sm font-medium cursor-pointer"
           onClick={() => setEdit(!edit)}
         >
           {edit ? <p onClick={handleSubmitChanges}>Save</p> : <p>Edit</p>}

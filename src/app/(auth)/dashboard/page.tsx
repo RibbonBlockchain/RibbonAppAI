@@ -1,6 +1,12 @@
 "use client";
 
 import {
+  TaskSVG,
+  SwapIcon,
+  SurveySVG,
+  QuestionnaireSVG,
+} from "../../../../public/images";
+import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
@@ -15,7 +21,6 @@ import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
-import { SwapIcon } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
@@ -29,8 +34,6 @@ const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
-  // const [claimed, setClaimed] = useState(false);
-
   const { data: user } = useGetAuth({ enabled: true });
   const pointBalance = user?.wallet.balance * 5000;
 
@@ -38,8 +41,11 @@ const Dashboard = () => {
   const toggleHideBalance = () => setHideBalance(!hideBalance);
 
   const [swapBalance, setSwapBalance] = useState(false);
+  const handleSwapBalance = () => setSwapBalance(!swapBalance);
 
-  const { data: todo, isLoading } = useGetUncompletedTasks();
+  const { data: questionnaire, isLoading } = useGetUncompletedTasks();
+  const survey: any[] = [];
+  const task: any[] = [];
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -111,7 +117,10 @@ const Dashboard = () => {
                     />
                   )}
                 </div>
-                <div className="flex flex-row gap-2 items-center justify-center text-lg font-bold">
+                <div
+                  onClick={handleSwapBalance}
+                  className="flex flex-row gap-2 items-center justify-center text-lg font-bold cursor-pointer"
+                >
                   <CoinSVG />
                   {hideBalance ? (
                     <p>***</p>
@@ -127,8 +136,11 @@ const Dashboard = () => {
                 </div>
 
                 {
-                  <div className="flex flex-row items-center justify-center gap-2 text-xs">
-                    <div onClick={() => setSwapBalance(!swapBalance)}>
+                  <div
+                    onClick={handleSwapBalance}
+                    className="flex flex-row items-center justify-center gap-2 text-xs cursor-pointer"
+                  >
+                    <div>
                       <SwapIcon />
                     </div>{" "}
                     {hideBalance ? (
@@ -223,11 +235,12 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className="w-full">
-            <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
-              To do List
-            </p>
-            {todo?.map((i: any) => (
+          <div className="w-full mb-4">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+              <p>Questionnaire</p>
+              <QuestionnaireSVG />
+            </div>
+            {questionnaire?.map((i: any) => (
               <Todo
                 key={i.id}
                 ratings={675}
@@ -243,20 +256,54 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* <div className="w-full">
-            <p className="text-[#34246B] text-xs pt-5 pb-3 font-bold">
-              Exclusive Surveys
-            </p>
-            <Survey />
-            <Survey />
-            <Survey />
-          </div> */}
+          <div className="w-full mb-4">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+              <p>Surveys</p>
+              <SurveySVG />
+            </div>
+            {/* <Survey /> */}
+
+            {survey?.map((i: any) => (
+              <Todo
+                key={i.id}
+                ratings={675}
+                score={i.point}
+                icon={undefined}
+                reward={i.reward}
+                taskTitle={i.name}
+                approximateTime={i.duration / 60}
+                ratingsLevel="/images/ratings.svg"
+                id={i.id}
+                href={`/dashboard/activity/${i.id}`}
+              />
+            ))}
+          </div>
+
+          <div className="w-full mb-4">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+              <p>Tasks</p>
+              <TaskSVG />
+            </div>
+            {task?.map((i: any) => (
+              <Todo
+                key={i.id}
+                ratings={675}
+                score={i.point}
+                icon={undefined}
+                reward={i.reward}
+                taskTitle={i.name}
+                approximateTime={i.duration / 60}
+                ratingsLevel="/images/ratings.svg"
+                id={i.id}
+                href={`/dashboard/activity/${i.id}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       <ClaimDailyRewardModal
         closeModal={() => {
-          // setClaimed(true);
           setShowDailyRewardModal(false);
         }}
         disabled={remainingTime > 0}

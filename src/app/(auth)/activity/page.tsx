@@ -41,7 +41,7 @@ const Activity = () => {
             <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
             <div
               onClick={() => setSwitchBalance(!switchBalance)}
-              className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold"
+              className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold cursor-pointer"
             >
               <CoinSVG width={12} height={12} fill="#6200EE" />
               {switchBalance

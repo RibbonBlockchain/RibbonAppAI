@@ -3,12 +3,12 @@
 import Image from "next/image";
 import Button from "../button";
 import { cn } from "@/lib/utils";
+import { useGetAuth } from "@/api/auth";
 import Coin from "@/public/images/coin.webp";
-import React, { Fragment, useEffect, useState } from "react";
 import { useClaimDailyRewards } from "@/api/user";
 import GiftBox from "@/public/images/gift_box.webp";
 import { Transition, Dialog } from "@headlessui/react";
-import { useGetAuth } from "@/api/auth";
+import React, { Fragment, useEffect, useState } from "react";
 
 type Props = {
   isOpen: boolean;

@@ -34,15 +34,15 @@ const css = `
 const CompletedTasks = () => {
   const today = new Date();
   const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-  const endOfWeek = new Date(
-    today.setDate(today.getDate() - today.getDay() + 6)
-  );
+  // const endOfWeek = new Date(
+  //   today.setDate(today.getDate() - today.getDay() + 6)
+  // );
 
   const todayDate = new Date();
   const currentDay = todayDate.toDateString();
-  const currentMonth = todayDate.toDateString().split(" ")[1];
-  const startOfWeekDate = startOfWeek.toDateString().split(" ")[2];
-  const endOfWeekDate = endOfWeek.toDateString().split(" ")[2];
+  // const currentMonth = todayDate.toDateString().split(" ")[1];
+  // const startOfWeekDate = startOfWeek.toDateString().split(" ")[2];
+  // const endOfWeekDate = endOfWeek.toDateString().split(" ")[2];
 
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
@@ -78,19 +78,17 @@ const CompletedTasks = () => {
   const { data: allCompleted, isLoading: allLoading } = useGetCompletedTasks();
 
   return (
-    <div className="p-4 sm:p-6">
-      <div className="flex flex-col mb-6 max-w-[320px]">
-        <div className="my-2 py-2 flex flex-row items-end justify-between">
-          <div className="flex flex-col relative">
+    <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+      <div className="flex flex-col mb-2">
+        <div className="flex flex-row items-end justify-between">
+          <div className="flex flex-col relative w-full items-end cursor-pointer">
             <div
               onClick={() => {
                 setShowCalender(!showCalender);
               }}
-              className="flex flex-row items-center  justify-center text-xs text-[#714EE7] gap-2"
+              className="flex items-end justify-end text-xs text-[#714EE7] gap-2"
             >
               <CalendarDays size={18} stroke="#7C56FE" />
-              {currentMonth} {startOfWeekDate} - {endOfWeekDate}
-              <ChevronDown size={18} stroke="#7C56FE" />
             </div>
 
             {showCalender && (
@@ -115,42 +113,6 @@ const CompletedTasks = () => {
               </>
             )}
           </div>
-
-          <p className="text-xs font-semibold text-[#FFF] bg-[#7C56FE] py-2 px-3 rounded-full">
-            {format(selectedDay as Date, "PPP")}
-          </p>
-        </div>
-        <div className="flex flex-row items-center justify-around text-base border-t-[1px] border-[#E8E8E8] pt-3">
-          {weekDates.map((date, index) => (
-            <div
-              key={index}
-              className={clsx(
-                `px-3 py-2 flex flex-col gap-1 rounded-full text-center`,
-                activeDate === date.toDateString() && "bg-[#7C56FE] text-white"
-              )}
-              // onClick={() => {
-              //   setActiveDate(date.toDateString());
-              // }}
-            >
-              <p
-                className={clsx(
-                  "text-[#939393] font-medium",
-                  activeDate === date.toDateString() && "text-white"
-                )}
-              >
-                {date.toDateString()[0]}
-              </p>
-              <p
-                className={clsx(
-                  "text-[#7C56FE] font-semibold",
-                  activeDate === date.toDateString() &&
-                    "bg-[#7C56FE] text-white"
-                )}
-              >
-                {date.toDateString().split(" ")[2]}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -170,6 +132,9 @@ const CompletedTasks = () => {
         <div>
           {allCompleted?.data.length >= 1 ? (
             <div className="py-3">
+              <p className="text-xs text-[#141414] py-3 font-bold">
+                Today ({formatDate(todayDate)})
+              </p>
               <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
                 <p className="text-xs">Daily rewards</p>
                 <p className="text-sm">1000 pts</p>

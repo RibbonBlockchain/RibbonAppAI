@@ -11,7 +11,6 @@ import Star from "./star.svg";
 import Check from "./check.svg";
 import Balance from "./cup.svg";
 import LogOut from "./logout.svg";
-import GroupSVG from "./group.svg";
 import Discord from "./discord.svg";
 import Profile from "./profile.svg";
 import WorldID from "./WorldID.svg";
@@ -31,10 +30,8 @@ import NotificationsIcon from "./notifications.svg";
 import TermsOfService from "./terms-of-service.svg";
 import MessageQuestion from "./message-question.svg";
 import LoveSmileyEmoji from "./love-smiley-emoji.svg";
-import DailyRewardClaimed from "./daily-rewards-claimed.svg";
-import QuestionnaireSVG from "./questionnaire.svg";
-import SurveySVG from "./survey.svg";
-import TaskSVG from "./task.svg";
+import Phone from "./phone.svg";
+import Mail from "./mail.svg";
 
 export {
   Key,
@@ -51,7 +48,6 @@ export {
   Discord,
   Twitter,
   SwapIcon,
-  GroupSVG,
   Feedback,
   SadEmoji,
   LinkedIn,
@@ -66,8 +62,6 @@ export {
   TermsOfService,
   MessageQuestion,
   NotificationsIcon,
-  DailyRewardClaimed,
-  QuestionnaireSVG,
-  SurveySVG,
-  TaskSVG,
+  Phone,
+  Mail,
 };

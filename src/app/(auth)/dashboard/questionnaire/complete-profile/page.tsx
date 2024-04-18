@@ -11,6 +11,7 @@ import UserSocials from "@/components/questionnarie/complete-profile/user-social
 import GenderSelect from "@/components/questionnarie/complete-profile/gender-select";
 import OptionSelectQuestionnarie from "@/containers/questionnaire/radio-questionnaire";
 import { useRouter } from "next/navigation";
+import Claimed from "@/components/modal/claimed";
 
 const CompleteProfile = () => {
   const router = useRouter();

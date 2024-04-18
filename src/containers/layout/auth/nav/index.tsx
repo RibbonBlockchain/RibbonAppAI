@@ -36,7 +36,6 @@ const FooterNav = () => {
         {items.map(({ route, name, icon, iconFilled }) => (
           <a
             key={name}
-            href="#"
             onClick={() => {
               router.push(route);
             }}

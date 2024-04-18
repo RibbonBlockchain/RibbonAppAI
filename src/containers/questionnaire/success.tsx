@@ -36,10 +36,16 @@ const Claim = ({ onclick }: { onclick: () => void }) => {
 
         <h3 className="text-2xl flex flex-row gap-2 text-primary font-extrabold mt-10">
           Reward claimed
-          <LoveSmileyEmoji />
+          <Image
+            width={30}
+            height={30}
+            alt="smiley-emoji"
+            src="/images/love-smiley-emoji.png"
+          />{" "}
+          {/* <LoveSmileyEmoji /> */}
         </h3>
 
-        <div className="text-primary w-full font-text-2xl flex items-center justify-between font-bold gap-x-6 mt-5 ">
+        <div className="text-primary w-full font-text-xl flex items-center justify-between font-bold gap-x-2 mt-5 ">
           <div className="flex flex-row items-center justify-center gap-1 w-full py-2 rounded-full bg-[#F2eeff]">
             <Image
               alt="cup"
@@ -62,7 +68,7 @@ const Claim = ({ onclick }: { onclick: () => void }) => {
         </div>
       </div>
 
-      <div className="mb-10 z-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white text-center py-3.5 font-semibold rounded-lg ">
+      <div className="mb-10 z-10 bg-gradient-to-r from-[#714EE7] to-[#A81DA6] text-white flex items-center justify-center text-center py-3.5 font-semibold rounded-lg ">
         <button
           onClick={onclick}
           className="flex items-center justify-center gap-2"

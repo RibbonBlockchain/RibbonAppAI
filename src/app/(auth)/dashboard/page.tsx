@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  TaskSVG,
-  SwapIcon,
-  SurveySVG,
-  QuestionnaireSVG,
-} from "../../../../public/images";
+import { SwapIcon } from "../../../../public/images";
 import {
   buildStyles,
   CircularProgressbarWithChildren,
@@ -44,6 +39,7 @@ const Dashboard = () => {
   const handleSwapBalance = () => setSwapBalance(!swapBalance);
 
   const { data: questionnaire, isLoading } = useGetUncompletedTasks();
+  console.log(questionnaire, "uncompleted questionnaire");
   const survey: any[] = [];
   const task: any[] = [];
 
@@ -238,7 +234,12 @@ const Dashboard = () => {
           <div className="w-full mb-4">
             <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
               <p>Questionnaire</p>
-              <QuestionnaireSVG />
+              <Image
+                width={40}
+                height={40}
+                alt="questionnaires"
+                src="/images/questionnaires.png"
+              />
             </div>
             {questionnaire?.map((i: any) => (
               <Todo
@@ -259,7 +260,12 @@ const Dashboard = () => {
           <div className="w-full mb-4">
             <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
               <p>Surveys</p>
-              <SurveySVG />
+              <Image
+                width={40}
+                height={40}
+                alt="surveys"
+                src="/images/surveys.png"
+              />
             </div>
             {/* <Survey /> */}
 
@@ -282,7 +288,12 @@ const Dashboard = () => {
           <div className="w-full mb-4">
             <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
               <p>Tasks</p>
-              <TaskSVG />
+              <Image
+                width={40}
+                alt="tasks"
+                height={40}
+                src="/images/tasks.png"
+              />
             </div>
             {task?.map((i: any) => (
               <Todo

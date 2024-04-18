@@ -9,7 +9,7 @@ type Props = {
   taskTitle: string;
   priority?: boolean;
   approximateTime: number;
-  completed?: boolean;
+  completed?: string;
 
   ratings?: number;
   ratingsLevel?: string;

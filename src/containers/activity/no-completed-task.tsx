@@ -1,7 +1,7 @@
 import React from "react";
 import { SadEmoji } from "../../../public/images";
 
-export const NoCompletedTaskOnDate = () => {
+export const NoCompletedTaskOnDate = ({ onclick }: { onclick: () => void }) => {
   return (
     <div className="min-h-[50vh] flex flex-col items-center gap-2 justify-center">
       <SadEmoji />
@@ -10,6 +10,12 @@ export const NoCompletedTaskOnDate = () => {
       </p>
       <p className="text-sm text-[#434343] text-center">
         Your completed tasks will be displayed here
+      </p>
+      <p
+        onClick={onclick}
+        className="text-sm text-[#714EE7] font-bold pt-3 text-center cursor-pointer"
+      >
+        See all completed tasks
       </p>
     </div>
   );

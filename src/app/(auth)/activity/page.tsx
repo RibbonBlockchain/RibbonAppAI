@@ -5,12 +5,12 @@ import { useGetAuth } from "@/api/auth";
 import { useGetTasksInProgress } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import InProgress from "@/containers/activity/in-progress";
-import CompletedTasks from "@/containers/activity/completed-tasks";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import CompletedActivities from "@/containers/activity/completed-tasks";
 
 const Activity = () => {
   const { data: user } = useGetAuth({ enabled: true });
-  const { data, isSuccess } = useGetTasksInProgress();
+  const { data: inProgress, isSuccess } = useGetTasksInProgress();
 
   const [activeTab, setActiveTab] = React.useState("");
   const [switchBalance, setSwitchBalance] = React.useState(false);
@@ -62,7 +62,7 @@ const Activity = () => {
               Pending
               {activeTab === "pending" && (
                 <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
-                  {data?.length}
+                  {inProgress?.length}
                 </p>
               )}
             </div>
@@ -79,7 +79,7 @@ const Activity = () => {
           </div>
         </div>
 
-        {activeTab === "completed" ? <CompletedTasks /> : <InProgress />}
+        {activeTab === "completed" ? <CompletedActivities /> : <InProgress />}
       </div>
     </AuthNavLayout>
   );

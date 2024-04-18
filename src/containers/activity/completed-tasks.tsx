@@ -2,15 +2,16 @@
 
 import clsx from "clsx";
 import React from "react";
-import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
+import { CalendarDays } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { formatDate } from "@/lib/utils/format-date";
-import { CalendarDays, ChevronDown } from "lucide-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { NoCompletedTaskOnDate } from "./no-completed-task";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import { useGetCompletedTasks, useGetCompletedTasksByDate } from "@/api/user";
+import TaskListByDate from "./task-list-bydate";
+import { useGetAuth } from "@/api/auth";
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -31,18 +32,11 @@ const css = `
     }
 `;
 
-const CompletedTasks = () => {
+const CompletedActivities = () => {
   const today = new Date();
   const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-  // const endOfWeek = new Date(
-  //   today.setDate(today.getDate() - today.getDay() + 6)
-  // );
 
   const todayDate = new Date();
-  const currentDay = todayDate.toDateString();
-  // const currentMonth = todayDate.toDateString().split(" ")[1];
-  // const startOfWeekDate = startOfWeek.toDateString().split(" ")[2];
-  // const endOfWeekDate = endOfWeek.toDateString().split(" ")[2];
 
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
@@ -53,29 +47,35 @@ const CompletedTasks = () => {
 
   // state management
   const [showCalender, setShowCalender] = React.useState(false);
-  const closeCalender = () => setShowCalender(false);
-
-  const CloseCalender = () => (
-    <div
-      className="text-end text-sm cursor-pointer pt-1 text-[#714EE7]"
-      onClick={closeCalender}
-    >
-      See completed tasks
-    </div>
-  );
 
   // get dates
-  const [activeDate, setActiveDate] = React.useState(currentDay);
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(
     todayDate
   );
   const [seeAllTasks, setSeeAllTasks] = React.useState<boolean>(true);
+
+  const closeCalender = () => {
+    setShowCalender(false), setSeeAllTasks(false);
+  };
+
+  const CloseCalender = () => (
+    <div
+      className="text-end text-sm cursor-pointer pt-2 text-[#714EE7] font-bold"
+      onClick={closeCalender}
+    >
+      Check date
+    </div>
+  );
 
   // api calls
   const { data, isLoading } = useGetCompletedTasksByDate(
     formatDate(selectedDay)
   );
   const { data: allCompleted, isLoading: allLoading } = useGetCompletedTasks();
+  const { data: user } = useGetAuth({ enabled: true });
+
+  const dateString = user?.lastClaimTime;
+  const date = new Date(dateString);
 
   return (
     <div className="px-4 pb-4 sm:px-6 sm:pb-6">
@@ -116,7 +116,7 @@ const CompletedTasks = () => {
         </div>
       </div>
 
-      <div onClick={() => setSeeAllTasks(!seeAllTasks)}>
+      {/* <div onClick={() => setSeeAllTasks(!seeAllTasks)}>
         {seeAllTasks ? (
           <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
             View activities by date
@@ -126,7 +126,7 @@ const CompletedTasks = () => {
             View all completed activities
           </p>
         )}
-      </div>
+      </div> */}
 
       {seeAllTasks ? (
         <div>
@@ -135,10 +135,15 @@ const CompletedTasks = () => {
               <p className="text-xs text-[#141414] py-3 font-bold">
                 Today ({formatDate(todayDate)})
               </p>
-              <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
-                <p className="text-xs">Daily rewards</p>
-                <p className="text-sm">1000 pts</p>
-              </div>
+              {user?.numberOfClaims > 0 &&
+              date.toDateString() == todayDate.toDateString() ? (
+                <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
+                  <p className="text-xs">Daily rewards</p>
+                  <p className="text-sm">1000 pts</p>
+                </div>
+              ) : (
+                <></>
+              )}
               {allCompleted?.data?.map((i: any) => (
                 <TodoCompletedForm
                   key={i.id}
@@ -155,20 +160,26 @@ const CompletedTasks = () => {
           ) : allLoading ? (
             <SpinnerIcon />
           ) : (
-            <NoCompletedTaskOnDate />
+            <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
           )}
         </div>
       ) : (
         <div>
+          {/* {user?.numberOfClaims > 0 &&
+          date.toDateString() == todayDate.toDateString() ? (
+            <div className="text-[#626262] mb-3 mt-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
+              <p className="text-xs">Daily rewards</p>
+              <p className="text-sm">1000 pts</p>
+            </div>
+          ) : (
+            <></>
+          )} */}
           {data?.data.length >= 1 ? (
             <div className="">
               <p className="text-xs text-[#141414] py-3 font-bold">
                 {formatDate(selectedDay)}
               </p>
-              <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
-                <p className="text-xs">Daily rewards</p>
-                <p className="text-sm">1000 pts</p>
-              </div>
+
               {data?.data?.map((i: any) => (
                 <TodoCompletedForm
                   key={i.id}
@@ -185,19 +196,16 @@ const CompletedTasks = () => {
           ) : isLoading ? (
             <SpinnerIcon />
           ) : (
-            <NoCompletedTaskOnDate />
+            <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
           )}
         </div>
       )}
 
-      {/* <div className="w-full">
-        <p className="text-xs text-[#141414] py-3 font-bold">
-          Yesterday, 8:30 am
-        </p>
-        <CoompletedSurvey />
-      </div> */}
+      {/* <TaskListByDate /> */}
+
+      {/* <CoompletedSurvey /> */}
     </div>
   );
 };
 
-export default CompletedTasks;
+export default CompletedActivities;

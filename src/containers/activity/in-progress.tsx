@@ -25,7 +25,7 @@ const InProgress = () => {
             ratings={i?.ratings || "675"}
             ratingsLevel={i?.ratingsLevel || "/images/empty-rating.svg"}
             approximateTime={i?.duration / 60}
-            href={`/dashboard/task/${i.id}`}
+            href={`/dashboard/activity/${i.id}`}
           />
         ))}
       </div>

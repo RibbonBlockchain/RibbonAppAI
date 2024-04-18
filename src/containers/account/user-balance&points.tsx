@@ -2,9 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
+import { useGetAuth } from "@/api/auth";
 import CoinSVG from "@/public/images/coin";
 import { SwapIconGray } from "@/public/images";
-import { useGetAuth } from "@/api/auth";
 import { useGetCompletedTasks } from "@/api/user";
 
 const BalanceDetails = ({
@@ -36,7 +36,7 @@ const UserBalanceAndPoints = () => {
   const pointBalance = user?.wallet.balance * 5000;
   const tokenSpent = user?.wallet.spent || 0;
 
-  const { data: completedTasks } = useGetCompletedTasks();
+  const { data: questionnaires } = useGetCompletedTasks();
 
   return (
     <div className="bg-white rounded-2xl py-6 px-4">
@@ -60,7 +60,7 @@ const UserBalanceAndPoints = () => {
         <BalanceDetails
           value={0}
           text={"Daily rewards claimed"}
-          logo={"/images/daily-rewards-claimed.svg"}
+          logo={"/images/daily-rewards-claimed.png"}
         />
         <BalanceDetails
           value={tokenSpent}
@@ -68,13 +68,13 @@ const UserBalanceAndPoints = () => {
           logo={"/images/tokens-spent.png"}
         />
         <BalanceDetails
-          value={completedTasks?.data.length | 0}
-          text={"Completed activities"}
+          value={questionnaires?.data.length | 0}
+          text={"Completed questionnaires"}
           logo={"/images/tasks-completed.png"}
         />
         <BalanceDetails
           value={0}
-          text={"Completed questionnaires"}
+          text={"Completed tasks"}
           logo={"/images/tasks-completed.png"}
         />
         <BalanceDetails

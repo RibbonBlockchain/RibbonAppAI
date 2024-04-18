@@ -17,20 +17,20 @@ type Props = {
 };
 
 const dailyRewardsData = [
-  { day: 1, reward: "100 points" },
-  { day: 2, reward: "200 points" },
-  { day: 3, reward: "300 points" },
-  { day: 4, reward: "400 points" },
-  { day: 5, reward: "500 points" },
-  { day: 6, reward: "600 points" },
-  { day: 7, reward: "700 points" },
+  { day: 1, reward: "1000 points" },
+  { day: 2, reward: "1000 points" },
+  { day: 3, reward: "1000 points" },
+  { day: 4, reward: "1000 points" },
+  { day: 5, reward: "1000 points" },
+  { day: 6, reward: "1000 points" },
+  { day: 7, reward: "1000 points" },
 ];
 
 const ClaimDailyRewardModal: React.FC<Props> = (props) => {
   const { data: user } = useGetAuth();
   const { mutate: claimDailyReward } = useClaimDailyRewards();
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(user?.numberOfClaims);
   const [lastClickedTimestamp, setLastClickedTimestamp] = useState(
     user?.lastClaimTime
   );
@@ -40,7 +40,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
       lastClickedTimestamp &&
       Date.now() - lastClickedTimestamp >= 12 * 60 * 60 * 1000
     ) {
-      setStep(0);
+      setStep(step);
     }
   }, [lastClickedTimestamp]);
 
@@ -95,12 +95,12 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   </figure>
 
                   <ul className="mt-6 flex flex-wrap justify-center place-items-center gap-x-2 gap-y-4">
-                    {dailyRewardsData?.map((item, index) => (
+                    {dailyRewardsData?.map(({ day, reward }, index) => (
                       <li key={index}>
                         <figure
                           className={cn(
                             "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
-                            item.day === step + 1
+                            index === step
                               ? "border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]"
                               : ""
                           )}
@@ -111,19 +111,17 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             className="max-w-8 mx-auto"
                           />
                           <figcaption className="text-center text-nowrap text-primary font-semibold text-xs">
-                            {item.reward}
+                            {reward}
                           </figcaption>
                         </figure>
 
                         <p
                           className={cn(
                             "text-center w-full mt-2 text-sm font-medium",
-                            item.day === step + 1
-                              ? "text-primary"
-                              : "text-[#939393]"
+                            index === step ? "text-primary" : "text-[#939393]"
                           )}
                         >
-                          Day {item.day}
+                          Day {day}
                         </p>
                       </li>
                     ))}
@@ -132,12 +130,13 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   <Button
                     disabled={props.disabled}
                     onClick={() => {
-                      props.closeModal;
                       claimDailyReward();
                       setLastClickedTimestamp(Date.now());
-                      setStep(
-                        (prevStep) => (prevStep + 1) % dailyRewardsData?.length
-                      );
+
+                      const nextReward = (step + 1) % dailyRewardsData.length;
+                      setStep(nextReward);
+
+                      props.closeModal;
                     }}
                     className="rounded-full mt-6 mb-4"
                   >

@@ -6,7 +6,7 @@ import { useGetAuth } from "@/api/auth";
 import ProgressBar from "@ramonak/react-progress-bar";
 import BackArrowButton from "@/components/button/back-arrow";
 import InviteFriends from "@/containers/account/invite-friends";
-import CompleteTasks from "@/containers/account/complete-tasks";
+import CompleteActivities from "@/containers/account/complete-tasks";
 import UserBalanceAndPoints from "@/containers/account/user-balance&points";
 
 const BalanceAndPoints = () => {
@@ -60,7 +60,7 @@ const BalanceAndPoints = () => {
       <div>
         <p className="text-[#080808] text-[14px]">Earn more points</p>
         <InviteFriends className="bg-[#FFFFFF]" />
-        <CompleteTasks />
+        <CompleteActivities />
       </div>
     </div>
   );

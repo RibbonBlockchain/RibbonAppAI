@@ -66,7 +66,13 @@ const Claimed: React.FC<Props> = (props) => {
 
                   <h3 className="text-2xl flex flex-row gap-2 text-primary font-extrabold mt-10">
                     Reward claimed
-                    <LoveSmileyEmoji />
+                    <Image
+                      width={30}
+                      height={30}
+                      alt="smiley-emoji"
+                      src="/images/love-smiley-emoji.png"
+                    />
+                    {/* <LoveSmileyEmoji /> */}
                   </h3>
 
                   <div className="text-primary w-full flex items-center justify-between font-bold gap-x-2 mt-5 ">

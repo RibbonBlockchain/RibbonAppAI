@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const CompleteTasks = () => {
+const CompleteActivities = () => {
   const router = useRouter();
 
   return (
@@ -21,7 +21,7 @@ const CompleteTasks = () => {
           src="/images/gift-box.png"
         />
         <div className="flex flex-col">
-          <p className="text-base font-semibold">Complete tasks</p>
+          <p className="text-base font-semibold">Complete activities</p>
           <p className="text-xs font-medium text-[#626262]">
             Complete more activities and earn more points
           </p>
@@ -38,4 +38,4 @@ const CompleteTasks = () => {
   );
 };
 
-export default CompleteTasks;
+export default CompleteActivities;

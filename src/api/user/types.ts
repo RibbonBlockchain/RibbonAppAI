@@ -5,7 +5,8 @@ export type TUpdateProfileBody = {
   firstName?: string;
   otherNames?: string;
   phone?: string;
-  gender?: "MALE" | "FEMALE" | "OTHER";
+  // gender?: "MALE" | "FEMALE" | "OTHER";
+  gender?: string;
   socials?: {
     x?: string;
     discord?: string;

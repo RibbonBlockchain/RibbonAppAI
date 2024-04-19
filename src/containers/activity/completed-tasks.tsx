@@ -2,16 +2,16 @@
 
 import clsx from "clsx";
 import React from "react";
+import { useGetAuth } from "@/api/auth";
 import "react-day-picker/dist/style.css";
 import { CalendarDays } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import TaskListByDate from "./task-list-bydate";
 import { formatDate } from "@/lib/utils/format-date";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { NoCompletedTaskOnDate } from "./no-completed-task";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import { useGetCompletedTasks, useGetCompletedTasksByDate } from "@/api/user";
-import TaskListByDate from "./task-list-bydate";
-import { useGetAuth } from "@/api/auth";
 
 const css = `
   .my-selected:not([disabled]) { 
@@ -71,11 +71,19 @@ const CompletedActivities = () => {
   const { data, isLoading } = useGetCompletedTasksByDate(
     formatDate(selectedDay)
   );
-  const { data: allCompleted, isLoading: allLoading } = useGetCompletedTasks();
+  const {
+    data: allCompleted,
+    isLoading: allLoading,
+    isFetching: allFetching,
+  } = useGetCompletedTasks();
   const { data: user } = useGetAuth({ enabled: true });
 
   const dateString = user?.lastClaimTime;
   const date = new Date(dateString);
+
+  if (allFetching || allLoading) {
+    <SpinnerIcon />;
+  }
 
   return (
     <div className="px-4 pb-4 sm:px-6 sm:pb-6">
@@ -135,26 +143,32 @@ const CompletedActivities = () => {
               <p className="text-xs text-[#141414] py-3 font-bold">
                 Today ({formatDate(todayDate)})
               </p>
-              {user?.numberOfClaims > 0 &&
-              date.toDateString() == todayDate.toDateString() ? (
-                <div className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
-                  <p className="text-xs">Daily rewards</p>
-                  <p className="text-sm">1000 pts</p>
-                </div>
-              ) : (
-                <></>
-              )}
+
               {allCompleted?.data?.map((i: any) => (
-                <TodoCompletedForm
-                  key={i.id}
-                  score={i.score}
-                  reward={i.reward}
-                  priority={i.priority}
-                  taskTitle={i.description}
-                  approximateTime={i.duration / 60}
-                  ratings={i.ratings || 675}
-                  ratingsLevel={i.ratingsLevel || "/images/empty-rating.svg"}
-                />
+                <>
+                  {i.type === "DAILY_REWARD" ? (
+                    <div
+                      key={i.id}
+                      className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                    >
+                      <p className="text-xs">Daily rewards</p>
+                      <p className="text-sm">1000 pts</p>
+                    </div>
+                  ) : (
+                    <TodoCompletedForm
+                      key={i.id}
+                      score={i.score}
+                      reward={i.reward}
+                      priority={i.priority}
+                      taskTitle={i.description}
+                      approximateTime={i.duration / 60}
+                      ratings={i.ratings || 675}
+                      ratingsLevel={
+                        i.ratingsLevel || "/images/empty-rating.svg"
+                      }
+                    />
+                  )}
+                </>
               ))}
             </div>
           ) : allLoading ? (
@@ -165,15 +179,6 @@ const CompletedActivities = () => {
         </div>
       ) : (
         <div>
-          {/* {user?.numberOfClaims > 0 &&
-          date.toDateString() == todayDate.toDateString() ? (
-            <div className="text-[#626262] mb-3 mt-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl">
-              <p className="text-xs">Daily rewards</p>
-              <p className="text-sm">1000 pts</p>
-            </div>
-          ) : (
-            <></>
-          )} */}
           {data?.data.length >= 1 ? (
             <div className="">
               <p className="text-xs text-[#141414] py-3 font-bold">
@@ -181,16 +186,30 @@ const CompletedActivities = () => {
               </p>
 
               {data?.data?.map((i: any) => (
-                <TodoCompletedForm
-                  key={i.id}
-                  score={i.score}
-                  reward={i.reward}
-                  priority={i.priority}
-                  taskTitle={i.description}
-                  approximateTime={i.duration / 60}
-                  ratings={i.ratings || 675}
-                  ratingsLevel={i.ratingsLevel || "/images/empty-rating.svg"}
-                />
+                <>
+                  {i.type === "DAILY_REWARD" ? (
+                    <div
+                      key={i.id}
+                      className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                    >
+                      <p className="text-xs">Daily rewards</p>
+                      <p className="text-sm">1000 pts</p>
+                    </div>
+                  ) : (
+                    <TodoCompletedForm
+                      key={i.id}
+                      score={i.score}
+                      reward={i.reward}
+                      priority={i.priority}
+                      taskTitle={i.description}
+                      approximateTime={i.duration / 60}
+                      ratings={i.ratings || 675}
+                      ratingsLevel={
+                        i.ratingsLevel || "/images/empty-rating.svg"
+                      }
+                    />
+                  )}
+                </>
               ))}
             </div>
           ) : isLoading ? (

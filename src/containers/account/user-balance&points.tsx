@@ -37,6 +37,9 @@ const UserBalanceAndPoints = () => {
   const tokenSpent = user?.wallet.spent || 0;
 
   const { data: questionnaires } = useGetCompletedTasks();
+  const filterQuestionnaires = questionnaires?.data.filter(
+    (item: { type: string }) => item.type === "QUESTIONNAIRE"
+  );
 
   return (
     <div className="bg-white rounded-2xl py-6 px-4">
@@ -58,7 +61,7 @@ const UserBalanceAndPoints = () => {
           logo={"/images/points-earned.png"}
         />
         <BalanceDetails
-          value={0}
+          value={user?.numberOfClaims}
           text={"Daily rewards claimed"}
           logo={"/images/daily-rewards-claimed.png"}
         />
@@ -68,7 +71,7 @@ const UserBalanceAndPoints = () => {
           logo={"/images/tokens-spent.png"}
         />
         <BalanceDetails
-          value={questionnaires?.data.length | 0}
+          value={filterQuestionnaires?.length | 0}
           text={"Completed questionnaires"}
           logo={"/images/tasks-completed.png"}
         />

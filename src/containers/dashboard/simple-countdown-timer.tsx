@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useGetAuth } from "@/api/auth";
 import CoinSVG from "@/public/images/coin";
 import React, { useEffect, useState } from "react";
@@ -65,7 +66,11 @@ const CountdownTimer: React.FC = () => {
       {remainingTime > 0 ? (
         <p className="w-[80px]">{formatTime(remainingTime)}</p>
       ) : (
-        <div className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold">
+        <div
+          className={clsx(
+            "text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
+          )}
+        >
           <CoinSVG fill="#4B199C" />5 WLD
         </div>
       )}

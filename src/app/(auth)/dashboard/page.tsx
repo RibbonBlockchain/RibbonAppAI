@@ -12,15 +12,16 @@ import PageLoader from "@/components/loader";
 import { useSession } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
+import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
+import CountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import SimpleCountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 
 const Dashboard = () => {
   const session = useSession();
@@ -39,7 +40,6 @@ const Dashboard = () => {
   const handleSwapBalance = () => setSwapBalance(!swapBalance);
 
   const { data: questionnaire, isLoading } = useGetUncompletedTasks();
-  console.log(questionnaire, "uncompleted questionnaire");
   const survey: any[] = [];
   const task: any[] = [];
 
@@ -166,7 +166,7 @@ const Dashboard = () => {
                     value={(pointBalance / 50000) * 100}
                     strokeWidth={8}
                   >
-                    <p className="flex flex-col text-base font-extrabold leading-4">
+                    <p className="flex flex-col text-sm font-extrabold leading-4">
                       {0 || (pointBalance > 50000 ? 50000 : pointBalance)}
                     </p>
                   </CircularProgressbarWithChildren>
@@ -200,11 +200,16 @@ const Dashboard = () => {
                 src="/images/trophy.gif"
               />
               {remainingTime > 0 ? (
-                <SimpleCountdownTimer />
+                <CountdownTimer />
               ) : (
-                <button className="text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold">
+                <div
+                  className={clsx(
+                    "text-gradient w-[80px] hidden flex-row gap-2 items-center justify-center text-[20px] font-bold",
+                    remainingTime === 0 && "flex"
+                  )}
+                >
                   <CoinSVG fill="#4B199C" />5 WLD
-                </button>
+                </div>
               )}
             </span>
           </button>

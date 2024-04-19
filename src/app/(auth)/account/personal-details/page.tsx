@@ -135,7 +135,9 @@ const PersonalDetails = () => {
             />
           </div>
           <div className="flex flex-col gap-1 text-[#626262] text-xs font-normal ">
-            <p className="text-lg text-black font-semibold">Ribbon Protocol</p>
+            <p className="text-lg text-black font-semibold">
+              {user?.firstName} {user?.lastName}
+            </p>
             <p>SES Score: {SES_Score}</p>
             <p>Balance: {user?.wallet.balance} WLD</p>
           </div>

@@ -13,7 +13,7 @@ const BalanceAndPoints = () => {
   const { data: user } = useGetAuth({ enabled: true });
 
   return (
-    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-[inherit] flex flex-col">
+    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-auto flex flex-col">
       <div className="mb-6">
         <BackArrowButton stroke="#583DB4" />
         <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
@@ -57,7 +57,7 @@ const BalanceAndPoints = () => {
         </div>
       </div>
 
-      <div>
+      <div className="mb-12">
         <p className="text-[#080808] text-[14px]">Earn more points</p>
         <InviteFriends className="bg-[#FFFFFF]" />
         <CompleteActivities />

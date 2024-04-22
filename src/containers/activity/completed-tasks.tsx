@@ -85,6 +85,56 @@ const CompletedActivities = () => {
     <SpinnerIcon />;
   }
 
+  interface Task {
+    id: number;
+    image: string;
+    name: string;
+    description: string;
+    type: string;
+    completedDate: string;
+    score: number;
+    slug: string;
+    reward: number;
+    point: number;
+    duration: number;
+    createdAt: string;
+    priority: boolean;
+    ratings: number;
+    ratingsLevel: string;
+  }
+
+  interface Reward {
+    id: number;
+    type: string;
+    completedDate: string;
+    image: string;
+    name: string;
+    description: string;
+    score: number;
+    slug: string;
+    reward: number;
+    point: number;
+    duration: number;
+    createdAt: string;
+    priority: boolean;
+    ratings: number;
+    ratingsLevel: string;
+  }
+
+  const renderData: { [date: string]: (Task | Reward)[] } =
+    allCompleted?.data.reduce(
+      (acc: { [x: string]: any[] }, item: { completedDate: any }) => {
+        const date = item.completedDate;
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(item);
+        console.log(acc, "acc here");
+        return acc;
+      },
+      {}
+    );
+
   return (
     <div className="px-4 pb-4 sm:px-6 sm:pb-6">
       <div className="flex flex-col mb-2">
@@ -140,35 +190,40 @@ const CompletedActivities = () => {
         <div>
           {allCompleted?.data.length >= 1 ? (
             <div className="py-3">
-              <p className="text-xs text-[#141414] py-3 font-bold">
-                Today ({formatDate(todayDate)})
-              </p>
-
-              {allCompleted?.data?.map((i: any) => (
-                <>
-                  {i.type === "DAILY_REWARD" ? (
-                    <div
-                      key={i.id}
-                      className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
-                    >
-                      <p className="text-xs">Daily rewards</p>
-                      <p className="text-sm">1000 pts</p>
+              {Object.entries(renderData).map(([date, items]) => (
+                <div key={date} className="pb-5">
+                  <p className="text-xs text-[#141414] py-3 font-bold">
+                    {date}
+                  </p>
+                  {items.map((i, index) => (
+                    <div key={index}>
+                      <>
+                        {i.type === "DAILY_REWARD" ? (
+                          <div
+                            key={i.id}
+                            className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                          >
+                            <p className="text-xs">Daily rewards</p>
+                            <p className="text-sm">1000 pts</p>
+                          </div>
+                        ) : (
+                          <TodoCompletedForm
+                            key={i.id}
+                            score={i.score}
+                            reward={i.reward}
+                            priority={i.priority}
+                            taskTitle={i.description}
+                            approximateTime={i.duration / 60}
+                            ratings={i.ratings || 675}
+                            ratingsLevel={
+                              i.ratingsLevel || "/images/empty-rating.svg"
+                            }
+                          />
+                        )}
+                      </>
                     </div>
-                  ) : (
-                    <TodoCompletedForm
-                      key={i.id}
-                      score={i.score}
-                      reward={i.reward}
-                      priority={i.priority}
-                      taskTitle={i.description}
-                      approximateTime={i.duration / 60}
-                      ratings={i.ratings || 675}
-                      ratingsLevel={
-                        i.ratingsLevel || "/images/empty-rating.svg"
-                      }
-                    />
-                  )}
-                </>
+                  ))}
+                </div>
               ))}
             </div>
           ) : allLoading ? (

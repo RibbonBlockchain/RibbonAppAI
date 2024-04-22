@@ -3,6 +3,7 @@
 import Menu, {
   Support,
   Settings,
+  RouteMenu,
   ProfileDetails,
 } from "@/containers/account/menu";
 import React from "react";
@@ -10,8 +11,9 @@ import Link from "next/link";
 import Logout from "./sections/logout";
 import { signIn } from "next-auth/react";
 import User from "@/containers/account/user";
+import MoonSVG from "@/public/ReactSVG/moon";
 import { Scan, WorldID } from "@/public/images";
-import { ChevronRight, Moon, Sun } from "lucide-react";
+import { ChevronRight, Sun } from "lucide-react";
 import SwitchButton from "@/containers/account/switch-button";
 import InviteFriends from "@/containers/account/invite-friends";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
@@ -86,12 +88,12 @@ const Account = () => {
             >
               {theme ? (
                 <div className="flex flex-row items-center justify-center gap-3">
-                  <Sun />
+                  <MoonSVG />
                   <p className="text-base font-medium">Dark Mode</p>
                 </div>
               ) : (
                 <div className="flex flex-row items-center justify-center gap-3">
-                  <Moon />
+                  <Sun />
                   <p className="text-base font-medium">Light Mode</p>
                 </div>
               )}
@@ -106,7 +108,7 @@ const Account = () => {
         <div className="flex flex-col gap-[2px]">
           <p className="text-xs font-bold pt-6 pb-2 text-[#434343] ">SUPPORT</p>
           {Support.map(({ href, description, logo }) => (
-            <Menu
+            <RouteMenu
               href={href}
               logo={logo}
               key={description}

@@ -6,13 +6,14 @@ import {
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
 import Image from "next/image";
+import clsx from "clsx";
+import Link from "next/link";
 import { EyeOff } from "lucide-react";
 import { useGetAuth } from "@/api/auth";
 import PageLoader from "@/components/loader";
 import { useSession } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
-import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetUncompletedTasks } from "@/api/user";
@@ -166,7 +167,7 @@ const Dashboard = () => {
                     value={(pointBalance / 50000) * 100}
                     strokeWidth={8}
                   >
-                    <p className="flex flex-col text-sm font-extrabold leading-4">
+                    <p className="flex flex-col text-xs font-extrabold leading-4">
                       {0 || (pointBalance > 50000 ? 50000 : pointBalance)}
                     </p>
                   </CircularProgressbarWithChildren>
@@ -175,12 +176,12 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <LinkButton
+            <Link
               href={""}
-              className="bg-white mt-6 text-[#080808] font-semibold"
+              className="bg-white py-2 rounded-xl text-center mt-6 text-[#080808] font-semibold"
             >
               Withdraw Tokens
-            </LinkButton>
+            </Link>
           </div>
 
           <button
@@ -188,7 +189,7 @@ const Dashboard = () => {
             className="mx-auto border-[#4B199C] border-1 mb-5 mt-2"
           >
             <span
-              className={`w-full gap-2 max-w-[320px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold py-1.5 px-2 sm:px-3 text-gradient bg-white border-[#4B199C] border-[2px] rounded-full `}
+              className={`w-full gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold py-1.5 px-2 sm:px-3 text-gradient bg-white border-[#4B199C] border-[2px] rounded-full `}
             >
               Claim daily reward
               <Image
@@ -204,8 +205,7 @@ const Dashboard = () => {
               ) : (
                 <div
                   className={clsx(
-                    "text-gradient w-[80px] hidden flex-row gap-2 items-center justify-center text-[20px] font-bold",
-                    remainingTime === 0 && "flex"
+                    "text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
                   )}
                 >
                   <CoinSVG fill="#4B199C" />5 WLD
@@ -237,7 +237,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
               <p>Questionnaire</p>
               <Image
                 width={40}
@@ -263,7 +263,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
               <p>Surveys</p>
               <Image
                 width={40}
@@ -291,7 +291,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#34246B] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
               <p>Tasks</p>
               <Image
                 width={40}

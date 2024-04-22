@@ -2,27 +2,29 @@
 
 import clsx from "clsx";
 import React from "react";
+import HomeSVG from "@/public/ReactSVG/home";
+import HistorySVG from "@/public/ReactSVG/history";
 import { usePathname, useRouter } from "next/navigation";
-import { CircleUser, History, Home } from "lucide-react";
+import UserProfileSVG from "@/public/ReactSVG/user-circle";
 
 const items = [
   {
     route: "/dashboard",
     name: "Home",
-    icon: <Home />,
-    iconFilled: <Home fill="#B6B6B6" />,
+    icon: <HomeSVG fill="white" />,
+    iconFilled: <HomeSVG fill="#B6B6B6" />,
   },
   {
     route: "/activity",
     name: "Activity",
-    icon: <History />,
-    iconFilled: <History fill="#B6B6B6" />,
+    icon: <HistorySVG fill="white" />,
+    iconFilled: <HistorySVG fill="#B6B6B6" />,
   },
   {
     route: "/account",
     name: "Account",
-    icon: <CircleUser />,
-    iconFilled: <CircleUser fill="#B6B6B6" />,
+    icon: <UserProfileSVG fill="white" />,
+    iconFilled: <UserProfileSVG fill="#B6B6B6" />,
   },
 ];
 

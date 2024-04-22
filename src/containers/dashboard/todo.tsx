@@ -28,7 +28,7 @@ const Todo = (props: Props) => {
       className={`${
         props.priority
           ? "bg-[#EDE8F5]"
-          : "bg-white border-[1px] border-[#E8E8E8]"
+          : "bg-white border-[1px] border-[#f1f1f1]"
       }   w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
     >
       <div className="flex flex-row items-start justify-start text-black gap-1">

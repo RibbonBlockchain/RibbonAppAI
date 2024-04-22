@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Bell, Moon } from "lucide-react";
 import { RibbonLight } from "../../../public/images";
+import MoonSVG from "@/public/ReactSVG/moon";
 
 const Topbar = () => {
   return (
@@ -15,11 +16,12 @@ const Topbar = () => {
             className="rounded-full p-[2px]"
           />
         </Link>
-        <Moon
+        <MoonSVG />
+        {/* <MoonSVG
           fill="#6338A2"
           stroke="#6338A2"
           className="rounded-full p-[2px]"
-        />
+        /> */}
       </div>
     </div>
   );

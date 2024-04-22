@@ -46,17 +46,17 @@ export const Settings = [
 
 export const Support = [
   {
-    href: "#",
+    href: "https://linktr.ee/ribbonprotocol",
     description: "Contact Us",
     logo: <ContactUs />,
   },
   {
-    href: "#",
+    href: "https://linktr.ee/ribbonprotocol",
     description: "Feedback",
     logo: <Feedback />,
   },
   {
-    href: "#",
+    href: "https://medium.com/@RibbonProtocol/ribbon-app-faqs-a531e66e1216",
     description: "FAQs",
     logo: <FAQs />,
   },
@@ -71,6 +71,33 @@ export const Support = [
     logo: <PrivacyPolicy />,
   },
 ];
+
+export const RouteMenu = ({
+  logo,
+  href,
+  description,
+}: {
+  href: string;
+  description: string;
+  logo: React.ReactNode;
+}) => {
+  return (
+    <div>
+      <Link
+        href={href}
+        target="_blank"
+        className="flex flex-row items-center justify-between py-3 px-[6px] "
+      >
+        <div className="flex flex-row items-center justify-center gap-3">
+          {logo}
+          <p className="text-base font-medium">{description}</p>
+        </div>
+        <ChevronRight stroke="#6200EE" />
+      </Link>
+      <hr />
+    </div>
+  );
+};
 
 const Menu = ({
   logo,

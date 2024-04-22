@@ -63,7 +63,9 @@ const CountdownTimer: React.FC = () => {
 
   return (
     <div className="w-auto">
-      {remainingTime > 0 ? (
+      <p className="w-[80px]">{formatTime(remainingTime)}</p>
+
+      {/* {remainingTime > 0 ? (
         <p className="w-[80px]">{formatTime(remainingTime)}</p>
       ) : (
         <div
@@ -73,7 +75,7 @@ const CountdownTimer: React.FC = () => {
         >
           <CoinSVG fill="#4B199C" />5 WLD
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -1,4 +1,8 @@
-import { TUpdateProfileBody, TSubmitTaskBody } from "./types";
+import {
+  TSubmitTaskBody,
+  TUpdateProfileBody,
+  TRateQuestionnaireBody,
+} from "./types";
 import { TResponse, client } from "../api-client";
 
 export const updateProfile = async (body: TUpdateProfileBody) => {
@@ -8,6 +12,11 @@ export const updateProfile = async (body: TUpdateProfileBody) => {
 
 export const submitTask = async (body: TSubmitTaskBody) => {
   const res = await client.post<TResponse<any>>("/task/user/respond", body);
+  return res.data;
+};
+
+export const rateQuestionnaire = async (body: TRateQuestionnaireBody) => {
+  const res = await client.post<TResponse<any>>("/questionnaire/rate", body);
   return res.data;
 };
 
@@ -56,4 +65,9 @@ export const getUserActivities = async () => {
 export const getUserActivityById = async (id: string) => {
   const res = await client.get<TResponse<any>>(`/task/user/activity/${id}`);
   return res.data;
+};
+
+export const getUserNotifications = async () => {
+  const res = await client.get<TResponse<any>>("/user/notification");
+  return res.data.data;
 };

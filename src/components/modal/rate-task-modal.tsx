@@ -9,6 +9,7 @@ import { Transition, Dialog } from "@headlessui/react";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
+  onChange: (newRating: number) => void;
   handleSubmit: () => void;
 };
 
@@ -55,7 +56,7 @@ const RateTaskModal: React.FC<Props> = (props) => {
                   <p className="text-sm text-[#434343] font-normal ">
                     Tah dah! You just completed a live saving task. We help
                     thousands of users everyday to earn extra money to improve
-                    their income. We want to help you too.{" "}
+                    their income. We want to help you too.
                   </p>
 
                   <div className="z-10 mt-8 p-4 flex flex-col gap-4 rounded-2xl bg-[#F2EEFF] text-[#434343]">
@@ -66,9 +67,10 @@ const RateTaskModal: React.FC<Props> = (props) => {
                       <Rating
                         initialRating={0}
                         maxRating={5}
-                        onChange={(newRating: any) =>
-                          console.log("New rating:", newRating)
-                        }
+                        onChange={props.onChange}
+                        // onChange={(newRating: any) =>
+                        //   console.log("New rating:", newRating)
+                        // }
                       />
                     </div>
                     <div className="flex text-xs font-medium justify-between">

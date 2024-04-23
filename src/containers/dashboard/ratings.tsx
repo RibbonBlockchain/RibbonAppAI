@@ -1,5 +1,6 @@
 import { Star } from "@/public/images";
 import React, { useState } from "react";
+import { useRateQuestionnaire } from "@/api/user";
 
 interface RatingProps {
   initialRating?: number;

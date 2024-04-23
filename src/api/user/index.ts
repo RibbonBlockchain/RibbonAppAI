@@ -1,4 +1,9 @@
 import {
+  TSubmitTaskBody,
+  TUpdateProfileBody,
+  TRateQuestionnaireBody,
+} from "./types";
+import {
   getTasks,
   submitTask,
   getTaskByID,
@@ -6,15 +11,17 @@ import {
   claimDailyReward,
   getCompletedTasks,
   getUserActivities,
+  rateQuestionnaire,
   getTasksInProgress,
   getUncompletedTasks,
   getUserActivityById,
   getCompletedTasksByDate,
+  getUserNotifications,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
-import { TSubmitTaskBody, TUpdateProfileBody } from "./types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const initialQuestionnaireState = {
   id: "",
@@ -54,10 +61,27 @@ export const useUpdateProfile = () => {
   });
 };
 
+export const useGetUserNotifications = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["notifications"],
+    queryFn: () => getUserNotifications(),
+  });
+};
+
 export const useSubmitTask = () => {
   return useMutation({
     onError,
     mutationFn: (body: TSubmitTaskBody) => submitTask(body),
+  });
+};
+
+export const useRateQuestionnaire = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TRateQuestionnaireBody) => rateQuestionnaire(body),
   });
 };
 

@@ -20,3 +20,8 @@ export type TSubmitTaskBody = {
   taskId: number;
   optionId: number;
 };
+
+export type TRateQuestionnaireBody = {
+  rating: number;
+  activityId: number;
+};

@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  useSubmitTask,
+  useGetTaskByID,
+  useRateQuestionnaire,
+} from "@/api/user";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +12,6 @@ import Claimed from "@/components/modal/claimed";
 import ProgressBar from "@ramonak/react-progress-bar";
 import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { useGetTaskByID, useSubmitTask } from "@/api/user";
 import BgEffect from "@/components/questionnarie/bg-effect";
 import RateTaskModal from "@/components/modal/rate-task-modal";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
@@ -27,6 +31,9 @@ const TaskPage = ({ params }: any) => {
 
   const { mutate: submitTask, isPending } = useSubmitTask();
   isPending && <SpinnerIcon />;
+
+  const { mutate: submitRate } = useRateQuestionnaire();
+  const [rating, setRating] = useState(0);
 
   const router = useRouter();
 
@@ -201,12 +208,19 @@ const TaskPage = ({ params }: any) => {
               <RateTaskModal
                 isOpen={rateTask}
                 closeModal={() => {
-                  setRateTask(false), router.push("/dashboard");
+                  setRateTask(false);
                 }}
+                onChange={(newRating: any) => setRating(newRating)}
                 handleSubmit={() => {
-                  // call rating API here
-                  console.log("call rating endpoint here");
-                  router.push("/dashboard");
+                  // submitRate(
+                  //   { rating: rating, activityId: data?.id },
+                  //   {
+                  //     onSuccess: () => {
+                  //       router.push("/dashboard");
+                  //     },
+                  //   }
+                  // );
+                  console.log("rate task");
                 }}
               />
             )}

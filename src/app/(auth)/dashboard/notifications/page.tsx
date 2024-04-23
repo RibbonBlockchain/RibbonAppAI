@@ -1,10 +1,13 @@
+"use client";
+
 import React from "react";
+import { useGetUserNotifications } from "@/api/user";
 import BackArrowButton from "@/components/button/back-arrow";
-import Notification from "@/containers/notifications/notifications";
 import NoNotification from "@/containers/notifications/no-notification";
+import DisplayNotifications from "@/containers/notifications/display-notifications";
 
 const Notifications = () => {
-  const notifications = [{}];
+  const { data: notifications } = useGetUserNotifications();
 
   return (
     <div className="p-4 sm:p-6">
@@ -16,9 +19,9 @@ const Notifications = () => {
       </div>
 
       <div className="">
-        {notifications?.length >= 1 ? (
+        {notifications?.data.length >= 1 ? (
           <div className="h-auto flex flex-col my-10">
-            <Notification />
+            <DisplayNotifications />
           </div>
         ) : (
           <NoNotification />

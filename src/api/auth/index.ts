@@ -35,6 +35,7 @@ import { useAtom } from "jotai";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { onError, onSuccess } from "../api-client";
+import { getUserNotifications } from "../user/req";
 import { SUCCESS, TOKEN_KEY } from "@/lib/values/constants";
 import { useMutation, useQuery } from "@tanstack/react-query";
 

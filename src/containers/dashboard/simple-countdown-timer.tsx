@@ -23,7 +23,7 @@ const CountdownTimer: React.FC = () => {
     };
 
     fetchCountdownTime();
-  }, []);
+  }, [user?.lastClaimTime]);
 
   useEffect(() => {
     if (!countdownTime) return;

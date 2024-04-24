@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { useGetAuth } from "@/api/auth";
 import { MessageQuestion } from "../../../public/images";
 
 export const Welcome = () => {
@@ -164,9 +165,17 @@ export const Next = () => {
 };
 
 export const Skip = (props: { text?: string }) => {
+  const { data: user } = useGetAuth({ enabled: true });
+
+  const completeWalkthrough = () => {
+    if (user) {
+      localStorage.setItem(`walkthroughCompleted_${user?.id}`, "true");
+    }
+  };
+
   return (
     <div
-      onClick={() => localStorage.setItem("walkthrough", "true")}
+      onClick={completeWalkthrough}
       className="w-auto min-w-[130px] absolute bottom-3 left-3 border-[1px] border-transparent bg-slate-200 py-2 px-3 text-sm rounded-md"
     >
       <strong>Skip</strong>
@@ -175,9 +184,16 @@ export const Skip = (props: { text?: string }) => {
 };
 
 export const GetStarted = () => {
+  const { data: user } = useGetAuth({ enabled: true });
+
+  const completeWalkthrough = () => {
+    if (user) {
+      localStorage.setItem(`walkthroughCompleted_${user?.id}`, "true");
+    }
+  };
   return (
     <strong
-      onClick={() => localStorage.setItem("walkthrough", "true")}
+      onClick={completeWalkthrough}
       className=" w-auto min-w-[130px] absolute bottom-3 right-3 border-[1px] border-transparent bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-2 px-3  text-sm rounded-md   "
     >
       Do it later

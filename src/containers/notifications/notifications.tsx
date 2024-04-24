@@ -13,7 +13,7 @@ function NotificationModal({
 }) {
   return (
     <div className="fixed w-[inherit] inset-0 z-50 flex justify-center items-center bg-black bg-opacity-80 p-4 sm:p-6">
-      <div className="bg-white max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
+      <div className="bg-white min-w-[300px] max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
         <NotificationsIcon />
 
         <div>

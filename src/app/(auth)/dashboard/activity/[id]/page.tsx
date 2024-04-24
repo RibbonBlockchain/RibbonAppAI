@@ -91,7 +91,7 @@ const TaskPage = ({ params }: any) => {
             onclick={() => setStep(1)}
             rewardPoints={data?.reward * 5000}
             imageUrl={data?.image || "/images/ribbon.svg"}
-            description={data?.description}
+            description={data?.description || data?.name}
             completionTime={data?.duration / 60}
           />
         ) : (
@@ -212,15 +212,15 @@ const TaskPage = ({ params }: any) => {
                 }}
                 onChange={(newRating: any) => setRating(newRating)}
                 handleSubmit={() => {
-                  // submitRate(
-                  //   { rating: rating, activityId: data?.id },
-                  //   {
-                  //     onSuccess: () => {
-                  //       router.push("/dashboard");
-                  //     },
-                  //   }
-                  // );
-                  console.log("rate task");
+                  submitRate(
+                    { rating: rating, activityId: data?.id }
+                    // {
+                    //   onSuccess: () => {
+                    //     router.push("/dashboard");
+                    //   },
+                    // }
+                  );
+                  router.push("/dashboard");
                 }}
               />
             )}

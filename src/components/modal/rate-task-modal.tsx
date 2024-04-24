@@ -14,8 +14,6 @@ type Props = {
 };
 
 const RateTaskModal: React.FC<Props> = (props) => {
-  const router = useRouter();
-
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
@@ -65,12 +63,9 @@ const RateTaskModal: React.FC<Props> = (props) => {
                     </p>
                     <div className="z-10">
                       <Rating
-                        initialRating={0}
                         maxRating={5}
+                        initialRating={0}
                         onChange={props.onChange}
-                        // onChange={(newRating: any) =>
-                        //   console.log("New rating:", newRating)
-                        // }
                       />
                     </div>
                     <div className="flex text-xs font-medium justify-between">

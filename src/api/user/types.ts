@@ -23,5 +23,5 @@ export type TSubmitTaskBody = {
 
 export type TRateQuestionnaireBody = {
   rating: number;
-  activityId: number;
+  questionnaireId: number;
 };

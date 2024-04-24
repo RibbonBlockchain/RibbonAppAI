@@ -80,13 +80,12 @@ const Dashboard = () => {
     0
   );
 
-  const [launch, setLaunch] = useState(false);
+  const [isNewUser, setIsNewUser] = useState<boolean>(false);
+
   useEffect(() => {
-    const walkthrough = localStorage.getItem("walkthrough");
-    if (walkthrough === "true") {
-      setLaunch(false);
-    } else {
-      setLaunch(true);
+    if (user) {
+      const isNew = !localStorage.getItem(`walkthroughCompleted_${user?.id}`);
+      setIsNewUser(isNew);
     }
   }, []);
 
@@ -96,7 +95,7 @@ const Dashboard = () => {
     <AuthNavLayout>
       <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
-          {launch && <UserWalkthrough />}
+          {isNewUser && user && <UserWalkthrough />}
 
           <Topbar />
           <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-2 flex flex-col">

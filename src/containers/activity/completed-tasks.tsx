@@ -129,7 +129,7 @@ const CompletedActivities = () => {
           acc[date] = [];
         }
         acc[date].push(item);
-        console.log(acc, "acc here");
+        // console.log(acc, "acc here");
         return acc;
       },
       {}

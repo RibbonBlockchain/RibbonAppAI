@@ -31,8 +31,6 @@ const TaskListByDate = () => {
     return acc;
   }, {});
 
-  console.log(groupedTasks, "grouped tasks here");
-
   return (
     <div>
       {groupedTasks &&

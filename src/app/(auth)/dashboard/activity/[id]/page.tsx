@@ -213,7 +213,7 @@ const TaskPage = ({ params }: any) => {
                 onChange={(newRating: any) => setRating(newRating)}
                 handleSubmit={() => {
                   submitRate(
-                    { rating: rating, activityId: data?.id }
+                    { rating: rating, questionnaireId: data?.id }
                     // {
                     //   onSuccess: () => {
                     //     router.push("/dashboard");

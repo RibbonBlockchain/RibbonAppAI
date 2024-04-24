@@ -13,6 +13,42 @@ import { NoCompletedTaskOnDate } from "./no-completed-task";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
 import { useGetCompletedTasks, useGetCompletedTasksByDate } from "@/api/user";
 
+interface Task {
+  id: number;
+  image: string;
+  name: string;
+  description: string;
+  type: string;
+  completedDate: string;
+  score: number;
+  slug: string;
+  reward: number;
+  point: number;
+  duration: number;
+  createdAt: string;
+  priority: boolean;
+  ratings: number;
+  ratingsLevel: number;
+}
+
+interface Reward {
+  id: number;
+  type: string;
+  completedDate: string;
+  image: string;
+  name: string;
+  description: string;
+  score: number;
+  slug: string;
+  reward: number;
+  point: number;
+  duration: number;
+  createdAt: string;
+  priority: boolean;
+  ratings: number;
+  ratingsLevel: number;
+}
+
 const css = `
   .my-selected:not([disabled]) { 
     font-weight: bold; 
@@ -83,42 +119,6 @@ const CompletedActivities = () => {
 
   if (allFetching || allLoading) {
     <SpinnerIcon />;
-  }
-
-  interface Task {
-    id: number;
-    image: string;
-    name: string;
-    description: string;
-    type: string;
-    completedDate: string;
-    score: number;
-    slug: string;
-    reward: number;
-    point: number;
-    duration: number;
-    createdAt: string;
-    priority: boolean;
-    ratings: number;
-    ratingsLevel: string;
-  }
-
-  interface Reward {
-    id: number;
-    type: string;
-    completedDate: string;
-    image: string;
-    name: string;
-    description: string;
-    score: number;
-    slug: string;
-    reward: number;
-    point: number;
-    duration: number;
-    createdAt: string;
-    priority: boolean;
-    ratings: number;
-    ratingsLevel: string;
   }
 
   const renderData: { [date: string]: (Task | Reward)[] } =
@@ -215,9 +215,7 @@ const CompletedActivities = () => {
                             taskTitle={i.description}
                             approximateTime={i.duration / 60}
                             ratings={i.ratings || 675}
-                            ratingsLevel={
-                              i.ratingsLevel || "/images/empty-rating.svg"
-                            }
+                            ratingsLevel={i.ratingsLevel || 3}
                           />
                         )}
                       </>

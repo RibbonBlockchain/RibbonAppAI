@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
+import RatingCompleted from "./rate-completed";
 
 type Props = {
   score: number;
@@ -12,7 +13,7 @@ type Props = {
   completed?: string;
 
   ratings?: number;
-  ratingsLevel?: string;
+  ratingsLevel?: number;
 };
 
 const TodoCompletedForm = (props: Props) => {
@@ -32,16 +33,8 @@ const TodoCompletedForm = (props: Props) => {
               Earned {rewardPoints.toLocaleString()} points
             </p>
           </div>
-          {props.ratingsLevel && (
-            <div>
-              <Image
-                width={75}
-                height={17}
-                alt="ratings"
-                src={props.ratingsLevel}
-              />
-            </div>
-          )}
+
+          <RatingCompleted rating={props.ratingsLevel || 0} />
         </div>
       </div>
 

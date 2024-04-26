@@ -1,12 +1,9 @@
 "use client";
 
-import clsx from "clsx";
 import React from "react";
-import { useGetAuth } from "@/api/auth";
 import "react-day-picker/dist/style.css";
 import { CalendarDays } from "lucide-react";
 import { DayPicker } from "react-day-picker";
-import TaskListByDate from "./task-list-bydate";
 import { formatDate } from "@/lib/utils/format-date";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { NoCompletedTaskOnDate } from "./no-completed-task";
@@ -112,10 +109,6 @@ const CompletedActivities = () => {
     isLoading: allLoading,
     isFetching: allFetching,
   } = useGetCompletedTasks();
-  const { data: user } = useGetAuth({ enabled: true });
-
-  const dateString = user?.lastClaimTime;
-  const date = new Date(dateString);
 
   if (allFetching || allLoading) {
     <SpinnerIcon />;
@@ -125,15 +118,39 @@ const CompletedActivities = () => {
     allCompleted?.data.reduce(
       (acc: { [x: string]: any[] }, item: { completedDate: any }) => {
         const date = item.completedDate;
-        if (!acc[date]) {
-          acc[date] = [];
+        // ONLY PROCESS IF DATE IS NOT NULL
+        if (date) {
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(item);
         }
-        acc[date].push(item);
-        // console.log(acc, "acc here");
+
+        //  PROCESS ALL DATES
+        // if (!acc[date]) {
+        //   acc[date] = [];
+        // }
+        // acc[date].push(item);
+
         return acc;
       },
       {}
     );
+
+  // SORT BY DATE
+  const sortedDates = renderData
+    ? Object.keys(renderData).sort((a, b) => {
+        if (a === null && b === null) return 0;
+        if (a === null) return 1;
+        if (b === null) return -1;
+        return new Date(b).getTime() - new Date(a).getTime();
+      })
+    : [];
+
+  const sortedRenderData: { [date: string]: (Task | Reward)[] } = {};
+  sortedDates.forEach((date) => {
+    sortedRenderData[date] = renderData[date];
+  });
 
   return (
     <div className="px-4 pb-4 sm:px-6 sm:pb-6">
@@ -190,7 +207,9 @@ const CompletedActivities = () => {
         <div>
           {allCompleted?.data.length >= 1 ? (
             <div className="py-3">
-              {Object.entries(renderData).map(([date, items]) => (
+              {/* display renderData or sortedRenderData */}
+              {/* {Object.entries(renderData).map(([date, items]) => ( */}
+              {Object.entries(sortedRenderData).map(([date, items]) => (
                 <div key={date} className="pb-5">
                   <p className="text-xs text-[#141414] py-3 font-bold">
                     {date}

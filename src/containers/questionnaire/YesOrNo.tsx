@@ -27,7 +27,7 @@ const YesOrNo = ({ options, onOptionSelect }: YesorNoOptionsProps) => {
             selected === i.id ? "bg-purple-600" : "bg-white"
           }`}
         >
-          {i.text === "Yes" ? <HappyEmoji /> : <SadEmoji />}
+          {/* {i.text === "Yes" ? <HappyEmoji /> : <SadEmoji />} */}
           <div
             className={clsx(
               selected === i.id ? "text-white" : "text-black",

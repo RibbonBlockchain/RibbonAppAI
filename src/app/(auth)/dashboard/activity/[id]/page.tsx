@@ -99,11 +99,11 @@ const TaskPage = ({ params }: any) => {
             {data?.questions?.map(
               (q: any, i: any) =>
                 i + 1 === step && (
-                  <>
-                    <div
-                      key={q?.id}
-                      className="flex w-full flex-col items-center justify-center gap-3"
-                    >
+                  <div
+                    key={q?.id}
+                    className="flex h-[80vh] w-full flex-col items-center justify-between"
+                  >
+                    <div className="flex w-full flex-col items-center justify-center gap-3">
                       <h1 className="font-normal text-lg text-center">
                         {q?.text}
                       </h1>
@@ -115,7 +115,10 @@ const TaskPage = ({ params }: any) => {
                       )}
 
                       {q?.type === "BOOLEAN" ? (
-                        <div className="flex items-center justify-center flex-row w-full mt-14">
+                        <div
+                          key={q?.id}
+                          className="flex items-center justify-center flex-row w-full mt-14"
+                        >
                           <YesOrNo
                             key={q?.id}
                             options={q?.options}
@@ -123,7 +126,10 @@ const TaskPage = ({ params }: any) => {
                           />
                         </div>
                       ) : (
-                        <div className="flex flex-row w-full mt-10 mb-20  ">
+                        <div
+                          key={q?.id}
+                          className="flex flex-row w-full mt-10 mb-20  "
+                        >
                           <RadioOptions
                             key={q?.id}
                             options={q?.options}
@@ -179,7 +185,7 @@ const TaskPage = ({ params }: any) => {
                         Submit <Check />
                       </button>
                     </div>
-                  </>
+                  </div>
                 )
             )}
 

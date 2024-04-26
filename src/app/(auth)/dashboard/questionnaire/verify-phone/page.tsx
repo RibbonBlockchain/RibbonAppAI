@@ -12,7 +12,7 @@ export default function Questionnaire() {
     completionTime: "1",
     description: "Verify your number",
     rewardPointText: "verifying your number",
-    imageUrl: "/images/questionnaire/questions.svg",
+    imageUrl: "/images/questionnaire/verify-phone.png",
   };
 
   const handleClick = () => {

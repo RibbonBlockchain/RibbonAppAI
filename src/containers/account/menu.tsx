@@ -46,12 +46,12 @@ export const Settings = [
 
 export const Support = [
   {
-    href: "https://linktr.ee/ribbonprotocol",
+    href: "https://discord.com/channels/834126035980255242/973481637369229332",
     description: "Contact Us",
     logo: <ContactUs />,
   },
   {
-    href: "https://linktr.ee/ribbonprotocol",
+    href: "https://discord.com/channels/834126035980255242/973481740813353000",
     description: "Feedback",
     logo: <Feedback />,
   },

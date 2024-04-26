@@ -101,8 +101,8 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                           className={cn(
                             "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
                             index === step
-                              ? "border border-[#D797D6] drop-shadow-[0_2px_1px_rgba(168,29,166,0.4)]"
-                              : ""
+                              ? "border border-[#D797D6] drop-shadow-[2px_3px_3px_rgba(168,29,166,0.4)]"
+                              : "opacity-70"
                           )}
                         >
                           <Image
@@ -110,7 +110,12 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             alt="coin"
                             className="max-w-8 mx-auto"
                           />
-                          <figcaption className="text-center text-nowrap text-primary font-semibold text-xs">
+                          <figcaption
+                            className={cn(
+                              "text-center text-nowrap text-primary font-semibold text-xs",
+                              index === step ? "text-primary" : "text-[#939393]"
+                            )}
+                          >
                             {reward}
                           </figcaption>
                         </figure>

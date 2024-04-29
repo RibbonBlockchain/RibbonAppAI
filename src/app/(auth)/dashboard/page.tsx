@@ -93,7 +93,7 @@ const Dashboard = () => {
 
   return (
     <AuthNavLayout>
-      <div className="w-full h-auto text-[#080808] bg-[#fffefe] p-4 sm:p-6">
+      <div className="w-full h-auto text-[#080808] dark:bg-gray-950 bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           {isNewUser && user && <UserWalkthrough />}
 

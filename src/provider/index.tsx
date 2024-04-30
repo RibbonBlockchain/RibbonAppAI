@@ -7,12 +7,12 @@ import { ThemeProvider } from "next-themes";
 
 const RootProvider = ({ children }: React.PropsWithChildren) => {
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
-      <ReactQueryProvider>
-        <SessionProvider>{children}</SessionProvider>
-        <Toaster />
-      </ReactQueryProvider>
-    </ThemeProvider>
+    // <ThemeProvider enableSystem={true} attribute="class">
+    <ReactQueryProvider>
+      <SessionProvider>{children}</SessionProvider>
+      <Toaster />
+    </ReactQueryProvider>
+    // </ThemeProvider>
   );
 };
 

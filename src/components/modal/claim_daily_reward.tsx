@@ -169,7 +169,8 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
       <DailyRewardClaimedPage
         isOpen={dailyRewardClaimedModal}
         closeModal={() => {
-          setDailyRewardClaimedModal(false), router.push("/dashboard");
+          setDailyRewardClaimedModal(false);
+          // router.push("/dashboard");
         }}
       />
     </>

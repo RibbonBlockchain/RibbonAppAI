@@ -18,7 +18,7 @@ export const Welcome = () => {
 
       <div className="flex flex-col text-start gap-2 mt-2">
         <h1 className="text-lg text-center font-bold">Welcome to Ribbon</h1>
-        <h2 className=" text-sm font-normal">
+        <h2 className=" text-sm font-normal text-center">
           We want to make sure you have the best experience with our app. To
           help you get started, we&apos;ve prepared a brief walkthrough that
           will introduce you to our key features.
@@ -55,7 +55,10 @@ export const WorldID = () => {
           Humanity helped launch Worldcoin, and currently serve as advisors to
           the Foundation and operators of the World App.
         </h2>
-        <a href="#" className="py-2 text-gradient-2  underline">
+        <h2 className="text-sm font-bold mt-2">
+          You can link world ID later under the wallet section in your account!
+        </h2>
+        <a href="#" className="py-2 text-gradient-2 underline">
           Link World ID
         </a>
       </div>
@@ -133,7 +136,7 @@ export const WithdrawTokens = () => {
           Quick tips <MessageQuestion />
         </h1>
         <h2 className="text-xs font-normal text-center">
-          You need to reach 20,000 points to be able to withdraw your tokens{" "}
+          You need to reach 50,000 points to be able to withdraw your tokens{" "}
         </h2>
       </div>
     </div>

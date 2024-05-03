@@ -2,6 +2,7 @@ import {
   TSubmitTaskBody,
   TUpdateProfileBody,
   TRateQuestionnaireBody,
+  TReadNotificationBody,
 } from "./types";
 import {
   getTasks,
@@ -17,6 +18,7 @@ import {
   getUserActivityById,
   getCompletedTasksByDate,
   getUserNotifications,
+  readNotification,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -161,5 +163,12 @@ export const useGetUserActivityById = ({ id }: { id: string }) => {
   return useQuery({
     queryKey: ["single-activity"],
     queryFn: () => getUserActivityById(id),
+  });
+};
+
+export const useReadNotification = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TReadNotificationBody) => readNotification(body),
   });
 };

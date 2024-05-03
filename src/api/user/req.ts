@@ -2,6 +2,7 @@ import {
   TSubmitTaskBody,
   TUpdateProfileBody,
   TRateQuestionnaireBody,
+  TReadNotificationBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -70,4 +71,9 @@ export const getUserActivityById = async (id: string) => {
 export const getUserNotifications = async () => {
   const res = await client.get<TResponse<any>>("/user/notification");
   return res.data.data;
+};
+
+export const readNotification = async (body: TReadNotificationBody) => {
+  const res = await client.post<TResponse<any>>("/notification/read", body);
+  return res.data;
 };

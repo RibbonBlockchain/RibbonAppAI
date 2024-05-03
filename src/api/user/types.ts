@@ -25,3 +25,7 @@ export type TRateQuestionnaireBody = {
   rating: number;
   questionnaireId: number;
 };
+
+export type TReadNotificationBody = {
+  notificationId: number;
+};

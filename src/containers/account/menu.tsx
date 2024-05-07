@@ -20,7 +20,7 @@ export const ProfileDetails = [
     logo: <Profile />,
   },
   {
-    href: "#",
+    href: "/wallet",
     description: "Wallets",
     logo: <Wallets />,
   },

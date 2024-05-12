@@ -10,8 +10,6 @@ const Submit = () => {
   const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
 
   const handleSubmit = async () => {
-    if (isFormInvalid) return;
-
     await signIn("credentials", {
       pin: form.pin,
       phone: form.phoneNumber,

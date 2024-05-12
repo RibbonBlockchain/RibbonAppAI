@@ -1,6 +1,6 @@
 import React from "react";
 import Submit from "./sections/submit";
-import FormInput from "./sections/form";
+import FormInput, { ConfirmFormInput } from "./sections/form";
 import BackArrow from "@/containers/auth/login/sections/back";
 
 const Login = () => {
@@ -30,7 +30,7 @@ const Login = () => {
           <p className="text-sm text-slate-600 font-semibold mb-3">
             Re-enter your 4 digit pin
           </p>
-          <FormInput />
+          <ConfirmFormInput />
         </div>
       </div>
 

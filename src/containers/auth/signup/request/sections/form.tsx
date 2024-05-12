@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import PhoneInput from "@/components/input/phone-input";
 import CountrySelect from "@/components/select/country-select";
+import { PhoneNumber } from "libphonenumber-js";
 
 const FormInput = () => {
   const [state, setState] = useAtom(authAtom);

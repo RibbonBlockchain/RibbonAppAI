@@ -44,7 +44,7 @@ const Todo = (props: Props) => {
               props.priority ? "text-black" : "text-gradient-2"
             }`}
           >
-            {props.taskTitle} questionnaire
+            {props.taskTitle}
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">

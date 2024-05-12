@@ -176,7 +176,7 @@ const Dashboard = () => {
             </div>
 
             <Link
-              href={""}
+              href={"/withdraw"}
               className="bg-white py-2 rounded-xl text-center mt-6 text-[#080808] font-semibold"
             >
               Withdraw Tokens

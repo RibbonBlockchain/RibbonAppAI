@@ -32,6 +32,7 @@ export const prepareRequestHeader = (token: string) => {
 
 const initialState = {
   pin: "",
+  pin2: "",
   code: "",
   phoneNumber: "",
   token: undefined,
@@ -41,6 +42,7 @@ const initialState = {
 
 export const authAtom = atom({
   pin: "",
+  pin2: "",
   code: "",
   phoneNumber: "",
   token: undefined,

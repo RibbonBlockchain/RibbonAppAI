@@ -20,7 +20,7 @@ const Logout = () => {
   return (
     <div
       onClick={handleLogout}
-      className="flex flex-row items-center justify-center my-10 gap-2 text-base text-[#FF170A]"
+      className="cursor-pointer flex flex-row items-center justify-center my-10 gap-2 text-base text-[#FF170A]"
     >
       <LogOut />
       <p>Log Out</p>

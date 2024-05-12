@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useCreateNewPin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
+import toast from "react-hot-toast";
 
 const Submit = () => {
   const router = useRouter();
@@ -15,7 +16,13 @@ const Submit = () => {
   const isFormInvalid =
     !form.phoneNumber.trim() || !form.pin.trim() || !form.code;
 
-  const isSubmitDisabled = isLoading || isFormInvalid;
+  const confirmNePins = form.pin.trim() === form.pin2.trim();
+
+  const isSubmitDisabled = isLoading || isFormInvalid || !confirmNePins;
+
+  if (form.pin2.length === 4 && !confirmNePins) {
+    toast.error("Pin mismatch: Please re-enter your PIN to confirm");
+  }
 
   const onSuccess = () => {
     router.push("/dashboard");

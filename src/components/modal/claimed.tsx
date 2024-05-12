@@ -10,6 +10,8 @@ type Props = {
   isOpen: boolean;
   handleClick: () => void;
   closeModal: () => void;
+  reward: any;
+  point: any;
 };
 
 const Claimed: React.FC<Props> = (props) => {
@@ -49,7 +51,7 @@ const Claimed: React.FC<Props> = (props) => {
                       alt="giftbox"
                       src="/images/questionnaire/giftbox.svg"
                     />
-                    Win 4 WLD
+                    Win 1 WLD
                   </div>
                 </div>
 
@@ -83,7 +85,7 @@ const Claimed: React.FC<Props> = (props) => {
                         height={28}
                         src="/images/questionnaire/coins.png"
                       />
-                      <span className=" text-[12px]">5 WLD</span>
+                      <span className=" text-[12px]">{props.reward} WLD</span>
                     </div>
 
                     <div className="flex flex-row items-center justify-center gap-1 w-full py-2 rounded-full bg-[#F2eeff]">
@@ -93,7 +95,9 @@ const Claimed: React.FC<Props> = (props) => {
                         height={31}
                         src="/images/questionnaire/cup.png"
                       />
-                      <span className=" text-[12px]">+ 25,000 points</span>
+                      <span className=" text-[12px]">
+                        + {props.point} points
+                      </span>
                     </div>
                   </div>
                 </div>

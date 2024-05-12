@@ -3,17 +3,20 @@
 import { useAtom } from "jotai";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import OtpInput from "@/components/input/otp-input";
-import { useState } from "react";
 
 export const ConfirmFormInput = () => {
-  const [confirmPin, setConfirmPin] = useState("");
+  const [state, setState] = useAtom(authAtom);
+
+  const setConfirmPin = (pin2: string) => {
+    setState((prev) => ({ ...prev, pin2 }));
+  };
 
   return (
     <div>
       <OtpInput
-        value={confirmPin}
-        setValue={() => setConfirmPin(confirmPin)}
-        // inputType="password"
+        value={state.pin2}
+        inputType="password"
+        setValue={setConfirmPin}
         separatorClassName="mr-4"
         fieldClassName="!w-14 !h-14"
       />

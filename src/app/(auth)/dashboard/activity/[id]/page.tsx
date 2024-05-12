@@ -207,6 +207,8 @@ const TaskPage = ({ params }: any) => {
                   setRateTask(true), setClaimPage(false);
                 }}
                 closeModal={() => {}}
+                reward={data?.reward}
+                point={data?.reward * 5000}
               />
             )}
 

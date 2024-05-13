@@ -26,7 +26,7 @@ const TodoCompletedForm = (props: Props) => {
       <div className="flex flex-row items-start justify-start gap-1">
         <div className="flex flex-col text-xs gap-[3px]">
           <p className="font-extrabold whitespace-nowrap truncate max-w-[130px] xxs:max-w-[150px] xs:max-w-[170px]">
-            {props.taskTitle} questionnaire
+            {props.taskTitle}
           </p>
           <div className="flex flex-row items-center">
             <p className="mr-1.5">

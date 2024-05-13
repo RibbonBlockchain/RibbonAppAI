@@ -223,7 +223,7 @@ const CompletedActivities = () => {
                             className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
                           >
                             <p className="text-xs">Daily rewards</p>
-                            <p className="text-sm">1000 pts</p>
+                            <p className="text-sm">100 pts</p>
                           </div>
                         ) : (
                           <TodoCompletedForm
@@ -231,7 +231,7 @@ const CompletedActivities = () => {
                             score={i.score}
                             reward={i.reward}
                             priority={i.priority}
-                            taskTitle={i.description}
+                            taskTitle={i.name}
                             approximateTime={i.duration / 60}
                             ratings={i.ratings || 675}
                             ratingsLevel={i.ratingsLevel || 3}

@@ -207,7 +207,8 @@ const Dashboard = () => {
                     "text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
                   )}
                 >
-                  <CoinSVG fill="#4B199C" />5 WLD
+                  <CoinSVG fill="#4B199C" />
+                  0.02 WLD
                 </div>
               )}
             </span>

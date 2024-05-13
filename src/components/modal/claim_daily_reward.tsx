@@ -107,7 +107,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                           <figure
                             className={cn(
                               "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
-                              index === step
+                              index === step % 7
                                 ? "border border-[#D797D6] drop-shadow-[2px_3px_3px_rgba(168,29,166,0.4)]"
                                 : "opacity-70"
                             )}
@@ -120,7 +120,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             <figcaption
                               className={cn(
                                 "text-center text-nowrap text-primary font-semibold text-xs",
-                                index === step
+                                index === step % 7
                                   ? "text-primary"
                                   : "text-[#939393]"
                               )}
@@ -132,7 +132,9 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                           <p
                             className={cn(
                               "text-center w-full mt-2 text-sm font-medium",
-                              index === step ? "text-primary" : "text-[#939393]"
+                              index === step % 7
+                                ? "text-primary"
+                                : "text-[#939393]"
                             )}
                           >
                             Day {day}

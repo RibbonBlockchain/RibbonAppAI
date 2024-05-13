@@ -1,32 +1,34 @@
 "use client";
 
-import BackArrowButton from "@/components/button/back-arrow";
-import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import {
-  CHAIN_NAMESPACES,
-  IProvider,
   UX_MODE,
+  IProvider,
   WALLET_ADAPTERS,
+  CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
 } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
 import {
   OpenloginAdapter,
   OpenloginUserInfo,
 } from "@web3auth/openlogin-adapter";
-import { useEffect, useState } from "react";
 import Web3 from "web3";
+import { LucideCopy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import BackArrowButton from "@/components/button/back-arrow";
+import { shorten, shortenTransaction } from "@/lib/utils/shorten";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 
 // IMP START - Dashboard Registration
 const clientId =
-  "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ"; // get from https://dashboard.web3auth.io
+  "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU"; // get from https://dashboard.web3auth.io
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0x1", // Please use 0x1 for Mainnet
   rpcTarget: "https://rpc.ankr.com/eth",
-  displayName: "Ethereum Mainnet",
+  displayName: "Ethereum Devnet",
+  // displayName: "Ethereum Mainnet",
   blockExplorerUrl: "https://etherscan.io/",
   ticker: "ETH",
   tickerName: "Ethereum",
@@ -39,7 +41,8 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
 
 const web3auth = new Web3AuthNoModal({
   clientId,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+  // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
   privateKeyProvider,
 });
 
@@ -161,6 +164,18 @@ const Wallet = () => {
   getBalance();
   // signMessage(message);
 
+  // copy messages
+  const copyToClipboard = (text: any) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard!");
+      })
+      .catch((error) => {
+        console.error("Error copying text: ", error);
+      });
+  };
+
   return (
     <div className="p-4 sm:p-6 bg-[#F7F5FF] h-full flex flex-col">
       <div className="mb-6">
@@ -180,7 +195,15 @@ const Wallet = () => {
 
           <div>
             <p>Wallet address</p>
-            <p>{shorten(address)}</p>
+            <div className="flex items-center gap-5">
+              <p>{shorten(address)}</p>
+              <p
+                className="cursor-pointer"
+                onClick={() => copyToClipboard(address)}
+              >
+                <LucideCopy size={18} />
+              </p>
+            </div>
           </div>
 
           <div>
@@ -206,7 +229,15 @@ const Wallet = () => {
                 Sign Tx
               </p>
             </div>
-            <p>Signed Tx: {shortenTransaction(sign)}</p>
+            <div className="flex items-center gap-5">
+              <p>Signed Tx: {shortenTransaction(sign)}</p>
+              <p
+                className="cursor-pointer"
+                onClick={() => copyToClipboard(sign)}
+              >
+                <LucideCopy size={18} />
+              </p>
+            </div>
           </div>
 
           <div>

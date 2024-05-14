@@ -1,7 +1,7 @@
 import { StarIcon } from "lucide-react";
 import React, { useState } from "react";
 import Button from "@/components/button";
-import { useReadNotification } from "@/api/user";
+import { useGetUserNotifications, useReadNotification } from "@/api/user";
 import { NotificationsIcon } from "@/public/images";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 
@@ -32,16 +32,25 @@ const NotificationModal = ({
   );
 };
 
-const Notifications = ({ notifications }: { notifications: any }) => {
+const NotificationsD = () => {
+  const { data } = useGetUserNotifications();
+
+  const filteredData = data?.data.filter((item: any) => item.isRead === false);
+
+  const useNotification = filteredData.sort(
+    (a: any, b: any) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { mutate: readNotification } = useReadNotification();
 
   const handleNotificationClick = (notification: any) => {
-    setSelectedNotification(notification);
     setIsModalOpen(true);
-    readNotification({ notificationId: notification.id as number });
+    setSelectedNotification(notification);
+    readNotification({ notificationId: notification.id });
   };
 
   const closeModal = () => {
@@ -57,7 +66,7 @@ const Notifications = ({ notifications }: { notifications: any }) => {
         />
       )}
 
-      {notifications?.map((notification: any) => (
+      {useNotification?.map((notification: any) => (
         <div
           key={notification.id}
           className="relative flex flex-col gap-3"
@@ -93,4 +102,4 @@ const Notifications = ({ notifications }: { notifications: any }) => {
   );
 };
 
-export default Notifications;
+export default NotificationsD;

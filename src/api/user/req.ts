@@ -74,6 +74,6 @@ export const getUserNotifications = async () => {
 };
 
 export const readNotification = async (body: TReadNotificationBody) => {
-  const res = await client.post<TResponse<any>>("/notification/read", body);
+  const res = await client.post("/notification/read", body);
   return res.data;
 };

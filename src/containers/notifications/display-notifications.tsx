@@ -12,12 +12,12 @@ const DisplayNotifications = () => {
 
   return (
     <>
-      <Notifications
+      {/* <Notifications
         notifications={filteredData.sort(
           (a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )}
-      />
+      /> */}
     </>
   );
 };

@@ -27,15 +27,14 @@ const clientId =
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xA", // hex of 10
-  rpcTarget: "https://rpc.ankr.com/optimism",
-  // Avoid using public rpcTarget in production.
-  // Use services like Infura, Quicknode etc
-  displayName: "Optimism Mainnet",
-  blockExplorerUrl: "https://optimistic.etherscan.io",
-  ticker: "OP",
-  tickerName: "OP",
-  logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
+  chainId: "0x1", // Please use 0x1 for Mainnet
+  rpcTarget: "https://rpc.ankr.com/eth",
+  displayName: "Ethereum Devnet",
+  // displayName: "Ethereum Mainnet",
+  blockExplorerUrl: "https://etherscan.io/",
+  ticker: "ETH",
+  tickerName: "Ethereum",
+  logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
 };
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
@@ -44,8 +43,8 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
 
 const web3auth = new Web3AuthNoModal({
   clientId,
-  // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // mainnet configuration requires payment to be used in deployed app
   web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+  // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
   privateKeyProvider,
 });
 
@@ -55,6 +54,8 @@ web3auth.configureAdapter(openloginAdapter);
 const Wallet = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+
+  const [PK, setPK] = useState("");
 
   const [userInfo, setUserInfo] = useState<Partial<OpenloginUserInfo>>();
   const [address, setAddress] = useState("");
@@ -88,16 +89,6 @@ const Wallet = () => {
     } catch (error) {
       console.error(error); // Web3ValidatorError: Web3 validator found 1 error[s]:value at "/1" is required
     }
-  };
-
-  // authenticate user
-  const authenticateUser = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const idToken = await web3auth.authenticateUser();
-    console.log(idToken);
   };
 
   // get user accounts
@@ -153,9 +144,8 @@ const Wallet = () => {
       });
 
       console.log("Transaction sent:", receipt);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending transaction:", error);
-      toast.error(`Error sending transaction`);
     }
   };
 
@@ -233,44 +223,18 @@ const Wallet = () => {
         <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
           Wallet
         </div>
-
-        {web3auth.connected ? (
-          <div className="px-4 py-2 w-fit bg-green-500 text-white rounded-full hover:bg-green-600 mr-2 mt-4 ">
-            on
-          </div>
-        ) : (
-          <div className="px-4 py-2 w-fit bg-red-500 text-white rounded-full hover:bg-red-600 mr-2 mt-4">
-            off
-          </div>
-        )}
       </div>
 
       {loggedIn ? (
         <div className="grid grid-cols-1 gap-6">
-          <div className="flex items-end justify-end">
-            <button
-              onClick={logout}
-              className="px-4 py-2 w-fit bg-green-500 text-white rounded hover:bg-green-600 mr-2 mt-4"
-            >
-              Log Out Wallet
-            </button>
-          </div>
-
           <div>
-            <button onClick={authenticateUser} className="card">
-              Get ID Token
-            </button>
-          </div>
-
-          <div onClick={getUserInfo}>
-            {/* <div> */}
-            <p>Get User Info</p>
+            <p>User</p>
             <p>name: {userInfo?.name}</p>
             <p>email: {userInfo?.email}</p>
           </div>
 
-          <div onClick={getAccounts}>
-            <p>Get Wallet address</p>
+          <div>
+            <p>Wallet address</p>
             <div className="flex items-center gap-5">
               <p>{shorten(address)}</p>
               <p
@@ -284,8 +248,8 @@ const Wallet = () => {
             </div>
           </div>
 
-          <div onClick={getBalance}>
-            <p>Get Wallet Balance</p>
+          <div>
+            <p>Wallet Balance</p>
             <p>{balance} ETH</p>
           </div>
 
@@ -346,6 +310,15 @@ const Wallet = () => {
                 <LucideCopy size={18} />
               </p>
             </div>
+          </div>
+
+          <div>
+            <button
+              onClick={logout}
+              className="px-4 py-2 w-fit bg-green-500 text-white rounded hover:bg-green-600 mr-2 mt-4"
+            >
+              Log Out Wallet
+            </button>
           </div>
         </div>
       ) : (

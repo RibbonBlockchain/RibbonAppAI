@@ -4,8 +4,7 @@ import React from "react";
 import { useGetUserNotifications } from "@/api/user";
 import BackArrowButton from "@/components/button/back-arrow";
 import NoNotification from "@/containers/notifications/no-notification";
-import DisplayNotifications from "@/containers/notifications/display-notifications";
-import NotificationsD from "@/containers/notifications/notifications";
+import DisplayNotification from "@/containers/notifications/notifications";
 
 const Notifications = () => {
   const { data: notifications } = useGetUserNotifications();
@@ -22,7 +21,7 @@ const Notifications = () => {
       <div className="">
         {notifications?.data.length >= 1 ? (
           <div className="h-auto flex flex-col my-10">
-            <NotificationsD />
+            <DisplayNotification />
           </div>
         ) : (
           <NoNotification />

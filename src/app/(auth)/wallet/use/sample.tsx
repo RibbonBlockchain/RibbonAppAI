@@ -22,6 +22,7 @@ import {
 import { WalletConnectModal } from "@walletconnect/modal";
 import RPC from "../web3RPC";
 import toast from "react-hot-toast";
+import BackArrowButton from "@/components/button/back-arrow";
 
 // Ribbon sample app
 // const clientId =
@@ -271,6 +272,8 @@ function App() {
     }
     const rpc = new RPC(provider);
     const chainId = await rpc.getChainId();
+    const chainBalance = await rpc.getBalance();
+
     uiConsole(chainId);
   };
 
@@ -458,11 +461,6 @@ function App() {
             Get Private Key
           </button>
         </div>
-        <div>
-          <button onClick={logout} className="card">
-            Log Out
-          </button>
-        </div>
       </div>
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}>Logged in Successfully!</p>
@@ -488,21 +486,36 @@ function App() {
   );
 
   return (
-    <div className="container">
-      <h1 className="title">
-        <a
-          target="_blank"
-          href="https://web3auth.io/docs/sdk/pnp/web/no-modal"
-          rel="noreferrer"
+    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-full flex flex-col">
+      <div className="mb-6">
+        <BackArrowButton stroke="#583DB4" />
+        <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
+          Wallet
+        </div>
+
+        {web3auth?.connected ? (
+          <div className="px-4 py-2 w-fit bg-green-500 text-white rounded-full hover:bg-green-600 mr-2 mt-4 ">
+            on
+          </div>
+        ) : (
+          <div className="px-4 py-2 w-fit bg-red-500 text-white rounded-full hover:bg-red-600 mr-2 mt-4">
+            off
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-end justify-end">
+        <button
+          onClick={logout}
+          className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-500 mr-2 mt-4"
         >
-          Web3Auth
-        </a>{" "}
-        & ReactJS Ethereum Example
-      </h1>
+          Log Out Wallet
+        </button>
+      </div>
 
       <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>
 
-      <footer className="footer">
+      {/* <footer className="footer">
         <a
           href="https://github.com/Web3Auth/web3auth-pnp-examples/tree/main/web-no-modal-sdk/blockchain-connection-examples/evm-no-modal-example"
           target="_blank"
@@ -510,7 +523,7 @@ function App() {
         >
           Source code
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

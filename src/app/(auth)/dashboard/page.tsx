@@ -167,7 +167,10 @@ const Dashboard = () => {
                     strokeWidth={8}
                   >
                     <p className="flex flex-col text-xs font-extrabold leading-4">
-                      {0 || (pointBalance > 50000 ? 50000 : pointBalance)}
+                      {0 ||
+                        (pointBalance > 50000
+                          ? 50000
+                          : Math.floor(pointBalance))}
                     </p>
                   </CircularProgressbarWithChildren>
                 </div>

@@ -1,16 +1,16 @@
 import { StarIcon } from "lucide-react";
 import React, { useState } from "react";
 import Button from "@/components/button";
-import { useGetUserNotifications, useReadNotification } from "@/api/user";
 import { NotificationsIcon } from "@/public/images";
+import { useGetUserNotifications, useReadNotification } from "@/api/user";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 
 const NotificationModal = ({
-  notification,
   onClose,
+  notification,
 }: {
-  onClose: () => void;
   notification: any;
+  onClose: () => void;
 }) => {
   return (
     <div className="fixed w-[inherit] inset-0 z-50 flex justify-center items-center bg-black bg-opacity-80 p-4 sm:p-6">
@@ -32,7 +32,7 @@ const NotificationModal = ({
   );
 };
 
-const NotificationsD = () => {
+const DisplayNotification = () => {
   const { data } = useGetUserNotifications();
 
   const filteredData = data?.data.filter((item: any) => item.isRead === false);
@@ -50,7 +50,7 @@ const NotificationsD = () => {
   const handleNotificationClick = (notification: any) => {
     setIsModalOpen(true);
     setSelectedNotification(notification);
-    readNotification({ notificationId: notification.id });
+    readNotification({ notificationId: notification.idz });
   };
 
   const closeModal = () => {
@@ -102,4 +102,4 @@ const NotificationsD = () => {
   );
 };
 
-export default NotificationsD;
+export default DisplayNotification;

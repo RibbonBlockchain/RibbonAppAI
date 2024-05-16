@@ -1,62 +1,88 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
-  CHAIN_NAMESPACES,
-  IProvider,
   UX_MODE,
+  IProvider,
   WALLET_ADAPTERS,
+  CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
+  OPENLOGIN_NETWORK,
 } from "@web3auth/base";
 import {
   OpenloginAdapter,
   OpenloginLoginParams,
-  OpenloginUserInfo,
 } from "@web3auth/openlogin-adapter";
 import {
   WalletConnectV2Adapter,
   getWalletConnectV2Settings,
 } from "@web3auth/wallet-connect-v2-adapter";
-import { WalletConnectModal } from "@walletconnect/modal";
-import RPC from "../web3RPC";
-import toast from "react-hot-toast";
-import BackArrowButton from "@/components/button/back-arrow";
 
-// Ribbon sample app
-// const clientId =
-//   "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
+import RPC from "../web3RPC"; //for web3.js
+import { useEffect, useState } from "react";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { WalletConnectModal } from "@walletconnect/modal";
+import BackArrowButton from "@/components/button/back-arrow";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 
 const clientId =
-  "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ"; // get from https://dashboard.web3auth.io
+  "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
 
 const chainConfig = {
+  // OPTIMISM MAINNET
+  // chainId: "0xa", // 10
+  // displayName: "OP Mainnet",
+  // chainNamespace: CHAIN_NAMESPACES.EIP155,
+  // tickerName: "OP Mainnet",
+  // ticker: "OP",
+  // rpcTarget: "https://optimism.drpc.org",
+  // blockExplorerUrl: "https://sepolia.etherscan.io",
+  // logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
+
+  // OPTIMISM SEPOLIA
+  chainId: "0xaa37dc", // 11155420
+  displayName: "OP Sepolia Testnet",
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xA", // hex of 10
-  rpcTarget: "https://rpc.ankr.com/optimism",
-  // Avoid using public rpcTarget in production.
-  // Use services like Infura, Quicknode etc
-  displayName: "Optimism Mainnet",
-  blockExplorerUrl: "https://optimistic.etherscan.io",
+  tickerName: "OP Sepolia",
   ticker: "OP",
-  tickerName: "OP",
-  logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
+  rpcTarget: "https://endpoints.omniatech.io/v1/op/sepolia/public",
+  blockExplorerUrl: "https://sepolia-optimistic.etherscan.io/",
+  logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
+
+  // ETH MAINNET
+  // chainNamespace: CHAIN_NAMESPACES.EIP155,
+  // chainId: "0x1", // 1 Please use 0x1 for Mainnet
+  // rpcTarget: "https://rpc.ankr.com/eth",
+  // displayName: "Ethereum Mainnet",
+  // blockExplorerUrl: "https://etherscan.io/",
+  // ticker: "ETH",
+  // tickerName: "Ethereum",
+  // logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+
+  // ETH SEPOLIA
+  // chainId: "0xaa36a7", // 11155111 for wallet connect make sure to pass in this chain in the loginSettings of the adapter.
+  // displayName: "Ethereum Sepolia",
+  // chainNamespace: CHAIN_NAMESPACES.EIP155,
+  // tickerName: "Ethereum Sepolia",
+  // ticker: "ETH",
+  // rpcTarget: "https://rpc.ankr.com/eth_sepolia",
+  // blockExplorerUrl: "https://sepolia.etherscan.io",
+  // logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
 };
+
+const walletServicesPlugin = new WalletServicesPlugin({
+  wsEmbedOpts: {
+    modalZIndex: 99999,
+    web3AuthClientId: clientId,
+    web3AuthNetwork: OPENLOGIN_NETWORK.SAPPHIRE_MAINNET,
+  },
+  walletInitOptions: {},
+});
 
 function App() {
   const [web3auth, setWeb3Auth] = useState<Web3AuthNoModal | null>(null);
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(false);
-
-  const [userInfo, setUserInfo] = useState<Partial<OpenloginUserInfo>>();
-  const [address, setAddress] = useState("");
-  const [balance, setBalance] = useState("");
-  const [sign, setSign] = useState("");
-
-  const [message, setMessage] = useState("");
-  const [destination, setDestination] = useState("");
-  const [amount, setAmount] = useState(0);
 
   useEffect(() => {
     const init = async () => {
@@ -67,13 +93,10 @@ function App() {
 
         const web3auth = new Web3AuthNoModal({
           clientId,
-          // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-
+          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           privateKeyProvider,
           uiConfig: {
-            // appName: "W3A Heroes",
-            appName: "Ribbon Sample app",
+            appName: "W3A Heroes",
             appUrl: "https://web3auth.io",
             logoLight: "https://web3auth.io/images/web3authlog.png",
             logoDark: "https://web3auth.io/images/web3authlogodark.png",
@@ -153,8 +176,7 @@ function App() {
 
   const login = async () => {
     if (!web3auth) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
       return;
     }
     const web3authProvider = await web3auth.connectTo(
@@ -169,65 +191,27 @@ function App() {
     }
   };
 
-  // const loginWithSMS = async () => {
-  //   if (!web3auth) {
-  //     uiConsole("web3auth not initialized yet");
-  //     return;
-  //   }
-  //   const web3authProvider = await web3auth.connectTo<OpenloginLoginParams>(
-  //     WALLET_ADAPTERS.OPENLOGIN,
-  //     {
-  //       loginProvider: "sms_passwordless",
-  //       extraLoginOptions: {
-  //         login_hint: "+65-XXXXXXX",
-  //       },
-  //     }
-  //   );
-  //   setProvider(web3authProvider);
-  //   if (web3auth.connected) {
-  //     setLoggedIn(true);
-  //   }
-  // };
-
-  // const loginWithEmail = async () => {
-  //   if (!web3auth) {
-  //     uiConsole("web3auth not initialized yet");
-  //     return;
-  //   }
-  //   const web3authProvider = await web3auth.connectTo(
-  //     WALLET_ADAPTERS.OPENLOGIN,
-  //     {
-  //       loginProvider: "email_passwordless",
-  //       extraLoginOptions: {
-  //         login_hint: "hello@web3auth.io",
-  //       },
-  //     }
-  //   );
-  //   setProvider(web3authProvider);
-  //   if (web3auth.connected) {
-  //     setLoggedIn(true);
-  //   }
-  // };
-
-  const loginWCModal = async () => {
+  const authenticateUser = async () => {
     if (!web3auth) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
       return;
     }
-    const web3authProvider = await web3auth.connectTo(
-      WALLET_ADAPTERS.WALLET_CONNECT_V2
-    );
-    setProvider(web3authProvider);
-    if (web3auth.connected) {
-      setLoggedIn(true);
+    const idToken = await web3auth.authenticateUser();
+    uiConsole(idToken);
+  };
+
+  const getUserInfo = async () => {
+    if (!web3auth) {
+      uiConsole("web3auth not initialized yet");
+      return;
     }
+    const user = await web3auth.getUserInfo();
+    uiConsole(user);
   };
 
   const logout = async () => {
     if (!web3auth) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
       return;
     }
     await web3auth.logout();
@@ -235,82 +219,26 @@ function App() {
     setLoggedIn(false);
   };
 
-  // authenticate user
-  const authenticateUser = async () => {
-    if (!web3auth) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-
-      return;
-    }
-    const idToken = await web3auth.authenticateUser();
-    // uiConsole(idToken);
-    console.log("id token>>>>>", idToken);
-  };
-
-  const getUserInfo = async () => {
-    if (!web3auth) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
-
-    try {
-      const user = await web3auth.getUserInfo();
-      // uiConsole(user);
-      setUserInfo(user);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const getChainId = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
     const chainId = await rpc.getChainId();
-    const chainBalance = await rpc.getBalance();
 
-    uiConsole(chainId);
-  };
-
-  const addChain = async () => {
-    if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
-    const newChain = {
-      chainId: "0xaa36a7", // for wallet connect make sure to pass in this chain in the loginSettings of the adapter.
-      displayName: "Ethereum Sepolia",
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      tickerName: "Ethereum Sepolia",
-      ticker: "ETH",
-      rpcTarget: "https://rpc.ankr.com/eth_sepolia",
-      blockExplorerUrl: "https://sepolia.etherscan.io",
-      logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-    };
-    await web3auth?.addChain(newChain);
-    uiConsole("New Chain Added");
-  };
-
-  const switchChain = async () => {
-    if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
-    await web3auth?.switchChain({ chainId: "0xaa36a7" });
-    uiConsole("Chain Switched");
+    if (chainId === "11155420") {
+      uiConsole("OP Sepolia Testnet", chainId);
+    } else if (chainId === "10") {
+      uiConsole("OP Mainnet", chainId);
+    } else if (chainId === "1") {
+      uiConsole("Ethereum Mainnet", chainId);
+    } else uiConsole("Ethereum Sepolia", chainId);
   };
 
   const getAccounts = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
@@ -320,8 +248,7 @@ function App() {
 
   const getBalance = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
@@ -331,8 +258,7 @@ function App() {
 
   const sendTransaction = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
@@ -342,8 +268,7 @@ function App() {
 
   const signMessage = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
@@ -353,8 +278,7 @@ function App() {
 
   const getPrivateKey = async () => {
     if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
+      uiConsole("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
@@ -362,13 +286,13 @@ function App() {
     uiConsole(privateKey);
   };
 
-  // const showWalletUi = async () => {
-  //   if (!walletServicesPlugin) {
-  //     uiConsole("provider not initialized yet");
-  //     return;
-  //   }
-  //   await walletServicesPlugin.showWalletUi();
-  // };
+  const showWalletUi = async () => {
+    if (!walletServicesPlugin) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await walletServicesPlugin.showWalletUi();
+  };
 
   // const showWalletConnectScanner = async () => {
   //   if (!walletServicesPlugin) {
@@ -395,7 +319,16 @@ function App() {
 
   const loggedInView = (
     <>
-      <div className="flex-container">
+      <div className="flex flex-col gap-2 mb-10">
+        <div className="flex items-end justify-end">
+          <button
+            onClick={logout}
+            className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
+          >
+            Log Out Wallet
+          </button>
+        </div>
+
         <div>
           <button onClick={getUserInfo} className="card">
             Get User Info
@@ -411,22 +344,13 @@ function App() {
             Get Chain ID
           </button>
         </div>
+
         <div>
-          <button onClick={addChain} className="card">
-            Add Chain
-          </button>
-        </div>
-        <div>
-          <button onClick={switchChain} className="card">
-            Switch Chain
-          </button>
-        </div>
-        {/* <div>
           <button onClick={showWalletUi} className="card">
             Show Wallet UI
           </button>
         </div>
-        <div>
+        {/* <div>
           <button onClick={showWalletConnectScanner} className="card">
             Show Wallet Connect Scanner
           </button>
@@ -462,68 +386,38 @@ function App() {
           </button>
         </div>
       </div>
-      <div id="console" style={{ whiteSpace: "pre-line" }}>
+      <div
+        className="border-2 border-gray-500 p-2 max "
+        id="console"
+        style={{ whiteSpace: "pre-line" }}
+      >
         <p style={{ whiteSpace: "pre-line" }}>Logged in Successfully!</p>
       </div>
     </>
   );
 
   const unloggedInView = (
-    <>
-      <button onClick={login} className="card">
-        Login
+    <div>
+      <p>Your wallet is not connected</p>
+      <button
+        onClick={login}
+        className="px-4 py-2 w-fit bg-green-500 text-white rounded hover:bg-green-600 mr-2 mt-4"
+      >
+        Login / Connect wallet
       </button>
-      {/* <button onClick={loginWithSMS} className="card">
-        SMS Login (e.g +cc-number)
-      </button>
-      <button onClick={loginWithEmail} className="card">
-        Email Login (e.g hello@web3auth.io)
-      </button> */}
-      <button onClick={loginWCModal} className="card">
-        Login with Wallet Connect v2
-      </button>
-    </>
+    </div>
   );
 
   return (
-    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-full flex flex-col">
+    <div className="p-4 sm:p-6 bg-[#F7F5FF] h-[inherit] flex flex-col">
       <div className="mb-6">
         <BackArrowButton stroke="#583DB4" />
         <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
           Wallet
         </div>
-
-        {web3auth?.connected ? (
-          <div className="px-4 py-2 w-fit bg-green-500 text-white rounded-full hover:bg-green-600 mr-2 mt-4 ">
-            on
-          </div>
-        ) : (
-          <div className="px-4 py-2 w-fit bg-red-500 text-white rounded-full hover:bg-red-600 mr-2 mt-4">
-            off
-          </div>
-        )}
       </div>
 
-      <div className="flex items-end justify-end">
-        <button
-          onClick={logout}
-          className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-500 mr-2 mt-4"
-        >
-          Log Out Wallet
-        </button>
-      </div>
-
-      <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>
-
-      {/* <footer className="footer">
-        <a
-          href="https://github.com/Web3Auth/web3auth-pnp-examples/tree/main/web-no-modal-sdk/blockchain-connection-examples/evm-no-modal-example"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Source code
-        </a>
-      </footer> */}
+      <div className="grid ">{loggedIn ? loggedInView : unloggedInView}</div>
     </div>
   );
 }

@@ -136,7 +136,7 @@ export const WithdrawTokens = () => {
           Quick tips <MessageQuestion />
         </h1>
         <h2 className="text-xs font-normal text-center">
-          You need to reach 50,000 points to be able to withdraw your tokens{" "}
+          You need to reach 10,000 points to be able to withdraw your tokens{" "}
         </h2>
       </div>
     </div>

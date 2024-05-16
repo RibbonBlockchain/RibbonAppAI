@@ -1,6 +1,6 @@
 "use client";
 
-import { SwapIcon } from "../../../../public/images";
+import { SwapIcon, WalletMoney } from "../../../../public/images";
 import {
   buildStyles,
   CircularProgressbarWithChildren,
@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import clsx from "clsx";
 import Link from "next/link";
-import { EyeOff } from "lucide-react";
+import { ArrowRight, EyeOff } from "lucide-react";
 import { useGetAuth } from "@/api/auth";
 import PageLoader from "@/components/loader";
 import { useSession } from "next-auth/react";
@@ -163,27 +163,38 @@ const Dashboard = () => {
                       pathColor: `#FFF`,
                       trailColor: `#F6C4D0`,
                     })}
-                    value={(pointBalance / 50000) * 100}
+                    value={(pointBalance / 10000) * 100}
                     strokeWidth={8}
                   >
                     <p className="flex flex-col text-xs font-extrabold leading-4">
                       {0 ||
-                        (pointBalance > 50000
-                          ? 50000
+                        (pointBalance > 10000
+                          ? 10000
                           : Math.floor(pointBalance))}
                     </p>
                   </CircularProgressbarWithChildren>
                 </div>
-                <p className="text-xs font-medium">50,000 pts to withdraw</p>
+                <p className="text-xs font-medium">10,000 pts to withdraw</p>
               </div>
             </div>
 
-            <Link
-              href={"/withdraw"}
-              className="bg-white py-2 rounded-xl text-center mt-6 text-[#080808] font-semibold"
-            >
-              Withdraw Tokens
-            </Link>
+            <div className="flex flex-row items-center justify-between w-full gap-3">
+              <Link
+                href={"/wallet"}
+                className="w-full flex flex-row gap-3 items-center justify-center bg-white py-3 rounded-xl text-center mt-6 text-[#080808] font-semibold"
+              >
+                Wallet
+                <WalletMoney />
+              </Link>
+
+              <Link
+                href={"/withdraw"}
+                className="w-full flex flex-row gap-3 items-center justify-center bg-white py-3 rounded-xl text-center mt-6 text-[#080808] font-semibold"
+              >
+                Withdraw Tokens
+                <ArrowRight stroke="#7C56FE" size={20} />
+              </Link>
+            </div>
           </div>
 
           <button

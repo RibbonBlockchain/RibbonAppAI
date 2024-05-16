@@ -36,6 +36,7 @@ import WalletWithdrawal from "./wallet-withdraw.svg";
 import MessageQuestion from "./message-question.svg";
 import LoveSmileyEmoji from "./love-smiley-emoji.svg";
 import WithdrawalSuccessfulSVG from "./withdrawal-successful.svg";
+import WalletMoney from "./wallet-money.svg";
 
 export {
   Key,
@@ -72,4 +73,5 @@ export {
   WalletWithdrawal,
   NotificationsIcon,
   WithdrawalSuccessfulSVG,
+  WalletMoney,
 };

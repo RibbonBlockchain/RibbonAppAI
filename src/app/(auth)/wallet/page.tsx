@@ -26,14 +26,12 @@ import RPC from "./web3RPC";
 
 // IMP START - Dashboard Registration
 const clientId =
-  "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU"; // get from https://dashboard.web3auth.io
+  "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0xA", // hex of 10
   rpcTarget: "https://rpc.ankr.com/optimism",
-  // Avoid using public rpcTarget in production.
-  // Use services like Infura, Quicknode etc
   displayName: "Optimism Mainnet",
   blockExplorerUrl: "https://optimistic.etherscan.io",
   ticker: "OP",
@@ -41,25 +39,12 @@ const chainConfig = {
   logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
 };
 
-// config from OP websire
-// const chainConfig = {
-//   chainNamespace: CHAIN_NAMESPACES.EIP155,
-//   chainId: "11155420", // hex of 10
-//   rpcTarget: "https://sepolia.optimism.io/",
-//   displayName: "OP Sepolia",
-//   blockExplorerUrl: "https://sepolia-optimistic.etherscan.io/",
-//   ticker: "OP",
-//   tickerName: "OP",
-//   logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
-// };
-
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
 });
 
 const web3auth = new Web3AuthNoModal({
   clientId,
-  // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // mainnet configuration requires payment to be used in deployed app
   web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
   privateKeyProvider,
 });
@@ -163,8 +148,8 @@ const Wallet = () => {
         from: fromAddress,
         to: destination,
         value: web3.utils.toWei(amount, "ether"),
-        maxPriorityFeePerGas: web3.utils.toHex("0.000000005"),
-        maxFeePerGas: web3.utils.toHex("0.000000000006"),
+        maxPriorityFeePerGas: web3.utils.toHex("1.500000005"),
+        maxFeePerGas: web3.utils.toHex("1.500000000006"),
       });
 
       console.log("Transaction sent:", receipt);
@@ -196,124 +181,123 @@ const Wallet = () => {
   };
 
   // get chain ID
-  const getChainId = async () => {
-    if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const chainId = await rpc.getChainId();
-    console.log(chainId, "chain ID");
-  };
-  getChainId();
+  // const getChainId = async () => {
+  //   if (!provider) {
+  //     // uiConsole("web3auth not initialized yet");
+  //     toast.error("web3auth not initialized yet");
+  //     return;
+  //   }
+  //   const rpc = new RPC(provider);
+  //   const chainId = await rpc.getChainId();
+  //   console.log(chainId, "chain ID");
+  // };
 
-  const chains: Chain[] = [
-    {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0x1",
-      rpcTarget: "https://rpc.ankr.com/eth",
-      displayName: "Ethereum Mainnet",
-      blockExplorerUrl: "https://etherscan.io",
-      ticker: "ETH",
-      tickerName: "Ethereum",
-      logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-    },
-    {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0xA", // hex of 10
-      rpcTarget: "https://rpc.ankr.com/optimism",
-      displayName: "Optimism Mainnet",
-      blockExplorerUrl: "https://optimistic.etherscan.io",
-      ticker: "OP",
-      tickerName: "OP",
-      logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
-    },
-    {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0x38", // hex of 56
-      rpcTarget: "https://rpc.ankr.com/bsc",
-      displayName: "Binance SmartChain Mainnet",
-      blockExplorerUrl: "https://bscscan.com/",
-      ticker: "BNB",
-      tickerName: "BNB",
-      logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
-    },
-    {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0x89", // hex of 137, polygon mainnet
-      rpcTarget: "https://rpc.ankr.com/polygon",
-      displayName: "Polygon Mainnet",
-      blockExplorerUrl: "https://polygonscan.com",
-      ticker: "MATIC",
-      tickerName: "MATIC",
-      logo: "https://cryptologos.cc/logos/polygon-matic-logo.png",
-    },
-    {
-      chainNamespace: CHAIN_NAMESPACES.SOLANA,
-      chainId: "0x1",
-      rpcTarget: "https://rpc.ankr.com/solana",
-      displayName: "Solana Mainnet",
-      blockExplorerUrl: "https://explorer.solana.com",
-      ticker: "SOL",
-      tickerName: "Solana",
-      logo: "https://images.toruswallet.io/solana.svg",
-    },
-    {
-      chainNamespace: CHAIN_NAMESPACES.OTHER,
-      chainId: "0x1",
-      rpcTarget: "https://ripple-node.tor.us",
-      wsTarget: "wss://s2.ripple.com",
-      ticker: "XRP",
-      tickerName: "XRPL",
-      displayName: "xrpl mainnet",
-      blockExplorerUrl: "https://livenet.xrpl.org",
-    },
-  ];
+  // const chains: Chain[] = [
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+  //     chainId: "0x1",
+  //     rpcTarget: "https://rpc.ankr.com/eth",
+  //     displayName: "Ethereum Mainnet",
+  //     blockExplorerUrl: "https://etherscan.io",
+  //     ticker: "ETH",
+  //     tickerName: "Ethereum",
+  //     logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+  //   },
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+  //     chainId: "0xA", // hex of 10
+  //     rpcTarget: "https://rpc.ankr.com/optimism",
+  //     displayName: "Optimism Mainnet",
+  //     blockExplorerUrl: "https://optimistic.etherscan.io",
+  //     ticker: "OP",
+  //     tickerName: "OP",
+  //     logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
+  //   },
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+  //     chainId: "0x38", // hex of 56
+  //     rpcTarget: "https://rpc.ankr.com/bsc",
+  //     displayName: "Binance SmartChain Mainnet",
+  //     blockExplorerUrl: "https://bscscan.com/",
+  //     ticker: "BNB",
+  //     tickerName: "BNB",
+  //     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
+  //   },
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+  //     chainId: "0x89", // hex of 137, polygon mainnet
+  //     rpcTarget: "https://rpc.ankr.com/polygon",
+  //     displayName: "Polygon Mainnet",
+  //     blockExplorerUrl: "https://polygonscan.com",
+  //     ticker: "MATIC",
+  //     tickerName: "MATIC",
+  //     logo: "https://cryptologos.cc/logos/polygon-matic-logo.png",
+  //   },
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.SOLANA,
+  //     chainId: "0x1",
+  //     rpcTarget: "https://rpc.ankr.com/solana",
+  //     displayName: "Solana Mainnet",
+  //     blockExplorerUrl: "https://explorer.solana.com",
+  //     ticker: "SOL",
+  //     tickerName: "Solana",
+  //     logo: "https://images.toruswallet.io/solana.svg",
+  //   },
+  //   {
+  //     chainNamespace: CHAIN_NAMESPACES.OTHER,
+  //     chainId: "0x1",
+  //     rpcTarget: "https://ripple-node.tor.us",
+  //     wsTarget: "wss://s2.ripple.com",
+  //     ticker: "XRP",
+  //     tickerName: "XRPL",
+  //     displayName: "xrpl mainnet",
+  //     blockExplorerUrl: "https://livenet.xrpl.org",
+  //   },
+  // ];
 
-  interface Chain {
-    chainId: string;
-    displayName: string;
-    chainNamespace: ChainNamespaceType;
-    tickerName: string;
-    ticker: string;
-    rpcTarget: string;
-    blockExplorerUrl: string;
-    logo?: string;
-    wsTarget?: string;
-  }
+  // interface Chain {
+  //   chainId: string;
+  //   displayName: string;
+  //   chainNamespace: ChainNamespaceType;
+  //   tickerName: string;
+  //   ticker: string;
+  //   rpcTarget: string;
+  //   blockExplorerUrl: string;
+  //   logo?: string;
+  //   wsTarget?: string;
+  // }
 
-  const addChain = async (chain: Chain) => {
-    if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
+  // const addChain = async (chain: Chain) => {
+  //   if (!provider) {
+  //     // uiConsole("web3auth not initialized yet");
+  //     toast.error("web3auth not initialized yet");
+  //     return;
+  //   }
 
-    if (!chain) {
-      toast.error("Please select a chain first");
-      return;
-    }
+  //   if (!chain) {
+  //     toast.error("Please select a chain first");
+  //     return;
+  //   }
 
-    try {
-      await web3auth?.addChain(chain);
-      console.log("New Chain Added>>>>", chain);
-      toast.success("New chain added successfully!");
-    } catch (error) {
-      console.error("Error adding new chain:", error);
-      toast.error("Failed to add new chain.");
-    }
-  };
+  //   try {
+  //     await web3auth?.addChain(chain);
+  //     console.log("New Chain Added>>>>", chain);
+  //     toast.success("New chain added successfully!");
+  //   } catch (error) {
+  //     console.error("Error adding new chain:", error);
+  //     toast.error("Failed to add new chain.");
+  //   }
+  // };
 
-  const switchChain = async (chain: Chain) => {
-    if (!provider) {
-      // uiConsole("web3auth not initialized yet");
-      toast.error("web3auth not initialized yet");
-      return;
-    }
-    await web3auth?.switchChain({ chainId: chain.chainId });
-    console.log(`Chain Switched to ${chain.chainId} - ${chain.displayName}`);
-  };
+  // const switchChain = async (chain: Chain) => {
+  //   if (!provider) {
+  //     // uiConsole("web3auth not initialized yet");
+  //     toast.error("web3auth not initialized yet");
+  //     return;
+  //   }
+  //   await web3auth?.switchChain({ chainId: chain.chainId });
+  //   console.log(`Chain Switched to ${chain.chainId} - ${chain.displayName}`);
+  // };
 
   // handle event change
   const handleChangeSignTx = (event: any) => {
@@ -362,13 +346,13 @@ const Wallet = () => {
       });
   };
 
-  const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
+  // const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
 
-  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedChainId = event.target.value;
-    const chain = chains.find((chain) => chain.chainId === selectedChainId);
-    setSelectedChain(chain || null);
-  };
+  // const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedChainId = event.target.value;
+  //   const chain = chains.find((chain) => chain.chainId === selectedChainId);
+  //   setSelectedChain(chain || null);
+  // };
 
   return (
     <div className="p-4 sm:p-6 bg-[#F7F5FF] h-auto flex flex-col">
@@ -378,7 +362,7 @@ const Wallet = () => {
           Wallet
         </div>
 
-        {web3auth.connected ? (
+        {/* {web3auth.connected ? (
           <div className="px-4 py-2 w-fit bg-green-500 text-white rounded-full hover:bg-green-600 mr-2 mt-4 ">
             on
           </div>
@@ -386,7 +370,7 @@ const Wallet = () => {
           <div className="px-4 py-2 w-fit bg-red-500 text-white rounded-full hover:bg-red-600 mr-2 mt-4">
             off
           </div>
-        )}
+        )} */}
       </div>
 
       {loggedIn ? (
@@ -400,21 +384,21 @@ const Wallet = () => {
             </button>
           </div>
 
-          <div>
+          {/* <div>
             <button onClick={authenticateUser} className="card">
               Get ID Token
             </button>
-          </div>
+          </div> */}
 
           {/* get a chainId */}
-          <div>
+          {/* <div>
             <button onClick={getChainId} className="card">
               Get Chain ID
             </button>
-          </div>
+          </div> */}
 
           {/* add a chain */}
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-2">
               <select
                 onChange={handleSelect}
@@ -441,16 +425,16 @@ const Wallet = () => {
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <button
               onClick={() => selectedChain && switchChain(selectedChain)}
               className="card"
             >
               Switch Chain
             </button>
-          </div>
+          </div> */}
 
           <div onClick={getUserInfo}>
             {/* <div> */}

@@ -49,7 +49,7 @@ const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       switch (account?.provider) {
         case "credentials": {
-          if (!user.accessToken) return false;
+          if (!user.accessToken) throw new Error("Invalid Credentials");
           return true;
         }
 

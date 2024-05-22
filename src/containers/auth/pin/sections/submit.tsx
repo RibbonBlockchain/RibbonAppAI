@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useAtomValue } from "jotai";
 import { signIn } from "next-auth/react";
 import Button from "@/components/button";
@@ -10,10 +11,12 @@ const Submit = () => {
   const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
 
   const handleSubmit = async () => {
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       pin: form.pin,
       phone: form.phoneNumber,
     });
+
+    if (res?.error) toast.error("Invalid Credentials");
   };
 
   return (

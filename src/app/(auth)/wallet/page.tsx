@@ -18,6 +18,8 @@ import {
 } from "@web3auth/wallet-connect-v2-adapter";
 
 import clsx from "clsx";
+import Image from "next/image";
+import toast from "react-hot-toast";
 import RPC from "./web3RPC"; //for web3.js
 import { useEffect, useState } from "react";
 import { shorten } from "@/lib/utils/shorten";
@@ -72,6 +74,16 @@ const chainConfig = {
   // rpcTarget: "https://rpc.ankr.com/eth_sepolia",
   // blockExplorerUrl: "https://sepolia.etherscan.io",
   // logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+
+  // DEVNET CONFIG
+  // chainNamespace: CHAIN_NAMESPACES.EIP155,
+  // chainId: "0xA", // hex of 10
+  // rpcTarget: "https://rpc.ankr.com/optimism",
+  // displayName: "Optimism Mainnet",
+  // blockExplorerUrl: "https://optimistic.etherscan.io",
+  // ticker: "OP",
+  // tickerName: "OP",
+  // logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png",
 };
 
 const walletServicesPlugin = new WalletServicesPlugin({
@@ -79,6 +91,7 @@ const walletServicesPlugin = new WalletServicesPlugin({
     modalZIndex: 99999,
     web3AuthClientId: clientId,
     web3AuthNetwork: OPENLOGIN_NETWORK.SAPPHIRE_MAINNET,
+    // web3AuthNetwork: OPENLOGIN_NETWORK.SAPPHIRE_DEVNET,
   },
   walletInitOptions: {},
 });
@@ -98,6 +111,7 @@ const Wallet = () => {
         const web3auth = new Web3AuthNoModal({
           clientId,
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+          // web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
           privateKeyProvider,
           uiConfig: {
             appName: "W3A Heroes",
@@ -293,6 +307,7 @@ const Wallet = () => {
     const rpc = new RPC(provider);
     const signedMessage = await rpc.signMessage();
     // uiConsole(signedMessage);
+    console.log(signMessage);
     return signMessage;
   };
 
@@ -322,6 +337,60 @@ const Wallet = () => {
     getBalance();
   }, [provider]);
 
+  const copyToClipboard = (text: any) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard!");
+      })
+      .catch((error) => {
+        console.error("Error copying text: ", error);
+      });
+  };
+
+  const walletList = [
+    {
+      id: "1",
+      name: "Worldcoin",
+      logo: "/images/world-coin.png",
+      priceIndex: 20,
+      unit: "WLD",
+      balance: 100.5,
+    },
+    {
+      id: "2",
+      name: "Worldcoin",
+      logo: "/images/world-coin.png",
+      priceIndex: 20,
+      unit: "WLD",
+      balance: 100.5,
+    },
+    {
+      id: "3",
+      name: "Worldcoin",
+      logo: "/images/world-coin.png",
+      priceIndex: 20,
+      unit: "WLD",
+      balance: 100.5,
+    },
+    {
+      id: "4",
+      name: "Worldcoin",
+      logo: "/images/world-coin.png",
+      priceIndex: 20,
+      unit: "WLD",
+      balance: 100.5,
+    },
+    {
+      id: "5",
+      name: "Worldcoin",
+      logo: "/images/world-coin.png",
+      priceIndex: 20,
+      unit: "WLD",
+      balance: 100.5,
+    },
+  ];
+
   const loggedInView = (
     <>
       <div className="flex flex-col gap-2 mb-10">
@@ -331,12 +400,12 @@ const Wallet = () => {
             <p className="text-[16px]">{shorten(walletAddress[0])}</p>
             <p
               className="cursor-pointer"
-              // onClick={() => {
-              //   console.log(walletAddress[0], "wallet");
-              //   copyToClipboard(walletAddress[0]), toast.success(`copied`);
-              // }}
+              onClick={() => {
+                console.log(walletAddress[0], "wallet");
+                copyToClipboard(walletAddress[0]), toast.success(`copied`);
+              }}
             >
-              <LucideCopy size={16} />
+              <LucideCopy fill="#939393" stroke="#939393" size={16} />
             </p>
           </div>
 
@@ -352,15 +421,30 @@ const Wallet = () => {
             <ArrowDown stroke="#7C56FE" />
             Recieve
           </div>
-          <div className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  ">
+          <div
+            onClick={sendTransaction}
+            className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
+          >
             <ArrowUp stroke="#7C56FE" />
             Send
           </div>
-          <div className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  ">
+          <div
+            onClick={signMessage}
+            className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
+          >
             <DollarSign stroke="#7C56FE" />
             Sign
           </div>
         </div>
+
+        {/* <div className=" items-end justify-end">
+          <button
+            onClick={logout}
+            className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
+          >
+            Log Out Wallet
+          </button>
+        </div> */}
 
         <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
           <p
@@ -383,28 +467,72 @@ const Wallet = () => {
           </p>
         </div>
 
-        <div className="">
+        <div className="w-[inherit]">
           {showWallet ? (
-            <div className="text-center flex items-center justify-center min-h-[200px]">
-              Your list of wallets will be displayed here
-            </div>
+            // <div className="flex flex-col gap-4 mt-6">
+            //   {walletList.map((i) => (
+            //     <div
+            //       key={i.id}
+            //       className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+            //     >
+            //       <div className="flex flex-row items-center justify-center gap-2">
+            //         <div className="w-[35px] h-[35px] flex items-center ">
+            //           <Image
+            //             src={i.logo}
+            //             alt="coin logo"
+            //             width={35}
+            //             height={35}
+            //             className="rounded-full bg-red-500"
+            //           />
+            //         </div>
+            //         <div>
+            //           <p className="text-base font-normal">{i.name}</p>
+            //           <p className="text-xs text-[#626262]">
+            //             {i.priceIndex} {i.unit}
+            //           </p>
+            //         </div>
+            //       </div>
+            //       <p className="text-sm">$ {i.balance}</p>
+            //     </div>
+            //   ))}
+            // </div>
+            <>
+              <div className="flex flex-col gap-4 mt-6">
+                {walletList.map((i) => (
+                  <div
+                    key={i.id}
+                    className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+                  >
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <div className="w-[35px] h-[35px] flex items-center ">
+                        <Image
+                          width={35}
+                          height={35}
+                          src={i.logo}
+                          alt="coin logo"
+                          className="rounded-full"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base font-normal">{i.name}</p>
+                        <p className="text-xs text-[#626262]">
+                          {i.priceIndex} {i.unit}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm">$ {i.balance}</p>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
-            <div className="text-center flex items-center justify-center min-h-[200px]">
-              Your list of transactions will be displayed her{" "}
+            <div className="text-center flex items-center justify-center mt-6 h-[200px]">
+              Your list of transactions will be displayed here
             </div>
           )}
         </div>
 
         <div className="hidden">
-          <div className=" items-end justify-end">
-            <button
-              onClick={logout}
-              className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
-            >
-              Log Out Wallet
-            </button>
-          </div>
-
           <div className="">
             <button onClick={getChainId} className="card">
               Get Chain ID
@@ -430,16 +558,6 @@ const Wallet = () => {
         </button>
       </div> */}
 
-          <div>
-            <button onClick={signMessage} className="card">
-              Sign Message
-            </button>
-          </div>
-          <div>
-            <button onClick={sendTransaction} className="card">
-              Send Transaction
-            </button>
-          </div>
           <div>
             <button onClick={getPrivateKey} className="card">
               Get Private Key

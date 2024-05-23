@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { getSession } from "next-auth/react";
 import { logout } from "@/lib/atoms/auth.atom";
 import { DEFAULT_ERROR_MESSAGE } from "@/lib/values/constants";
-import { useRouter } from "next/navigation";
 
 export type TResponse<T> = { data: T; message: string };
 

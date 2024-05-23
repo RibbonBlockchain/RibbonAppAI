@@ -8,7 +8,7 @@ import BackArrowButton from "@/components/button/back-arrow";
 export const SubHeading = () => {
   const { phoneNumber } = useAtomValue(authAtom);
   return (
-    <p className="text-sm text-slate-600">
+    <p className="text-sm text-slate-600 dark:text-white">
       A code has been sent to {phoneNumber}
     </p>
   );

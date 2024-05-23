@@ -24,7 +24,7 @@ const Account = () => {
 
   return (
     <AuthNavLayout>
-      <div className="bg-white min-h-screen p-4 sm:p-6">
+      <div className="bg-white dark:bg-[#171717] min-h-screen p-4 sm:p-6">
         <h1 className="text-2xl font-extrabold mt-3">My Account</h1>
         <User />
 

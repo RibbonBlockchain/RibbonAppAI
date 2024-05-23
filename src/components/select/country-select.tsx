@@ -38,7 +38,9 @@ const getOption = (value: TCountry) => ({
         className="!w-7 !h-7 rounded-full object-cover"
       />
 
-      <span className="text-slate-700 text-md">{value?.name}</span>
+      <span className="text-slate-700 dark:text-white text-md">
+        {value?.name}
+      </span>
     </div>
   ),
 });
@@ -64,9 +66,9 @@ const CountrySelect = ({ value, setValue }: Props) => {
         singleValue: () => `!pl-0`,
         indicatorsContainer: () => `pr-3`,
         menu: () =>
-          `rounded-xl !top-[calc(100%+8px)] bg-white shadow-lg border-[1px] border-gray-200`,
+          `rounded-xl !top-[calc(100%+8px)] bg-white dark:bg-[#171717] shadow-lg border-[1px] border-gray-200`,
         container: () =>
-          `h-[56px] border-[1px] border-gray-300 rounded-xl flex items-center w-full`,
+          `h-[56px] border-[1px] dark:text-white border-gray-300 rounded-xl flex items-center w-full`,
       }}
     />
   );

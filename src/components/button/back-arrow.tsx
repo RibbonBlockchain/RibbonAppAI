@@ -19,7 +19,7 @@ const BackArrowButton = ({ onClick, stroke, className }: Props) => {
       className={clsx(className, "flex py-4 w-[40px] cursor-pointer")}
       onClick={handleBack}
     >
-      <ArrowLeft stroke={stroke} />
+      <ArrowLeft stroke={stroke || "white"} />
     </div>
   );
 };

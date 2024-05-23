@@ -14,7 +14,7 @@ const ThemeSwitcher = () => {
         <SunIcon
           className="w-5 h-5 text-gray-900 "
           role="button"
-          fill={"#6338A2"}
+          fill={"#FFF"}
           onClick={() => setTheme("light")}
         />
       );

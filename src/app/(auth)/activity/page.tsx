@@ -35,15 +35,15 @@ const Activity = () => {
 
   return (
     <AuthNavLayout>
-      <div className="bg-[#F9F9F9] min-h-screen">
+      <div className="bg-[#F9F9F9] dark:bg-[#1B1B1B] min-h-screen">
         <div className="p-4 sm:p-6">
           <div className="flex items-center justify-between py-3">
             <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
             <div
               onClick={() => setSwitchBalance(!switchBalance)}
-              className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold cursor-pointer"
+              className="bg-[#FCECF0] dark:bg-[#282729] text-[#7C56FE] dark:text-white rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold cursor-pointer"
             >
-              <CoinSVG width={12} height={12} fill="#6200EE" />
+              <CoinSVG width={12} height={12} fill="#9b8fc0" />
               {switchBalance
                 ? `${user?.wallet.balance} WLD`
                 : `${pointBalance.toLocaleString()} points`}
@@ -54,8 +54,8 @@ const Activity = () => {
             <div
               className={
                 activeTab === "pending"
-                  ? "flex flex-row items-center gap-2 text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-xs"
-                  : "flex flex-row items-center gap-2 text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-4 rounded-full text-xs"
+                  ? "dark:bg-[#282729] dark:text-white flex flex-row items-center gap-2 text-white font-semibold border dark:border-[#C3B1FF] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-xs"
+                  : "dark:bg-[#282729] dark:text-white flex flex-row items-center gap-2 text-[#080808] font-semibold border dark:border-[#C3B1FF] bg-[#F2EEFF] py-3 px-4 rounded-full text-xs"
               }
               onClick={() => handleTabClick("pending")}
             >
@@ -69,8 +69,8 @@ const Activity = () => {
             <div
               className={
                 activeTab === "completed"
-                  ? "text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-xs"
-                  : "text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-2 rounded-full text-xs"
+                  ? " dark:bg-[#282729] dark:text-white  text-white font-semibold border border-[#6200EE]  bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-xs"
+                  : " dark:bg-[#282729] dark:text-white  text-[#080808] font-semibold border border-[#6200EE]  bg-[#F2EEFF] py-3 px-2 rounded-full text-xs"
               }
               onClick={() => handleTabClick("completed")}
             >

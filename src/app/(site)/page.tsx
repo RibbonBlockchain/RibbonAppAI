@@ -6,7 +6,7 @@ import { WorldIdButton } from "@/containers/auth/landing/button";
 
 const Home = () => {
   return (
-    <div className="flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
+    <div className="dark:bg-[#171717] flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
       <div className="h-full w-full flex flex-col items-center justify-center gap-4 sm:gap-6">
         <Image
           width={100}
@@ -16,10 +16,10 @@ const Home = () => {
         />
 
         <div className="text-center">
-          <h1 className="text-slate-700 text-2xl font-extrabold">
+          <h1 className="text-slate-700 dark:text-white text-2xl font-extrabold">
             Welcome to <span className="text-gradient">Ribbon</span> Protocol
           </h1>
-          <p className="text-base font-normal text-slate-600 text-center">
+          <p className="text-base font-normal text-slate-600 dark:text-[#d8cdcd] text-center">
             Earn tokenized Universal Basic Income
           </p>
         </div>
@@ -37,7 +37,7 @@ const Home = () => {
 
         <Link
           href="/auth/login"
-          className="text-sm font-normal text-[#141414] text-center"
+          className="text-sm font-normal text-[#141414] dark:text-white text-center"
         >
           Already an existing user?{" "}
           <span className="text-[#6200EE] font-semibold">Sign In</span>

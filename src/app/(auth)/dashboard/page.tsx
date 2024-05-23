@@ -93,7 +93,7 @@ const Dashboard = () => {
 
   return (
     <AuthNavLayout>
-      <div className="w-full h-auto text-[#080808] dark:bg-gray-950 bg-[#fffefe] p-4 sm:p-6">
+      <div className="w-full h-auto text-[#080808] dark:bg-[#1B1B1B] bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           {isNewUser && user && <UserWalkthrough />}
 
@@ -202,7 +202,7 @@ const Dashboard = () => {
             className="mx-auto border-[#4B199C] border-1 mb-5 mt-2"
           >
             <span
-              className={`w-full gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold py-1.5 px-2 sm:px-3 text-gradient bg-white border-[#4B199C] border-[2px] rounded-full `}
+              className={`w-full gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-[14px] font-semibold py-1.5 px-2 sm:px-3 text-gradient dark:text-white bg-[inherit] border-[#4B199C] border-[2px] rounded-full `}
             >
               Claim daily reward
               <Image
@@ -228,9 +228,9 @@ const Dashboard = () => {
             </span>
           </button>
 
-          <div className="w-full">
+          <div className="w-full mb-4">
             {priorityTask?.length >= 1 && (
-              <p className="text-[#34246B] text-xs py-3 font-bold">
+              <p className="text-[#34246B] dark:text-white text-xs py-3 font-bold">
                 Priority activity
               </p>
             )}

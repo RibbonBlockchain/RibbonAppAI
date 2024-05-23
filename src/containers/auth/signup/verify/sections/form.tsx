@@ -23,7 +23,7 @@ const FormInput = () => {
         value={state.code}
         setValue={setOtp}
       />
-      <p className="flex items-center gap-2 text-sm text-slate-600">
+      <p className="flex items-center gap-2 text-sm text-slate-600 dark:text-white">
         <span>I didn&apos;t get a code!</span>{" "}
         <span
           onClick={handleRequest}

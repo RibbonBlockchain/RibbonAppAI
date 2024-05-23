@@ -11,7 +11,7 @@ const BackArrow = ({ stroke }: { stroke?: string }) => {
     setState((prev) => ({ ...prev, phoneNumber: "" }));
   };
 
-  return <BackArrowButton stroke={"#000"} onClick={handleClick} />;
+  return <BackArrowButton stroke={"grey"} onClick={handleClick} />;
 };
 
 export default BackArrow;

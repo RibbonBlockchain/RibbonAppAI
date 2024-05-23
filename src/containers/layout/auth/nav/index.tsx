@@ -33,7 +33,7 @@ const FooterNav = () => {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 w-full z-50 max-w-[500px] h-auto text-xs font-extrabold text-white rounded-t-[24px] bg-[#FDFDFD] bg-opacity-95">
+    <div className="fixed bottom-0 w-full z-50 max-w-[500px] h-auto text-xs font-extrabold text-white  rounded-t-[24px] bg-[#FDFDFD] dark:bg-[#171717] bg-opacity-95">
       <div className="flex items-center justify-around p-4 sm:p-6 sm:py-5">
         {items.map(({ route, name, icon, iconFilled }) => (
           <a

@@ -8,7 +8,7 @@ export const NoCompletedTaskOnDate = ({ onclick }: { onclick: () => void }) => {
       <p className="text-[20px] font-medium text-center">
         You do not have any completed task on this date
       </p>
-      <p className="text-sm text-[#434343] text-center">
+      <p className="text-sm text-[#434343] dark:text-[#939393] text-center">
         Your completed tasks will be displayed here
       </p>
       <p

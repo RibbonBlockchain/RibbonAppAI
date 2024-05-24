@@ -12,8 +12,8 @@ import {
 
 import {
   OpenloginAdapter,
-  OpenloginLoginParams,
   OpenloginUserInfo,
+  OpenloginLoginParams,
 } from "@web3auth/openlogin-adapter";
 
 import Web3 from "web3";
@@ -276,7 +276,7 @@ const Wallet = () => {
   const [showWallet, setShowWallet] = useState(false);
 
   return (
-    <div className="p-4 sm:p-6 bg-white  h-auto flex flex-col">
+    <div className="p-4 sm:p-6 min-h-screen bg-white flex flex-col">
       <div className="mb-6">
         <BackArrowButton stroke="#583DB4" />
         <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
@@ -390,14 +390,14 @@ const Wallet = () => {
               </div>
             </div>
 
-            {/* <div className=" items-end justify-end">
+            <div className="hidden items-end justify-end">
               <button
                 onClick={logout}
                 className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
               >
                 Log Out Wallet
               </button>
-            </div> */}
+            </div>
 
             <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
               <p
@@ -473,14 +473,25 @@ const Wallet = () => {
           </div>
         </>
       ) : (
-        <div>
-          <p>Your wallet is not connected</p>
-          <button
-            onClick={login}
-            className="px-4 py-2 w-fit bg-green-500 text-white rounded hover:bg-green-600 mr-2 mt-4"
-          >
-            Login / Connect wallet
-          </button>
+        <div className="flex-1 flex flex-col items-center justify-evenly mb-20">
+          <div>
+            <Image
+              src=""
+              alt=""
+              height={212}
+              width={232}
+              className="bg-purple-500"
+            />
+          </div>
+          <div className="flex flex-col items-center justify-center gap-10">
+            <p className="text-2xl font-semibold">Manage your assets easily</p>
+            <button
+              onClick={login}
+              className="px-6 py-2 w-fit bg-[#7C56FE] text-white font-medium rounded-md hover:bg-[#6745d6] mr-2 mt-4"
+            >
+              Connect wallet
+            </button>
+          </div>
         </div>
       )}
 

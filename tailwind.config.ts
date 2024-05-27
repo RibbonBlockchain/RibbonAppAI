@@ -20,6 +20,7 @@ const config: Config = {
       backgroundImage: {
         account: "url('/images/user-bg.png')",
         peronalDetails: "url('/images/personal-details.png')",
+        walletBg: 'url("/images/connect-wallet-bg.png")',
       },
     },
   },

@@ -50,7 +50,7 @@ const DisplayNotification = () => {
   const handleNotificationClick = (notification: any) => {
     setIsModalOpen(true);
     setSelectedNotification(notification);
-    readNotification({ notificationId: notification.idz });
+    readNotification({ notificationId: notification?.id as number });
   };
 
   const closeModal = () => {
@@ -83,7 +83,7 @@ const DisplayNotification = () => {
             </div>
 
             <div
-              onClick={() => handleNotificationClick(notification.id)}
+              onClick={() => handleNotificationClick(notification)}
               className="w-full h-auto flex felx-start flex-col mt-3 gap-y-1.5"
             >
               <p className="text-sm font-semibold">{notification.title}</p>

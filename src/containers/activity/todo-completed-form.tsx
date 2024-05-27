@@ -1,8 +1,12 @@
+"use client";
+
 import React from "react";
-import Image from "next/image";
 import { Clock4 } from "lucide-react";
-import CoinSVG from "../../../public/images/coin";
+import { useRouter } from "next/navigation";
 import RatingCompleted from "./rate-completed";
+import CoinSVG from "../../../public/images/coin";
+import RateTaskModal from "@/components/modal/rate-task-modal";
+import { useGetTaskByID, useRateQuestionnaire } from "@/api/user";
 
 type Props = {
   score: number;
@@ -11,13 +15,22 @@ type Props = {
   priority?: boolean;
   approximateTime: number;
   completed?: string;
-
+  params: any;
   ratings?: number;
   ratingsLevel?: number;
 };
 
 const TodoCompletedForm = (props: Props) => {
   const rewardPoints = props.reward * 5000;
+
+  const router = useRouter();
+  const [rateTask, setRateTask] = React.useState(false);
+
+  const { data } = useGetTaskByID({ id: String(props.params?.id) });
+  const questionIds = data?.questions?.map((question: any) => question.id);
+
+  const { mutate: submitRate } = useRateQuestionnaire();
+  const [rating, setRating] = React.useState(0);
 
   return (
     <div
@@ -34,7 +47,17 @@ const TodoCompletedForm = (props: Props) => {
             </p>
           </div>
 
-          <RatingCompleted rating={props.ratingsLevel || 0} />
+          <div className="flex flex-row items-center gap-1">
+            <RatingCompleted rating={props.ratingsLevel || 0} />
+            {props.ratingsLevel === 0 && (
+              <p
+                onClick={() => setRateTask(true)}
+                className="text-[#714EE7] underline cursor-pointer"
+              >
+                Rate task
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -59,6 +82,27 @@ const TodoCompletedForm = (props: Props) => {
           </p>
         )}
       </div>
+
+      {rateTask && (
+        <RateTaskModal
+          isOpen={rateTask}
+          closeModal={() => {
+            setRateTask(false);
+          }}
+          onChange={(newRating: any) => setRating(newRating)}
+          handleSubmit={() => {
+            // submitRate(
+            //   { rating: rating, questionnaireId: data?.id },
+            //   {
+            //     onSuccess: () => {
+            //       router.push("/dashboard");
+            //     },
+            //   }
+            // );
+            router.push("/dashboard");
+          }}
+        />
+      )}
     </div>
   );
 };

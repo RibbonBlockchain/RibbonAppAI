@@ -26,7 +26,11 @@ const TaskPage = ({ params }: any) => {
   const [claimPage, setClaimPage] = React.useState(false);
   const [rateTask, setRateTask] = React.useState(false);
 
-  const { data } = useGetTaskByID({ id: String(params.id) });
+  const {
+    data,
+    isLoading: isLoadingGetTask,
+    isPending: isPendingGetTask,
+  } = useGetTaskByID({ id: String(params.id) });
   const questionIds = data?.questions?.map((question: any) => question.id);
 
   const { mutate: submitTask, isPending } = useSubmitTask();
@@ -55,6 +59,8 @@ const TaskPage = ({ params }: any) => {
     setYesorNoId(id);
     setButtonDisable(false);
   };
+
+  const stillLoading = isLoadingGetTask || isPendingGetTask;
 
   return (
     <div className="relative z-10 flex flex-col min-h-[100vh] items-start justify-between p-4 sm:p-6">
@@ -87,12 +93,12 @@ const TaskPage = ({ params }: any) => {
 
         {step == 0 ? (
           <BeginQuestionnaire
-            reward={data?.reward}
+            reward={stillLoading ? "" : data?.reward}
             onclick={() => setStep(1)}
-            rewardPoints={data?.reward * 5000}
+            rewardPoints={stillLoading ? "" : data?.reward * 5000}
             imageUrl={data?.image || "/images/ribbon.svg"}
             description={data?.description || data?.name}
-            completionTime={data?.duration / 60}
+            completionTime={stillLoading ? "" : data?.duration / 60}
           />
         ) : (
           <div className="flex h-[80vh] flex-col items-center justify-between">
@@ -221,14 +227,14 @@ const TaskPage = ({ params }: any) => {
                 onChange={(newRating: any) => setRating(newRating)}
                 handleSubmit={() => {
                   submitRate(
-                    { rating: rating, questionnaireId: data?.id }
-                    // {
-                    //   onSuccess: () => {
-                    //     router.push("/dashboard");
-                    //   },
-                    // }
+                    { rating: rating, questionnaireId: data?.id },
+                    {
+                      onSuccess: () => {
+                        router.push("/dashboard");
+                      },
+                    }
                   );
-                  router.push("/dashboard");
+                  // router.push("/dashboard");
                 }}
               />
             )}

@@ -13,6 +13,7 @@ const TaskComponent = ({ tasks }: { tasks: any }) => {
           reward={task.reward}
           taskTitle={task.name}
           approximateTime={task.duration / 60}
+          params={undefined}
         />
       ))}
     </div>

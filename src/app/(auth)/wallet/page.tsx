@@ -21,6 +21,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
+import { WalletMoney } from "@/public/images";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import BackArrowButton from "@/components/button/back-arrow";
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
@@ -276,14 +277,7 @@ const Wallet = () => {
   const [showWallet, setShowWallet] = useState(false);
 
   return (
-    <div className="p-4 sm:p-6 min-h-screen bg-white flex flex-col">
-      <div className="mb-6">
-        <BackArrowButton stroke="#583DB4" />
-        <div className="flex -mt-10  flex-row items-center justify-center text-base font-semibold">
-          Wallet
-        </div>
-      </div>
-
+    <>
       {loggedIn ? (
         // <div className="grid grid-cols-1 gap-6">
         //   <div className="border-2 border-gray-600 p-2">
@@ -347,150 +341,168 @@ const Wallet = () => {
         // </div>
 
         <>
-          <div className="flex flex-col gap-2 mb-10">
-            <div className="text-center ">
-              <div className="flex mt-6 flex-row gap-5 items-center justify-center ">
-                <p className="text-[16px]">{shorten(address)}</p>
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    console.log(address, "wallet");
-                    copyToClipboard(address), toast.success(`copied`);
-                  }}
-                >
-                  <LucideCopy fill="#939393" stroke="#939393" size={16} />
-                </p>
-              </div>
-
-              <div className="flex flex-row gap-1 items-center justify-center font-semibold ">
-                <p className="text-[48px]">
-                  <a className="text-[24px]">$</a> {balance}
-                </p>
+          <div className="p-4 sm:p-6 min-h-screen bg-white flex flex-col">
+            <div className="mb-6">
+              <BackArrowButton stroke="#939393" />
+              <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
+                Wallet
               </div>
             </div>
-
-            <div className="w-full py-10 flex gap-4 items-center justify-between">
-              <div className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  ">
-                <ArrowDown stroke="#7C56FE" />
-                Recieve
-              </div>
-              <div
-                onClick={() => sendTransaction(destination, amount)}
-                className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
-              >
-                <ArrowUp stroke="#7C56FE" />
-                Send
-              </div>
-              <div
-                onClick={() => signMessage(message)}
-                className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
-              >
-                <DollarSign stroke="#7C56FE" />
-                Sign
-              </div>
-            </div>
-
-            <div className="hidden items-end justify-end">
-              <button
-                onClick={logout}
-                className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
-              >
-                Log Out Wallet
-              </button>
-            </div>
-
-            <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
-              <p
-                onClick={() => setShowWallet(true)}
-                className={clsx(
-                  "w-full text-center py-3 text-black",
-                  showWallet && "text-white bg-[#7C56FE] rounded-[16px]"
-                )}
-              >
-                Wallets
-              </p>
-              <p
-                onClick={() => setShowWallet(false)}
-                className={clsx(
-                  "w-full text-center py-3 text-black bg-[#7C56FE] rounded-[16px]",
-                  showWallet && "text-black bg-[inherit]"
-                )}
-              >
-                History
-              </p>
-            </div>
-
-            <div className="w-[inherit]">
-              {showWallet ? (
-                <>
-                  <div className="flex flex-col gap-4 mt-6">
-                    {walletList.map((i) => (
-                      <div
-                        key={i.id}
-                        className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
-                      >
-                        <div className="flex flex-row items-center justify-center gap-2">
-                          <div className="w-[35px] h-[35px] flex items-center ">
-                            <Image
-                              width={35}
-                              height={35}
-                              src={i.logo}
-                              alt="coin logo"
-                              className="rounded-full"
-                            />
-                          </div>
-                          <div>
-                            <p className="text-base font-normal">{i.name}</p>
-                            <p className="text-xs text-[#626262]">
-                              {i.priceIndex} {i.unit}
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-sm">$ {i.balance}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="text-center flex items-center justify-center mt-6 h-[200px]">
-                  Your list of transactions will be displayed here
+            <div className="flex flex-col gap-2 mb-10 overflow-hidden">
+              <div className="text-center ">
+                <div className="flex mt-6 flex-row gap-5 items-center justify-center ">
+                  <p className="text-[16px]">{shorten(address)}</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => {
+                      console.log(address, "wallet");
+                      copyToClipboard(address), toast.success(`copied`);
+                    }}
+                  >
+                    <LucideCopy fill="#939393" stroke="#939393" size={16} />
+                  </p>
                 </div>
-              )}
-            </div>
 
-            <div className="hidden">
-              <div>
-                <button onClick={getUserInfo} className="card">
-                  Get User Info
+                <div className="flex flex-row gap-1 items-center justify-center font-semibold ">
+                  <p className="text-[48px]">
+                    <a className="text-[24px]">$</a> {balance}
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-full py-10 flex gap-4 items-center justify-between">
+                <div className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  ">
+                  <ArrowDown stroke="#7C56FE" />
+                  Recieve
+                </div>
+                <div
+                  onClick={() => sendTransaction(destination, amount)}
+                  className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
+                >
+                  <ArrowUp stroke="#7C56FE" />
+                  Send
+                </div>
+                <div
+                  onClick={() => signMessage(message)}
+                  className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
+                >
+                  <DollarSign stroke="#7C56FE" />
+                  Sign
+                </div>
+              </div>
+
+              <div className="hidden items-end justify-end">
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
+                >
+                  Log Out Wallet
                 </button>
               </div>
-              <div>
-                <button onClick={authenticateUser} className="card">
-                  Get ID Token
-                </button>
+
+              <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
+                <p
+                  onClick={() => setShowWallet(true)}
+                  className={clsx(
+                    "w-full text-center py-3 text-black",
+                    showWallet && "text-white bg-[#7C56FE] rounded-[16px]"
+                  )}
+                >
+                  Wallets
+                </p>
+                <p
+                  onClick={() => setShowWallet(false)}
+                  className={clsx(
+                    "w-full text-center py-3 text-black bg-[#7C56FE] rounded-[16px]",
+                    showWallet && "text-black bg-[inherit]"
+                  )}
+                >
+                  History
+                </p>
+              </div>
+
+              <div className="w-[inherit]">
+                {showWallet ? (
+                  <>
+                    <div className="flex flex-col gap-4 mt-6">
+                      {walletList.map((i) => (
+                        <div
+                          key={i.id}
+                          className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+                        >
+                          <div className="flex flex-row items-center justify-center gap-2">
+                            <div className="w-[35px] h-[35px] flex items-center ">
+                              <Image
+                                width={35}
+                                height={35}
+                                src={i.logo}
+                                alt="coin logo"
+                                className="rounded-full"
+                              />
+                            </div>
+                            <div>
+                              <p className="text-base font-normal">{i.name}</p>
+                              <p className="text-xs text-[#626262]">
+                                {i.priceIndex} {i.unit}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="text-sm">$ {i.balance}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center flex items-center justify-center mt-6 h-[200px]">
+                    Your list of transactions will be displayed here
+                  </div>
+                )}
+              </div>
+
+              <div className="hidden">
+                <div>
+                  <button onClick={getUserInfo} className="card">
+                    Get User Info
+                  </button>
+                </div>
+                <div>
+                  <button onClick={authenticateUser} className="card">
+                    Get ID Token
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-evenly mb-20">
-          <div>
-            <Image
-              src=""
-              alt=""
-              height={212}
-              width={232}
-              className="bg-purple-500"
-            />
+        <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
+          <div className="mb-6">
+            <BackArrowButton stroke="#FFF" />
+            <div className="flex -mt-10 text-white  flex-row items-center justify-center text-base font-semibold">
+              Wallet
+            </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-10">
-            <p className="text-2xl font-semibold">Manage your assets easily</p>
-            <button
-              onClick={login}
-              className="px-6 py-2 w-fit bg-[#7C56FE] text-white font-medium rounded-md hover:bg-[#6745d6] mr-2 mt-4"
-            >
-              Connect wallet
-            </button>
+
+          <div className="flex-1 flex flex-col items-center justify-evenly text-white">
+            <div className="w-[212px] h-[232px]">
+              {/* <Image src="" alt="" height={212} width={232} /> */}
+            </div>
+            <div className="flex flex-col items-center justify-center text-center gap-10">
+              <div className="flex flex-col gap-1.5">
+                <p className="text-3xl font-bold">
+                  Manage Your Crypto Assets Easily
+                </p>
+                <p className="text-sm">
+                  Monitor and manage crypto portfolio with Ribbon Protocol
+                </p>
+              </div>
+              <button
+                onClick={login}
+                className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
+              >
+                Connect wallet <WalletMoney />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -498,7 +510,7 @@ const Wallet = () => {
       {/* <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div> */}
-    </div>
+    </>
   );
 };
 

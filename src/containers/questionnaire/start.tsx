@@ -39,7 +39,6 @@ const BeginQuestionnaire = ({
 
         <h1 className="flex flex-wrap w-screen items-center justify-center text-center gap-2 font-bold text-[22px] text-[#714EE7] ">
           <p className="whitespace-nowrap">{description}</p>{" "}
-          <p className="text-black">Questionnaire</p>
         </h1>
 
         <div className="grid gap-y-7 self-start">

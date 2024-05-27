@@ -234,7 +234,8 @@ const CompletedActivities = () => {
                             taskTitle={i.name}
                             approximateTime={i.duration / 60}
                             ratings={i.ratings || 675}
-                            ratingsLevel={i.ratingsLevel || 3}
+                            ratingsLevel={i.ratingsLevel || 0}
+                            params={undefined}
                           />
                         )}
                       </>
@@ -276,9 +277,8 @@ const CompletedActivities = () => {
                       taskTitle={i.description}
                       approximateTime={i.duration / 60}
                       ratings={i.ratings || 675}
-                      ratingsLevel={
-                        i.ratingsLevel || "/images/empty-rating.svg"
-                      }
+                      ratingsLevel={i.ratingsLevel || 0}
+                      params={undefined}
                     />
                   )}
                 </>

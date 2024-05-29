@@ -93,7 +93,7 @@ const Dashboard = () => {
 
   return (
     <AuthNavLayout>
-      <div className="w-full h-auto text-[#080808] dark:bg-[#1B1B1B] bg-[#fffefe] p-4 sm:p-6">
+      <div className="w-full h-auto min-h-screen text-[#080808] dark:bg-[#1B1B1B] bg-[#fffefe] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           {isNewUser && user && <UserWalkthrough />}
 
@@ -251,7 +251,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] dark:bg-[#7C56FE] mb-2 flex flex-row items-center justify-between text-[#A81DA6] dark:text-white text-xs px-3 py-1 font-bold rounded-md">
               <p>Questionnaire</p>
               <Image
                 width={40}
@@ -277,7 +277,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] dark:bg-[#A81DA6] mb-2 flex flex-row items-center justify-between text-[#A81DA6] dark:text-white text-xs px-3 py-1 font-bold rounded-md">
               <p>Surveys</p>
               <Image
                 width={40}
@@ -305,7 +305,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
+            <div className="bg-[#F2EEFF] dark:bg-[#7C56FE] mb-2 flex flex-row items-center justify-between text-[#A81DA6] dark:text-white text-xs px-3 py-1 font-bold rounded-md">
               <p>Tasks</p>
               <Image
                 width={40}

@@ -10,7 +10,7 @@ const Notifications = () => {
   const { data: notifications } = useGetUserNotifications();
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 dark:bg-[#1B1B1B] min-h-screen">
       <div className="">
         <BackArrowButton stroke="#583DB4" />
         <div className="flex -mt-10 flex-row items-center justify-center text-lg font-semibold">

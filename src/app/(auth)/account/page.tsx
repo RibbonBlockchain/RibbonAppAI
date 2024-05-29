@@ -33,7 +33,9 @@ const Account = () => {
         </div>
 
         <div className="mt-2 flex flex-col gap-[2px]">
-          <p className="text-xs font-bold text-[#434343]">ACCOUNT</p>
+          <p className="text-xs font-bold text-[#434343] dark:text-white">
+            ACCOUNT
+          </p>
 
           <Link href="/account/kyc">
             <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
@@ -70,7 +72,7 @@ const Account = () => {
         </div>
 
         <div className="flex flex-col gap-[2px]">
-          <p className="text-xs font-bold pt-6 pb-2 text-[#434343]">
+          <p className="text-xs font-bold pt-6 pb-2 text-[#434343] dark:text-white">
             SETTINGS & SECURITY
           </p>
           {Settings.map(({ href, description, logo }) => (
@@ -106,7 +108,9 @@ const Account = () => {
         </div>
 
         <div className="flex flex-col gap-[2px]">
-          <p className="text-xs font-bold pt-6 pb-2 text-[#434343] ">SUPPORT</p>
+          <p className="text-xs font-bold pt-6 pb-2 text-[#434343] dark:text-white">
+            SUPPORT
+          </p>
           {Support.map(({ href, description, logo }) => (
             <RouteMenu
               href={href}

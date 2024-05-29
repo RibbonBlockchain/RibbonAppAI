@@ -63,7 +63,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/70 dark:bg-black/10" />
+            <div className="fixed inset-0 bg-black/70 dark:bg-black/85" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -81,7 +81,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                   <Dialog.Title
                     as="h3"
                     className={cn(
-                      "text-base text-center px-6 py-4 font-medium  text-white flex items-center justify-center",
+                      "text-base text-center px-6 py-4 font-medium text-white flex items-center justify-center",
                       "bg-gradient-to-r from-[#7C56FE] to-[#A81DA6]"
                     )}
                   >
@@ -90,7 +90,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
 
                   <div className="mt-2 p-4">
                     <figure className="space-y-4">
-                      <figcaption className="text-center text-primary font-bold">
+                      <figcaption className="text-center text-primary dark:text-white font-bold">
                         Use the app every day to claim daily rewards
                       </figcaption>
 
@@ -108,8 +108,8 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                             className={cn(
                               "bg-primary-50 py-4 px-2 space-y-4 rounded-md min-w-16",
                               index === step % 7
-                                ? "border border-[#D797D6] drop-shadow-[2px_3px_3px_rgba(168,29,166,0.4)]"
-                                : "opacity-70"
+                                ? "border border-[#D797D6] dark:bg-[#7C56FE] drop-shadow-[2px_3px_3px_rgba(168,29,166,0.4)]"
+                                : "opacity-70 "
                             )}
                           >
                             <Image
@@ -121,7 +121,7 @@ const ClaimDailyRewardModal: React.FC<Props> = (props) => {
                               className={cn(
                                 "text-center text-nowrap text-primary font-semibold text-xs",
                                 index === step % 7
-                                  ? "text-primary"
+                                  ? "text-primary dark:text-white"
                                   : "text-[#939393]"
                               )}
                             >

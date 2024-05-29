@@ -10,6 +10,8 @@ type Props = {
   closeModal: () => void;
 };
 
+// dark mode implementation
+
 const DailyRewardClaimedPage: React.FC<Props> = (props) => {
   const router = useRouter();
 
@@ -39,7 +41,7 @@ const DailyRewardClaimedPage: React.FC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-[80%] max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-[80%] max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-[#1B1B1B] text-left align-middle shadow-xl transition-all">
                 <div className="mt-8 mb-5 p-4">
                   <div className="flex w-full flex-col items-center justify-center ">
                     <div className="">
@@ -52,7 +54,7 @@ const DailyRewardClaimedPage: React.FC<Props> = (props) => {
                       />
                     </div>
 
-                    <h3 className="text-2xl flex flex-row gap-2 text-primary font-extrabold mt-10">
+                    <h3 className="text-2xl flex flex-row gap-2 text-primary dark:text-white font-extrabold mt-10">
                       Reward claimed
                       <Image
                         width={30}
@@ -62,14 +64,16 @@ const DailyRewardClaimedPage: React.FC<Props> = (props) => {
                       />
                     </h3>
 
-                    <div className="flex mt-2 flex-row items-center justify-center gap-1 w-[80%] py-2 rounded-full bg-[#F2eeff]">
+                    <div className="flex mt-2 flex-row items-center justify-center gap-1 w-[80%] py-2 rounded-full bg-[#F2eeff] dark:bg-[#151515]">
                       <Image
                         alt="cup"
                         width={29}
                         height={31}
                         src="/images/questionnaire/cup.png"
                       />
-                      <span className=" text-[12px]">+ 1000 points</span>
+                      <span className="text-[12px] dark:text-white">
+                        + 1000 points
+                      </span>
                     </div>
                   </div>
                 </div>

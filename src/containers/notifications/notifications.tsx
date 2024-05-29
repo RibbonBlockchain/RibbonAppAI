@@ -14,7 +14,7 @@ const NotificationModal = ({
 }) => {
   return (
     <div className="fixed w-[inherit] inset-0 z-50 flex justify-center items-center bg-black bg-opacity-80 p-4 sm:p-6">
-      <div className="bg-white min-w-[300px] max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
+      <div className="bg-white dark:bg-[#1b1b1b] min-w-[300px] max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
         <NotificationsIcon />
 
         <div>
@@ -50,7 +50,7 @@ const DisplayNotification = () => {
   const handleNotificationClick = (notification: any) => {
     setIsModalOpen(true);
     setSelectedNotification(notification);
-    readNotification({ notificationId: notification.idz });
+    readNotification({ notificationId: notification.id });
   };
 
   const closeModal = () => {
@@ -72,7 +72,7 @@ const DisplayNotification = () => {
           className="relative flex flex-col gap-3"
           onClick={() => handleNotificationClick(notification)}
         >
-          <div className="flex flex-row gap-4 items-center pb-3 border-b-[2px] border-gray-200">
+          <div className="flex flex-row gap-4 items-center pb-3 border-b border-gray-50">
             <div className="w-[30px] flex items-center justify-center self-center">
               {/* {i.type === "questionnaire" ? (
                 <StarIcon fill="#7C56FE" stroke="#7C56FE" />
@@ -83,12 +83,12 @@ const DisplayNotification = () => {
             </div>
 
             <div
-              onClick={() => handleNotificationClick(notification.id)}
+              onClick={() => handleNotificationClick(notification)}
               className="w-full h-auto flex felx-start flex-col mt-3 gap-y-1.5"
             >
               <p className="text-sm font-semibold">{notification.title}</p>
               <p className="text-sm font-normal">{notification.message}</p>
-              <p className="text-[12px] font-normal text-[#626262]">
+              <p className="text-[12px] font-normal text-[#626262] dark:text-white">
                 {
                   formatDateAndTimeAgo(notification.createdAt as string)
                     .relativeTime

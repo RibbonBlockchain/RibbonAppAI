@@ -211,7 +211,7 @@ const CompletedActivities = () => {
               {/* {Object.entries(renderData).map(([date, items]) => ( */}
               {Object.entries(sortedRenderData).map(([date, items]) => (
                 <div key={date} className="pb-5">
-                  <p className="text-xs text-[#141414] py-3 font-bold">
+                  <p className="text-xs text-[#141414] dark:text-white py-3 font-bold">
                     {date}
                   </p>
                   {items.map((i, index) => (
@@ -220,7 +220,7 @@ const CompletedActivities = () => {
                         {i.type === "DAILY_REWARD" ? (
                           <div
                             key={i.id}
-                            className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                            className="text-[#626262] dark:text-white mb-3 bg-white dark:bg-[#282729] font-bold flex items-center justify-between p-3 rounded-xl"
                           >
                             <p className="text-xs">Daily rewards</p>
                             <p className="text-sm">100 pts</p>

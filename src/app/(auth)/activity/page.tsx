@@ -69,8 +69,8 @@ const Activity = () => {
             <div
               className={
                 activeTab === "completed"
-                  ? " dark:bg-[#282729] dark:text-white  text-white font-semibold border border-[#6200EE]  bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-xs"
-                  : " dark:bg-[#282729] dark:text-white  text-[#080808] font-semibold border border-[#6200EE]  bg-[#F2EEFF] py-3 px-2 rounded-full text-xs"
+                  ? " dark:bg-[#282729] dark:text-white text-white font-semibold border border-[#6200EE]  bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-xs"
+                  : " dark:bg-[#282729] dark:text-white text-[#080808] font-semibold border border-[#6200EE]  bg-[#F2EEFF] py-3 px-2 rounded-full text-xs"
               }
               onClick={() => handleTabClick("completed")}
             >

@@ -48,8 +48,8 @@ const TodoCompletedForm = (props: Props) => {
           </div>
 
           <div className="flex flex-row items-center gap-1">
-            <RatingCompleted rating={props.ratingsLevel || 0} />
-            {props.ratingsLevel === 0 && (
+            <RatingCompleted rating={props.ratings || 0} />
+            {props.ratings === 0 && (
               <p
                 onClick={() => setRateTask(true)}
                 className="text-[#714EE7] underline cursor-pointer"
@@ -78,7 +78,7 @@ const TodoCompletedForm = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings}) Ratings
+            ({props.ratings.toFixed(2)}) Ratings
           </p>
         )}
       </div>

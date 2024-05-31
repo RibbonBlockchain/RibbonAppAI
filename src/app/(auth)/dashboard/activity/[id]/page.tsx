@@ -14,10 +14,12 @@ import YesOrNo from "@/containers/questionnaire/YesOrNo";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import BgEffect from "@/components/questionnarie/bg-effect";
 import RateTaskModal from "@/components/modal/rate-task-modal";
+import CheckBoxes from "@/containers/questionnaire/multi-choice";
 import BeginQuestionnaire from "@/containers/questionnaire/start";
 import ClaimTaskReward from "@/components/modal/claim_task_reward";
 import RadioOptions from "@/containers/questionnaire/radio-options";
 import { Check, RibbonLight } from "../../../../../../public/images";
+import TextareaInput from "@/containers/questionnaire/answerTextInput";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
 
 const TaskPage = ({ params }: any) => {
@@ -49,6 +51,18 @@ const TaskPage = ({ params }: any) => {
   const [optionId, setSelectedOptionId] = useState<number>();
   const [YesOrNoId, setYesorNoId] = useState<number>();
   const [buttonDisable, setButtonDisable] = useState<boolean>(true);
+  const [shortAnswer, setShortAnswer] = useState("");
+  const [longAnswer, setLongAnswer] = useState("");
+
+  const handleShortAnswerInputChange = (value: string) => {
+    setShortAnswer(value);
+    setButtonDisable(false);
+  };
+
+  const handleLongAnswerInputChange = (value: string) => {
+    setLongAnswer(value);
+    setButtonDisable(false);
+  };
 
   const handleOptionSelect = (id: number) => {
     setSelectedOptionId(id);
@@ -57,6 +71,12 @@ const TaskPage = ({ params }: any) => {
 
   const handleYesOrNoOptionSelect = (id: number) => {
     setYesorNoId(id);
+    setButtonDisable(false);
+  };
+
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const handleCheckBoxSelect = (ids: number[]) => {
+    setSelectedOptions(ids);
     setButtonDisable(false);
   };
 
@@ -114,10 +134,30 @@ const TaskPage = ({ params }: any) => {
                         {q?.text}
                       </h1>
 
-                      {q?.type && (
-                        <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
-                          Select One
-                        </p>
+                      {q?.type === "SHORT_ANSWER" ? (
+                        <>
+                          <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
+                            Type in your answer
+                          </p>
+                        </>
+                      ) : q?.type === "LONG_ANSWER" ? (
+                        <>
+                          <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
+                            Type in your answer
+                          </p>
+                        </>
+                      ) : q?.type === "MULTISELECT" ? (
+                        <>
+                          <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
+                            Check all boxes that applies
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-[10px] py-1 px-3 bg-[#F6E8F6] rounded-full">
+                            Select One
+                          </p>
+                        </>
                       )}
 
                       {q?.type === "BOOLEAN" ? (
@@ -131,7 +171,39 @@ const TaskPage = ({ params }: any) => {
                             onOptionSelect={handleYesOrNoOptionSelect}
                           />
                         </div>
-                      ) : (
+                      ) : q?.type === "SHORT_ANSWER" ? (
+                        <div
+                          key={q?.id}
+                          className="flex items-center justify-center flex-row w-full mt-6"
+                        >
+                          <TextareaInput
+                            value={shortAnswer}
+                            onChange={handleShortAnswerInputChange}
+                          />
+                        </div>
+                      ) : q?.type === "LONG_ANSWER" ? (
+                        <div
+                          key={q?.id}
+                          className="flex items-center justify-center flex-row w-full mt-6"
+                        >
+                          <TextareaInput
+                            value={longAnswer}
+                            onChange={handleLongAnswerInputChange}
+                          />
+                        </div>
+                      ) : q?.type === "MULTISELECT" ? (
+                        <div
+                          key={q?.id}
+                          className="flex flex-row w-full mt-10 mb-20  "
+                        >
+                          <CheckBoxes
+                            key={q?.id}
+                            options={q?.options}
+                            onOptionSelect={handleCheckBoxSelect}
+                            selectedOptions={selectedOptions}
+                          />
+                        </div>
+                      ) : q?.type === "MULTICHOICE" ? (
                         <div
                           key={q?.id}
                           className="flex flex-row w-full mt-10 mb-20  "
@@ -142,6 +214,8 @@ const TaskPage = ({ params }: any) => {
                             onOptionSelect={handleOptionSelect}
                           />
                         </div>
+                      ) : (
+                        <></>
                       )}
                     </div>
 
@@ -151,12 +225,22 @@ const TaskPage = ({ params }: any) => {
                         onClick={() => {
                           setStep((x) => x + 1);
                           setButtonDisable(!buttonDisable);
+                          setShortAnswer("");
+                          setLongAnswer("");
+                          setSelectedOptionId(0);
+                          setSelectedOptions([]);
 
                           // submit each question
                           if (step !== data?.questions?.length) {
                             submitTask({
                               questionId: questionIds[step - 1],
-                              optionId: YesOrNoId || optionId || 0,
+                              optionId:
+                                YesOrNoId ||
+                                shortAnswer ||
+                                longAnswer ||
+                                optionId ||
+                                selectedOptions ||
+                                0,
                               taskId: data?.id,
                             });
                           }
@@ -168,7 +252,13 @@ const TaskPage = ({ params }: any) => {
                             submitTask({
                               questionId:
                                 questionIds[data?.questions?.length - 1],
-                              optionId: YesOrNoId || optionId || 0,
+                              optionId:
+                                YesOrNoId ||
+                                shortAnswer ||
+                                longAnswer ||
+                                optionId ||
+                                selectedOptions ||
+                                0,
                               taskId: data?.id,
                             });
                           }
@@ -178,7 +268,7 @@ const TaskPage = ({ params }: any) => {
                           //   "questionId last?",
                           //   questionIds[data?.questions?.length - 1]
                           // );
-                          // console.log("optionId", YesOrNoId || optionId || 0);
+                          // console.log("optionId", YesOrNoId || optionId);
                           // console.log("taskId", data?.id);
                         }}
                         className={clsx(

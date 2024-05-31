@@ -18,7 +18,7 @@ export type TUpdateProfileBody = {
 export type TSubmitTaskBody = {
   questionId: number;
   taskId: number;
-  optionId: number;
+  optionId: number | string | number[];
 };
 
 export type TRateQuestionnaireBody = {

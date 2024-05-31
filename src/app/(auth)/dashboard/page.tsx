@@ -32,6 +32,7 @@ const Dashboard = () => {
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
   const { data: user } = useGetAuth({ enabled: true });
+  const balance = user?.wallet.balance;
   const pointBalance = user?.wallet.balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
@@ -125,7 +126,7 @@ const Dashboard = () => {
                       {swapBalance ? (
                         <p> {pointBalance.toLocaleString()} Points</p>
                       ) : (
-                        <p> {user?.wallet.balance} WLD</p>
+                        <p> {balance.toFixed(4)} WLD</p>
                       )}
                     </>
                   )}
@@ -144,7 +145,7 @@ const Dashboard = () => {
                     ) : (
                       <>
                         {swapBalance ? (
-                          <p> {user?.wallet.balance} WLD</p>
+                          <p> {balance.toFixed(4)} WLD</p>
                         ) : (
                           <p> {pointBalance.toLocaleString()} Points</p>
                         )}
@@ -263,7 +264,7 @@ const Dashboard = () => {
             {questionnaire?.map((i: any) => (
               <Todo
                 key={i.id}
-                ratings={675}
+                ratings={i.ratings}
                 score={i.point}
                 icon={undefined}
                 reward={i.reward}
@@ -291,7 +292,7 @@ const Dashboard = () => {
             {survey?.map((i: any) => (
               <Todo
                 key={i.id}
-                ratings={675}
+                ratings={i.ratings}
                 score={i.point}
                 icon={undefined}
                 reward={i.reward}
@@ -317,7 +318,7 @@ const Dashboard = () => {
             {task?.map((i: any) => (
               <Todo
                 key={i.id}
-                ratings={675}
+                ratings={i.ratings}
                 score={i.point}
                 icon={undefined}
                 reward={i.reward}

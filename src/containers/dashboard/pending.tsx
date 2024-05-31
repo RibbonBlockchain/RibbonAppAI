@@ -15,7 +15,7 @@ type Props = {
   approximateTime: number;
   icon: string | undefined;
 
-  ratings?: number;
+  ratings: number;
   ratingsLevel?: string;
 };
 
@@ -93,7 +93,7 @@ const Pending = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings}) Ratings
+            ({props.ratings.toFixed(2)}) Ratings
           </p>
         )}
       </div>

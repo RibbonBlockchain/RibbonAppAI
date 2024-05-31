@@ -48,6 +48,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-joyride": "^2.7.4",
+    "react-multi-select-component": "^4.3.4",
     "react-otp-input": "^3.1.1",
     "react-phone-input-2": "^2.15.1",
     "react-popper": "^2.3.0",

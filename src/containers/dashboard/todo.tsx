@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
+import RatingCompleted from "../activity/rate-completed";
 
 type Props = {
   id: string;
@@ -52,16 +53,7 @@ const Todo = (props: Props) => {
               Claim {rewardPoints.toLocaleString()} points
             </p>
           </div>
-          {props.ratingsLevel && (
-            <div>
-              <Image
-                width={75}
-                height={17}
-                alt="ratings"
-                src={props.ratingsLevel}
-              />
-            </div>
-          )}
+          {props.ratings && <RatingCompleted rating={props.ratings} />}
         </div>
       </div>
 
@@ -82,7 +74,7 @@ const Todo = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings}) Ratings
+            ({props.ratings.toFixed(2)}) Ratings
           </p>
         )}
       </div>

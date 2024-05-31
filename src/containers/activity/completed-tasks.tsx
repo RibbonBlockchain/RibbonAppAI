@@ -233,7 +233,7 @@ const CompletedActivities = () => {
                             priority={i.priority}
                             taskTitle={i.name}
                             approximateTime={i.duration / 60}
-                            ratings={i.ratings || 675}
+                            ratings={i.ratings}
                             ratingsLevel={i.ratingsLevel || 0}
                             params={undefined}
                           />

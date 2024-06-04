@@ -25,7 +25,7 @@ interface Task {
   createdAt: string;
   priority: boolean;
   ratings: number;
-  ratingsLevel: number;
+  totalRatings: number;
 }
 
 interface Reward {
@@ -43,7 +43,7 @@ interface Reward {
   createdAt: string;
   priority: boolean;
   ratings: number;
-  ratingsLevel: number;
+  totalRatings: number;
 }
 
 const css = `
@@ -234,7 +234,7 @@ const CompletedActivities = () => {
                             taskTitle={i.name}
                             approximateTime={i.duration / 60}
                             ratings={i.ratings}
-                            ratingsLevel={i.ratingsLevel || 0}
+                            totalRatings={i.totalRatings}
                             params={undefined}
                           />
                         )}
@@ -276,8 +276,8 @@ const CompletedActivities = () => {
                       priority={i.priority}
                       taskTitle={i.description}
                       approximateTime={i.duration / 60}
-                      ratings={i.ratings || 675}
-                      ratingsLevel={i.ratingsLevel || 0}
+                      ratings={i.ratings}
+                      totalRatings={i.totalRatings}
                       params={undefined}
                     />
                   )}

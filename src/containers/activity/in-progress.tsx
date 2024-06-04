@@ -23,7 +23,7 @@ const InProgress = () => {
             reward={i?.reward}
             taskTitle={i?.name}
             ratings={i?.ratings}
-            ratingsLevel={i?.ratingsLevel || "/images/empty-rating.svg"}
+            totalRatings={i?.totalRatings}
             approximateTime={i?.duration / 60}
             href={`/dashboard/activity/${i.id}`}
           />

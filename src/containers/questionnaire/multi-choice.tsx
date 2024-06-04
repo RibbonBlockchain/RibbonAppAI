@@ -24,7 +24,7 @@ const CheckBoxes = ({
 
   useEffect(() => {
     setSelected(selectedOptions);
-  }, [selectedOptions]);
+  }, []);
 
   const handleOptionToggle = (id: number) => {
     if (selected.includes(id)) {

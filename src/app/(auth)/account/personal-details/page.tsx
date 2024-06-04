@@ -11,7 +11,6 @@ import {
 import UserDetailsInputBox, {
   UserSocialsInputBox,
 } from "@/containers/account/userdetails-input";
-import clsx from "clsx";
 import React from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -92,15 +91,10 @@ const PersonalDetails = () => {
     }
   };
 
-  // const [selected, setSelected] = React.useState(user?.gender);
-  // console.log(selected, "selected here");
-
   const handleSubmitChanges = () => {
     update(userState);
     toast.success("Profile updated successfully");
   };
-
-  // console.log(gender, "user state here");
 
   return (
     <div className=" bg-[#FFFFFF] h-[inherit] flex flex-col">

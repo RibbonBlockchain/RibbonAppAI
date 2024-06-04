@@ -27,7 +27,6 @@ const Submit = () => {
     }
     toast("Phone number verification successful");
     router.push("/dashboard/questionnaire/verify-phone/confirmation");
-    console.log(form.phoneNumber, "<<<phone number updated>>>>");
   };
 
   const handleSubmit = () => {

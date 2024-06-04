@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import CoinSVG from "../../../public/images/coin";
+import RatingCompleted from "../activity/rate-completed";
 
 type Props = {
   id: string;
@@ -16,7 +17,7 @@ type Props = {
   icon: string | undefined;
 
   ratings: number;
-  ratingsLevel?: string;
+  totalRatings?: string;
 };
 
 const Pending = (props: Props) => {
@@ -51,30 +52,8 @@ const Pending = (props: Props) => {
             <p className="text-[#434343]">
               Claim {rewardPoints.toLocaleString()} points
             </p>
-
-            {/* {props.priority ? (
-              <> </>
-            ) : (
-              <ProgressBar
-                height="7px"
-                width="60px"
-                labelSize="10px"
-                maxCompleted={100}
-                isLabelVisible={false}
-                completed={props.score}
-              />
-            )} */}
           </div>
-          {props.ratingsLevel && (
-            <div>
-              <Image
-                width={75}
-                height={17}
-                alt="ratings"
-                src={props.ratingsLevel}
-              />
-            </div>
-          )}
+          {props.ratings && <RatingCompleted rating={props.ratings} />}
         </div>
       </div>
 
@@ -93,7 +72,7 @@ const Pending = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings.toFixed(2)}) Ratings
+            ({props.totalRatings}) Ratings
           </p>
         )}
       </div>

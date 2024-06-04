@@ -17,7 +17,7 @@ type Props = {
   icon: string | undefined;
 
   ratings?: number;
-  ratingsLevel?: string;
+  totalRatings?: string;
 };
 
 const Todo = (props: Props) => {
@@ -74,7 +74,7 @@ const Todo = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings.toFixed(2)}) Ratings
+            ({props.totalRatings}) Ratings
           </p>
         )}
       </div>

@@ -17,7 +17,7 @@ type Props = {
   completed?: string;
   params: any;
   ratings?: number;
-  ratingsLevel?: number;
+  totalRatings?: number;
 };
 
 const TodoCompletedForm = (props: Props) => {
@@ -78,7 +78,7 @@ const TodoCompletedForm = (props: Props) => {
         </div>
         {props.ratings && (
           <p className="text-[10px] font-medium text-[#626262]">
-            ({props.ratings.toFixed(2)}) Ratings
+            ({props.totalRatings}) Ratings
           </p>
         )}
       </div>

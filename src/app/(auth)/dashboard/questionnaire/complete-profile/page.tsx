@@ -50,7 +50,6 @@ const CompleteProfile = () => {
 
     update(state, {
       onSuccess: () => {
-        console.log(step);
         setStep(step + 1);
       },
     });

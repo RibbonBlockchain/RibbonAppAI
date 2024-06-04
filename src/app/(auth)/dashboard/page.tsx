@@ -26,7 +26,6 @@ import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 
 const Dashboard = () => {
   const session = useSession();
-  console.log(session);
 
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
@@ -270,7 +269,7 @@ const Dashboard = () => {
                 reward={i.reward}
                 taskTitle={i.name}
                 approximateTime={i.duration / 60}
-                ratingsLevel="/images/ratings.svg"
+                totalRatings={i.totalRatings}
                 id={i.id}
                 href={`/dashboard/activity/${i.id}`}
               />
@@ -298,7 +297,7 @@ const Dashboard = () => {
                 reward={i.reward}
                 taskTitle={i.name}
                 approximateTime={i.duration / 60}
-                ratingsLevel="/images/ratings.svg"
+                totalRatings={i.totalRatings}
                 id={i.id}
                 href={`/dashboard/activity/${i.id}`}
               />
@@ -324,7 +323,7 @@ const Dashboard = () => {
                 reward={i.reward}
                 taskTitle={i.name}
                 approximateTime={i.duration / 60}
-                ratingsLevel="/images/ratings.svg"
+                totalRatings={i.totalRatings}
                 id={i.id}
                 href={`/dashboard/activity/${i.id}`}
               />

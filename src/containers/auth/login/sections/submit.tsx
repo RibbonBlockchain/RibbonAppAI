@@ -26,14 +26,6 @@ const Submit = () => {
     if (isSubmitDisabled) return;
     check({ phone: form.phoneNumber }, { onSuccess });
   };
-
-  // const number = "+542936405564";
-  // // const number = "+2348102523205";
-
-  // const isValid = phoneValidator(number, "any");
-
-  // console.log(isValid, "TF");
-
   return (
     <div className="flex items-center justify-center w-full pb-6">
       <Button

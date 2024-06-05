@@ -27,18 +27,32 @@ import BackArrowButton from "@/components/button/back-arrow";
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { ArrowDown, ArrowUp, DollarSign, LucideCopy } from "lucide-react";
+import { BigNumber } from "bignumber.js"; // Import BigNumber library
+
+const pointsABI = require("../contract/pointsABI.json");
 
 const clientId =
   "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
 
+// const chainConfig = {
+//   chainNamespace: CHAIN_NAMESPACES.EIP155,
+//   chainId: "0xA", // hex of 10
+//   rpcTarget: "https://optimism.drpc.org",
+//   displayName: "Optimism Mainnet",
+//   blockExplorerUrl: "https://optimistic.etherscan.io",
+//   ticker: "OP",
+//   tickerName: "OP",
+//   logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
+// };
+
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xA", // hex of 10
-  rpcTarget: "https://optimism.drpc.org",
-  displayName: "Optimism Mainnet",
-  blockExplorerUrl: "https://optimistic.etherscan.io",
-  ticker: "OP",
-  tickerName: "OP",
+  chainId: "0xaa37dc", // 11155420
+  displayName: "OP Sepolia",
+  tickerName: "ETH",
+  ticker: "ETH",
+  rpcTarget: "https://optimism-sepolia.drpc.org",
+  blockExplorerUrl: "https://sepolia-optimistic.etherscan.io/",
   logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
 };
 
@@ -144,7 +158,6 @@ const Wallet = () => {
 
     try {
       const fromAddress = (await web3.eth.getAccounts())[0];
-      // const destination = "0x7aFac68875d2841dc16F1730Fba43974060b907A";
 
       const receipt = await web3.eth.sendTransaction({
         from: fromAddress,
@@ -160,6 +173,40 @@ const Wallet = () => {
       toast.error(`Error sending transaction`);
     }
   };
+
+  // send new token
+  const [point, setPoint] = useState("");
+  const [pointName, setPointName] = useState("");
+
+  const getPointToken = async () => {
+    const web3 = new Web3(provider as any);
+
+    const myaddress = (await web3.eth.getAccounts())[0];
+
+    const ADDRESS = "0x004E9b9c6Ff44ccd0c2bD12addB9b9C56E893E62";
+
+    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
+
+    const number: string = await contract.methods.balanceOf(myaddress).call();
+    const decimal: number = await contract.methods.decimals().call();
+
+    const numberBig: BigNumber = new BigNumber(number);
+    const divisor: BigNumber = new BigNumber(10).pow(decimal);
+
+    const result: BigNumber = numberBig.dividedBy(divisor);
+    setPoint(result.toString());
+
+    const tokenName: string = await contract.methods.name().call();
+    setPointName(tokenName);
+
+    try {
+    } catch (error) {
+      console.error("Error sending transaction:", error);
+      toast.error(`Error sending transaction`);
+    }
+  };
+  const pointToWLD = Number(point) / 5000;
+  getPointToken();
 
   // sign a message
   const signMessage = async (yourMessage: string) => {
@@ -236,45 +283,13 @@ const Wallet = () => {
       id: "1",
       name: "Worldcoin",
       logo: "/images/world-coin.png",
-      priceIndex: 20,
+      priceIndex: 2,
       unit: "WLD",
-      balance: 100.5,
-    },
-    {
-      id: "2",
-      name: "Worldcoin",
-      logo: "/images/world-coin.png",
-      priceIndex: 20,
-      unit: "WLD",
-      balance: 100.5,
-    },
-    {
-      id: "3",
-      name: "Worldcoin",
-      logo: "/images/world-coin.png",
-      priceIndex: 20,
-      unit: "WLD",
-      balance: 100.5,
-    },
-    {
-      id: "4",
-      name: "Worldcoin",
-      logo: "/images/world-coin.png",
-      priceIndex: 20,
-      unit: "WLD",
-      balance: 100.5,
-    },
-    {
-      id: "5",
-      name: "Worldcoin",
-      logo: "/images/world-coin.png",
-      priceIndex: 20,
-      unit: "WLD",
-      balance: 100.5,
+      balance: 10.5,
     },
   ];
 
-  const [showWallet, setShowWallet] = useState(false);
+  const [showWallet, setShowWallet] = useState(true);
 
   return (
     <>
@@ -363,10 +378,9 @@ const Wallet = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-row gap-1 items-center justify-center font-semibold ">
-                  <p className="text-[48px]">
-                    <a className="text-[24px]">$</a> {balance}
-                  </p>
+                <div className="flex flex-col items-center justify-center font-semibold ">
+                  <p className="text-[42px]">{balance} ETH</p>
+                  <p className="text-[18px] text-[#626262]"> $ 0.87 </p>
                 </div>
               </div>
 
@@ -377,6 +391,7 @@ const Wallet = () => {
                 </div>
                 <div
                   onClick={() => sendTransaction(destination, amount)}
+                  // onClick={() => sendTransaction(destination, amount)}
                   className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
@@ -408,7 +423,7 @@ const Wallet = () => {
                     showWallet && "text-white bg-[#7C56FE] rounded-[16px]"
                   )}
                 >
-                  Wallets
+                  Tokens
                 </p>
                 <p
                   onClick={() => setShowWallet(false)}
@@ -417,7 +432,7 @@ const Wallet = () => {
                     showWallet && "text-black bg-[inherit]"
                   )}
                 >
-                  History
+                  Activiy
                 </p>
               </div>
 
@@ -425,6 +440,26 @@ const Wallet = () => {
                 {showWallet ? (
                   <>
                     <div className="flex flex-col gap-4 mt-6">
+                      <div className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]">
+                        <div className="flex flex-row items-center justify-center gap-2">
+                          <div className="w-[35px] h-[35px] flex items-center ">
+                            <Image
+                              width={35}
+                              height={35}
+                              src={"/images/ribbon.svg"}
+                              alt="coin logo"
+                              className="rounded-full"
+                            />
+                          </div>
+                          <div>
+                            <p className="text-base font-normal">PTS</p>
+                            <p className="text-xs text-[#626262]">
+                              {pointName}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-sm">{point} points</p>
+                      </div>
                       {walletList.map((i) => (
                         <div
                           key={i.id}
@@ -441,13 +476,18 @@ const Wallet = () => {
                               />
                             </div>
                             <div>
-                              <p className="text-base font-normal">{i.name}</p>
-                              <p className="text-xs text-[#626262]">
-                                {i.priceIndex} {i.unit}
-                              </p>
+                              <p className="text-base font-normal">{i.unit}</p>
+                              <p className="text-xs text-[#626262]">{i.name}</p>
                             </div>
                           </div>
-                          <p className="text-sm">$ {i.balance}</p>
+                          <div className="text-end">
+                            <p className="text-sm font-normal">
+                              {i.priceIndex} {i.unit}
+                            </p>
+                            <p className="text-xs text-[#626262]">
+                              {i.balance} USD
+                            </p>
+                          </div>
                         </div>
                       ))}
                     </div>

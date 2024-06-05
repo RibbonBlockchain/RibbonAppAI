@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   const { data: user } = useGetAuth({ enabled: true });
   const balance = user?.wallet.balance;
-  const pointBalance = user?.wallet.balance * 5000;
+  const pointBalance = balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -166,12 +166,18 @@ const Dashboard = () => {
                     value={(pointBalance / 10000) * 100}
                     strokeWidth={8}
                   >
-                    <p className="flex flex-col text-xs font-extrabold leading-4">
-                      {0 ||
-                        (pointBalance > 10000
-                          ? 10000
-                          : Math.floor(pointBalance))}
-                    </p>
+                    {pointBalance >= 10000 ? (
+                      <p className="text-sm px-2 py-1 bg-white text-black rounded-full ">
+                        Claim
+                      </p>
+                    ) : (
+                      <p className="flex flex-col text-xs font-extrabold leading-4">
+                        {0 ||
+                          (pointBalance > 10000
+                            ? 10000
+                            : Math.floor(pointBalance))}
+                      </p>
+                    )}
                   </CircularProgressbarWithChildren>
                 </div>
                 <p className="text-xs font-medium">10,000 pts to withdraw</p>

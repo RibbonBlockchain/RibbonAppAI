@@ -3,6 +3,7 @@ import {
   TUpdateProfileBody,
   TRateQuestionnaireBody,
   TReadNotificationBody,
+  TClaimSwapPointsBody,
 } from "./types";
 import {
   getTasks,
@@ -19,6 +20,8 @@ import {
   getCompletedTasksByDate,
   getUserNotifications,
   readNotification,
+  claimPoints,
+  swapPoints,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -170,5 +173,19 @@ export const useReadNotification = () => {
   return useMutation({
     onError,
     mutationFn: (body: TReadNotificationBody) => readNotification(body),
+  });
+};
+
+export const useClaimPoints = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TClaimSwapPointsBody) => claimPoints(body),
+  });
+};
+
+export const useSwapPoints = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TClaimSwapPointsBody) => swapPoints(body),
   });
 };

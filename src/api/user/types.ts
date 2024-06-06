@@ -29,3 +29,7 @@ export type TRateQuestionnaireBody = {
 export type TReadNotificationBody = {
   notificationId: number;
 };
+
+export type TClaimSwapPointsBody = {
+  amount: number;
+};

@@ -31,5 +31,6 @@ export type TReadNotificationBody = {
 };
 
 export type TClaimSwapPointsBody = {
-  amount: number;
+  amount: string;
+  address: string;
 };

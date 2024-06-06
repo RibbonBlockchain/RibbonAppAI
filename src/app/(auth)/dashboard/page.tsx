@@ -1,6 +1,5 @@
 "use client";
 
-import { SwapIcon, WalletMoney } from "../../../../public/images";
 import {
   buildStyles,
   CircularProgressbarWithChildren,
@@ -8,16 +7,17 @@ import {
 import Image from "next/image";
 import clsx from "clsx";
 import Link from "next/link";
-import { ArrowRight, EyeOff } from "lucide-react";
 import { useGetAuth } from "@/api/auth";
 import PageLoader from "@/components/loader";
 import { useSession } from "next-auth/react";
 import Todo from "@/containers/dashboard/todo";
-import LinkButton from "@/components/button/link";
+import { ArrowRight, EyeOff } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
-import { useClaimPoints, useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
+import { convertPoints } from "@/lib/utils/convertPoint";
+import { SwapIcon, WalletMoney } from "../../../../public/images";
+import { useClaimPoints, useGetUncompletedTasks } from "@/api/user";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import CountdownTimer from "@/containers/dashboard/simple-countdown-timer";
@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   const { data: user } = useGetAuth({ enabled: true });
   const balance = user?.wallet.balance;
-  const pointBalance = balance * 5000;
+  const pointBalance = user?.wallet.point;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -44,10 +44,14 @@ const Dashboard = () => {
   const survey: any[] = [];
   const task: any[] = [];
 
+  const savedAddress = localStorage.getItem("address");
+
   const { mutate: claimPoints } = useClaimPoints();
-  const handleClaimPoints = (amount: any) => {
-    console.log(amount, "anount claimed here");
-    claimPoints({ amount });
+  const handleClaimPoints = () => {
+    claimPoints({
+      amount: convertPoints(10000),
+      address: savedAddress as string,
+    });
   };
 
   React.useEffect(() => {
@@ -174,7 +178,7 @@ const Dashboard = () => {
                   >
                     {pointBalance >= 10000 ? (
                       <button
-                        onClick={() => handleClaimPoints(pointBalance)}
+                        onClick={() => handleClaimPoints()}
                         className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full "
                       >
                         Claim

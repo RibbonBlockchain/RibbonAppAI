@@ -3,6 +3,7 @@ import {
   TUpdateProfileBody,
   TRateQuestionnaireBody,
   TReadNotificationBody,
+  TClaimSwapPointsBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -75,5 +76,15 @@ export const getUserNotifications = async () => {
 
 export const readNotification = async (body: TReadNotificationBody) => {
   const res = await client.post("/notification/read", body);
+  return res.data;
+};
+
+export const claimPoints = async (body: TClaimSwapPointsBody) => {
+  const res = await client.post("/user/claim-point", body);
+  return res.data;
+};
+
+export const swapPoints = async (body: TClaimSwapPointsBody) => {
+  const res = await client.post("/user/swap-point", body);
   return res.data;
 };

@@ -21,7 +21,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { WalletMoney } from "@/public/images";
+import { SwapIcon, SwapIconGray, WalletMoney } from "@/public/images";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import BackArrowButton from "@/components/button/back-arrow";
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
@@ -29,6 +29,8 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { ArrowDown, ArrowUp, DollarSign, LucideCopy } from "lucide-react";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { useRouter } from "next/navigation";
+import { useSwapPoints } from "@/api/user";
+import { ArrowDownUp } from "lucide-react";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -317,70 +319,14 @@ const Wallet = () => {
 
   const [showWallet, setShowWallet] = useState(true);
 
+  const { mutate: swapPoints } = useSwapPoints();
+  const handleSwapPoints = (amount: any) => {
+    swapPoints({ amount });
+  };
+
   return (
     <>
       {loggedIn ? (
-        // <div className="grid grid-cols-1 gap-6">
-        //   <div className="border-2 border-gray-600 p-2">
-        //     <p className="mb-3">Send Tx</p>
-
-        //     <div className="flex flex-col items-start justify-between gap-1 w-full mb-2">
-        //       <input
-        //         type="text"
-        //         value={amount}
-        //         onChange={handleChangeAmount}
-        //         placeholder="Enter amount"
-        //         className="border border-gray-300 p-2 rounded w-[40%]"
-        //       />
-        //       <input
-        //         type="text"
-        //         value={destination}
-        //         onChange={handleChangeDestination}
-        //         placeholder="Enter destination wallet adddress"
-        //         className="border border-gray-300 p-2 rounded w-full"
-        //       />
-
-        //       <div
-        //         onClick={() => sendTransaction(destination, amount)}
-        //         className="cursor-pointer w-fit px-2 py-2  bg-green-500 min-w-[80px] text-white rounded hover:bg-green-600"
-        //       >
-        //         Send
-        //       </div>
-        //     </div>
-        //   </div>
-
-        //   <div className="border-2 border-gray-600 p-2 mb-20">
-        //     <p className="mb-3">Sign or Hash your Txs</p>
-        //     <div className="flex flex-row items-center justify-between gap-1 w-full mb-2">
-        //       <input
-        //         type="text"
-        //         value={message}
-        //         onChange={handleChangeSignTx}
-        //         placeholder="Enter your message"
-        //         className="border border-gray-300 p-2 rounded w-full"
-        //       />
-
-        //       <p
-        //         onClick={() => signMessage(message)}
-        //         className="px-2 py-2 w-fit bg-green-500 min-w-[80px] text-white rounded hover:bg-green-600"
-        //       >
-        //         Sign Tx
-        //       </p>
-        //     </div>
-        //     <div className="flex items-center gap-5">
-        //       <p>Signed Tx: {shortenTransaction(sign)}</p>
-        //       <p
-        //         className="cursor-pointer"
-        //         onClick={() => {
-        //           copyToClipboard(address), toast.success(`copied`);
-        //         }}
-        //       >
-        //         <LucideCopy size={18} />
-        //       </p>
-        //     </div>
-        //   </div>
-        // </div>
-
         <>
           <div className="p-4 sm:p-6 min-h-screen bg-white flex flex-col">
             <div className="mb-6">
@@ -406,7 +352,7 @@ const Wallet = () => {
 
                 <div className="flex flex-col items-center justify-center font-semibold ">
                   <p className="text-[42px]">{balance} ETH</p>
-                  <p className="text-[18px] text-[#626262]"> $ 0.87 </p>
+                  <p className="text-[18px] text-[#626262]"> $ 0.00 </p>
                 </div>
               </div>
 
@@ -421,17 +367,16 @@ const Wallet = () => {
                 <div
                   onClick={() => router.push("/withdraw/wallet-address")}
                   // onClick={() => sendTransaction(destination, amount)}
-                  // onClick={() => sendTransaction(destination, amount)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
                   Send
                 </div>
                 <div
-                  onClick={() => signMessage(message)}
+                  onClick={() => handleSwapPoints(point)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
                 >
-                  <DollarSign stroke="#7C56FE" />
+                  <ArrowDownUp stroke="#7C56FE" />
                   Swap
                 </div>
               </div>

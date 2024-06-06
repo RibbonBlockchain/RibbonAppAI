@@ -16,7 +16,7 @@ import Todo from "@/containers/dashboard/todo";
 import LinkButton from "@/components/button/link";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
-import { useGetUncompletedTasks } from "@/api/user";
+import { useClaimPoints, useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
@@ -43,6 +43,12 @@ const Dashboard = () => {
   const { data: questionnaire, isLoading } = useGetUncompletedTasks();
   const survey: any[] = [];
   const task: any[] = [];
+
+  const { mutate: claimPoints } = useClaimPoints();
+  const handleClaimPoints = (amount: any) => {
+    console.log(amount, "anount claimed here");
+    claimPoints({ amount });
+  };
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -167,9 +173,12 @@ const Dashboard = () => {
                     strokeWidth={8}
                   >
                     {pointBalance >= 10000 ? (
-                      <p className="text-sm px-2 py-1 bg-white text-black rounded-full ">
+                      <button
+                        onClick={() => handleClaimPoints(pointBalance)}
+                        className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full "
+                      >
                         Claim
-                      </p>
+                      </button>
                     ) : (
                       <p className="flex flex-col text-xs font-extrabold leading-4">
                         {0 ||

@@ -31,6 +31,7 @@ import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { useRouter } from "next/navigation";
 import { useSwapPoints } from "@/api/user";
 import { ArrowDownUp } from "lucide-react";
+import { convertPoints } from "@/lib/utils/convertPoint";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -80,12 +81,13 @@ const Wallet = () => {
 
   const [userInfo, setUserInfo] = useState<Partial<OpenloginUserInfo>>();
   const [address, setAddress] = useState("");
+  localStorage.setItem("address", address);
   const [balance, setBalance] = useState("");
   const [sign, setSign] = useState("");
 
   const [message, setMessage] = useState("");
   const [destination, setDestination] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     const init = async () => {
@@ -157,8 +159,8 @@ const Wallet = () => {
     }
   };
 
-  // send transaction
-  const sendTransaction = async (destination: string, amount: number) => {
+  // send native transaction
+  const sendNativeTransaction = async (destination: string, amount: number) => {
     const web3 = new Web3(provider as any);
 
     try {
@@ -177,6 +179,29 @@ const Wallet = () => {
       console.error("Error sending transaction:", error);
       toast.error(`Error sending transaction`);
     }
+  };
+
+  // send transaction
+  const sendTransaction = async (destination: string, amount: any) => {
+    const web3 = new Web3(provider as any);
+
+    const myaddress = (await web3.eth.getAccounts())[0];
+
+    const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
+    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
+
+    const decimal: any = await contract.methods.decimals().call();
+
+    try {
+      await contract.methods.transfer(destination, amount).send({
+        from: myaddress,
+      });
+      console.log(destination, amount, "desinaition and amount");
+    } catch (error) {
+      console.log(error);
+    }
+
+    // 0x9E1A4104c7e6eE707945532bEd57DFBa36d40Cef
   };
 
   // points token
@@ -321,8 +346,13 @@ const Wallet = () => {
 
   const { mutate: swapPoints } = useSwapPoints();
   const handleSwapPoints = (amount: any) => {
-    swapPoints({ amount });
+    swapPoints({ amount: convertPoints(amount), address: address });
   };
+
+  const [sendTx, setSendTx] = useState(false);
+  const [swapTx, setSwapTx] = useState(false);
+
+  const [pointsToSwap, setPointsToSwap] = useState("");
 
   return (
     <>
@@ -335,6 +365,90 @@ const Wallet = () => {
                 Wallet
               </div>
             </div>
+
+            <div>
+              {swapTx && (
+                <div className="p-6 h-[300px] bg-gray-200 ">
+                  <p>Swap Points to WLD here</p>
+                  <div className="pt-5">
+                    <p>Input points amount to swap</p>
+                    <input
+                      type="text"
+                      value={pointsToSwap}
+                      onChange={(e) => setPointsToSwap(e.target.value)}
+                      className="border border-gray-800 py-2 px-2"
+                    />
+                  </div>
+
+                  <button
+                    className={"mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"}
+                    onClick={() => handleSwapPoints(pointsToSwap)}
+                  >
+                    Swap
+                  </button>
+
+                  <button
+                    className={
+                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"
+                    }
+                    onClick={() => setSwapTx(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div>
+              {sendTx && (
+                <div className="p-6 h-[370px] bg-gray-200 ">
+                  <p>Send tokens here</p>
+                  <div className="pt-5">
+                    <p>Input recipient address here</p>
+
+                    <input
+                      type="text"
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      className="border border-gray-800 py-2 px-2"
+                    />
+                  </div>
+
+                  <div className="pt-5">
+                    <p>Input amount here</p>
+                    <input
+                      type="text"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      className="border border-gray-800 py-2 px-2"
+                    />
+                  </div>
+
+                  <button
+                    className={"mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"}
+                    onClick={() => {
+                      // sendTransaction(destination, amount),
+                      sendTransaction(
+                        "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
+                        convertPoints(20)
+                      );
+                    }}
+                  >
+                    Send
+                  </button>
+
+                  <button
+                    className={
+                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"
+                    }
+                    onClick={() => setSendTx(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="flex flex-col gap-2 mb-10 overflow-hidden">
               <div className="text-center ">
                 <div className="flex mt-6 flex-row gap-5 items-center justify-center ">
@@ -351,7 +465,7 @@ const Wallet = () => {
                 </div>
 
                 <div className="flex flex-col items-center justify-center font-semibold ">
-                  <p className="text-[42px]">{balance} ETH</p>
+                  <p className="text-[42px]">{balance} WLD</p>
                   <p className="text-[18px] text-[#626262]"> $ 0.00 </p>
                 </div>
               </div>
@@ -365,15 +479,16 @@ const Wallet = () => {
                   Recieve
                 </div>
                 <div
-                  onClick={() => router.push("/withdraw/wallet-address")}
-                  // onClick={() => sendTransaction(destination, amount)}
+                  // onClick={() => router.push("/withdraw/wallet-address")}
+                  onClick={() => setSendTx(true)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
                   Send
                 </div>
                 <div
-                  onClick={() => handleSwapPoints(point)}
+                  // onClick={() => handleSwapPoints(amount)}
+                  onClick={() => setSwapTx(true)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
                 >
                   <ArrowDownUp stroke="#7C56FE" />

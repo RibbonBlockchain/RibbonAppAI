@@ -28,6 +28,7 @@ import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { ArrowDown, ArrowUp, DollarSign, LucideCopy } from "lucide-react";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
+import { useRouter } from "next/navigation";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -70,6 +71,8 @@ const openloginAdapter = new OpenloginAdapter();
 web3auth.configureAdapter(openloginAdapter);
 
 const Wallet = () => {
+  const router = useRouter();
+
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -174,7 +177,7 @@ const Wallet = () => {
     }
   };
 
-  // send new token
+  // points token
   const [point, setPoint] = useState("");
   const [pointName, setPointName] = useState("");
 
@@ -207,6 +210,40 @@ const Wallet = () => {
   };
   const pointToWLD = Number(point) / 5000;
   getPointToken();
+
+  // world token
+  const [wldToken, setWldToken] = useState("");
+  const [worldTokenName, setWorldTokenName] = useState("");
+
+  const getWorldToken = async () => {
+    const web3 = new Web3(provider as any);
+
+    const myaddress = (await web3.eth.getAccounts())[0];
+
+    const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
+
+    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
+
+    const number: string = await contract.methods.balanceOf(myaddress).call();
+    const decimal: number = await contract.methods.decimals().call();
+
+    const numberBig: BigNumber = new BigNumber(number);
+    const divisor: BigNumber = new BigNumber(10).pow(decimal);
+
+    const result: BigNumber = numberBig.dividedBy(divisor);
+    setWldToken(result.toString());
+
+    const tokenName: string = await contract.methods.name().call();
+    setWorldTokenName(tokenName);
+
+    try {
+    } catch (error) {
+      console.error("Error sending transaction:", error);
+      toast.error(`Error sending transaction`);
+    }
+  };
+
+  getWorldToken();
 
   // sign a message
   const signMessage = async (yourMessage: string) => {
@@ -277,17 +314,6 @@ const Wallet = () => {
         console.error("Error copying text: ", error);
       });
   };
-
-  const walletList = [
-    {
-      id: "1",
-      name: "Worldcoin",
-      logo: "/images/world-coin.png",
-      priceIndex: 2,
-      unit: "WLD",
-      balance: 10.5,
-    },
-  ];
 
   const [showWallet, setShowWallet] = useState(true);
 
@@ -385,24 +411,28 @@ const Wallet = () => {
               </div>
 
               <div className="w-full py-10 flex gap-4 items-center justify-between">
-                <div className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  ">
+                <div
+                  onClick={() => router.push("/wallet/receive")}
+                  className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
+                >
                   <ArrowDown stroke="#7C56FE" />
                   Recieve
                 </div>
                 <div
-                  onClick={() => sendTransaction(destination, amount)}
+                  onClick={() => router.push("/withdraw/wallet-address")}
                   // onClick={() => sendTransaction(destination, amount)}
-                  className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
+                  // onClick={() => sendTransaction(destination, amount)}
+                  className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
                   Send
                 </div>
                 <div
                   onClick={() => signMessage(message)}
-                  className="w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
+                  className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
                 >
                   <DollarSign stroke="#7C56FE" />
-                  Sign
+                  Swap
                 </div>
               </div>
 
@@ -440,6 +470,7 @@ const Wallet = () => {
                 {showWallet ? (
                   <>
                     <div className="flex flex-col gap-4 mt-6">
+                      {/* // points */}
                       <div className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]">
                         <div className="flex flex-row items-center justify-center gap-2">
                           <div className="w-[35px] h-[35px] flex items-center ">
@@ -460,36 +491,34 @@ const Wallet = () => {
                         </div>
                         <p className="text-sm">{point} points</p>
                       </div>
-                      {walletList.map((i) => (
-                        <div
-                          key={i.id}
-                          className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
-                        >
-                          <div className="flex flex-row items-center justify-center gap-2">
-                            <div className="w-[35px] h-[35px] flex items-center ">
-                              <Image
-                                width={35}
-                                height={35}
-                                src={i.logo}
-                                alt="coin logo"
-                                className="rounded-full"
-                              />
-                            </div>
-                            <div>
-                              <p className="text-base font-normal">{i.unit}</p>
-                              <p className="text-xs text-[#626262]">{i.name}</p>
-                            </div>
+                      {/* // world */}
+                      <div className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]">
+                        <div className="flex flex-row items-center justify-center gap-2">
+                          <div className="w-[35px] h-[35px] flex items-center ">
+                            <Image
+                              width={35}
+                              height={35}
+                              src={"/images/world-coin.png"}
+                              alt="coin logo"
+                              className="rounded-full"
+                            />
                           </div>
-                          <div className="text-end">
-                            <p className="text-sm font-normal">
-                              {i.priceIndex} {i.unit}
+                          <div>
+                            <p className="text-base font-normal">
+                              {worldTokenName}
                             </p>
                             <p className="text-xs text-[#626262]">
-                              {i.balance} USD
+                              {worldTokenName}
                             </p>
                           </div>
                         </div>
-                      ))}
+                        <div className="text-end">
+                          <p className="text-sm font-normal">{wldToken} WLD</p>
+                          <p className="text-xs text-[#626262]">
+                            {Number(wldToken) * 4.8} USD
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </>
                 ) : (

@@ -50,7 +50,7 @@ const WalletAddress = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 mt-6">
+        {/* <div className="flex flex-col gap-6 mt-6">
           <div className="flex flex-row text-sm items-center justify-between">
             <div className="flex gap-3 items-center ">
               <Wallets /> <p>My wallets</p>
@@ -66,7 +66,7 @@ const WalletAddress = () => {
               <p className="text-xs text-[#8C8C8C]">78 WLD</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-center justify-center w-full pb-6">

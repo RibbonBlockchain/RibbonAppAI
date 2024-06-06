@@ -1,18 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { BankWithdrawal, Paypal, WorldID } from "@/public/images";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import BackArrowButton from "@/components/button/back-arrow";
-import Network from "@/public/ReactSVG/network";
+import { BankWithdrawal, Paypal, WorldID } from "@/public/images";
 
 const withdrwalMethods = [
-  {
-    name: "wallet-address",
-    logo: <WorldID />,
-    text: "Wallet Address",
-    link: "/withdraw/wallet-address",
-    available: true,
-  },
   {
     name: "paypal",
     logo: <Paypal />,

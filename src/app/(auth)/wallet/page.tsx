@@ -32,6 +32,8 @@ import { useRouter } from "next/navigation";
 import { useSwapPoints } from "@/api/user";
 import { ArrowDownUp } from "lucide-react";
 import { convertPoints } from "@/lib/utils/convertPoint";
+import { onSuccess } from "@/api/api-client";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -160,7 +162,7 @@ const Wallet = () => {
   };
 
   // send native transaction
-  const sendNativeTransaction = async (destination: string, amount: number) => {
+  const sendNativeTransaction = async (destination: string, amount: any) => {
     const web3 = new Web3(provider as any);
 
     try {
@@ -170,8 +172,10 @@ const Wallet = () => {
         from: fromAddress,
         to: destination,
         value: web3.utils.toWei(amount, "ether"),
-        maxPriorityFeePerGas: web3.utils.toHex("1.500000005"),
-        maxFeePerGas: web3.utils.toHex("1.500000000006"),
+        // gasPrice: '20000000000', // 20 Gwei
+        // gas: '21000', // 21,000 Gwei
+        gasPrice: "20000000000",
+        gas: "21000",
       });
 
       console.log("Transaction sent:", receipt);
@@ -193,12 +197,18 @@ const Wallet = () => {
     const decimal: any = await contract.methods.decimals().call();
 
     try {
-      await contract.methods.transfer(destination, amount).send({
+      await web3.eth.sendTransaction({
         from: myaddress,
+        to: destination,
+        value: web3.utils.toWei(amount, "ether"),
+        gasPrice: "20000000000",
+        gas: "21000",
       });
+      console.log(decimal, "here");
+
       console.log(destination, amount, "desinaition and amount");
     } catch (error) {
-      console.log(error);
+      console.log("Web3Auth error", error);
     }
 
     // 0x9E1A4104c7e6eE707945532bEd57DFBa36d40Cef
@@ -219,6 +229,8 @@ const Wallet = () => {
 
     const number: string = await contract.methods.balanceOf(myaddress).call();
     const decimal: number = await contract.methods.decimals().call();
+
+    console.log(decimal, "decimal here");
 
     const numberBig: BigNumber = new BigNumber(number);
     const divisor: BigNumber = new BigNumber(10).pow(decimal);
@@ -269,7 +281,6 @@ const Wallet = () => {
       toast.error(`Error sending transaction`);
     }
   };
-
   getWorldToken();
 
   // sign a message
@@ -344,10 +355,11 @@ const Wallet = () => {
 
   const [showWallet, setShowWallet] = useState(true);
 
-  const { mutate: swapPoints } = useSwapPoints();
+  const { mutate: swapPoints, isPending, isSuccess } = useSwapPoints();
   const handleSwapPoints = (amount: any) => {
     swapPoints({ amount: convertPoints(amount), address: address });
   };
+  isSuccess && toast.success("points swapped");
 
   const [sendTx, setSendTx] = useState(false);
   const [swapTx, setSwapTx] = useState(false);
@@ -381,15 +393,18 @@ const Wallet = () => {
                   </div>
 
                   <button
-                    className={"mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"}
+                    disabled={isPending}
+                    className={clsx(
+                      "mt-4 py-2 px-4 rounded-md text-sm bg-purple-600"
+                    )}
                     onClick={() => handleSwapPoints(pointsToSwap)}
                   >
-                    Swap
+                    {isPending ? <SpinnerIcon /> : "Swap"}
                   </button>
 
                   <button
                     className={
-                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"
+                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-red-400"
                     }
                     onClick={() => setSwapTx(false)}
                   >
@@ -425,21 +440,26 @@ const Wallet = () => {
                   </div>
 
                   <button
-                    className={"mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"}
+                    className={
+                      "mt-4 py-2 px-4 rounded-md text-sm bg-purple-400"
+                    }
                     onClick={() => {
-                      // sendTransaction(destination, amount),
+                      sendNativeTransaction(destination, amount);
                       sendTransaction(
                         "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
                         convertPoints(20)
                       );
+                      console.log(destination, amount);
                     }}
                   >
                     Send
                   </button>
 
+                  {/* 0x1d9aa22b610d401f3884c55ebB1477173eCEf63F */}
+
                   <button
                     className={
-                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-gray-400"
+                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-red-400"
                     }
                     onClick={() => setSendTx(false)}
                   >
@@ -465,7 +485,7 @@ const Wallet = () => {
                 </div>
 
                 <div className="flex flex-col items-center justify-center font-semibold ">
-                  <p className="text-[42px]">{balance} WLD</p>
+                  <p className="text-[42px] w-fit">{balance} ETH</p>
                   <p className="text-[18px] text-[#626262]"> $ 0.00 </p>
                 </div>
               </div>

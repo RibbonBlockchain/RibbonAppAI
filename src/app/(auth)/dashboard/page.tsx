@@ -23,6 +23,8 @@ import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import CountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import toast from "react-hot-toast";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const Dashboard = () => {
   const session = useSession();
@@ -32,7 +34,7 @@ const Dashboard = () => {
 
   const { data: user } = useGetAuth({ enabled: true });
   const balance = user?.wallet.balance;
-  const pointBalance = user?.wallet.point;
+  const pointBalance = balance * 5000;
 
   const [hideBalance, setHideBalance] = useState(false);
   const toggleHideBalance = () => setHideBalance(!hideBalance);
@@ -46,13 +48,19 @@ const Dashboard = () => {
 
   const savedAddress = localStorage.getItem("address");
 
-  const { mutate: claimPoints } = useClaimPoints();
+  const {
+    mutate: claimPoints,
+    isPending: claimPointPending,
+    isSuccess: claimPointSuccess,
+  } = useClaimPoints();
+
   const handleClaimPoints = () => {
     claimPoints({
       amount: convertPoints(10000),
       address: savedAddress as string,
     });
   };
+  claimPointSuccess && toast.success("points claimed");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -178,10 +186,11 @@ const Dashboard = () => {
                   >
                     {pointBalance >= 10000 ? (
                       <button
+                        disabled={claimPointPending}
                         onClick={() => handleClaimPoints()}
                         className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full "
                       >
-                        Claim
+                        {claimPointPending ? <SpinnerIconPurple /> : "Claim"}
                       </button>
                     ) : (
                       <p className="flex flex-col text-xs font-extrabold leading-4">

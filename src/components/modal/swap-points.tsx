@@ -13,6 +13,8 @@ type Props = {
   pointInput: string;
   handlePointInput: (e: any) => void;
   isPending: any;
+  pointsBalance: any;
+  wldBalance: any;
 };
 
 const SwapPointToWorldToken: React.FC<Props> = (props) => {
@@ -70,7 +72,9 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                         </div>
                         <div>
                           <p className="text-base font-normal">PTS</p>
-                          <p className="text-xs text-[#626262]">10000 Points</p>
+                          <p className="text-xs text-[#626262]">
+                            {props.pointsBalance} Points
+                          </p>
                         </div>
                       </div>
                       <ArrowDownUp stroke="#7C56FE" />
@@ -110,7 +114,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                         <div>
                           <p className="text-base font-normal">Worldcoin</p>
                           <p className="text-xs text-[#626262]">
-                            20 WLD - wld balance
+                            {props.wldBalance} WLD
                           </p>
                         </div>
                       </div>

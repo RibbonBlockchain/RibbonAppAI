@@ -4,11 +4,11 @@ import React from "react";
 type Props = {
   address: string;
   handleCopyAddress: () => void;
-  nativeTokenBalance: string;
+  wldTokenBalance: string;
   balanceUSD: string;
 };
 
-const NativeTokenUI = (props: Props) => {
+const CustomTokenUI = (props: Props) => {
   return (
     <div className="text-center ">
       <div className="flex mt-6 flex-row gap-5 items-center justify-center ">
@@ -20,11 +20,11 @@ const NativeTokenUI = (props: Props) => {
       </div>
 
       <div className="flex flex-col items-center justify-center font-semibold ">
-        <p className="text-[42px] w-fit">{props.nativeTokenBalance} ETH</p>
+        <p className="text-[42px] w-fit">{props.wldTokenBalance} WLD</p>
         <p className="text-[18px] text-[#626262]"> $ {props.balanceUSD} </p>
       </div>
     </div>
   );
 };
 
-export default NativeTokenUI;
+export default CustomTokenUI;

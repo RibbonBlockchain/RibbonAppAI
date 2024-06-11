@@ -7,9 +7,11 @@ type Props = {
   closeModal: () => void;
   handleClick: () => void;
   wldBalance: string;
+  tokenName: string;
+  tokenUnit: string;
 };
 
-const WLDTokenTxUI: React.FC<Props> = (props) => {
+const TokenTxUI: React.FC<Props> = (props) => {
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
@@ -45,13 +47,15 @@ const WLDTokenTxUI: React.FC<Props> = (props) => {
                     <ArrowLeft stroke="#939393" />
                   </div>{" "}
                   <div className="flex -mt-6 text-black  flex-row items-center justify-center text-base font-semibold">
-                    World (WLD)
+                    {props.tokenName}
                   </div>
                 </div>
 
                 <div className="h-[400px] w-full p-8">
                   <div className="flex flex-col mt-10 gap-10 items-center justify-center mx-auto">
-                    <p>{props.wldBalance} WLD</p>
+                    <p>
+                      {props.wldBalance} {props.tokenUnit}
+                    </p>
 
                     <div className="flex flex-row items-center gap-6 text-xs font-light">
                       <div className="flex flex-col gap-1 items-center justify-center mx-auto">
@@ -86,4 +90,4 @@ const WLDTokenTxUI: React.FC<Props> = (props) => {
   );
 };
 
-export default WLDTokenTxUI;
+export default TokenTxUI;

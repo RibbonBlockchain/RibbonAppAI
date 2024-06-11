@@ -115,13 +115,8 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
                         />
                         <p>WLD</p>
                       </div>
-                      <ArrowDownUp
-                        stroke="#7C56FE"
-                        className="flex self-center mx-auto"
-                        width={18}
-                        height={18}
-                      />
-                      <div className="flex px-2 flex-row items-center justify-between">
+
+                      <div className="flex px-2 flex-row">
                         <p>0</p>
                         <p>USD</p>
                       </div>

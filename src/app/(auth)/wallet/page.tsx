@@ -39,13 +39,12 @@ import { useRouter } from "next/navigation";
 import { useSwapPoints } from "@/api/user";
 import { ArrowDownUp } from "lucide-react";
 import { convertPoints } from "@/lib/utils/convertPoint";
-import { onSuccess } from "@/api/api-client";
-import { SpinnerIcon } from "@/components/icons/spinner";
 import SwapPointToWorldToken from "@/components/modal/swap-points";
 import WithdrawWorldToken from "@/components/modal/withdraw-token";
 import NativeTokenUI from "@/components/wallet/native-token-ui";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
-import WLDTokenTxUI from "@/components/wallet/wld-token-tx-ui";
+import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
+import CustomTokenUI from "@/components/wallet/native-token-ui";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -204,15 +203,20 @@ const Wallet = () => {
       JSON.parse(JSON.stringify(pointsABI)),
       "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5"
     );
-    const txData = contract.methods
-      // .transfer(
-      //   "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
-      //   "10000000000000000000"
-      // )
-      .transfer(destination, amount)
-      .send({
-        from: address[0],
-      });
+
+    try {
+      const txData = contract.methods
+        // .transfer(
+        //   "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
+        //   "10000000000000000000"
+        // )
+        .transfer(destination, amount)
+        .send({
+          from: address[0],
+        });
+    } catch (error) {
+      toast.error("Transaction failed");
+    }
   };
 
   // points token
@@ -371,6 +375,7 @@ const Wallet = () => {
 
   const [openPointTxPage, setOpenPointTxPage] = useState(false);
   const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
+  const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
 
   return (
     <>
@@ -391,6 +396,8 @@ const Wallet = () => {
                   isOpen={swapTx}
                   isPending={isPending}
                   pointInput={pointsToSwap}
+                  pointsBalance={point}
+                  wldBalance={wldToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
                     handleSwapPoints(pointsToSwap),
@@ -454,22 +461,40 @@ const Wallet = () => {
             {/* open WLD tx interface */}
             <div>
               {openWLDTxPage && (
-                <WLDTokenTxUI
+                <TokenTxUI
                   isOpen={openWLDTxPage}
                   closeModal={() => setOpenWLDTxPage(false)}
                   handleClick={() => setSendTx(true)}
                   wldBalance={wldToken}
+                  tokenName={"World (WLD)"}
+                  tokenUnit={"WLD"}
+                />
+              )}
+            </div>
+
+            {/* open OP Sepolia tx interface */}
+            <div>
+              {openOPSepoiliaTxPage && (
+                <TokenTxUI
+                  isOpen={openOPSepoiliaTxPage}
+                  closeModal={() => setOpenOPSepoiliaTxPage(false)}
+                  // handleClick={() => setSendTx(true)}
+                  handleClick={() => {}}
+                  wldBalance={balance}
+                  tokenName={"OP Sepolia"}
+                  tokenUnit={"ETH"}
                 />
               )}
             </div>
 
             <div className="flex flex-col gap-2 mb-10 overflow-hidden">
-              <NativeTokenUI
+              <CustomTokenUI
                 address={shorten(address)}
                 handleCopyAddress={() => {
                   copyToClipboard(address), toast.success(`copied`);
                 }}
-                nativeTokenBalance={balance}
+                // nativeTokenBalance={balance}
+                wldTokenBalance={wldToken}
                 balanceUSD={"0"}
               />
 
@@ -483,12 +508,16 @@ const Wallet = () => {
                 </div>
                 <div
                   onClick={() => setSendTx(true)}
+                  // onClick={() => setSendNativeTx(true)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
                   Send
                 </div>
-                <div className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]">
+                <div
+                  onClick={() => setSwapTx(true)}
+                  className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
+                >
                   <ArrowDownUp stroke="#7C56FE" />
                   Swap
                 </div>
@@ -528,7 +557,7 @@ const Wallet = () => {
                 {showWallet ? (
                   <>
                     <div className="flex flex-col gap-4 mt-6">
-                      {/* // points */}
+                      {/* // points token */}
                       <div
                         onClick={() => setOpenPointTxPage(true)}
                         className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
@@ -553,7 +582,7 @@ const Wallet = () => {
                         <p className="text-sm">{point} points</p>
                       </div>
 
-                      {/* // world */}
+                      {/* // world token */}
                       <div
                         onClick={() => setOpenWLDTxPage(true)}
                         className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
@@ -582,6 +611,32 @@ const Wallet = () => {
                           <p className="text-xs text-[#626262]">
                             {Number(wldToken) * 4.8} USD
                           </p>
+                        </div>
+                      </div>
+
+                      {/* // native optimism token */}
+                      <div
+                        onClick={() => setOpenOPSepoiliaTxPage(true)}
+                        className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+                      >
+                        <div className="flex flex-row items-center justify-center gap-2">
+                          <div className="w-[35px] h-[35px] flex items-center ">
+                            <Image
+                              width={35}
+                              height={35}
+                              src={"/images/optimism.png"}
+                              alt="coin logo"
+                              className="rounded-full"
+                            />
+                          </div>
+                          <div>
+                            <p className="text-base font-normal">OP Sepolia</p>
+                            <p className="text-xs text-[#626262]">ETH</p>
+                          </div>
+                        </div>
+                        <div className="text-end">
+                          <p className="text-sm font-normal">{balance} ETH</p>
+                          <p className="text-xs text-[#626262]">0 USD</p>
                         </div>
                       </div>
                     </div>

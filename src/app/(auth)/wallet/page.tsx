@@ -26,7 +26,14 @@ import { Web3AuthNoModal } from "@web3auth/no-modal";
 import BackArrowButton from "@/components/button/back-arrow";
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { ArrowDown, ArrowUp, DollarSign, LucideCopy } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  DollarSign,
+  LucideCopy,
+  X,
+} from "lucide-react";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { useRouter } from "next/navigation";
 import { useSwapPoints } from "@/api/user";
@@ -34,6 +41,11 @@ import { ArrowDownUp } from "lucide-react";
 import { convertPoints } from "@/lib/utils/convertPoint";
 import { onSuccess } from "@/api/api-client";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import SwapPointToWorldToken from "@/components/modal/swap-points";
+import WithdrawWorldToken from "@/components/modal/withdraw-token";
+import NativeTokenUI from "@/components/wallet/native-token-ui";
+import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
+import WLDTokenTxUI from "@/components/wallet/wld-token-tx-ui";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -157,7 +169,7 @@ const Wallet = () => {
       );
       setBalance(balance);
     } catch (error) {
-      console.error(error); //Web3ValidatorError: Web3 validator found 1 error[s]:value at "/1" is required
+      console.error(error);
     }
   };
 
@@ -172,8 +184,6 @@ const Wallet = () => {
         from: fromAddress,
         to: destination,
         value: web3.utils.toWei(amount, "ether"),
-        // gasPrice: '20000000000', // 20 Gwei
-        // gas: '21000', // 21,000 Gwei
         gasPrice: "20000000000",
         gas: "21000",
       });
@@ -186,32 +196,23 @@ const Wallet = () => {
   };
 
   // send transaction
-  const sendTransaction = async (destination: string, amount: any) => {
+  const sendWorldToken = async (destination: any, amount: any) => {
     const web3 = new Web3(provider as any);
+    const address = await web3.eth.getAccounts();
 
-    const myaddress = (await web3.eth.getAccounts())[0];
-
-    const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
-    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
-
-    const decimal: any = await contract.methods.decimals().call();
-
-    try {
-      await web3.eth.sendTransaction({
-        from: myaddress,
-        to: destination,
-        value: web3.utils.toWei(amount, "ether"),
-        gasPrice: "20000000000",
-        gas: "21000",
+    const contract = new web3.eth.Contract(
+      JSON.parse(JSON.stringify(pointsABI)),
+      "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5"
+    );
+    const txData = contract.methods
+      // .transfer(
+      //   "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
+      //   "10000000000000000000"
+      // )
+      .transfer(destination, amount)
+      .send({
+        from: address[0],
       });
-      console.log(decimal, "here");
-
-      console.log(destination, amount, "desinaition and amount");
-    } catch (error) {
-      console.log("Web3Auth error", error);
-    }
-
-    // 0x9E1A4104c7e6eE707945532bEd57DFBa36d40Cef
   };
 
   // points token
@@ -358,13 +359,18 @@ const Wallet = () => {
   const { mutate: swapPoints, isPending, isSuccess } = useSwapPoints();
   const handleSwapPoints = (amount: any) => {
     swapPoints({ amount: convertPoints(amount), address: address });
+    isSuccess &&
+      toast.success("points swapped, please wait while transaction resolves");
   };
-  isSuccess && toast.success("points swapped");
 
   const [sendTx, setSendTx] = useState(false);
   const [swapTx, setSwapTx] = useState(false);
+  const [sendNativeTx, setSendNativeTx] = useState(false);
 
   const [pointsToSwap, setPointsToSwap] = useState("");
+
+  const [openPointTxPage, setOpenPointTxPage] = useState(false);
+  const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
 
   return (
     <>
@@ -378,117 +384,94 @@ const Wallet = () => {
               </div>
             </div>
 
+            {/* // swap points modal */}
             <div>
               {swapTx && (
-                <div className="p-6 h-[300px] bg-gray-200 ">
-                  <p>Swap Points to WLD here</p>
-                  <div className="pt-5">
-                    <p>Input points amount to swap</p>
-                    <input
-                      type="text"
-                      value={pointsToSwap}
-                      onChange={(e) => setPointsToSwap(e.target.value)}
-                      className="border border-gray-800 py-2 px-2"
-                    />
-                  </div>
-
-                  <button
-                    disabled={isPending}
-                    className={clsx(
-                      "mt-4 py-2 px-4 rounded-md text-sm bg-purple-600"
-                    )}
-                    onClick={() => handleSwapPoints(pointsToSwap)}
-                  >
-                    {isPending ? <SpinnerIcon /> : "Swap"}
-                  </button>
-
-                  <button
-                    className={
-                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-red-400"
-                    }
-                    onClick={() => setSwapTx(false)}
-                  >
-                    Close
-                  </button>
-                </div>
+                <SwapPointToWorldToken
+                  isOpen={swapTx}
+                  isPending={isPending}
+                  pointInput={pointsToSwap}
+                  closeModal={() => setSwapTx(false)}
+                  handleClick={() => {
+                    handleSwapPoints(pointsToSwap),
+                      isSuccess && setPointsToSwap("");
+                  }}
+                  handlePointInput={(e) => setPointsToSwap(e.target.value)}
+                />
               )}
             </div>
 
+            {/* withdraw world token */}
             <div>
               {sendTx && (
-                <div className="p-6 h-[370px] bg-gray-200 ">
-                  <p>Send tokens here</p>
-                  <div className="pt-5">
-                    <p>Input recipient address here</p>
+                <WithdrawWorldToken
+                  isOpen={sendTx}
+                  closeModal={() => setSendTx(false)}
+                  handleClick={() =>
+                    sendWorldToken(destination, convertPoints(Number(amount)))
+                  }
+                  destination={destination}
+                  handleDestinationInput={(e) => setDestination(e.target.value)}
+                  amount={amount}
+                  handleAmountInput={(e) => setAmount(e.target.value)}
+                  isPending={undefined}
+                  wldTokenBalance={wldToken}
+                />
+              )}
+            </div>
 
-                    <input
-                      type="text"
-                      value={destination}
-                      onChange={(e) => setDestination(e.target.value)}
-                      className="border border-gray-800 py-2 px-2"
-                    />
-                  </div>
+            {/* withdraw native token */}
+            <div>
+              {sendNativeTx && (
+                <WithdrawWorldToken
+                  isOpen={sendNativeTx}
+                  closeModal={() => setSendNativeTx(false)}
+                  handleClick={() =>
+                    sendWorldToken(destination, convertPoints(Number(amount)))
+                  }
+                  destination={destination}
+                  handleDestinationInput={(e) => setDestination(e.target.value)}
+                  amount={amount}
+                  handleAmountInput={(e) => setAmount(e.target.value)}
+                  isPending={undefined}
+                  wldTokenBalance={balance}
+                />
+              )}
+            </div>
 
-                  <div className="pt-5">
-                    <p>Input amount here</p>
-                    <input
-                      type="text"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      className="border border-gray-800 py-2 px-2"
-                    />
-                  </div>
+            {/* open point tx interface */}
+            <div>
+              {openPointTxPage && (
+                <PointsTokenTxUI
+                  isOpen={openPointTxPage}
+                  closeModal={() => setOpenPointTxPage(false)}
+                  handleClick={() => setSwapTx(true)}
+                  pointBalance={point}
+                />
+              )}
+            </div>
 
-                  <button
-                    className={
-                      "mt-4 py-2 px-4 rounded-md text-sm bg-purple-400"
-                    }
-                    onClick={() => {
-                      sendNativeTransaction(destination, amount);
-                      sendTransaction(
-                        "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
-                        convertPoints(20)
-                      );
-                      console.log(destination, amount);
-                    }}
-                  >
-                    Send
-                  </button>
-
-                  {/* 0x1d9aa22b610d401f3884c55ebB1477173eCEf63F */}
-
-                  <button
-                    className={
-                      "flex justify-end mt-4 py-2 px-4 rounded-md text-sm bg-red-400"
-                    }
-                    onClick={() => setSendTx(false)}
-                  >
-                    Close
-                  </button>
-                </div>
+            {/* open WLD tx interface */}
+            <div>
+              {openWLDTxPage && (
+                <WLDTokenTxUI
+                  isOpen={openWLDTxPage}
+                  closeModal={() => setOpenWLDTxPage(false)}
+                  handleClick={() => setSendTx(true)}
+                  wldBalance={wldToken}
+                />
               )}
             </div>
 
             <div className="flex flex-col gap-2 mb-10 overflow-hidden">
-              <div className="text-center ">
-                <div className="flex mt-6 flex-row gap-5 items-center justify-center ">
-                  <p className="text-[16px]">{shorten(address)}</p>
-                  <p
-                    className="cursor-pointer"
-                    onClick={() => {
-                      console.log(address, "wallet");
-                      copyToClipboard(address), toast.success(`copied`);
-                    }}
-                  >
-                    <LucideCopy fill="#939393" stroke="#939393" size={16} />
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-center justify-center font-semibold ">
-                  <p className="text-[42px] w-fit">{balance} ETH</p>
-                  <p className="text-[18px] text-[#626262]"> $ 0.00 </p>
-                </div>
-              </div>
+              <NativeTokenUI
+                address={shorten(address)}
+                handleCopyAddress={() => {
+                  copyToClipboard(address), toast.success(`copied`);
+                }}
+                nativeTokenBalance={balance}
+                balanceUSD={"0"}
+              />
 
               <div className="w-full py-10 flex gap-4 items-center justify-between">
                 <div
@@ -499,18 +482,13 @@ const Wallet = () => {
                   Recieve
                 </div>
                 <div
-                  // onClick={() => router.push("/withdraw/wallet-address")}
                   onClick={() => setSendTx(true)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
                   Send
                 </div>
-                <div
-                  // onClick={() => handleSwapPoints(amount)}
-                  onClick={() => setSwapTx(true)}
-                  className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]"
-                >
+                <div className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]">
                   <ArrowDownUp stroke="#7C56FE" />
                   Swap
                 </div>
@@ -551,7 +529,10 @@ const Wallet = () => {
                   <>
                     <div className="flex flex-col gap-4 mt-6">
                       {/* // points */}
-                      <div className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]">
+                      <div
+                        onClick={() => setOpenPointTxPage(true)}
+                        className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+                      >
                         <div className="flex flex-row items-center justify-center gap-2">
                           <div className="w-[35px] h-[35px] flex items-center ">
                             <Image
@@ -571,8 +552,12 @@ const Wallet = () => {
                         </div>
                         <p className="text-sm">{point} points</p>
                       </div>
+
                       {/* // world */}
-                      <div className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]">
+                      <div
+                        onClick={() => setOpenWLDTxPage(true)}
+                        className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
+                      >
                         <div className="flex flex-row items-center justify-center gap-2">
                           <div className="w-[35px] h-[35px] flex items-center ">
                             <Image

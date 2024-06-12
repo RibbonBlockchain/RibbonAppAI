@@ -29,7 +29,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center text-center">
+          <div className="flex h-[screen] overflow-auto items-center justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -47,27 +47,31 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                   >
                     <ArrowLeft stroke="#939393" />
                   </div>
-                  <div className="flex -mt-8 text-black  flex-row items-center justify-center text-base font-semibold">
-                    Points (PTS)
+                  <div className="flex -mt-8 text-black  flex-col gap-2 items-center justify-center  text-base font-semibold">
+                    <p> Points (PTS)</p>
+                    <p className="text-center text-xs font-medium text-[#546881]">
+                      OPTIMISM | OP Mainnet
+                    </p>
                   </div>
                 </div>
 
                 <div className="h-[400px] w-full p-8">
                   <div className="flex flex-col mt-10 gap-10 items-center justify-center mx-auto">
-                    <p>{props.pointBalance} Points</p>
+                    <div className="flex flex-col gap-1 text-center">
+                      <div className="flex flex-row items-center gap-2 text-lg font-bold">
+                        <Image
+                          width={35}
+                          height={35}
+                          src={"/images/ribbon.svg"}
+                          alt="coin logo"
+                          className="rounded-full"
+                        />
+                        PTS
+                      </div>
+                      <p>{props.pointBalance} Points</p>
+                    </div>
 
                     <div className="flex flex-row items-center gap-6 text-xs font-light">
-                      <div className="flex flex-col gap-1 items-center justify-center mx-auto">
-                        <button className="cursor-pointer px-3 py-3 w-fit items-center justify-center flex flex-col border border-[#D6CBFF] rounded-full">
-                          <ArrowDownUp
-                            stroke="#7C56FE"
-                            height={16}
-                            width={16}
-                          />
-                        </button>
-                        Send/Receive
-                      </div>
-
                       <div className="flex flex-col gap-1 items-center justify-center mx-auto">
                         <button
                           onClick={props.handleClick}

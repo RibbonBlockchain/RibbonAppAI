@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@biconomy/account": "^4.4.6",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.3",
     "@nextui-org/react": "^2.2.10",

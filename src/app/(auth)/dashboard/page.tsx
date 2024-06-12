@@ -14,17 +14,14 @@ import Todo from "@/containers/dashboard/todo";
 import { ArrowRight, EyeOff } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
+import { useGetUncompletedTasks } from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
-import { convertPoints } from "@/lib/utils/convertPoint";
 import { SwapIcon, WalletMoney } from "../../../../public/images";
-import { useClaimPoints, useGetUncompletedTasks } from "@/api/user";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import CountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import toast from "react-hot-toast";
-import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const Dashboard = () => {
   const session = useSession();
@@ -47,20 +44,6 @@ const Dashboard = () => {
   const task: any[] = [];
 
   const savedAddress = localStorage.getItem("address");
-
-  const {
-    mutate: claimPoints,
-    isPending: claimPointPending,
-    isSuccess: claimPointSuccess,
-  } = useClaimPoints();
-
-  const handleClaimPoints = () => {
-    claimPoints({
-      amount: convertPoints(10000),
-      address: savedAddress as string,
-    });
-  };
-  claimPointSuccess && toast.success("points claimed");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -185,12 +168,8 @@ const Dashboard = () => {
                     strokeWidth={8}
                   >
                     {pointBalance >= 10000 ? (
-                      <button
-                        disabled={claimPointPending}
-                        onClick={() => handleClaimPoints()}
-                        className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full "
-                      >
-                        {claimPointPending ? <SpinnerIconPurple /> : "Claim"}
+                      <button className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full ">
+                        {"Claim"}
                       </button>
                     ) : (
                       <p className="flex flex-col text-xs font-extrabold leading-4">
@@ -202,7 +181,12 @@ const Dashboard = () => {
                     )}
                   </CircularProgressbarWithChildren>
                 </div>
-                <p className="text-xs font-medium">10,000 pts to withdraw</p>
+                <p className="text-xs font-medium text-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ">
+                  {" "}
+                  {pointBalance >= 10000
+                    ? "Claim points in wallet"
+                    : "10,000 pts to withdraw"}{" "}
+                </p>
               </div>
             </div>
 

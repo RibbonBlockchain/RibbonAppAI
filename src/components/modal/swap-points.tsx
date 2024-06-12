@@ -3,7 +3,7 @@ import Button from "../button";
 import React, { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { Transition, Dialog } from "@headlessui/react";
-import { ArrowDownUp, ArrowLeft } from "lucide-react";
+import { ArrowDown, ArrowDownUp, ArrowLeft } from "lucide-react";
 import { SpinnerIcon } from "../icons/spinner";
 
 type Props = {
@@ -38,7 +38,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
           <div className="fixed inset-0 bg-black/25" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
+        <div className="fixed inset-0 h-[screen] overflow-y-auto">
           <div className="flex min-h-full items-center justify-center text-center">
             <Transition.Child
               as={Fragment}
@@ -77,7 +77,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                           </p>
                         </div>
                       </div>
-                      <ArrowDownUp stroke="#7C56FE" />
+                      <ArrowDown stroke="#7C56FE" />
                     </div>
 
                     <hr />
@@ -93,7 +93,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                         />
                         <p>$ 0</p>
                       </div>
-                      <p>Sell</p>
+                      <p className="text-xs">From</p>
                     </div>
                   </div>
 
@@ -118,17 +118,17 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                           </p>
                         </div>
                       </div>
-                      <ArrowDownUp stroke="#7C56FE" />
+                      <ArrowDown stroke="#7C56FE" />
                     </div>
 
                     <hr />
 
                     <div className="flex mt-4 flex-row items-center justify-between">
                       <div className="flex flex-col gap-1">
-                        <p>{WLDValue} WLD</p>
+                        <p>{Number(props.pointInput) / 5000} WLD</p>
                         <p>$ {WLDTotalValue}</p>
                       </div>
-                      <p>Buy</p>
+                      <p className="text-xs">To</p>
                     </div>
                   </div>
                 </div>

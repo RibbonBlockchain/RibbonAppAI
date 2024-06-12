@@ -36,17 +36,34 @@ import {
 } from "lucide-react";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { useRouter } from "next/navigation";
-import { useSwapPoints } from "@/api/user";
+import { useClaimPoints, useSwapPoints } from "@/api/user";
 import { ArrowDownUp } from "lucide-react";
 import { convertPoints } from "@/lib/utils/convertPoint";
 import SwapPointToWorldToken from "@/components/modal/swap-points";
 import WithdrawWorldToken from "@/components/modal/withdraw-token";
-import NativeTokenUI from "@/components/wallet/native-token-ui";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
+import { ethers } from "ethers";
+import {
+  createSmartAccountClient,
+  IPaymaster,
+  createPaymaster,
+  PaymasterMode,
+} from "@biconomy/account";
 
 const pointsABI = require("../contract/pointsABI.json");
+
+const config = {
+  biconomyPaymasterApiKey:
+    "https://paymaster.biconomy.io/api/v1/11155420/aS0A_slW9.c8557306-0d4d-45ac-a178-544c2891e4ac",
+  bundlerUrl:
+    "https://bundler.biconomy.io/api/v2/11155420/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44", // <-- Read about this at https://docs.biconomy.io/dashboard#bundler-url
+};
+
+const chainId = 11155420;
+const rpcTarget =
+  "https://opt-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
 
 const clientId =
   "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
@@ -68,7 +85,8 @@ const chainConfig = {
   displayName: "OP Sepolia",
   tickerName: "ETH",
   ticker: "ETH",
-  rpcTarget: "https://optimism-sepolia.drpc.org",
+  // rpcTarget: "https://optimism-sepolia.drpc.org",
+  rpcTarget: rpcTarget,
   blockExplorerUrl: "https://sepolia-optimistic.etherscan.io/",
   logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
 };
@@ -102,6 +120,34 @@ const Wallet = () => {
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
 
+  const [signer, setsigner] = useState<any>("");
+
+  const {
+    mutate: claimPoints,
+    isPending: claimPointPending,
+    isSuccess: claimPointSuccess,
+    data: claimPointsData,
+  } = useClaimPoints();
+
+  const handleClaimPoints = () => {
+    claimPoints({
+      amount: convertPoints(10000),
+      address: address as string,
+    });
+  };
+
+  const {
+    mutate: swapPoints,
+    isPending,
+    isSuccess,
+    data: swapPointsData,
+  } = useSwapPoints();
+  const handleSwapPoints = (amount: any) => {
+    swapPoints({ amount: convertPoints(amount), address: address });
+    isSuccess &&
+      toast.success("points swapped, please wait while transaction resolves");
+  };
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -110,6 +156,13 @@ const Wallet = () => {
         if (web3auth.connected) {
           setLoggedIn(true);
         }
+
+        const ethersProvider = new ethers.providers.Web3Provider(
+          web3auth.provider as any
+        );
+
+        const web3AuthSigner = ethersProvider.getSigner();
+        setsigner(web3AuthSigner);
       } catch (error) {
         console.error(error);
       }
@@ -133,7 +186,11 @@ const Wallet = () => {
       console.log("web3auth not initialized yet");
       return;
     }
-    const idToken = await web3auth.authenticateUser();
+    try {
+      const idToken = await web3auth.authenticateUser();
+    } catch (error) {
+      console.log("error processing");
+    }
   };
 
   // get user accounts
@@ -142,9 +199,10 @@ const Wallet = () => {
       console.error("Provider not initialized yet");
       return;
     }
-    const web3 = new Web3(provider as any);
 
     try {
+      const web3 = new Web3(provider as any);
+
       const accounts = await web3.eth.getAccounts();
       setAddress(accounts[0] || "");
     } catch (error) {
@@ -158,10 +216,11 @@ const Wallet = () => {
       console.error("Provider not initialized yet");
       return;
     }
-    const web3 = new Web3(provider as any);
-    const accounts = await web3.eth.getAccounts();
 
     try {
+      const web3 = new Web3(provider as any);
+      const accounts = await web3.eth.getAccounts();
+
       const balance = web3.utils.fromWei(
         await web3.eth.getBalance(accounts[0]),
         "ether"
@@ -174,9 +233,9 @@ const Wallet = () => {
 
   // send native transaction
   const sendNativeTransaction = async (destination: string, amount: any) => {
-    const web3 = new Web3(provider as any);
-
     try {
+      const web3 = new Web3(provider as any);
+
       const fromAddress = (await web3.eth.getAccounts())[0];
 
       const receipt = await web3.eth.sendTransaction({
@@ -190,21 +249,167 @@ const Wallet = () => {
       console.log("Transaction sent:", receipt);
     } catch (error: any) {
       console.error("Error sending transaction:", error);
-      toast.error(`Error sending transaction`);
+    }
+  };
+
+  // usersClaimPointsFromVirtualWallet
+  const usersClaimPoints = async () => {
+    const web3 = new Web3(provider as any);
+
+    try {
+      const paymaster: IPaymaster = await createPaymaster({
+        paymasterUrl: config.biconomyPaymasterApiKey,
+        strictMode: true,
+      });
+
+      const smartWallet = await createSmartAccountClient({
+        //@ts-ignore
+        signer: signer,
+        chainId: chainId,
+        paymaster,
+        bundlerUrl: config.bundlerUrl,
+        rpcUrl: rpcTarget,
+      });
+      const saAddress = await smartWallet.getAccountAddress();
+      console.log("SA Address", saAddress);
+
+      const spender = address;
+      const value = "10000000000000000000000";
+      const vaultAddress = "0x6F3a5331E59CA2e7Cb4ae5B434fC0305a6298982";
+
+      //  @ts-ignore
+      const interfacedata = new ethers.utils.Interface([
+        "function permitClaimPoints(address user,uint amount,uint256 deadline,uint8 v,bytes32 r,bytes32 s)",
+      ]);
+      const data = interfacedata.encodeFunctionData("permitClaimPoints", [
+        spender,
+        value,
+        claimPointsData?.data?.deadline,
+        claimPointsData?.data?.v,
+        claimPointsData?.data?.r,
+        claimPointsData?.data?.s,
+      ]);
+
+      // @ts-ignore
+      const userOpResponse = await smartWallet.sendTransaction(
+        {
+          to: vaultAddress,
+          data: data,
+        },
+        {
+          paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+        }
+      );
+      const { transactionHash } = await userOpResponse.waitForTxHash();
+      console.log("Transaction Hash", transactionHash);
+      const userOpReceipt = await userOpResponse.wait();
+
+      if (userOpReceipt.success == "true") {
+        console.log("UserOp receipt", userOpReceipt);
+        console.log("Transaction receipt", userOpReceipt.receipt);
+
+        const contractfub = new web3.eth.Contract(
+          pointsABI,
+          "0x0dfbca4abcDE14966a0D6F19afA20b0b1f1a5DD6"
+        );
+
+        const bal = await contractfub.methods.balanceOf(spender).call();
+        console.log(bal);
+
+        //  @ts-ignore
+        setamount(bal);
+        console.log(amount);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // usersSwapPointsForWld
+  const usersSwapPoints = async () => {
+    const web3 = new Web3(provider as any);
+
+    try {
+      const paymaster: IPaymaster = await createPaymaster({
+        paymasterUrl: config.biconomyPaymasterApiKey,
+        strictMode: true,
+      });
+
+      const smartWallet = await createSmartAccountClient({
+        //@ts-ignore
+        signer: signer,
+        chainId: chainId,
+        paymaster,
+        bundlerUrl: config.bundlerUrl,
+        rpcUrl: rpcTarget,
+      });
+      const saAddress = await smartWallet.getAccountAddress();
+      console.log("SA Address", saAddress);
+
+      const spender = address;
+      const value = "10000000000000000000000";
+      const vaultAddress = "0x6F3a5331E59CA2e7Cb4ae5B434fC0305a6298982";
+
+      //  @ts-ignore
+      const interfacedata = new ethers.utils.Interface([
+        "function permitSwapToPaymentCoin(address user,uint amount,uint256 deadline,uint8 v,bytes32 r,bytes32 s)",
+      ]);
+      const data = interfacedata.encodeFunctionData("permitSwapToPaymentCoin", [
+        spender,
+        value,
+        swapPointsData?.data?.deadline,
+        swapPointsData?.data?.v,
+        swapPointsData?.data?.r,
+        swapPointsData?.data?.s,
+      ]);
+
+      // @ts-ignore
+      const userOpResponse = await smartWallet.sendTransaction(
+        {
+          to: vaultAddress,
+          data: data,
+        },
+        {
+          paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+        }
+      );
+      const { transactionHash } = await userOpResponse.waitForTxHash();
+      console.log("Transaction Hash", transactionHash);
+      const userOpReceipt = await userOpResponse.wait();
+
+      if (userOpReceipt.success == "true") {
+        console.log("UserOp receipt", userOpReceipt);
+        console.log("Transaction receipt", userOpReceipt.receipt);
+
+        const contractfub = new web3.eth.Contract(
+          pointsABI,
+          "0x0dfbca4abcDE14966a0D6F19afA20b0b1f1a5DD6"
+        );
+
+        const bal = await contractfub.methods.balanceOf(spender).call();
+        console.log(bal);
+
+        //  @ts-ignore
+        setamount(bal);
+        console.log(amount);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   // send transaction
   const sendWorldToken = async (destination: any, amount: any) => {
-    const web3 = new Web3(provider as any);
-    const address = await web3.eth.getAccounts();
-
-    const contract = new web3.eth.Contract(
-      JSON.parse(JSON.stringify(pointsABI)),
-      "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5"
-    );
-
     try {
+      const web3 = new Web3(provider as any);
+
+      const address = await web3.eth.getAccounts();
+
+      const contract = new web3.eth.Contract(
+        JSON.parse(JSON.stringify(pointsABI)),
+        "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5"
+      );
+
       const txData = contract.methods
         // .transfer(
         //   "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
@@ -215,7 +420,7 @@ const Wallet = () => {
           from: address[0],
         });
     } catch (error) {
-      toast.error("Transaction failed");
+      toast.error("Error sending transaction");
     }
   };
 
@@ -224,32 +429,31 @@ const Wallet = () => {
   const [pointName, setPointName] = useState("");
 
   const getPointToken = async () => {
-    const web3 = new Web3(provider as any);
-
-    const myaddress = (await web3.eth.getAccounts())[0];
-
-    const ADDRESS = "0x004E9b9c6Ff44ccd0c2bD12addB9b9C56E893E62";
-
-    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
-
-    const number: string = await contract.methods.balanceOf(myaddress).call();
-    const decimal: number = await contract.methods.decimals().call();
-
-    console.log(decimal, "decimal here");
-
-    const numberBig: BigNumber = new BigNumber(number);
-    const divisor: BigNumber = new BigNumber(10).pow(decimal);
-
-    const result: BigNumber = numberBig.dividedBy(divisor);
-    setPoint(result.toString());
-
-    const tokenName: string = await contract.methods.name().call();
-    setPointName(tokenName);
-
     try {
+      const web3 = new Web3(provider as any);
+
+      const myaddress = (await web3.eth.getAccounts())[0];
+
+      const ADDRESS = "0x904C01A63d8122e6829DF8c96f1ed1854e8b757B";
+
+      const contract = new web3.eth.Contract(pointsABI, ADDRESS);
+
+      const number: string = await contract.methods.balanceOf(myaddress).call();
+      const decimal: number = await contract.methods.decimals().call();
+
+      console.log(decimal, "decimal here");
+
+      const numberBig: BigNumber = new BigNumber(number);
+      const divisor: BigNumber = new BigNumber(10).pow(decimal);
+
+      const result: BigNumber = numberBig.dividedBy(divisor);
+      setPoint(result.toString());
+
+      const tokenName: string = await contract.methods.name().call();
+      setPointName(tokenName);
     } catch (error) {
       console.error("Error sending transaction:", error);
-      toast.error(`Error sending transaction`);
+      // toast.error(`Error sending transaction`);
     }
   };
   const pointToWLD = Number(point) / 5000;
@@ -260,66 +464,36 @@ const Wallet = () => {
   const [worldTokenName, setWorldTokenName] = useState("");
 
   const getWorldToken = async () => {
-    const web3 = new Web3(provider as any);
-
-    const myaddress = (await web3.eth.getAccounts())[0];
-
-    const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
-
-    const contract = new web3.eth.Contract(pointsABI, ADDRESS);
-
-    const number: string = await contract.methods.balanceOf(myaddress).call();
-    const decimal: number = await contract.methods.decimals().call();
-
-    const numberBig: BigNumber = new BigNumber(number);
-    const divisor: BigNumber = new BigNumber(10).pow(decimal);
-
-    const result: BigNumber = numberBig.dividedBy(divisor);
-    setWldToken(result.toString());
-
-    const tokenName: string = await contract.methods.name().call();
-    setWorldTokenName(tokenName);
-
     try {
+      const web3 = new Web3(provider as any);
+
+      const myaddress = (await web3.eth.getAccounts())[0];
+
+      const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
+
+      const contract = new web3.eth.Contract(pointsABI, ADDRESS);
+
+      const number: string = await contract.methods.balanceOf(myaddress).call();
+      const decimal: number = await contract.methods.decimals().call();
+
+      const numberBig: BigNumber = new BigNumber(number);
+      const divisor: BigNumber = new BigNumber(10).pow(decimal);
+
+      const result: BigNumber = numberBig.dividedBy(divisor);
+      setWldToken(result.toString());
+
+      const tokenName: string = await contract.methods.name().call();
+      setWorldTokenName(tokenName);
     } catch (error) {
       console.error("Error sending transaction:", error);
-      toast.error(`Error sending transaction`);
+      // toast.error(`Error sending transaction`);
     }
   };
   getWorldToken();
 
-  // sign a message
-  const signMessage = async (yourMessage: string) => {
-    if (!provider) {
-      console.error("Provider not initialized yet");
-      return;
-    }
-    const web3 = new Web3(provider as any);
-    const accounts = await web3.eth.getAccounts();
-    const originalMessage = yourMessage || "YOUR_DEFAULT_MESSAGE";
-    try {
-      const signedMessage = await web3.eth.personal.sign(
-        originalMessage,
-        accounts[0],
-        "test password!"
-      );
-      setSign(signedMessage);
-    } catch (error) {
-      console.error(error); //Web3ValidatorError: Web3 validator found 1 error[s]:value at "/1" is required
-    }
-  };
-
   // handle event change
   const handleChangeSignTx = (event: any) => {
     setMessage(event.target.value);
-  };
-
-  const handleChangeAmount = (event: any) => {
-    setAmount(event.target.value);
-  };
-
-  const handleChangeDestination = (event: any) => {
-    setDestination(event.target.value);
   };
 
   const login = async () => {
@@ -360,13 +534,6 @@ const Wallet = () => {
 
   const [showWallet, setShowWallet] = useState(true);
 
-  const { mutate: swapPoints, isPending, isSuccess } = useSwapPoints();
-  const handleSwapPoints = (amount: any) => {
-    swapPoints({ amount: convertPoints(amount), address: address });
-    isSuccess &&
-      toast.success("points swapped, please wait while transaction resolves");
-  };
-
   const [sendTx, setSendTx] = useState(false);
   const [swapTx, setSwapTx] = useState(false);
   const [sendNativeTx, setSendNativeTx] = useState(false);
@@ -400,8 +567,8 @@ const Wallet = () => {
                   wldBalance={wldToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
-                    handleSwapPoints(pointsToSwap),
-                      isSuccess && setPointsToSwap("");
+                    handleSwapPoints(pointsToSwap), usersSwapPoints();
+                    //   isSuccess && setPointsToSwap("");
                   }}
                   handlePointInput={(e) => setPointsToSwap(e.target.value)}
                 />
@@ -498,7 +665,20 @@ const Wallet = () => {
                 balanceUSD={"0"}
               />
 
-              <div className="w-full py-10 flex gap-4 items-center justify-between">
+              <button
+                onClick={() => {
+                  handleClaimPoints(), usersClaimPoints();
+                }}
+                className="mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]"
+              >
+                Claim points
+              </button>
+
+              {/* <button onClick={() => handleClaimPoints()}>
+                Claim endpoint
+              </button> */}
+
+              <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-between">
                 <div
                   onClick={() => router.push("/wallet/receive")}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "

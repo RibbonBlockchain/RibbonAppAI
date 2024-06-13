@@ -28,6 +28,7 @@ const Dashboard = () => {
 
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
+  const [swapVirtualBalance, setSwapVirtualBalance] = useState(false);
 
   const { data: user } = useGetAuth({ enabled: true });
   const balance = user?.wallet.balance;
@@ -44,6 +45,7 @@ const Dashboard = () => {
   const task: any[] = [];
 
   const savedAddress = localStorage.getItem("address");
+  const wldTokenBalance = localStorage.getItem("wldTokenBalance");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -102,58 +104,121 @@ const Dashboard = () => {
           <div className="bg-gradient-to-br from-[#442F8C] to-[#951E93] text-white rounded-2xl w-full h-auto p-4 my-2 flex flex-col">
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-col items-start gap-1 text-center">
-                <div className="flex flex-row gap-2 items-center text-sm font-medium">
-                  Total Balance
-                  {hideBalance ? (
-                    <EyeOff onClick={toggleHideBalance} size={16} />
-                  ) : (
-                    <EyeOff
-                      onClick={toggleHideBalance}
-                      fill="white"
-                      size={16}
-                    />
-                  )}
-                </div>
                 <div
-                  onClick={handleSwapBalance}
-                  className="flex flex-row gap-2 items-center justify-center text-lg font-bold cursor-pointer"
+                  onClick={() => setSwapVirtualBalance(!swapVirtualBalance)}
+                  className="w-full cursor-pointer flex items-center justify-center mx-auto"
                 >
-                  <CoinSVG />
-                  {hideBalance ? (
-                    <p>***</p>
-                  ) : (
-                    <>
-                      {swapBalance ? (
-                        <p> {pointBalance.toLocaleString()} Points</p>
-                      ) : (
-                        <p> {balance.toFixed(4)} WLD</p>
-                      )}
-                    </>
-                  )}
+                  . .
                 </div>
-
-                {
-                  <div
-                    onClick={handleSwapBalance}
-                    className="flex flex-row items-center justify-center gap-2 text-xs cursor-pointer"
-                  >
-                    <div>
-                      <SwapIcon />
-                    </div>{" "}
-                    {hideBalance ? (
-                      <p>***</p>
-                    ) : (
-                      <>
-                        {swapBalance ? (
-                          <p> {balance.toFixed(4)} WLD</p>
+                {!swapVirtualBalance ? (
+                  <>
+                    <div className="flex flex-row gap-2 items-center text-sm font-medium">
+                      Virtual Balance
+                      {hideBalance ? (
+                        <EyeOff onClick={toggleHideBalance} size={16} />
+                      ) : (
+                        <EyeOff
+                          onClick={toggleHideBalance}
+                          fill="white"
+                          size={16}
+                        />
+                      )}
+                    </div>
+                    <div
+                      onClick={handleSwapBalance}
+                      className="flex flex-row gap-2 items-center justify-center text-lg font-bold cursor-pointer"
+                    >
+                      <CoinSVG />
+                      {hideBalance ? (
+                        <p>***</p>
+                      ) : (
+                        <>
+                          {swapBalance ? (
+                            <p> {pointBalance.toLocaleString()} Points</p>
+                          ) : (
+                            <p> {balance.toFixed(4)} WLD</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    {
+                      <div
+                        onClick={handleSwapBalance}
+                        className="flex flex-row items-center justify-center gap-2 text-xs cursor-pointer"
+                      >
+                        <div>
+                          <SwapIcon />
+                        </div>{" "}
+                        {hideBalance ? (
+                          <p>***</p>
                         ) : (
-                          <p> {pointBalance.toLocaleString()} Points</p>
+                          <>
+                            {swapBalance ? (
+                              <p> {balance.toFixed(4)} WLD</p>
+                            ) : (
+                              <p> {pointBalance.toLocaleString()} Points</p>
+                            )}
+                          </>
                         )}
-                      </>
-                    )}
-                  </div>
-                }
+                      </div>
+                    }
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-row gap-2 items-center text-sm font-medium">
+                      Crypto Balance
+                      {hideBalance ? (
+                        <EyeOff onClick={toggleHideBalance} size={16} />
+                      ) : (
+                        <EyeOff
+                          onClick={toggleHideBalance}
+                          fill="white"
+                          size={16}
+                        />
+                      )}
+                    </div>
+                    <div
+                      onClick={handleSwapBalance}
+                      className="flex flex-row gap-2 items-center justify-center text-lg font-bold cursor-pointer"
+                    >
+                      <CoinSVG />
+                      {hideBalance ? (
+                        <p>***</p>
+                      ) : (
+                        <>
+                          {swapBalance ? (
+                            <p> {Number(wldTokenBalance) * 5000} Points </p>
+                          ) : (
+                            <p> {wldTokenBalance} WLD</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    {
+                      <div
+                        onClick={handleSwapBalance}
+                        className="flex flex-row items-center justify-center gap-2 text-xs cursor-pointer"
+                      >
+                        <div>
+                          <SwapIcon />
+                        </div>{" "}
+                        {hideBalance ? (
+                          <p>***</p>
+                        ) : (
+                          <>
+                            {swapBalance ? (
+                              <p> {wldTokenBalance} WLD</p>
+                            ) : (
+                              <p>{Number(wldTokenBalance) * 5000} Points</p>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    }
+                  </>
+                )}
               </div>
+
               <div
                 id="withdraw-tokens"
                 className="flex flex-col items-center justify-center"

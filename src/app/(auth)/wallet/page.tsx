@@ -1,56 +1,44 @@
 "use client";
 
 import {
-  UX_MODE,
   IProvider,
   WALLET_ADAPTERS,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-  CustomChainConfig,
-  ChainNamespaceType,
 } from "@web3auth/base";
-
+import {
+  IPaymaster,
+  PaymasterMode,
+  createPaymaster,
+  createSmartAccountClient,
+} from "@biconomy/account";
 import {
   OpenloginAdapter,
   OpenloginUserInfo,
-  OpenloginLoginParams,
 } from "@web3auth/openlogin-adapter";
-
 import Web3 from "web3";
 import clsx from "clsx";
 import Image from "next/image";
+import { ethers } from "ethers";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
-import { SwapIcon, SwapIconGray, WalletMoney } from "@/public/images";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import BackArrowButton from "@/components/button/back-arrow";
-import { shorten, shortenTransaction } from "@/lib/utils/shorten";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUp,
-  DollarSign,
-  LucideCopy,
-  X,
-} from "lucide-react";
-import { BigNumber } from "bignumber.js"; // Import BigNumber library
-import { useRouter } from "next/navigation";
-import { useClaimPoints, useSwapPoints } from "@/api/user";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { ArrowDownUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { WalletMoney } from "@/public/images";
+import { shorten } from "@/lib/utils/shorten";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { convertPoints } from "@/lib/utils/convertPoint";
+import { useClaimPoints, useSwapPoints } from "@/api/user";
+import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
+import BackArrowButton from "@/components/button/back-arrow";
+import CustomTokenUI from "@/components/wallet/native-token-ui";
 import SwapPointToWorldToken from "@/components/modal/swap-points";
 import WithdrawWorldToken from "@/components/modal/withdraw-token";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
-import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
-import CustomTokenUI from "@/components/wallet/native-token-ui";
-import { ethers } from "ethers";
-import {
-  createSmartAccountClient,
-  IPaymaster,
-  createPaymaster,
-  PaymasterMode,
-} from "@biconomy/account";
+import { BigNumber } from "bignumber.js"; // Import BigNumber library
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { copyToClipboard } from "@/lib/utils";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -111,42 +99,15 @@ const Wallet = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [userInfo, setUserInfo] = useState<Partial<OpenloginUserInfo>>();
+  const [balance, setBalance] = useState("");
+
   const [address, setAddress] = useState("");
   localStorage.setItem("address", address);
-  const [balance, setBalance] = useState("");
-  const [sign, setSign] = useState("");
 
-  const [message, setMessage] = useState("");
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
 
   const [signer, setsigner] = useState<any>("");
-
-  const {
-    mutate: claimPoints,
-    isPending: claimPointPending,
-    isSuccess: claimPointSuccess,
-    data: claimPointsData,
-  } = useClaimPoints();
-
-  const handleClaimPoints = () => {
-    claimPoints({
-      amount: convertPoints(10000),
-      address: address as string,
-    });
-  };
-
-  const {
-    mutate: swapPoints,
-    isPending,
-    isSuccess,
-    data: swapPointsData,
-  } = useSwapPoints();
-  const handleSwapPoints = (amount: any) => {
-    swapPoints({ amount: convertPoints(amount), address: address });
-    isSuccess &&
-      toast.success("points swapped, please wait while transaction resolves");
-  };
 
   useEffect(() => {
     const init = async () => {
@@ -252,8 +213,17 @@ const Wallet = () => {
     }
   };
 
+  const spender = address;
+  const claimValue = 10000;
+
+  const { mutate: claimPoints, data: claimPointsData } = useClaimPoints();
+
+  const onClaimPointsSuccess = (claimPointsData: any) => {
+    usersClaimPoints(claimPointsData);
+  };
+
   // usersClaimPointsFromVirtualWallet
-  const usersClaimPoints = async () => {
+  const usersClaimPoints = async (claimPointsData: any) => {
     const web3 = new Web3(provider as any);
 
     try {
@@ -273,60 +243,57 @@ const Wallet = () => {
       const saAddress = await smartWallet.getAccountAddress();
       console.log("SA Address", saAddress);
 
-      const spender = address;
-      const value = "10000000000000000000000";
-      const vaultAddress = "0x30fe3c083Bf0727a748823E3000f367FdFFa9aC5";
-
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
         "function permitClaimPoints(address user,uint amount,uint256 deadline,uint8 v,bytes32 r,bytes32 s)",
       ]);
-      const data = interfacedata.encodeFunctionData("permitClaimPoints", [
+      const data = interfacedata?.encodeFunctionData("permitClaimPoints", [
         spender,
-        value,
+        convertPoints(claimValue) as string,
         claimPointsData?.data?.deadline,
         claimPointsData?.data?.v,
-        claimPointsData?.data?.r,
-        claimPointsData?.data?.s,
+        claimPointsData?.data?.r as string,
+        claimPointsData?.data?.s as string,
       ]);
 
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
-          to: vaultAddress,
+          to: "0x8ebBE4b3bABeED275c2eCd0F04Ec46368EC24379",
           data: data,
         },
         {
           paymasterServiceData: { mode: PaymasterMode.SPONSORED },
         }
       );
+
       const { transactionHash } = await userOpResponse.waitForTxHash();
       console.log("Transaction Hash", transactionHash);
+
       const userOpReceipt = await userOpResponse.wait();
 
       if (userOpReceipt.success == "true") {
         console.log("UserOp receipt", userOpReceipt);
         console.log("Transaction receipt", userOpReceipt.receipt);
-
-        const contractfub = new web3.eth.Contract(
-          pointsABI,
-          "0x0dfbca4abcDE14966a0D6F19afA20b0b1f1a5DD6"
-        );
-
-        const bal = await contractfub.methods.balanceOf(spender).call();
-        console.log(bal);
-
-        //  @ts-ignore
-        setamount(bal);
-        console.log(amount);
       }
     } catch (err) {
       console.log(err);
     }
   };
 
+  const swapValue = 10000;
+  const {
+    mutate: swapPoints,
+    isPending,
+    data: swapPointsData,
+  } = useSwapPoints();
+
+  const onSwapPointsSuccess = (swapPointsData: any) => {
+    usersSwapPoints(swapPointsData);
+  };
+
   // usersSwapPointsForWld
-  const usersSwapPoints = async () => {
+  const usersSwapPoints = async (swapPointsData: any) => {
     const web3 = new Web3(provider as any);
 
     try {
@@ -347,8 +314,7 @@ const Wallet = () => {
       console.log("SA Address", saAddress);
 
       const spender = address;
-      const value = "10000000000000000000000";
-      const vaultAddress = "0x30fe3c083Bf0727a748823E3000f367FdFFa9aC5";
+      const vaultAddress = swapPointsData?.data?.vaultAddress;
 
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
@@ -356,12 +322,19 @@ const Wallet = () => {
       ]);
       const data = interfacedata.encodeFunctionData("permitSwapToPaymentCoin", [
         spender,
-        value,
+        convertPoints(swapValue) as string,
         swapPointsData?.data?.deadline,
         swapPointsData?.data?.v,
         swapPointsData?.data?.r,
         swapPointsData?.data?.s,
       ]);
+
+      console.log(
+        "passed>>>>>>>>>>>",
+        spender,
+        convertPoints(swapValue) as string,
+        swapPointsData?.data
+      );
 
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
@@ -373,6 +346,14 @@ const Wallet = () => {
           paymasterServiceData: { mode: PaymasterMode.SPONSORED },
         }
       );
+
+      console.log(
+        "passed>>>>>>>>>>>",
+        spender,
+        convertPoints(swapValue) as string,
+        swapPointsData?.data
+      );
+
       const { transactionHash } = await userOpResponse.waitForTxHash();
       console.log("Transaction Hash", transactionHash);
       const userOpReceipt = await userOpResponse.wait();
@@ -380,18 +361,6 @@ const Wallet = () => {
       if (userOpReceipt.success == "true") {
         console.log("UserOp receipt", userOpReceipt);
         console.log("Transaction receipt", userOpReceipt.receipt);
-
-        const contractfub = new web3.eth.Contract(
-          pointsABI,
-          "0x0dfbca4abcDE14966a0D6F19afA20b0b1f1a5DD6"
-        );
-
-        const bal = await contractfub.methods.balanceOf(spender).call();
-        console.log(bal);
-
-        //  @ts-ignore
-        setamount(bal);
-        console.log(amount);
       }
     } catch (err) {
       console.log(err);
@@ -441,8 +410,6 @@ const Wallet = () => {
       const number: string = await contract.methods.balanceOf(myaddress).call();
       const decimal: number = await contract.methods.decimals().call();
 
-      console.log(decimal, "decimal here");
-
       const numberBig: BigNumber = new BigNumber(number);
       const divisor: BigNumber = new BigNumber(10).pow(decimal);
 
@@ -462,6 +429,7 @@ const Wallet = () => {
   // world token
   const [wldToken, setWldToken] = useState("");
   const [worldTokenName, setWorldTokenName] = useState("");
+  localStorage.setItem("wldTokenBalance", wldToken);
 
   const getWorldToken = async () => {
     try {
@@ -491,11 +459,6 @@ const Wallet = () => {
   };
   getWorldToken();
 
-  // handle event change
-  const handleChangeSignTx = (event: any) => {
-    setMessage(event.target.value);
-  };
-
   const login = async () => {
     const web3authProvider = await web3auth.connectTo(
       WALLET_ADAPTERS.OPENLOGIN,
@@ -521,16 +484,6 @@ const Wallet = () => {
   }, [authenticateUser()]);
 
   // copy messages
-  const copyToClipboard = (text: any) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        console.log("Text copied to clipboard!");
-      })
-      .catch((error) => {
-        console.error("Error copying text: ", error);
-      });
-  };
 
   const [showWallet, setShowWallet] = useState(true);
 
@@ -552,7 +505,7 @@ const Wallet = () => {
             <div className="mb-6">
               <BackArrowButton stroke="#939393" />
               <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
-                Wallet
+                {userInfo?.name?.split(" ")[1]}`&apos;`s Wallet
               </div>
             </div>
 
@@ -567,8 +520,13 @@ const Wallet = () => {
                   wldBalance={wldToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
-                    handleSwapPoints(pointsToSwap), usersSwapPoints();
-                    //   isSuccess && setPointsToSwap("");
+                    swapPoints(
+                      {
+                        amount: convertPoints(claimValue),
+                        address: address as string,
+                      },
+                      { onSuccess: onSwapPointsSuccess }
+                    );
                   }}
                   handlePointInput={(e) => setPointsToSwap(e.target.value)}
                 />
@@ -667,7 +625,13 @@ const Wallet = () => {
 
               <button
                 onClick={() => {
-                  handleClaimPoints(), usersClaimPoints();
+                  claimPoints(
+                    {
+                      amount: convertPoints(claimValue),
+                      address: address as string,
+                    },
+                    { onSuccess: onClaimPointsSuccess }
+                  );
                 }}
                 className="mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]"
               >

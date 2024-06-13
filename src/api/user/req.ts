@@ -4,6 +4,7 @@ import {
   TRateQuestionnaireBody,
   TReadNotificationBody,
   TClaimSwapPointsBody,
+  TWithdrawPointsBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -86,5 +87,10 @@ export const claimPoints = async (body: TClaimSwapPointsBody) => {
 
 export const swapPoints = async (body: TClaimSwapPointsBody) => {
   const res = await client.post("/user/swap-point", body);
+  return res.data;
+};
+
+export const withdrawPoints = async (body: TWithdrawPointsBody) => {
+  const res = await client.post("/user/withdraw-point", body);
   return res.data;
 };

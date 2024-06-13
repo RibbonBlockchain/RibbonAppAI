@@ -29,7 +29,7 @@ import { WalletMoney } from "@/public/images";
 import { shorten } from "@/lib/utils/shorten";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { convertPoints } from "@/lib/utils/convertPoint";
-import { useClaimPoints, useSwapPoints } from "@/api/user";
+import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
 import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
 import BackArrowButton from "@/components/button/back-arrow";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
@@ -39,6 +39,8 @@ import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { copyToClipboard } from "@/lib/utils";
+import { SpinnerIcon } from "@/components/icons/spinner";
+import LoggoutWalletUI from "@/components/wallet/loggout-walletUI";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -216,11 +218,22 @@ const Wallet = () => {
   const spender = address;
   const claimValue = 10000;
 
-  const { mutate: claimPoints, data: claimPointsData } = useClaimPoints();
+  const {
+    mutate: claimPoints,
+    isPending: claimPointsPending,
+    data: claimPointsData,
+  } = useClaimPoints();
+
+  const { mutate: withdrawPoints, isPending: withdrawIsPending } =
+    useWithdrawPoints();
+
+  const pendingClaim = claimPointsPending || withdrawIsPending;
 
   const onClaimPointsSuccess = (claimPointsData: any) => {
+    toast.success("Please wait while transaction resolves");
     usersClaimPoints(claimPointsData);
   };
+  const onWithdrawSuccess = () => toast.success("Points claimed");
 
   // usersClaimPointsFromVirtualWallet
   const usersClaimPoints = async (claimPointsData: any) => {
@@ -273,6 +286,10 @@ const Wallet = () => {
       const userOpReceipt = await userOpResponse.wait();
 
       if (userOpReceipt.success == "true") {
+        withdrawPoints(
+          { amount: claimValue },
+          { onSuccess: onWithdrawSuccess }
+        );
         console.log("UserOp receipt", userOpReceipt);
         console.log("Transaction receipt", userOpReceipt.receipt);
       }
@@ -287,10 +304,6 @@ const Wallet = () => {
     isPending,
     data: swapPointsData,
   } = useSwapPoints();
-
-  const onSwapPointsSuccess = (swapPointsData: any) => {
-    usersSwapPoints(swapPointsData);
-  };
 
   // usersSwapPointsForWld
   const usersSwapPoints = async (swapPointsData: any) => {
@@ -426,6 +439,13 @@ const Wallet = () => {
   const pointToWLD = Number(point) / 5000;
   getPointToken();
 
+  const onSwapPointsSuccess = (swapPointsData: any) => {
+    usersSwapPoints(swapPointsData);
+    toast.success("Points swapped");
+    setSwapTx(false);
+    setPointsToSwap("");
+  };
+
   // world token
   const [wldToken, setWldToken] = useState("");
   const [worldTokenName, setWorldTokenName] = useState("");
@@ -505,7 +525,7 @@ const Wallet = () => {
             <div className="mb-6">
               <BackArrowButton stroke="#939393" />
               <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
-                {userInfo?.name?.split(" ")[1]}`&apos;`s Wallet
+                {userInfo?.name?.split(" ")[1]}&apos;s Wallet
               </div>
             </div>
 
@@ -633,14 +653,19 @@ const Wallet = () => {
                     { onSuccess: onClaimPointsSuccess }
                   );
                 }}
-                className="mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]"
+                className={clsx(
+                  "mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]",
+                  pendingClaim && "bg-gray-300"
+                )}
               >
-                Claim points
+                {pendingClaim ? (
+                  <div className="flex self-center items-center justify-center">
+                    <SpinnerIcon />
+                  </div>
+                ) : (
+                  "Claim points"
+                )}
               </button>
-
-              {/* <button onClick={() => handleClaimPoints()}>
-                Claim endpoint
-              </button> */}
 
               <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-between">
                 <div
@@ -791,53 +816,11 @@ const Wallet = () => {
                   </div>
                 )}
               </div>
-
-              <div className="hidden">
-                <div>
-                  <button onClick={getUserInfo} className="card">
-                    Get User Info
-                  </button>
-                </div>
-                <div>
-                  <button onClick={authenticateUser} className="card">
-                    Get ID Token
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </>
       ) : (
-        <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
-          <div className="mb-6">
-            <BackArrowButton stroke="#FFF" />
-            <div className="flex -mt-10 text-white  flex-row items-center justify-center text-base font-semibold">
-              Wallet
-            </div>
-          </div>
-
-          <div className="flex-1 flex flex-col items-center justify-evenly text-white">
-            <div className="w-[212px] h-[232px]">
-              {/* <Image src="" alt="" height={212} width={232} /> */}
-            </div>
-            <div className="flex flex-col items-center justify-center text-center gap-10">
-              <div className="flex flex-col gap-1.5">
-                <p className="text-3xl font-bold">
-                  Manage Your Crypto Assets Easily
-                </p>
-                <p className="text-sm">
-                  Monitor and manage crypto portfolio with Ribbon Protocol
-                </p>
-              </div>
-              <button
-                onClick={login}
-                className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
-              >
-                Connect wallet <WalletMoney />
-              </button>
-            </div>
-          </div>
-        </div>
+        <LoggoutWalletUI login={login} />
       )}
 
       {/* <div id="console" style={{ whiteSpace: "pre-line" }}>

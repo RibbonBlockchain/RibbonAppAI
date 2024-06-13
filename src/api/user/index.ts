@@ -4,6 +4,7 @@ import {
   TRateQuestionnaireBody,
   TReadNotificationBody,
   TClaimSwapPointsBody,
+  TWithdrawPointsBody,
 } from "./types";
 import {
   getTasks,
@@ -22,6 +23,7 @@ import {
   readNotification,
   claimPoints,
   swapPoints,
+  withdrawPoints,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -187,5 +189,12 @@ export const useSwapPoints = () => {
   return useMutation({
     onError,
     mutationFn: (body: TClaimSwapPointsBody) => swapPoints(body),
+  });
+};
+
+export const useWithdrawPoints = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TWithdrawPointsBody) => withdrawPoints(body),
   });
 };

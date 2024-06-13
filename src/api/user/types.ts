@@ -34,3 +34,7 @@ export type TClaimSwapPointsBody = {
   amount: string;
   address: string;
 };
+
+export type TWithdrawPointsBody = {
+  amount: number;
+};

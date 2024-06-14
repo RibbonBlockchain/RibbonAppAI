@@ -41,6 +41,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { copyToClipboard } from "@/lib/utils";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import LoggoutWalletUI from "@/components/wallet/loggout-walletUI";
+import WithdrawalProcessing from "@/components/modal/withdrawal-processing";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -53,7 +54,8 @@ const config = {
 
 const chainId = 11155420;
 const rpcTarget =
-  "https://opt-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
+  "https://opt-sepolia.g.alchemy.com/v2/_8csWnIUc_XqEFzGwGK_m--nBSfJcKkH";
+// "https://opt-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
 
 const clientId =
   "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
@@ -111,6 +113,8 @@ const Wallet = () => {
 
   const [signer, setsigner] = useState<any>("");
 
+  const [showPending, setShowPending] = useState(false);
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -139,27 +143,25 @@ const Wallet = () => {
       const user = await web3auth.getUserInfo();
       setUserInfo(user);
     } catch (error) {
-      console.error(error); // Web3ValidatorError: Web3 validator found 1 error[s]:value at "/1" is required
+      // console.error(error); // Web3ValidatorError: Web3 validator found 1 error[s]:value at "/1" is required
     }
   };
 
   // authenticate user
   const authenticateUser = async () => {
     if (!web3auth) {
-      console.log("web3auth not initialized yet");
       return;
     }
     try {
       const idToken = await web3auth.authenticateUser();
     } catch (error) {
-      console.log("error processing");
+      // handle error
     }
   };
 
   // get user accounts
   const getAccounts = async () => {
     if (!provider) {
-      console.error("Provider not initialized yet");
       return;
     }
 
@@ -169,14 +171,13 @@ const Wallet = () => {
       const accounts = await web3.eth.getAccounts();
       setAddress(accounts[0] || "");
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
   // get wallet balance
   const getBalance = async () => {
     if (!provider) {
-      console.error("Provider not initialized yet");
       return;
     }
 
@@ -190,7 +191,7 @@ const Wallet = () => {
       );
       setBalance(balance);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -208,10 +209,9 @@ const Wallet = () => {
         gasPrice: "20000000000",
         gas: "21000",
       });
-
-      console.log("Transaction sent:", receipt);
     } catch (error: any) {
-      console.error("Error sending transaction:", error);
+      // handle error
+      toast.error("Error sending transaction");
     }
   };
 
@@ -233,7 +233,9 @@ const Wallet = () => {
     toast.success("Please wait while transaction resolves");
     usersClaimPoints(claimPointsData);
   };
-  const onWithdrawSuccess = () => toast.success("Points claimed");
+  const onWithdrawSuccess = () => {
+    setShowPending(false), toast.success("Points claimed");
+  };
 
   // usersClaimPointsFromVirtualWallet
   const usersClaimPoints = async (claimPointsData: any) => {
@@ -254,7 +256,6 @@ const Wallet = () => {
         rpcUrl: rpcTarget,
       });
       const saAddress = await smartWallet.getAccountAddress();
-      console.log("SA Address", saAddress);
 
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
@@ -281,7 +282,7 @@ const Wallet = () => {
       );
 
       const { transactionHash } = await userOpResponse.waitForTxHash();
-      console.log("Transaction Hash", transactionHash);
+      // console.log("Transaction Hash", transactionHash);
 
       const userOpReceipt = await userOpResponse.wait();
 
@@ -290,8 +291,8 @@ const Wallet = () => {
           { amount: claimValue },
           { onSuccess: onWithdrawSuccess }
         );
-        console.log("UserOp receipt", userOpReceipt);
-        console.log("Transaction receipt", userOpReceipt.receipt);
+        // console.log("UserOp receipt", userOpReceipt);
+        // console.log("Transaction receipt", userOpReceipt.receipt);
       }
     } catch (err) {
       console.log(err);
@@ -324,7 +325,6 @@ const Wallet = () => {
         rpcUrl: rpcTarget,
       });
       const saAddress = await smartWallet.getAccountAddress();
-      console.log("SA Address", saAddress);
 
       const spender = address;
       const vaultAddress = swapPointsData?.data?.vaultAddress;
@@ -342,13 +342,6 @@ const Wallet = () => {
         swapPointsData?.data?.s,
       ]);
 
-      console.log(
-        "passed>>>>>>>>>>>",
-        spender,
-        convertPoints(swapValue) as string,
-        swapPointsData?.data
-      );
-
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
@@ -360,20 +353,16 @@ const Wallet = () => {
         }
       );
 
-      console.log(
-        "passed>>>>>>>>>>>",
-        spender,
-        convertPoints(swapValue) as string,
-        swapPointsData?.data
-      );
-
       const { transactionHash } = await userOpResponse.waitForTxHash();
-      console.log("Transaction Hash", transactionHash);
+
       const userOpReceipt = await userOpResponse.wait();
 
       if (userOpReceipt.success == "true") {
-        console.log("UserOp receipt", userOpReceipt);
-        console.log("Transaction receipt", userOpReceipt.receipt);
+        getPointToken();
+        setShowPending(false);
+
+        // console.log("UserOp receipt", userOpReceipt);
+        // console.log("Transaction receipt", userOpReceipt.receipt);
       }
     } catch (err) {
       console.log(err);
@@ -392,15 +381,11 @@ const Wallet = () => {
         "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5"
       );
 
-      const txData = contract.methods
-        // .transfer(
-        //   "0x1d9aa22b610d401f3884c55ebB1477173eCEf63F",
-        //   "10000000000000000000"
-        // )
-        .transfer(destination, amount)
-        .send({
-          from: address[0],
-        });
+      const txData = contract.methods.transfer(destination, amount).send({
+        from: address[0],
+      });
+
+      setShowPending(false);
     } catch (error) {
       toast.error("Error sending transaction");
     }
@@ -432,12 +417,9 @@ const Wallet = () => {
       const tokenName: string = await contract.methods.name().call();
       setPointName(tokenName);
     } catch (error) {
-      console.error("Error sending transaction:", error);
       // toast.error(`Error sending transaction`);
     }
   };
-  const pointToWLD = Number(point) / 5000;
-  getPointToken();
 
   const onSwapPointsSuccess = (swapPointsData: any) => {
     usersSwapPoints(swapPointsData);
@@ -445,6 +427,8 @@ const Wallet = () => {
     setSwapTx(false);
     setPointsToSwap("");
   };
+  const pointToWLD = Number(point) / 5000;
+  getPointToken();
 
   // world token
   const [wldToken, setWldToken] = useState("");
@@ -473,7 +457,6 @@ const Wallet = () => {
       const tokenName: string = await contract.methods.name().call();
       setWorldTokenName(tokenName);
     } catch (error) {
-      console.error("Error sending transaction:", error);
       // toast.error(`Error sending transaction`);
     }
   };
@@ -497,11 +480,24 @@ const Wallet = () => {
     // uiConsole("Logged out");
   };
 
+  const [clickCount, setClickCount] = useState(0);
+  useEffect(() => {
+    const handleClick = () => {
+      setClickCount((prevCount) => prevCount + 1);
+    };
+    window.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
+
   useEffect(() => {
     getUserInfo();
     getAccounts();
     getBalance();
-  }, [authenticateUser()]);
+    getPointToken();
+    getWorldToken();
+  }, [authenticateUser(), clickCount]);
 
   // copy messages
 
@@ -528,6 +524,15 @@ const Wallet = () => {
                 {userInfo?.name?.split(" ")[1]}&apos;s Wallet
               </div>
             </div>
+            {/* show pending tx */}
+            <div>
+              {showPending && (
+                <WithdrawalProcessing
+                  isOpen={showPending}
+                  closeModal={() => setShowPending(false)}
+                />
+              )}
+            </div>
 
             {/* // swap points modal */}
             <div>
@@ -547,6 +552,7 @@ const Wallet = () => {
                       },
                       { onSuccess: onSwapPointsSuccess }
                     );
+                    setShowPending(true);
                   }}
                   handlePointInput={(e) => setPointsToSwap(e.target.value)}
                 />
@@ -559,9 +565,13 @@ const Wallet = () => {
                 <WithdrawWorldToken
                   isOpen={sendTx}
                   closeModal={() => setSendTx(false)}
-                  handleClick={() =>
-                    sendWorldToken(destination, convertPoints(Number(amount)))
-                  }
+                  handleClick={() => {
+                    setShowPending(true),
+                      sendWorldToken(
+                        destination,
+                        convertPoints(Number(amount))
+                      );
+                  }}
                   destination={destination}
                   handleDestinationInput={(e) => setDestination(e.target.value)}
                   amount={amount}
@@ -573,7 +583,7 @@ const Wallet = () => {
             </div>
 
             {/* withdraw native token */}
-            <div>
+            {/* <div>
               {sendNativeTx && (
                 <WithdrawWorldToken
                   isOpen={sendNativeTx}
@@ -589,7 +599,7 @@ const Wallet = () => {
                   wldTokenBalance={balance}
                 />
               )}
-            </div>
+            </div> */}
 
             {/* open point tx interface */}
             <div>
@@ -645,6 +655,7 @@ const Wallet = () => {
 
               <button
                 onClick={() => {
+                  setShowPending(true);
                   claimPoints(
                     {
                       amount: convertPoints(claimValue),

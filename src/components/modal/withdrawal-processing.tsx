@@ -9,13 +9,12 @@ import Withdrawing from "@/public/ReactSVG/withdrawing";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
-  handleClick: () => void;
 };
 
 const WithdrawalProcessing: React.FC<Props> = (props) => {
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
+      <Dialog as="div" className="relative z-100" onClose={props.closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

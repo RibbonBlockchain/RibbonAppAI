@@ -58,6 +58,11 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                 </div>
 
                 <div className="flex flex-col gap-6 w-full">
+                  <p className="text-xs text-[#626262]">
+                    NOTE: You can only swap 10000 points for WLD at a time at
+                    the moment
+                  </p>
+
                   <div className="border rounded-[10px] p-4">
                     <div className="flex mb-4 flex-row items-center justify-between">
                       <div className="flex flex-row items-center justify-center gap-2">

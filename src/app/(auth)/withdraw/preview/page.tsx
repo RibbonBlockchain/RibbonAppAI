@@ -56,11 +56,7 @@ const Preview = () => {
         </Button>
       </div>
 
-      <WithdrawalProcessing
-        isOpen={modal}
-        closeModal={closeModal}
-        handleClick={closeModal}
-      />
+      <WithdrawalProcessing isOpen={modal} closeModal={closeModal} />
     </div>
   );
 };

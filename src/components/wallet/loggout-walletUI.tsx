@@ -2,7 +2,13 @@ import React from "react";
 import { WalletMoney } from "@/public/images";
 import BackArrowButton from "../button/back-arrow";
 
-const LoggoutWalletUI = ({ login }: { login: any }) => {
+const LoggoutWalletUI = ({
+  login,
+  loginWithEmail,
+}: {
+  login: any;
+  loginWithEmail: any;
+}) => {
   return (
     <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
       <div className="mb-6">
@@ -29,6 +35,20 @@ const LoggoutWalletUI = ({ login }: { login: any }) => {
           >
             Connect wallet <WalletMoney />
           </button>
+
+          <button
+            onClick={loginWithEmail}
+            className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
+          >
+            Email Login <WalletMoney />
+          </button>
+
+          {/* <button onClick={loginWithSMS} className="card">
+            SMS Login (e.g +cc-number)
+          </button>
+          <button onClick={loginWCModal} className="card">
+            Login with Wallet Connect v2
+          </button> */}
         </div>
       </div>
     </div>

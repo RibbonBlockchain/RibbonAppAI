@@ -42,8 +42,8 @@ import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { copyToClipboard } from "@/lib/utils";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import LoggoutWalletUI from "@/components/wallet/loggout-walletUI";
 import WithdrawalProcessing from "@/components/modal/withdrawal-processing";
+import RecoveryEmailModal from "@/components/modal/recovery-email";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -619,6 +619,9 @@ const Wallet = () => {
   const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
   const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
 
+  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [emailModal, setEmailModal] = useState(false);
+
   return (
     <>
       {loggedIn ? (
@@ -906,7 +909,60 @@ const Wallet = () => {
           </div>
         </>
       ) : (
-        <LoggoutWalletUI login={login} />
+        <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
+          <div className="mb-6">
+            <BackArrowButton stroke="#FFF" />
+            <div className="flex -mt-10 text-white  flex-row items-center justify-center text-base font-semibold">
+              Wallet
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-evenly text-white">
+            <div className="w-[212px] h-[232px]"></div>
+            <div className="flex flex-col items-center justify-center text-center gap-10">
+              <div className="flex flex-col gap-1.5">
+                <p className="text-3xl font-bold">
+                  Manage Your Crypto Assets Easily
+                </p>
+                <p className="text-sm">
+                  Monitor and manage crypto portfolio with Ribbon Protocol
+                </p>
+              </div>
+              <button
+                onClick={login}
+                className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
+              >
+                Login wallet <WalletMoney />
+              </button>
+
+              <button
+                onClick={() => setEmailModal(true)}
+                className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
+              >
+                Wallet recovery <WalletMoney />
+              </button>
+
+              {/* <button onClick={loginWithSMS} className="card">
+              SMS Login (e.g +cc-number)
+            </button>
+            <button onClick={loginWCModal} className="card">
+              Login with Wallet Connect v2
+            </button> */}
+            </div>
+
+            {emailModal && (
+              <RecoveryEmailModal
+                isOpen={emailModal}
+                closeModal={() => setEmailModal(false)}
+                handleClick={() => loginWithEmail(recoveryEmail)}
+                recoveryEmail={recoveryEmail}
+                handleRecoveryEmailChange={(e: any) =>
+                  setRecoveryEmail(e.target.value)
+                }
+              />
+            )}
+          </div>
+        </div>
       )}
     </>
   );

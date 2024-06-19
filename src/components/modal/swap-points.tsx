@@ -90,10 +90,10 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                     <div className="flex mt-4 flex-row items-center justify-between">
                       <div className="flex flex-col gap-1">
                         <input
-                          type="text"
+                          type="number"
                           value={props.pointInput}
                           onChange={props.handlePointInput}
-                          className="border-none py-2 px-2 rounded-md w-[90%]"
+                          className="border-none py-2 px-2 rounded-md w-[90%] appearance-none"
                           placeholder="0"
                         />
                         <p>$ 0</p>

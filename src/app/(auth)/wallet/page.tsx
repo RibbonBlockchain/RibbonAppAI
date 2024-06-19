@@ -99,7 +99,6 @@ const Wallet = () => {
   const [balance, setBalance] = useState("");
 
   const [address, setAddress] = useState("");
-  localStorage.setItem("address", address);
 
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
@@ -136,16 +135,16 @@ const Wallet = () => {
                 priority: 2,
                 mandatory: true,
               },
-              socialBackupFactor: {
-                enable: true,
-                priority: 3,
-                mandatory: false,
-              },
-              passwordFactor: {
-                enable: true,
-                priority: 4,
-                mandatory: false,
-              },
+              // socialBackupFactor: {
+              //   enable: true,
+              //   priority: 3,
+              //   mandatory: false,
+              // },
+              // passwordFactor: {
+              //   enable: true,
+              //   priority: 4,
+              //   mandatory: false,
+              // },
             },
           },
           loginSettings: {
@@ -187,27 +186,7 @@ const Wallet = () => {
     }
   };
 
-  const loginWithSMS = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const web3authProvider = await web3auth.connectTo<OpenloginLoginParams>(
-      WALLET_ADAPTERS.OPENLOGIN,
-      {
-        loginProvider: "sms_passwordless",
-        extraLoginOptions: {
-          login_hint: "+65-XXXXXXX",
-        },
-      }
-    );
-    setProvider(web3authProvider);
-    if (web3auth.connected) {
-      setLoggedIn(true);
-    }
-  };
-
-  const loginWithEmail = async () => {
+  const loginWithEmail = async (email: string) => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
@@ -216,8 +195,9 @@ const Wallet = () => {
       WALLET_ADAPTERS.OPENLOGIN,
       {
         loginProvider: "email_passwordless",
+        UX_MODE: UX_MODE.POPUP,
         extraLoginOptions: {
-          login_hint: "hello@web3auth.io",
+          login_hint: email,
         },
       }
     );
@@ -310,6 +290,8 @@ const Wallet = () => {
 
   // get smart contract address
   const [SAAddress, setSAAddress] = useState("");
+  localStorage.setItem("address", SAAddress);
+
   const getSAAdsress = async () => {
     try {
       const paymaster: IPaymaster = await createPaymaster({
@@ -630,7 +612,6 @@ const Wallet = () => {
 
   const [sendTx, setSendTx] = useState(false);
   const [swapTx, setSwapTx] = useState(false);
-  const [sendNativeTx, setSendNativeTx] = useState(false);
 
   const [pointsToSwap, setPointsToSwap] = useState("");
 
@@ -677,7 +658,6 @@ const Wallet = () => {
                       {
                         amount: convertPoints(claimValue),
                         address: SAAddress,
-                        // address: address as string,
                       },
                       { onSuccess: onSwapPointsSuccess }
                     );
@@ -703,6 +683,8 @@ const Wallet = () => {
                         convertPoints(Number(amount))
                       );
                     setSendTx(false);
+                    setDestination("");
+                    setAmount("");
                   }}
                   destination={destination}
                   handleDestinationInput={(e) => setDestination(e.target.value)}
@@ -713,25 +695,6 @@ const Wallet = () => {
                 />
               )}
             </div>
-
-            {/* withdraw native token */}
-            {/* <div>
-              {sendNativeTx && (
-                <WithdrawWorldToken
-                  isOpen={sendNativeTx}
-                  closeModal={() => setSendNativeTx(false)}
-                  handleClick={() =>
-                    sendWorldToken(destination, convertPoints(Number(amount)))
-                  }
-                  destination={destination}
-                  handleDestinationInput={(e) => setDestination(e.target.value)}
-                  amount={amount}
-                  handleAmountInput={(e) => setAmount(e.target.value)}
-                  isPending={undefined}
-                  wldTokenBalance={balance}
-                />
-              )}
-            </div> */}
 
             {/* open point tx interface */}
             <div>
@@ -775,9 +738,8 @@ const Wallet = () => {
             </div>
 
             <div className="flex flex-col gap-2 mb-10 overflow-hidden">
-              {/* <p>SA Address: {shorten(SAAddress)}</p> */}
               <div className="mt-4">
-                <p className="text-center mb-1">Your smart acccount is below</p>
+                <p className="text-center mb-1">Your smart account is below</p>
                 <div className="flex flex-row gap-5 items-center justify-center ">
                   <p className="text-[16px]">{shorten(SAAddress)}</p>
                   <p
@@ -800,7 +762,6 @@ const Wallet = () => {
                     {
                       amount: convertPoints(claimValue),
                       address: SAAddress,
-                      // address: address as string,
                     },
                     { onSuccess: onClaimPointsSuccess }
                   );
@@ -829,7 +790,6 @@ const Wallet = () => {
                 </div>
                 <div
                   onClick={() => setSendTx(true)}
-                  // onClick={() => setSendNativeTx(true)}
                   className="cursor-pointer w-full py-6 items-center justify-center flex flex-col gap-3 border border-[#D6CBFF] rounded-[12px]  "
                 >
                   <ArrowUp stroke="#7C56FE" />
@@ -870,7 +830,7 @@ const Wallet = () => {
                     showWallet && "text-black bg-[inherit]"
                   )}
                 >
-                  Activiy
+                  Activity
                 </p>
               </div>
 
@@ -934,32 +894,6 @@ const Wallet = () => {
                           </p>
                         </div>
                       </div>
-
-                      {/* // native optimism token */}
-                      <div
-                        onClick={() => setOpenOPSepoiliaTxPage(true)}
-                        className="flex flex-row items-center justify-between p-3 border border-[#D6CBFF] rounded-[12px]"
-                      >
-                        <div className="flex flex-row items-center justify-center gap-2">
-                          <div className="w-[35px] h-[35px] flex items-center ">
-                            <Image
-                              width={35}
-                              height={35}
-                              src={"/images/optimism.png"}
-                              alt="coin logo"
-                              className="rounded-full"
-                            />
-                          </div>
-                          <div>
-                            <p className="text-base font-normal">OP Sepolia</p>
-                            <p className="text-xs text-[#626262]">ETH</p>
-                          </div>
-                        </div>
-                        <div className="text-end">
-                          <p className="text-sm font-normal">{balance} ETH</p>
-                          <p className="text-xs text-[#626262]">0 USD</p>
-                        </div>
-                      </div>
                     </div>
                   </>
                 ) : (
@@ -972,12 +906,8 @@ const Wallet = () => {
           </div>
         </>
       ) : (
-        <LoggoutWalletUI login={login} loginWithEmail={loginWithEmail} />
+        <LoggoutWalletUI login={login} />
       )}
-
-      {/* <div id="console" style={{ whiteSpace: "pre-line" }}>
-        <p style={{ whiteSpace: "pre-line" }}></p>
-      </div> */}
     </>
   );
 };

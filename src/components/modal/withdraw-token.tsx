@@ -107,16 +107,16 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
                     <div className="border rounded-[10px] p-4 flex flex-col gap-2">
                       <div className="flex flex-row items-center justify-between">
                         <input
-                          type="text"
+                          type="number"
                           value={props.amount}
                           onChange={props.handleAmountInput}
-                          className="border-none py-2 px-2 rounded-md w-[90%]"
+                          className="border-none py-2 px-2 rounded-md w-[60%]"
                           placeholder="0"
                         />
                         <p>WLD</p>
                       </div>
 
-                      <div className="flex px-2 flex-row">
+                      <div className="flex gap-1 px-2 flex-row">
                         <p>0</p>
                         <p>USD</p>
                       </div>

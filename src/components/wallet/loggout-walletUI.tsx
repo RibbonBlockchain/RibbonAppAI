@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { WalletMoney } from "@/public/images";
 import BackArrowButton from "../button/back-arrow";
 
 const LoggoutWalletUI = ({
   login,
-  loginWithEmail,
-}: {
+}: // loginWithEmail,
+{
   login: any;
-  loginWithEmail: any;
+  // loginWithEmail: any;
 }) => {
+  const [emailModal, setEmailModal] = useState(false);
+  const [email, setEmail] = useState("");
+
   return (
     <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
       <div className="mb-6">
@@ -33,15 +36,30 @@ const LoggoutWalletUI = ({
             onClick={login}
             className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
           >
-            Connect wallet <WalletMoney />
+            Login wallet <WalletMoney />
           </button>
 
-          <button
-            onClick={loginWithEmail}
+          {/* <button
+            onClick={() => setEmailModal(true)}
             className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
           >
-            Email Login <WalletMoney />
+            Wallet recovery <WalletMoney />
           </button>
+
+          {emailModal && (
+            <div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e: any) => setEmailModal(e.target.value)}
+                className="border py-4 px-2 rounded-md text-sm font-medium text-[#434343] break-words"
+                placeholder="Enter your email"
+              />
+              <button onClick={loginWithEmail(email)} className="">
+                Continue
+              </button>
+            </div>
+          )} */}
 
           {/* <button onClick={loginWithSMS} className="card">
             SMS Login (e.g +cc-number)

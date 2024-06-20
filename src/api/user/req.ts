@@ -1,10 +1,10 @@
 import {
   TSubmitTaskBody,
   TUpdateProfileBody,
-  TRateQuestionnaireBody,
-  TReadNotificationBody,
-  TClaimSwapPointsBody,
   TWithdrawPointsBody,
+  TClaimSwapPointsBody,
+  TReadNotificationBody,
+  TRateQuestionnaireBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -43,8 +43,18 @@ export const getTasksInProgress = async () => {
   return res.data.data;
 };
 
-export const getUncompletedTasks = async () => {
+export const getUncompletedQuestionnaires = async () => {
   const res = await client.get<TResponse<any>>("/task/user/uncompleted");
+  return res.data.data;
+};
+
+export const getUncompletedSurveys = async () => {
+  const res = await client.get<TResponse<any>>("/survey/uncompleted");
+  return res.data.data;
+};
+
+export const getUncompletedTasks = async () => {
+  const res = await client.get<TResponse<any>>("/tassk/uncompleted");
   return res.data.data;
 };
 

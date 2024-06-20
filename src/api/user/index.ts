@@ -16,7 +16,6 @@ import {
   getUserActivities,
   rateQuestionnaire,
   getTasksInProgress,
-  getUncompletedTasks,
   getUserActivityById,
   getCompletedTasksByDate,
   getUserNotifications,
@@ -24,6 +23,9 @@ import {
   claimPoints,
   swapPoints,
   withdrawPoints,
+  getUncompletedSurveys,
+  getUncompletedQuestionnaires,
+  getUncompletedTasks,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -117,6 +119,20 @@ export const useGetTasksInProgress = (
     enabled,
     queryKey: ["task-inProgress"],
     queryFn: () => getTasksInProgress(),
+  });
+};
+
+export const useGetUncompletedQuestionnaires = () => {
+  return useQuery({
+    queryKey: ["quetionnaire-uncompleted"],
+    queryFn: getUncompletedQuestionnaires,
+  });
+};
+
+export const useGetUncompletedSurveys = () => {
+  return useQuery({
+    queryKey: ["survey-uncompleted"],
+    queryFn: getUncompletedSurveys,
   });
 };
 

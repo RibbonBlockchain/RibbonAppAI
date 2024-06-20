@@ -51,7 +51,7 @@ import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import WithdrawalProcessing from "@/components/modal/withdrawal-processing";
-import axios from "axios";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -161,6 +161,18 @@ const Wallet = () => {
           privateKeyProvider,
         });
         web3auth.configureAdapter(openloginAdapter);
+
+        const walletServicesPlugin = new WalletServicesPlugin();
+        web3auth.addPlugin(walletServicesPlugin); // Add the plugin to web3auth
+
+        // Show the wallet services plugin
+        await walletServicesPlugin.showWalletUi();
+
+        // Show the wallet connect scanner
+        await walletServicesPlugin.showWalletConnectScanner();
+
+        // Show the checkout
+        await walletServicesPlugin.showCheckout();
 
         setWeb3Auth(web3auth);
         await web3auth.init();

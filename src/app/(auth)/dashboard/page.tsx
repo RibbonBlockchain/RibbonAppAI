@@ -14,7 +14,11 @@ import Todo from "@/containers/dashboard/todo";
 import { ArrowRight, EyeOff } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
-import { useGetUncompletedTasks } from "@/api/user";
+import {
+  useGetUncompletedQuestionnaires,
+  useGetUncompletedSurveys,
+  useGetUncompletedTasks,
+} from "@/api/user";
 import CoinSVG from "../../../../public/images/coin";
 import { SwapIcon, WalletMoney } from "../../../../public/images";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
@@ -40,9 +44,9 @@ const Dashboard = () => {
   const [swapBalance, setSwapBalance] = useState(false);
   const handleSwapBalance = () => setSwapBalance(!swapBalance);
 
-  const { data: questionnaire, isLoading } = useGetUncompletedTasks();
-  const survey: any[] = [];
-  const task: any[] = [];
+  const { data: questionnaire, isLoading } = useGetUncompletedQuestionnaires();
+  const { data: survey } = useGetUncompletedSurveys();
+  const { data: task } = useGetUncompletedTasks();
 
   const savedAddress = localStorage.getItem("address");
   const wldTokenBalance = localStorage.getItem("wldTokenBalance");

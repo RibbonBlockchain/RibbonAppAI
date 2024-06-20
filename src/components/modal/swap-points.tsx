@@ -2,9 +2,9 @@ import Image from "next/image";
 import Button from "../button";
 import React, { Fragment } from "react";
 import { useRouter } from "next/navigation";
+import { SpinnerIcon } from "../icons/spinner";
 import { Transition, Dialog } from "@headlessui/react";
 import { ArrowDown, ArrowDownUp, ArrowLeft } from "lucide-react";
-import { SpinnerIcon } from "../icons/spinner";
 
 type Props = {
   isOpen: boolean;
@@ -15,13 +15,11 @@ type Props = {
   isPending: any;
   pointsBalance: any;
   wldBalance: any;
+  USDvalue: any;
 };
 
 const SwapPointToWorldToken: React.FC<Props> = (props) => {
   const router = useRouter();
-
-  const WLDValue = Number(props.pointInput) / 5000;
-  const WLDTotalValue = WLDValue * 4.8;
 
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
@@ -93,10 +91,9 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                           type="number"
                           value={props.pointInput}
                           onChange={props.handlePointInput}
-                          className="border-none py-2 px-2 rounded-md w-[90%] appearance-none"
+                          className="border-gray-200 border py-2 px-3 rounded-md w-[90%]"
                           placeholder="0"
                         />
-                        <p>$ 0</p>
                       </div>
                       <p className="text-xs">From</p>
                     </div>
@@ -131,7 +128,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                     <div className="flex mt-4 flex-row items-center justify-between">
                       <div className="flex flex-col gap-1">
                         <p>{Number(props.pointInput) / 5000} WLD</p>
-                        <p>$ {WLDTotalValue}</p>
+                        <p>$ {props.USDvalue}</p>
                       </div>
                       <p className="text-xs">To</p>
                     </div>

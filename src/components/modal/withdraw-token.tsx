@@ -16,6 +16,7 @@ type Props = {
   handleAmountInput: (e: any) => void;
   isPending: any;
   wldTokenBalance: any;
+  USDvalue: any;
 };
 
 const WithdrawWorldToken: React.FC<Props> = (props) => {
@@ -110,14 +111,14 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
                           type="number"
                           value={props.amount}
                           onChange={props.handleAmountInput}
-                          className="border-none py-2 px-2 rounded-md w-[60%]"
+                          className="border-gray-200 border py-2 px-3 rounded-md w-[60%]"
                           placeholder="0"
                         />
                         <p>WLD</p>
                       </div>
 
                       <div className="flex gap-1 px-2 flex-row">
-                        <p>0</p>
+                        <p>{props.USDvalue}</p>
                         <p>USD</p>
                       </div>
                     </div>

@@ -2,8 +2,8 @@ import { LucideCopy } from "lucide-react";
 import React from "react";
 
 type Props = {
-  wldTokenBalance: string;
-  balanceUSD: string;
+  wldTokenBalance: any;
+  balanceUSD: any;
 };
 
 const CustomTokenUI = (props: Props) => {

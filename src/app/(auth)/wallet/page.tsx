@@ -1,5 +1,6 @@
 "use client";
 
+import useSWR from "swr";
 import {
   IProvider,
   WALLET_ADAPTERS,
@@ -23,7 +24,13 @@ import clsx from "clsx";
 import Image from "next/image";
 import { ethers } from "ethers";
 import toast from "react-hot-toast";
-import { ArrowDown, ArrowUp, LucideCopy } from "lucide-react";
+import {
+  ArrowBigLeft,
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  LucideCopy,
+} from "lucide-react";
 import { ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,15 +42,16 @@ import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
 import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
 import BackArrowButton from "@/components/button/back-arrow";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
+import { copyToClipboard } from "@/lib/utils";
+import { fetcher } from "@/lib/values/priceAPI";
+import { SpinnerIcon } from "@/components/icons/spinner";
 import SwapPointToWorldToken from "@/components/modal/swap-points";
 import WithdrawWorldToken from "@/components/modal/withdraw-token";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { copyToClipboard } from "@/lib/utils";
-import { SpinnerIcon } from "@/components/icons/spinner";
 import WithdrawalProcessing from "@/components/modal/withdrawal-processing";
-import RecoveryEmailModal from "@/components/modal/recovery-email";
+import axios from "axios";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -182,41 +190,6 @@ const Wallet = () => {
     );
     setProvider(web3authProvider);
     if (web3auth?.connected) {
-      setLoggedIn(true);
-    }
-  };
-
-  const loginWithEmail = async (email: string) => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const web3authProvider = await web3auth.connectTo(
-      WALLET_ADAPTERS.OPENLOGIN,
-      {
-        loginProvider: "email_passwordless",
-        UX_MODE: UX_MODE.POPUP,
-        extraLoginOptions: {
-          login_hint: email,
-        },
-      }
-    );
-    setProvider(web3authProvider);
-    if (web3auth.connected) {
-      setLoggedIn(true);
-    }
-  };
-
-  const loginWCModal = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const web3authProvider = await web3auth.connectTo(
-      WALLET_ADAPTERS.WALLET_CONNECT_V2
-    );
-    setProvider(web3authProvider);
-    if (web3auth.connected) {
       setLoggedIn(true);
     }
   };
@@ -622,13 +595,33 @@ const Wallet = () => {
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [emailModal, setEmailModal] = useState(false);
 
+  const useCoinDetails = () => {
+    const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
+
+    const { isLoading, error, data } = useSWR(apiUrl, fetcher);
+
+    return {
+      isLoading,
+      error,
+      data,
+    };
+  };
+
+  const { data } = useCoinDetails();
+  const currentPrice = data?.market_data.current_price.usd as number;
+
   return (
     <>
       {loggedIn ? (
         <>
           <div className="p-4 sm:p-6 min-h-screen bg-white flex flex-col">
             <div className="mb-6">
-              <BackArrowButton stroke="#939393" />
+              <ArrowLeft
+                stroke="#939393"
+                onClick={() => router.push("/dashboard")}
+                className="flex w-[40px] cursor-pointer"
+              />
+
               <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
                 {userInfo?.name?.split(" ")[1]}&apos;s Wallet
               </div>
@@ -653,6 +646,7 @@ const Wallet = () => {
                   isOpen={swapTx}
                   isPending={isPending}
                   pointInput={pointsToSwap}
+                  USDvalue={(Number(pointsToSwap) / 5000) * currentPrice}
                   pointsBalance={point}
                   wldBalance={wldToken}
                   closeModal={() => setSwapTx(false)}
@@ -695,6 +689,7 @@ const Wallet = () => {
                   handleAmountInput={(e) => setAmount(e.target.value)}
                   isPending={undefined}
                   wldTokenBalance={wldToken}
+                  USDvalue={Number(amount) * currentPrice}
                 />
               )}
             </div>
@@ -756,7 +751,10 @@ const Wallet = () => {
                 </div>
               </div>
 
-              <CustomTokenUI wldTokenBalance={wldToken} balanceUSD={"0"} />
+              <CustomTokenUI
+                wldTokenBalance={wldToken}
+                balanceUSD={(Number(wldToken) * currentPrice).toFixed(5)}
+              />
 
               <button
                 onClick={() => {
@@ -893,7 +891,7 @@ const Wallet = () => {
                         <div className="text-end">
                           <p className="text-sm font-normal">{wldToken} WLD</p>
                           <p className="text-xs text-[#626262]">
-                            {Number(wldToken) * 4.8} USD
+                            {Number(wldToken) * currentPrice} USD
                           </p>
                         </div>
                       </div>
@@ -935,13 +933,6 @@ const Wallet = () => {
                 Login wallet <WalletMoney />
               </button>
 
-              <button
-                onClick={() => setEmailModal(true)}
-                className="flex flex-row gap-3 items-center justify-center px-6 py-2 w-fit bg-white text-[#7C56FE] font-medium rounded-md hover:bg-[#c0b7df] mr-2 mt-4"
-              >
-                Wallet recovery <WalletMoney />
-              </button>
-
               {/* <button onClick={loginWithSMS} className="card">
               SMS Login (e.g +cc-number)
             </button>
@@ -949,18 +940,6 @@ const Wallet = () => {
               Login with Wallet Connect v2
             </button> */}
             </div>
-
-            {emailModal && (
-              <RecoveryEmailModal
-                isOpen={emailModal}
-                closeModal={() => setEmailModal(false)}
-                handleClick={() => loginWithEmail(recoveryEmail)}
-                recoveryEmail={recoveryEmail}
-                handleRecoveryEmailChange={(e: any) =>
-                  setRecoveryEmail(e.target.value)
-                }
-              />
-            )}
           </div>
         </div>
       )}

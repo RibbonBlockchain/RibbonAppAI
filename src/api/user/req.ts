@@ -5,6 +5,8 @@ import {
   TClaimSwapPointsBody,
   TReadNotificationBody,
   TRateQuestionnaireBody,
+  TSubmitSurveyBody,
+  TRateSurveyBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -18,10 +20,30 @@ export const submitTask = async (body: TSubmitTaskBody) => {
   return res.data;
 };
 
+export const submitSurvey = async (body: TSubmitSurveyBody) => {
+  const res = await client.post<TResponse<any>>("/survey/respond", body);
+  return res.data;
+};
+
+// export const submitTassk = async (body: TSubmitTaskBody) => {
+//   const res = await client.post<TResponse<any>>("/tassk/respond", body);
+//   return res.data;
+// };
+
 export const rateQuestionnaire = async (body: TRateQuestionnaireBody) => {
   const res = await client.post<TResponse<any>>("/questionnaire/rate", body);
   return res.data;
 };
+
+export const rateSurvey = async (body: TRateSurveyBody) => {
+  const res = await client.post<TResponse<any>>("/survey/rate", body);
+  return res.data;
+};
+
+// export const rateTask = async (body: TRateQuestionnaireBody) => {
+//   const res = await client.post<TResponse<any>>("/task/rate", body);
+//   return res.data;
+// };
 
 export const claimDailyReward = async () => {
   const res = await client.post<TResponse<any>>("/user/claim");
@@ -38,10 +60,30 @@ export const getTaskByID = async (id: string) => {
   return res.data.data;
 };
 
+export const getSurveyByID = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/survey/${id}`);
+  return res.data.data;
+};
+
+export const getTasskByID = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/tassk/${id}`);
+  return res.data.data;
+};
+
 export const getTasksInProgress = async () => {
   const res = await client.get<TResponse<any>>("/task/user/processing");
   return res.data.data;
 };
+
+export const getSurveysInProgress = async () => {
+  const res = await client.get<TResponse<any>>("/survey/processing");
+  return res.data.data;
+};
+
+// export const getTassksInProgress = async () => {
+//   const res = await client.get<TResponse<any>>("/task/user/processing");
+//   return res.data.data;
+// };
 
 export const getUncompletedQuestionnaires = async () => {
   const res = await client.get<TResponse<any>>("/task/user/uncompleted");
@@ -62,6 +104,16 @@ export const getCompletedTasks = async () => {
   const res = await client.get<TResponse<any>>(`/task/user/completed`);
   return res.data;
 };
+
+export const getCompletedSurveys = async () => {
+  const res = await client.get<TResponse<any>>(`/survey/completed`);
+  return res.data;
+};
+
+// export const getCompletedTassks = async () => {
+//   const res = await client.get<TResponse<any>>(`/task/user/completed`);
+//   return res.data;
+// };
 
 export const getCompletedTasksByDate = async (date?: any) => {
   const res = await client.get<TResponse<any>>(

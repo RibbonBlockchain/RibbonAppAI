@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useSubmitTask,
-  useGetTaskByID,
-  useRateQuestionnaire,
-} from "@/api/user";
+import { useGetSurveyByID, useSubmitSurvey, useRateSurvey } from "@/api/user";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +18,7 @@ import { Check, RibbonLight } from "../../../../../../public/images";
 import TextareaInput from "@/containers/questionnaire/answerTextInput";
 import PrevQuestionnairePageButton from "@/components/button/prev-questionnarie-page";
 
-const TaskPage = ({ params }: any) => {
+const SurveyPages = ({ params }: any) => {
   const [step, setStep] = React.useState(0);
   const [claim, setClaim] = React.useState(false);
   const [claimPage, setClaimPage] = React.useState(false);
@@ -30,15 +26,18 @@ const TaskPage = ({ params }: any) => {
 
   const {
     data,
-    isLoading: isLoadingGetTask,
-    isPending: isPendingGetTask,
-  } = useGetTaskByID({ id: String(params.id) });
+    isLoading: isLoadingGetSurvey,
+    isPending: isPendingGetSurvey,
+  } = useGetSurveyByID({ id: String(params.id) });
+
+  console.log(data, "survey data");
+
   const questionIds = data?.questions?.map((question: any) => question.id);
 
-  const { mutate: submitTask, isPending } = useSubmitTask();
+  const { mutate: submitSurvey, isPending } = useSubmitSurvey();
   isPending && <SpinnerIcon />;
 
-  const { mutate: submitRate } = useRateQuestionnaire();
+  const { mutate: submitRate } = useRateSurvey();
   const [rating, setRating] = useState(0);
 
   const router = useRouter();
@@ -80,7 +79,7 @@ const TaskPage = ({ params }: any) => {
     setButtonDisable(false);
   };
 
-  const stillLoading = isLoadingGetTask || isPendingGetTask;
+  const stillLoading = isLoadingGetSurvey || isPendingGetSurvey;
 
   return (
     <div className="relative z-10 flex flex-col min-h-[100vh] items-start justify-between p-4 sm:p-6">
@@ -118,7 +117,7 @@ const TaskPage = ({ params }: any) => {
             rewardPoints={stillLoading ? "" : data?.reward * 5000}
             imageUrl={data?.image || "/images/ribbon.svg"}
             description={data?.description || data?.name}
-            completionTime={stillLoading ? "" : data?.duration / 60}
+            completionTime={"5-15"}
           />
         ) : (
           <div className="flex h-[80vh] flex-col items-center justify-between">
@@ -215,6 +214,7 @@ const TaskPage = ({ params }: any) => {
                           />
                         </div>
                       ) : (
+                        // display nothing if question does not have type
                         <></>
                       )}
                     </div>
@@ -232,7 +232,7 @@ const TaskPage = ({ params }: any) => {
 
                           // submit each question
                           if (step !== data?.questions?.length) {
-                            submitTask({
+                            submitSurvey({
                               questionId: questionIds[step - 1],
                               optionId:
                                 YesOrNoId ||
@@ -241,7 +241,7 @@ const TaskPage = ({ params }: any) => {
                                 optionId ||
                                 selectedOptions ||
                                 0,
-                              taskId: data?.id,
+                              surveyId: data?.id,
                             });
                           }
 
@@ -249,7 +249,7 @@ const TaskPage = ({ params }: any) => {
                           if (step === data?.questions?.length) {
                             setStep(data?.questions?.length);
                             setClaim(!claim);
-                            submitTask({
+                            submitSurvey({
                               questionId:
                                 questionIds[data?.questions?.length - 1],
                               optionId:
@@ -259,17 +259,9 @@ const TaskPage = ({ params }: any) => {
                                 optionId ||
                                 selectedOptions ||
                                 0,
-                              taskId: data?.id,
+                              surveyId: data?.id,
                             });
                           }
-
-                          // console.log("questionId", questionIds[step - 1]);
-                          // console.log(
-                          //   "questionId last?",
-                          //   questionIds[data?.questions?.length - 1]
-                          // );
-                          // console.log("optionId", YesOrNoId || optionId);
-                          // console.log("taskId", data?.id);
                         }}
                         className={clsx(
                           buttonDisable
@@ -317,14 +309,13 @@ const TaskPage = ({ params }: any) => {
                 onChange={(newRating: any) => setRating(newRating)}
                 handleSubmit={() => {
                   submitRate(
-                    { rating: rating, questionnaireId: data?.id },
+                    { rating: rating, surveyId: data?.id },
                     {
                       onSuccess: () => {
                         router.push("/dashboard");
                       },
                     }
                   );
-                  // router.push("/dashboard");
                 }}
               />
             )}
@@ -335,4 +326,4 @@ const TaskPage = ({ params }: any) => {
   );
 };
 
-export default TaskPage;
+export default SurveyPages;

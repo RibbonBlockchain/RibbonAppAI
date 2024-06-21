@@ -26,6 +26,11 @@ import ClaimDailyRewardModal from "@/components/modal/claim_daily_reward";
 import CountdownTimer from "@/containers/dashboard/simple-countdown-timer";
 import { UserWalkthrough } from "@/containers/user-walkthrough/walkthrough";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import {
+  QuestionnaireHeader,
+  SurveyHeader,
+  TaskHeader,
+} from "@/containers/questionnaire/headers";
 
 const Dashboard = () => {
   const session = useSession();
@@ -48,7 +53,7 @@ const Dashboard = () => {
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
 
-  const savedAddress = localStorage.getItem("address");
+  // const savedAddress = localStorage.getItem("address");
   const wldTokenBalance = localStorage.getItem("wldTokenBalance");
 
   React.useEffect(() => {
@@ -332,15 +337,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
-              <p>Questionnaire</p>
-              <Image
-                width={40}
-                height={40}
-                alt="questionnaires"
-                src="/images/questionnaires.png"
-              />
-            </div>
+            <QuestionnaireHeader />
             {questionnaire?.map((i: any) => (
               <Todo
                 key={i.id}
@@ -352,22 +349,13 @@ const Dashboard = () => {
                 approximateTime={i.duration / 60}
                 totalRatings={i.totalRatings}
                 id={i.id}
-                href={`/dashboard/activity/${i.id}`}
+                href={`/dashboard/questionnaires/${i.id}`}
               />
             ))}
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
-              <p>Surveys</p>
-              <Image
-                width={40}
-                height={40}
-                alt="surveys"
-                src="/images/surveys.png"
-              />
-            </div>
-            {/* <Survey /> */}
+            <SurveyHeader />
 
             {survey?.map((i: any) => (
               <Todo
@@ -380,21 +368,13 @@ const Dashboard = () => {
                 approximateTime={i.duration / 60}
                 totalRatings={i.totalRatings}
                 id={i.id}
-                href={`/dashboard/activity/${i.id}`}
+                href={`/dashboard/survey/${i.id}`}
               />
             ))}
           </div>
 
           <div className="w-full mb-4">
-            <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
-              <p>Tasks</p>
-              <Image
-                width={40}
-                alt="tasks"
-                height={40}
-                src="/images/tasks.png"
-              />
-            </div>
+            <TaskHeader />
             {task?.map((i: any) => (
               <Todo
                 key={i.id}
@@ -406,7 +386,7 @@ const Dashboard = () => {
                 approximateTime={i.duration / 60}
                 totalRatings={i.totalRatings}
                 id={i.id}
-                href={`/dashboard/activity/${i.id}`}
+                href={`/dashboard/task/${i.id}`}
               />
             ))}
           </div>

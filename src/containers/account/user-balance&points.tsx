@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
 import CoinSVG from "@/public/images/coin";
 import { SwapIconGray } from "@/public/images";
-import { useGetCompletedTasks } from "@/api/user";
+import { useGetCompletedSurveys, useGetCompletedTasks } from "@/api/user";
 
 const BalanceDetails = ({
   text,
@@ -40,6 +40,8 @@ const UserBalanceAndPoints = () => {
   const filterQuestionnaires = questionnaires?.data.filter(
     (item: { type: string }) => item.type === "QUESTIONNAIRE"
   );
+
+  const { data: completedSurveys } = useGetCompletedSurveys();
 
   return (
     <div className="bg-white rounded-2xl py-6 px-4">
@@ -81,7 +83,7 @@ const UserBalanceAndPoints = () => {
           logo={"/images/tasks-completed.png"}
         />
         <BalanceDetails
-          value={0}
+          value={completedSurveys?.data.length | 0}
           text={"Completed surveys"}
           logo={"/images/tasks-completed.png"}
         />

@@ -38,7 +38,7 @@ const BeginQuestionnaire = ({
         </div>
 
         <h1 className="flex flex-wrap w-screen items-center justify-center text-center gap-2 font-bold text-[22px] text-[#714EE7] ">
-          <p className="whitespace-nowrap">{description}</p>{" "}
+          <p className="whitespace-nowrap">{description}</p>
         </h1>
 
         <div className="grid gap-y-7 self-start">
@@ -75,7 +75,7 @@ const BeginQuestionnaire = ({
                 + {rewardPoints} points
               </h3>
               <p className="text-[#434343] text-[11px]">
-                Earn {rewardPoints} points by completing this {description}{" "}
+                Earn {rewardPoints} points by completing this {description}
                 survey
               </p>
             </div>

@@ -52,7 +52,7 @@ const ClaimTaskReward: React.FC<Props> = (props) => {
                   </Dialog.Title>
 
                   <p className="text-center text-base text-[#434343] font-normal ">
-                    Your questionnaire has been recorded successfully
+                    Your responses have been recorded successfully
                   </p>
 
                   <Button

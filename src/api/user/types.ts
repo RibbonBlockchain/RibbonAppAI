@@ -21,9 +21,20 @@ export type TSubmitTaskBody = {
   optionId: number | string | number[];
 };
 
+export type TSubmitSurveyBody = {
+  questionId: number;
+  surveyId: number;
+  optionId: number | string | number[];
+};
+
 export type TRateQuestionnaireBody = {
   rating: number;
   questionnaireId: number;
+};
+
+export type TRateSurveyBody = {
+  rating: number;
+  surveyId: number;
 };
 
 export type TReadNotificationBody = {

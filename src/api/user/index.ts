@@ -5,6 +5,8 @@ import {
   TReadNotificationBody,
   TClaimSwapPointsBody,
   TWithdrawPointsBody,
+  TSubmitSurveyBody,
+  TRateSurveyBody,
 } from "./types";
 import {
   getTasks,
@@ -26,6 +28,12 @@ import {
   getUncompletedSurveys,
   getUncompletedQuestionnaires,
   getUncompletedTasks,
+  getTasskByID,
+  getSurveyByID,
+  getSurveysInProgress,
+  submitSurvey,
+  rateSurvey,
+  getCompletedSurveys,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -87,12 +95,40 @@ export const useSubmitTask = () => {
   });
 };
 
+export const useSubmitSurvey = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TSubmitSurveyBody) => submitSurvey(body),
+  });
+};
+
+// export const useSubmitTassk = () => {
+//   return useMutation({
+//     onError,
+//     mutationFn: (body: TSubmitTaskBody) => submitTassk(body),
+//   });
+// };
+
 export const useRateQuestionnaire = () => {
   return useMutation({
     onError,
     mutationFn: (body: TRateQuestionnaireBody) => rateQuestionnaire(body),
   });
 };
+
+export const useRateSurvey = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TRateSurveyBody) => rateSurvey(body),
+  });
+};
+
+// export const useRateTask = () => {
+//   return useMutation({
+//     onError,
+//     mutationFn: (body: TRateQuestionnaireBody) => rateTask(body),
+//   });
+// };
 
 export const useClaimDailyRewards = () => {
   return useMutation({
@@ -121,6 +157,26 @@ export const useGetTasksInProgress = (
     queryFn: () => getTasksInProgress(),
   });
 };
+
+export const useGetSurveysInProgress = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["survey-inProgress"],
+    queryFn: () => getSurveysInProgress(),
+  });
+};
+
+// export const useGetTassksInProgress = (
+//   { enabled }: TGetResponse = { enabled: true }
+// ) => {
+//   return useQuery({
+//     enabled,
+//     queryKey: ["task-inProgress"],
+//     queryFn: () => getTassksInProgress(),
+//   });
+// };
 
 export const useGetUncompletedQuestionnaires = () => {
   return useQuery({
@@ -153,10 +209,34 @@ export const useGetCompletedTasks = (
   });
 };
 
+export const useGetCompletedSurveys = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["survey-completed"],
+    queryFn: () => getCompletedSurveys(),
+  });
+};
+
 export const useGetTaskByID = ({ id }: { id: string }) => {
   return useQuery({
     queryKey: ["single-task"],
     queryFn: () => getTaskByID(id),
+  });
+};
+
+export const useGetSurveyByID = ({ id }: { id: string }) => {
+  return useQuery({
+    queryKey: ["single-survey"],
+    queryFn: () => getSurveyByID(id),
+  });
+};
+
+export const useGetTasskByID = ({ id }: { id: string }) => {
+  return useQuery({
+    queryKey: ["single-tassk"],
+    queryFn: () => getTasskByID(id),
   });
 };
 

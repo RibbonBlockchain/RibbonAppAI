@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  useGetCompletedSurveys,
+  useGetCompletedTasks,
+  useGetCompletedTasksByDate,
+} from "@/api/user";
+import Image from "next/image";
 import React from "react";
 import "react-day-picker/dist/style.css";
 import { CalendarDays } from "lucide-react";
@@ -8,7 +14,7 @@ import { formatDate } from "@/lib/utils/format-date";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { NoCompletedTaskOnDate } from "./no-completed-task";
 import TodoCompletedForm from "@/containers/activity/todo-completed-form";
-import { useGetCompletedTasks, useGetCompletedTasksByDate } from "@/api/user";
+import { QuestionnaireHeader, SurveyHeader } from "../questionnaire/headers";
 
 interface Task {
   id: number;
@@ -104,11 +110,14 @@ const CompletedActivities = () => {
   const { data, isLoading } = useGetCompletedTasksByDate(
     formatDate(selectedDay)
   );
+
   const {
     data: allCompleted,
     isLoading: allLoading,
     isFetching: allFetching,
   } = useGetCompletedTasks();
+
+  const { data: completedSurvey } = useGetCompletedSurveys();
 
   if (allFetching || allLoading) {
     <SpinnerIcon />;
@@ -191,22 +200,11 @@ const CompletedActivities = () => {
         </div>
       </div>
 
-      {/* <div onClick={() => setSeeAllTasks(!seeAllTasks)}>
-        {seeAllTasks ? (
-          <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
-            View activities by date
-          </p>
-        ) : (
-          <p className="text-xs cursor-pointer text-[#7C56FE] py-3 font-bold text-end">
-            View all completed activities
-          </p>
-        )}
-      </div> */}
-
       {seeAllTasks ? (
         <div>
+          <QuestionnaireHeader />
           {allCompleted?.data.length >= 1 ? (
-            <div className="py-3">
+            <div className="pb-3">
               {/* display renderData or sortedRenderData */}
               {/* {Object.entries(renderData).map(([date, items]) => ( */}
               {Object.entries(sortedRenderData).map(([date, items]) => (
@@ -292,9 +290,29 @@ const CompletedActivities = () => {
         </div>
       )}
 
-      {/* <TaskListByDate /> */}
+      <div className="mb-8">
+        <SurveyHeader />
+        {completedSurvey?.data?.map((i: any) => (
+          <TodoCompletedForm
+            key={i.id}
+            score={i.score}
+            reward={i.reward}
+            priority={i.priority}
+            taskTitle={i.name}
+            approximateTime={i.duration / 60}
+            ratings={i.ratings}
+            totalRatings={i.totalRatings || 0}
+            params={undefined}
+          />
+        ))}
+      </div>
 
-      {/* <CoompletedSurvey /> */}
+      <div className="mb-8">
+        <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
+          <p>Tasks</p>
+          <Image width={40} alt="tasks" height={40} src="/images/tasks.png" />
+        </div>
+      </div>
     </div>
   );
 };

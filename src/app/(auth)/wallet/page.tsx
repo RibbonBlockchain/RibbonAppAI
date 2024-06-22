@@ -162,18 +162,6 @@ const Wallet = () => {
         });
         web3auth.configureAdapter(openloginAdapter);
 
-        const walletServicesPlugin = new WalletServicesPlugin();
-        web3auth.addPlugin(walletServicesPlugin); // Add the plugin to web3auth
-
-        // Show the wallet services plugin
-        await walletServicesPlugin.showWalletUi();
-
-        // Show the wallet connect scanner
-        await walletServicesPlugin.showWalletConnectScanner();
-
-        // Show the checkout
-        await walletServicesPlugin.showCheckout();
-
         setWeb3Auth(web3auth);
         await web3auth.init();
         setProvider(web3auth.provider);
@@ -345,6 +333,8 @@ const Wallet = () => {
       console.log(saAddress, "SA address");
       console.log(spender, "virtual wallet address");
 
+      claimPointsData?.data?.valutAddress;
+
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
         "function permitClaimPoints(address user,uint amount,uint256 deadline,uint8 v,bytes32 r,bytes32 s)",
@@ -361,7 +351,7 @@ const Wallet = () => {
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
-          to: "0x8ebBE4b3bABeED275c2eCd0F04Ec46368EC24379",
+          to: claimPointsData?.data?.valutAddress,
           data: data,
         },
         {
@@ -511,7 +501,7 @@ const Wallet = () => {
 
       const myaddress = (await web3.eth.getAccounts())[0];
 
-      const ADDRESS = "0x904C01A63d8122e6829DF8c96f1ed1854e8b757B";
+      const ADDRESS = "0x28B841ab4C9fAD21ee837a66d8F533FF97CecaFF";
 
       const contract = new web3.eth.Contract(pointsABI, ADDRESS);
 
@@ -603,9 +593,6 @@ const Wallet = () => {
   const [openPointTxPage, setOpenPointTxPage] = useState(false);
   const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
   const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
-
-  const [recoveryEmail, setRecoveryEmail] = useState("");
-  const [emailModal, setEmailModal] = useState(false);
 
   const useCoinDetails = () => {
     const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;

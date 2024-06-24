@@ -351,7 +351,7 @@ const Wallet = () => {
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
-          to: claimPointsData?.data?.valutAddress,
+          to: claimPointsData?.data?.vaultAddress,
           data: data,
         },
         {
@@ -523,7 +523,6 @@ const Wallet = () => {
 
   const onSwapPointsSuccess = (swapPointsData: any) => {
     usersSwapPoints(swapPointsData);
-    toast.success("Points swapped");
     setSwapTx(false);
     setPointsToSwap("");
   };

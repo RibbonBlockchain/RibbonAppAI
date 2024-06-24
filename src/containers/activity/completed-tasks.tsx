@@ -6,7 +6,7 @@ import {
   useGetCompletedTasksByDate,
 } from "@/api/user";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import "react-day-picker/dist/style.css";
 import { CalendarDays } from "lucide-react";
 import { DayPicker } from "react-day-picker";
@@ -161,6 +161,10 @@ const CompletedActivities = () => {
     sortedRenderData[date] = renderData[date];
   });
 
+  const [collapseQuestionnaire, setCollapseQuestionnaire] = useState(true);
+  const [collapseSurvey, setCollapseSurvey] = useState(true);
+  const [collapseTasks, setCollapseTasks] = useState(true);
+
   return (
     <div className="px-4 pb-4 sm:px-6 sm:pb-6">
       <div className="flex flex-col mb-2">
@@ -200,20 +204,68 @@ const CompletedActivities = () => {
         </div>
       </div>
 
-      {seeAllTasks ? (
-        <div>
+      <div className="mb-8">
+        <div onClick={() => setCollapseQuestionnaire(!collapseQuestionnaire)}>
           <QuestionnaireHeader />
-          {allCompleted?.data.length >= 1 ? (
-            <div className="pb-3">
-              {/* display renderData or sortedRenderData */}
-              {/* {Object.entries(renderData).map(([date, items]) => ( */}
-              {Object.entries(sortedRenderData).map(([date, items]) => (
-                <div key={date} className="pb-5">
-                  <p className="text-xs text-[#141414] py-3 font-bold">
-                    {date}
-                  </p>
-                  {items.map((i, index) => (
-                    <div key={index}>
+        </div>
+        {collapseQuestionnaire && (
+          <>
+            {seeAllTasks ? (
+              <div>
+                {allCompleted?.data.length >= 1 ? (
+                  <div className="pb-3">
+                    {/* display renderData or sortedRenderData */}
+                    {/* {Object.entries(renderData).map(([date, items]) => ( */}
+                    {Object.entries(sortedRenderData).map(([date, items]) => (
+                      <div key={date} className="pb-5">
+                        <p className="text-xs text-[#141414] py-3 font-bold">
+                          {date}
+                        </p>
+                        {items.map((i, index) => (
+                          <div key={index}>
+                            <>
+                              {i.type === "DAILY_REWARD" ? (
+                                <div
+                                  key={i.id}
+                                  className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                                >
+                                  <p className="text-xs">Daily rewards</p>
+                                  <p className="text-sm">100 pts</p>
+                                </div>
+                              ) : (
+                                <TodoCompletedForm
+                                  key={i.id}
+                                  score={i.score}
+                                  reward={i.reward}
+                                  priority={i.priority}
+                                  taskTitle={i.name}
+                                  approximateTime={i.duration / 60}
+                                  ratings={i.ratings}
+                                  totalRatings={i.totalRatings}
+                                  params={undefined}
+                                />
+                              )}
+                            </>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ) : allLoading ? (
+                  <SpinnerIcon />
+                ) : (
+                  <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
+                )}
+              </div>
+            ) : (
+              <div>
+                {data?.data.length >= 1 ? (
+                  <div className="">
+                    <p className="text-xs text-[#141414] py-3 font-bold">
+                      {formatDate(selectedDay)}
+                    </p>
+
+                    {data?.data?.map((i: any) => (
                       <>
                         {i.type === "DAILY_REWARD" ? (
                           <div
@@ -221,7 +273,7 @@ const CompletedActivities = () => {
                             className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
                           >
                             <p className="text-xs">Daily rewards</p>
-                            <p className="text-sm">100 pts</p>
+                            <p className="text-sm">1000 pts</p>
                           </div>
                         ) : (
                           <TodoCompletedForm
@@ -229,7 +281,7 @@ const CompletedActivities = () => {
                             score={i.score}
                             reward={i.reward}
                             priority={i.priority}
-                            taskTitle={i.name}
+                            taskTitle={i.description}
                             approximateTime={i.duration / 60}
                             ratings={i.ratings}
                             totalRatings={i.totalRatings}
@@ -237,74 +289,41 @@ const CompletedActivities = () => {
                           />
                         )}
                       </>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          ) : allLoading ? (
-            <SpinnerIcon />
-          ) : (
-            <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
-          )}
-        </div>
-      ) : (
-        <div>
-          {data?.data.length >= 1 ? (
-            <div className="">
-              <p className="text-xs text-[#141414] py-3 font-bold">
-                {formatDate(selectedDay)}
-              </p>
-
-              {data?.data?.map((i: any) => (
-                <>
-                  {i.type === "DAILY_REWARD" ? (
-                    <div
-                      key={i.id}
-                      className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
-                    >
-                      <p className="text-xs">Daily rewards</p>
-                      <p className="text-sm">1000 pts</p>
-                    </div>
-                  ) : (
-                    <TodoCompletedForm
-                      key={i.id}
-                      score={i.score}
-                      reward={i.reward}
-                      priority={i.priority}
-                      taskTitle={i.description}
-                      approximateTime={i.duration / 60}
-                      ratings={i.ratings}
-                      totalRatings={i.totalRatings}
-                      params={undefined}
-                    />
-                  )}
-                </>
-              ))}
-            </div>
-          ) : isLoading ? (
-            <SpinnerIcon />
-          ) : (
-            <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
-          )}
-        </div>
-      )}
+                    ))}
+                  </div>
+                ) : isLoading ? (
+                  <SpinnerIcon />
+                ) : (
+                  <NoCompletedTaskOnDate onclick={() => setSeeAllTasks(true)} />
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       <div className="mb-8">
-        <SurveyHeader />
-        {completedSurvey?.data?.map((i: any) => (
-          <TodoCompletedForm
-            key={i.id}
-            score={i.score}
-            reward={i.reward}
-            priority={i.priority}
-            taskTitle={i.name}
-            approximateTime={i.duration / 60}
-            ratings={i.ratings}
-            totalRatings={i.totalRatings || 0}
-            params={undefined}
-          />
-        ))}
+        <div onClick={() => setCollapseSurvey(!collapseSurvey)}>
+          <SurveyHeader />
+        </div>
+        {collapseSurvey && (
+          <>
+            {" "}
+            {completedSurvey?.data?.map((i: any) => (
+              <TodoCompletedForm
+                key={i.id}
+                score={i.score}
+                reward={i.reward}
+                priority={i.priority}
+                taskTitle={i.name}
+                approximateTime={i.duration / 60}
+                ratings={i.ratings}
+                totalRatings={i.totalRatings || 0}
+                params={undefined}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <div className="mb-8">

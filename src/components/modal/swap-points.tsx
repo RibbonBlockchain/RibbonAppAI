@@ -10,7 +10,8 @@ type Props = {
   isOpen: boolean;
   closeModal: () => void;
   handleClick: () => void;
-  pointInput: string;
+  setMaxAmount: () => void;
+  pointInput: number;
   handlePointInput: (e: any) => void;
   isPending: any;
   pointsBalance: any;
@@ -57,8 +58,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
 
                 <div className="flex flex-col gap-6 w-full">
                   <p className="text-xs text-[#626262]">
-                    NOTE: You can only swap 10000 points for WLD at a time at
-                    the moment
+                    NOTE: You can only swap a minimum of 10000 points
                   </p>
 
                   <div className="border rounded-[10px] p-4">
@@ -95,6 +95,12 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                           placeholder="0"
                         />
                       </div>
+                      <button
+                        onClick={props.setMaxAmount}
+                        className="font-bold"
+                      >
+                        Max
+                      </button>{" "}
                       <p className="text-xs">From</p>
                     </div>
                   </div>

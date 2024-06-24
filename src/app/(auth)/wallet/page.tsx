@@ -34,7 +34,7 @@ import {
 import { ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { WalletMoney } from "@/public/images";
+import { LogOut, WalletMoney } from "@/public/images";
 import { shorten } from "@/lib/utils/shorten";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { convertPoints } from "@/lib/utils/convertPoint";
@@ -51,7 +51,8 @@ import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import WithdrawalProcessing from "@/components/modal/withdrawal-processing";
-import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import ClaimPointsModal from "@/components/modal/claim-point-modal";
+import { useGetAuth } from "@/api/auth";
 
 const pointsABI = require("../contract/pointsABI.json");
 
@@ -290,7 +291,7 @@ const Wallet = () => {
   };
 
   const spender = address;
-  const claimValue = 10000;
+  const [claimValue, setClaimValue] = useState("10000");
 
   const {
     mutate: claimPoints,
@@ -307,8 +308,10 @@ const Wallet = () => {
     toast.success("Please wait while transaction resolves");
     usersClaimPoints(claimPointsData);
   };
+
   const onWithdrawSuccess = () => {
-    setShowPending(false), toast.success("Points claimed");
+    setShowClaimModal(false), setShowPending(false), setClaimValue("0");
+    toast.success("Points claimed");
   };
 
   // usersClaimPointsFromVirtualWallet
@@ -330,10 +333,6 @@ const Wallet = () => {
         rpcUrl: rpcTarget,
       });
       const saAddress = await smartWallet.getAccountAddress();
-      console.log(saAddress, "SA address");
-      console.log(spender, "virtual wallet address");
-
-      claimPointsData?.data?.valutAddress;
 
       //  @ts-ignore
       const interfacedata = new ethers.utils.Interface([
@@ -341,7 +340,7 @@ const Wallet = () => {
       ]);
       const data = interfacedata?.encodeFunctionData("permitClaimPoints", [
         saAddress,
-        convertPoints(claimValue) as string,
+        convertPoints(Number(claimValue)) as string,
         claimPointsData?.data?.deadline,
         claimPointsData?.data?.v,
         claimPointsData?.data?.r as string,
@@ -365,7 +364,7 @@ const Wallet = () => {
 
       if (userOpReceipt.success == "true") {
         withdrawPoints(
-          { amount: claimValue },
+          { amount: Number(claimValue) },
           { onSuccess: onWithdrawSuccess }
         );
       }
@@ -374,7 +373,8 @@ const Wallet = () => {
     }
   };
 
-  const swapValue = 10000;
+  const [swapValue, setSwapValue] = useState(10000);
+
   const {
     mutate: swapPoints,
     isPending,
@@ -524,7 +524,7 @@ const Wallet = () => {
   const onSwapPointsSuccess = (swapPointsData: any) => {
     usersSwapPoints(swapPointsData);
     setSwapTx(false);
-    setPointsToSwap("");
+    setSwapValue(0);
   };
   const pointToWLD = Number(point) / 5000;
 
@@ -587,11 +587,12 @@ const Wallet = () => {
   const [sendTx, setSendTx] = useState(false);
   const [swapTx, setSwapTx] = useState(false);
 
-  const [pointsToSwap, setPointsToSwap] = useState("");
+  // const [pointsToSwap, setPointsToSwap] = useState("");
 
   const [openPointTxPage, setOpenPointTxPage] = useState(false);
   const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
   const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
   const useCoinDetails = () => {
     const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
@@ -607,6 +608,10 @@ const Wallet = () => {
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
+
+  const { data: user } = useGetAuth({ enabled: true });
+  const virtualBalance = user?.wallet.balance;
+  const virtualPointBalance = virtualBalance * 5000;
 
   return (
     <>
@@ -637,21 +642,51 @@ const Wallet = () => {
               )}
             </div>
 
+            {/* open claim modal */}
+            <div>
+              {showClaimModal && (
+                <ClaimPointsModal
+                  isOpen={showClaimModal}
+                  closeModal={() => setShowClaimModal(false)}
+                  handleClick={() => {
+                    setShowClaimModal(false);
+                    setShowPending(true),
+                      toast.success("Transaction initiated");
+                    claimPoints(
+                      {
+                        amount: convertPoints(Number(claimValue)),
+                        address: SAAddress,
+                      },
+                      { onSuccess: onClaimPointsSuccess }
+                    );
+                  }}
+                  setMaxAmount={() =>
+                    setClaimValue(virtualPointBalance.toString())
+                  }
+                  pointInput={claimValue}
+                  handlePointInput={(e: any) => setClaimValue(e.target.value)}
+                  isPending={pendingClaim}
+                  pointsBalance={point}
+                />
+              )}
+            </div>
+
             {/* // swap points modal */}
             <div>
               {swapTx && (
                 <SwapPointToWorldToken
                   isOpen={swapTx}
                   isPending={isPending}
-                  pointInput={pointsToSwap}
-                  USDvalue={(Number(pointsToSwap) / 5000) * currentPrice}
+                  pointInput={swapValue}
+                  setMaxAmount={() => setSwapValue(Number(point))}
+                  USDvalue={(Number(swapValue) / 5000) * currentPrice}
                   pointsBalance={point}
                   wldBalance={wldToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
                     swapPoints(
                       {
-                        amount: convertPoints(claimValue),
+                        amount: convertPoints(Number(swapValue)),
                         address: SAAddress,
                       },
                       { onSuccess: onSwapPointsSuccess }
@@ -659,7 +694,7 @@ const Wallet = () => {
                     setShowPending(true),
                       toast.success("Transaction initiated");
                   }}
-                  handlePointInput={(e) => setPointsToSwap(e.target.value)}
+                  handlePointInput={(e) => setSwapValue(e.target.value)}
                 />
               )}
             </div>
@@ -755,16 +790,17 @@ const Wallet = () => {
               />
 
               <button
-                onClick={() => {
-                  setShowPending(true), toast.success("Transaction initiated");
-                  claimPoints(
-                    {
-                      amount: convertPoints(claimValue),
-                      address: SAAddress,
-                    },
-                    { onSuccess: onClaimPointsSuccess }
-                  );
-                }}
+                // onClick={() => {
+                //   setShowPending(true), toast.success("Transaction initiated");
+                //   claimPoints(
+                //     {
+                //       amount: convertPoints(claimValue),
+                //       address: SAAddress,
+                //     },
+                //     { onSuccess: onClaimPointsSuccess }
+                //   );
+                // }}
+                onClick={() => setShowClaimModal(true)}
                 className={clsx(
                   "mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]",
                   pendingClaim && "bg-gray-300"
@@ -801,15 +837,6 @@ const Wallet = () => {
                   <ArrowDownUp stroke="#7C56FE" />
                   Swap
                 </div>
-              </div>
-
-              <div className="flex items-end justify-end">
-                <button
-                  onClick={logout}
-                  className="px-4 py-2 w-fit bg-red-500 text-white rounded hover:bg-red-600 mr-2 mt-4"
-                >
-                  Log Out Wallet
-                </button>
               </div>
 
               <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
@@ -893,6 +920,15 @@ const Wallet = () => {
                           </p>
                         </div>
                       </div>
+                    </div>
+
+                    <div className="flex my-20 items-center justify-center">
+                      <button
+                        onClick={logout}
+                        className="flex flex-row items-center justify-center gap-2 px-4 py-2 w-fit font-semibold text-red-500 rounded hover:bg-red-600 mr-2 mt-4"
+                      >
+                        Log out wallet <LogOut />
+                      </button>
                     </div>
                   </>
                 ) : (

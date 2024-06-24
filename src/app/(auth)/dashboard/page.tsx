@@ -56,6 +56,10 @@ const Dashboard = () => {
   // const savedAddress = localStorage.getItem("address");
   const wldTokenBalance = localStorage.getItem("wldTokenBalance");
 
+  const [collapseQuestionnaire, setCollapseQuestionnaire] = useState(true);
+  const [collapseSurvey, setCollapseSurvey] = useState(true);
+  const [collapseTasks, setCollapseTasks] = useState(true);
+
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
       setPriorityTask((prev: any) => {
@@ -337,58 +341,79 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full mb-4">
-            <QuestionnaireHeader />
-            {questionnaire?.map((i: any) => (
-              <Todo
-                key={i.id}
-                ratings={i.ratings}
-                score={i.point}
-                icon={undefined}
-                reward={i.reward}
-                taskTitle={i.name}
-                approximateTime={i.duration / 60}
-                totalRatings={i.totalRatings}
-                id={i.id}
-                href={`/dashboard/questionnaires/${i.id}`}
-              />
-            ))}
+            <div
+              onClick={() => setCollapseQuestionnaire(!collapseQuestionnaire)}
+            >
+              <QuestionnaireHeader />
+            </div>
+            {collapseQuestionnaire && (
+              <>
+                {questionnaire?.map((i: any) => (
+                  <Todo
+                    key={i.id}
+                    ratings={i.ratings}
+                    score={i.point}
+                    icon={undefined}
+                    reward={i.reward}
+                    taskTitle={i.name}
+                    approximateTime={i.duration / 60}
+                    totalRatings={i.totalRatings}
+                    id={i.id}
+                    href={`/dashboard/questionnaires/${i.id}`}
+                  />
+                ))}
+              </>
+            )}
           </div>
 
           <div className="w-full mb-4">
-            <SurveyHeader />
+            <div onClick={() => setCollapseSurvey(!collapseSurvey)}>
+              <SurveyHeader />
+            </div>
 
-            {survey?.map((i: any) => (
-              <Todo
-                key={i.id}
-                ratings={i.ratings}
-                score={i.point}
-                icon={undefined}
-                reward={i.reward}
-                taskTitle={i.name}
-                approximateTime={i.duration / 60}
-                totalRatings={i.totalRatings}
-                id={i.id}
-                href={`/dashboard/survey/${i.id}`}
-              />
-            ))}
+            {collapseSurvey && (
+              <>
+                {survey?.map((i: any) => (
+                  <Todo
+                    key={i.id}
+                    ratings={i.ratings}
+                    score={i.point}
+                    icon={undefined}
+                    reward={i.reward}
+                    taskTitle={i.name}
+                    approximateTime={i.duration / 60}
+                    totalRatings={i.totalRatings}
+                    id={i.id}
+                    href={`/dashboard/survey/${i.id}`}
+                  />
+                ))}
+              </>
+            )}
           </div>
 
           <div className="w-full mb-4">
-            <TaskHeader />
-            {task?.map((i: any) => (
-              <Todo
-                key={i.id}
-                ratings={i.ratings}
-                score={i.point}
-                icon={undefined}
-                reward={i.reward}
-                taskTitle={i.name}
-                approximateTime={i.duration / 60}
-                totalRatings={i.totalRatings}
-                id={i.id}
-                href={`/dashboard/task/${i.id}`}
-              />
-            ))}
+            <div onClick={() => setCollapseTasks(!collapseTasks)}>
+              <TaskHeader />
+            </div>
+            {collapseTasks && (
+              <>
+                {" "}
+                {task?.map((i: any) => (
+                  <Todo
+                    key={i.id}
+                    ratings={i.ratings}
+                    score={i.point}
+                    icon={undefined}
+                    reward={i.reward}
+                    taskTitle={i.name}
+                    approximateTime={i.duration / 60}
+                    totalRatings={i.totalRatings}
+                    id={i.id}
+                    href={`/dashboard/task/${i.id}`}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>

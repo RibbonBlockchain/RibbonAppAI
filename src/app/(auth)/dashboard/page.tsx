@@ -31,6 +31,7 @@ import {
   SurveyHeader,
   TaskHeader,
 } from "@/containers/questionnaire/headers";
+import SurveyTodo from "@/containers/dashboard/survey-todo";
 
 const Dashboard = () => {
   const session = useSession();
@@ -52,6 +53,8 @@ const Dashboard = () => {
   const { data: questionnaire, isLoading } = useGetUncompletedQuestionnaires();
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
+
+  console.log(survey, "surveys here");
 
   // const savedAddress = localStorage.getItem("address");
   const wldTokenBalance = localStorage.getItem("wldTokenBalance");
@@ -374,14 +377,14 @@ const Dashboard = () => {
             {collapseSurvey && (
               <>
                 {survey?.map((i: any) => (
-                  <Todo
+                  <SurveyTodo
                     key={i.id}
-                    ratings={i.ratings}
                     score={i.point}
                     icon={undefined}
                     reward={i.reward}
                     taskTitle={i.name}
                     approximateTime={i.duration / 60}
+                    ratings={i.ratings}
                     totalRatings={i.totalRatings}
                     id={i.id}
                     href={`/dashboard/survey/${i.id}`}
@@ -397,7 +400,6 @@ const Dashboard = () => {
             </div>
             {collapseTasks && (
               <>
-                {" "}
                 {task?.map((i: any) => (
                   <Todo
                     key={i.id}

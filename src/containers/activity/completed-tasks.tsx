@@ -318,7 +318,7 @@ const CompletedActivities = () => {
                 taskTitle={i.name}
                 approximateTime={i.duration / 60}
                 ratings={i.ratings}
-                totalRatings={i.totalRatings || 0}
+                totalRatings={i.totalRatings}
                 params={undefined}
               />
             ))}

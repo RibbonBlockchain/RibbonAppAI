@@ -16,11 +16,11 @@ type Props = {
   approximateTime: number;
   icon: string | undefined;
 
-  ratings?: number;
-  totalRatings?: string;
+  ratings?: any;
+  totalRatings?: any;
 };
 
-const Todo = (props: Props) => {
+const SurveyTodo = (props: Props) => {
   const rewardPoints = props.reward * 5000;
 
   return (
@@ -53,7 +53,7 @@ const Todo = (props: Props) => {
               Claim {rewardPoints.toLocaleString()} points
             </p>
           </div>
-          {props.ratings && <RatingCompleted rating={props.ratings} />}
+          {<RatingCompleted rating={props.ratings} />}
         </div>
       </div>
 
@@ -72,14 +72,14 @@ const Todo = (props: Props) => {
           <CoinSVG width={12} height={13} fill={`#A81DA6`} />
           {props.reward} WLD
         </div>
-        {props.ratings && (
+        {
           <p className="text-[10px] font-medium text-[#626262] self-end">
             ({props.totalRatings}) Ratings
           </p>
-        )}
+        }
       </div>
     </div>
   );
 };
 
-export default Todo;
+export default SurveyTodo;

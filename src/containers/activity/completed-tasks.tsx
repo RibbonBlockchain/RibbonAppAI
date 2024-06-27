@@ -308,7 +308,6 @@ const CompletedActivities = () => {
         </div>
         {collapseSurvey && (
           <>
-            {" "}
             {completedSurvey?.data?.map((i: any) => (
               <TodoCompletedForm
                 key={i.id}

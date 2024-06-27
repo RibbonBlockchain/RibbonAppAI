@@ -367,9 +367,12 @@ const Wallet = () => {
           { amount: Number(claimValue) },
           { onSuccess: onWithdrawSuccess }
         );
+      } else {
+        setShowPending(false), toast.error("An error occured");
       }
     } catch (err) {
-      console.log(err);
+      setShowPending(false), toast.error("An error occured");
+      return;
     }
   };
 
@@ -434,9 +437,12 @@ const Wallet = () => {
 
       if (userOpReceipt.success == "true") {
         setShowPending(false), toast.success("Transaction successful");
+      } else {
+        setShowPending(false), toast.error("An error occured");
       }
     } catch (err) {
-      console.log(err);
+      setShowPending(false), toast.error("An error occured");
+      return;
     }
   };
 
@@ -484,9 +490,12 @@ const Wallet = () => {
 
       if (userOpReceipt.success == "true") {
         setShowPending(false), toast.success("Transaction successful");
+      } else {
+        setShowPending(false), toast.error("An error occured");
       }
     } catch (err) {
-      console.log(err);
+      setShowPending(false), toast.error("An error occured");
+      return;
     }
   };
 
@@ -666,7 +675,7 @@ const Wallet = () => {
                   pointInput={claimValue}
                   handlePointInput={(e: any) => setClaimValue(e.target.value)}
                   isPending={pendingClaim}
-                  pointsBalance={point}
+                  pointsBalance={virtualPointBalance}
                 />
               )}
             </div>
@@ -790,16 +799,6 @@ const Wallet = () => {
               />
 
               <button
-                // onClick={() => {
-                //   setShowPending(true), toast.success("Transaction initiated");
-                //   claimPoints(
-                //     {
-                //       amount: convertPoints(claimValue),
-                //       address: SAAddress,
-                //     },
-                //     { onSuccess: onClaimPointsSuccess }
-                //   );
-                // }}
                 onClick={() => setShowClaimModal(true)}
                 className={clsx(
                   "mt-5 w-full text-center py-3 text-white font-semibold bg-[#7C56FE] rounded-[16px]",
@@ -925,7 +924,7 @@ const Wallet = () => {
                     <div className="flex my-20 items-center justify-center">
                       <button
                         onClick={logout}
-                        className="flex flex-row items-center justify-center gap-2 px-4 py-2 w-fit font-semibold text-red-500 rounded hover:bg-red-600 mr-2 mt-4"
+                        className="flex flex-row items-center justify-center gap-2 px-4 py-2 w-fit font-semibold text-red-500 rounded hover:bg-red-300 mr-2 mt-4"
                       >
                         Log out wallet <LogOut />
                       </button>
@@ -966,13 +965,6 @@ const Wallet = () => {
               >
                 Login wallet <WalletMoney />
               </button>
-
-              {/* <button onClick={loginWithSMS} className="card">
-              SMS Login (e.g +cc-number)
-            </button>
-            <button onClick={loginWCModal} className="card">
-              Login with Wallet Connect v2
-            </button> */}
             </div>
           </div>
         </div>

@@ -49,14 +49,14 @@ const TodoCompletedForm = (props: Props) => {
 
           <div className="flex flex-row items-center gap-1">
             <RatingCompleted rating={props.ratings || 0} />
-            {props.ratings === 0 && (
+            {/* {props.ratings === 0 && (
               <p
                 onClick={() => setRateTask(true)}
                 className="text-[#714EE7] underline cursor-pointer"
               >
                 Rate task
               </p>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -76,14 +76,14 @@ const TodoCompletedForm = (props: Props) => {
           <CoinSVG width={12} height={13} fill={`#626262`} />
           {props.reward} WLD
         </div>
-        {props.ratings && (
-          <p className="text-[10px] font-medium text-[#626262]">
+        {
+          <p className="text-[10px] font-medium text-[#626262] self-end">
             ({props.totalRatings}) Ratings
           </p>
-        )}
+        }
       </div>
 
-      {rateTask && (
+      {/* {rateTask && (
         <RateTaskModal
           isOpen={rateTask}
           closeModal={() => {
@@ -91,18 +91,18 @@ const TodoCompletedForm = (props: Props) => {
           }}
           onChange={(newRating: any) => setRating(newRating)}
           handleSubmit={() => {
-            // submitRate(
-            //   { rating: rating, questionnaireId: data?.id },
-            //   {
-            //     onSuccess: () => {
-            //       router.push("/dashboard");
-            //     },
-            //   }
-            // );
-            router.push("/dashboard");
+            submitRate(
+              { rating: rating, questionnaireId: data?.id },
+              {
+                onSuccess: () => {
+                  router.push("/dashboard");
+                },
+              }
+            );
+            // router.push("/dashboard");
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };

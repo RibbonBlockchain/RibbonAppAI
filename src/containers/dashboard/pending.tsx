@@ -53,7 +53,7 @@ const Pending = (props: Props) => {
               Claim {rewardPoints.toLocaleString()} points
             </p>
           </div>
-          {props.ratings && <RatingCompleted rating={props.ratings} />}
+          {<RatingCompleted rating={props.ratings} />}
         </div>
       </div>
 
@@ -70,11 +70,11 @@ const Pending = (props: Props) => {
           <CoinSVG width={12} height={13} fill={`#A81DA6`} />
           {props.reward} WLD
         </div>
-        {props.ratings && (
-          <p className="text-[10px] font-medium text-[#626262]">
+        {
+          <p className="text-[10px] font-medium text-[#626262] self-end">
             ({props.totalRatings}) Ratings
           </p>
-        )}
+        }
       </div>
     </div>
   );

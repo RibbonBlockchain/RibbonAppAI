@@ -54,8 +54,6 @@ const Dashboard = () => {
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
 
-  console.log(survey, "surveys here");
-
   // const savedAddress = localStorage.getItem("address");
   const wldTokenBalance = localStorage.getItem("wldTokenBalance");
 

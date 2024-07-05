@@ -144,16 +144,6 @@ const Wallet = () => {
                 priority: 2,
                 mandatory: true,
               },
-              // socialBackupFactor: {
-              //   enable: true,
-              //   priority: 3,
-              //   mandatory: false,
-              // },
-              // passwordFactor: {
-              //   enable: true,
-              //   priority: 4,
-              //   mandatory: false,
-              // },
             },
           },
           loginSettings: {

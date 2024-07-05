@@ -32,9 +32,15 @@ import {
   TaskHeader,
 } from "@/containers/questionnaire/headers";
 import SurveyTodo from "@/containers/dashboard/survey-todo";
+import { useRouter } from "next/navigation";
+import TaskTodo from "@/containers/dashboard/task-todo";
+import TaskModal, { TTasks } from "@/components/modal/task-modal";
+import TaskDetailsModal from "@/components/modal/task-modal";
 
 const Dashboard = () => {
   const session = useSession();
+
+  const router = useRouter();
 
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
@@ -247,7 +253,10 @@ const Dashboard = () => {
                     strokeWidth={8}
                   >
                     {pointBalance >= 10000 ? (
-                      <button className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full ">
+                      <button
+                        onClick={() => router.push("/wallet")}
+                        className="cursor-pointer text-sm px-2 py-1 bg-white text-black rounded-full "
+                      >
                         {"Claim"}
                       </button>
                     ) : (
@@ -399,17 +408,12 @@ const Dashboard = () => {
             {collapseTasks && (
               <>
                 {task?.map((i: any) => (
-                  <Todo
+                  <TaskTodo
                     key={i.id}
-                    ratings={i.ratings}
+                    id={i.id}
                     score={i.point}
-                    icon={undefined}
                     reward={i.reward}
                     taskTitle={i.name}
-                    approximateTime={i.duration / 60}
-                    totalRatings={i.totalRatings}
-                    id={i.id}
-                    href={`/dashboard/task/${i.id}`}
                   />
                 ))}
               </>

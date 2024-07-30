@@ -1,8 +1,8 @@
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import React from "react";
 
-const Wallet = () => {
-  return <AuthNavLayout>Wallet</AuthNavLayout>;
+const Profile = () => {
+  return <AuthNavLayout>Profile</AuthNavLayout>;
 };
 
-export default Wallet;
+export default Profile;

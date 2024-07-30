@@ -3,8 +3,8 @@ import FooterNav from "./nav";
 
 const AuthNavLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1 mb-[70px]">{children}</div>
+    <div className=" flex flex-col">
+      <div className="flex-1 text-white">{children}</div>
       <FooterNav />
     </div>
   );

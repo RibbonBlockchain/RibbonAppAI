@@ -1,8 +1,6 @@
 "use client";
 
-import clsx from "clsx";
 import { useGetAuth } from "@/api/auth";
-import CoinSVG from "@/public/images/coin";
 import React, { useEffect, useState } from "react";
 
 const CountdownTimer: React.FC = () => {
@@ -53,29 +51,9 @@ const CountdownTimer: React.FC = () => {
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const restartCountdown = () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-    setCountdownTime(null);
-    setRemainingTime(0);
-  };
-
   return (
     <div className="w-auto">
       <p className="w-[80px]">{formatTime(remainingTime)}</p>
-
-      {/* {remainingTime > 0 ? (
-        <p className="w-[80px]">{formatTime(remainingTime)}</p>
-      ) : (
-        <div
-          className={clsx(
-            "text-gradient flex flex-row gap-2 items-center justify-center text-[20px] font-bold"
-          )}
-        >
-          <CoinSVG fill="#4B199C" />5 WLD
-        </div>
-      )} */}
     </div>
   );
 };

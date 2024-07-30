@@ -20,7 +20,7 @@ const RootLayout = async ({
 }>) => {
   return (
     <html lang="en" className={`h-full ${inter.className}`}>
-      <body className="h-full bg-white dark:bg-white">
+      <body className="h-full bg-white">
         <RootProvider>
           <main className="w-full max-w-[500px] h-[inherit] mx-auto">
             {children}

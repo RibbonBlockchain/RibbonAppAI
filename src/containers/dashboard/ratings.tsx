@@ -1,6 +1,5 @@
-import { Star } from "@/public/images";
+import { Star } from "lucide-react";
 import React, { useState } from "react";
-import { useRateQuestionnaire } from "@/api/user";
 
 interface RatingProps {
   initialRating?: number;

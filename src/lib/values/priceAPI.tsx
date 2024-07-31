@@ -25,8 +25,8 @@ const useCoinDetails = () => {
 
 const WorldCoinPrice = () => {
   const { data, error, isLoading } = useCoinDetails();
-  console.log("WLD coin data>>>>>", data);
-  console.log("WLD Price", data?.market_data.current_price.usd as number);
+  // console.log("WLD coin data>>>>>", data);
+  // console.log("WLD Price", data?.market_data.current_price.usd as number);
   const currentPrice = data?.market_data.current_price.usd as number;
 
   return <div>Current World Price: {currentPrice}</div>;

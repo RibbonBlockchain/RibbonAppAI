@@ -1,26 +1,62 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
-const Chat: React.FC = () => {
+interface Option {
+  id: number;
+  text: string;
+}
+
+interface Question {
+  id: number;
+  text: string;
+  type: "BOOLEAN" | "MULTICHOICE"; // More precise type
+  isFirst: boolean;
+  isLast: boolean;
+  taskId: number;
+  createdAt: string;
+  updatedAt: string;
+  options: Option[];
+}
+
+const Chat = ({ questions }: { questions: Question[] }) => {
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string }[]
-  >([{ sender: "ai", text: "Hi Tolu, what do you feel like doing today?" }]);
+  >([]);
   const [input, setInput] = useState("");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (questions?.length > 0) {
+      setMessages([{ sender: "ai", text: questions[0].text }]);
+    }
+  }, [questions]);
 
   const handleSend = () => {
     if (input.trim() === "") return;
-    setMessages([...messages, { sender: "user", text: input }]);
 
-    // Simulate AI response
-    setTimeout(() => {
-      setMessages([
-        ...messages,
-        { sender: "user", text: input },
-        { sender: "ai", text: "This is a response from the AI!" },
-      ]);
-    }, 1000);
+    // Add user's message to the chat
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: input },
+    ]);
+
+    // Clear the input field
     setInput("");
+
+    // Determine if there's a next question
+    if (currentQuestionIndex < questions.length - 1) {
+      const nextQuestionIndex = currentQuestionIndex + 1;
+
+      setTimeout(() => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "ai", text: questions[nextQuestionIndex].text },
+        ]);
+        setCurrentQuestionIndex(nextQuestionIndex);
+      }, 1000);
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -30,9 +66,15 @@ const Chat: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <div className="w-full mt-2 p-4 flex flex-col h-auto overflow-auto mx-auto rounded-lg shadow-lg">
-      <div className="flex-1 overflow-y-auto mb-16">
+    <div className="relative w-full mt-2 p-4 flex flex-col h-auto overflow-auto mx-auto rounded-lg shadow-lg">
+      <div className="flex-1 h-auto overflow-y-auto mb-16">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -46,10 +88,10 @@ const Chat: React.FC = () => {
               </div>
             )}
             <div
-              className={`inline-block px-4 py-2 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
+              className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
                 msg.sender === "user"
-                  ? "bg-[#3f3952] bg-opacity-75 text-white rounded-l-full rounded-tr-full rounded-br-md "
-                  : "bg-[#3f3952] bg-opacity-75 text-white rounded-r-full rounded-tl-full rounded-bl-md"
+                  ? "bg-[#3f3952] bg-opacity-75 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
+                  : "bg-[#3f3952] bg-opacity-75 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
               }`}
             >
               {msg.text}
@@ -65,9 +107,10 @@ const Chat: React.FC = () => {
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="absolute bottom-4 p-4 w-[340px]">
+      <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
         <div className="flex flex-row items-center">
           <input
             type="text"

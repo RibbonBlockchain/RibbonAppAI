@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
+import toast from "react-hot-toast";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,9 +24,9 @@ export const copyToClipboard = (text: any) => {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      console.log("Text copied to clipboard!");
+      toast.success("Text copied to clipboard!");
     })
     .catch((error) => {
-      console.error("Error copying text: ", error);
+      toast.error("Error copying text: ", error);
     });
 };

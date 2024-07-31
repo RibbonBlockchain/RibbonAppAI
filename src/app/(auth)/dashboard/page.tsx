@@ -208,16 +208,17 @@ const Dashboard = () => {
           <div className="w-full flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row gap-2">
               <div
-                onClick={() => setActiveMenu("tasks")}
+                onClick={() => setActiveMenu("questionnaires")}
                 className={clsx(
                   "h-[32px] flex text-center items-center px-[9px] rounded-[20px] border border-[#EFE6FD]",
-                  activeMenu === "tasks"
+                  activeMenu === "questionnaires"
                     ? "bg-white text-[#290064] font-bold"
                     : "bg-[inherit] text-white font-medium"
                 )}
               >
-                Tasks
+                Questionnarie
               </div>
+
               <div
                 onClick={() => setActiveMenu("surveys")}
                 className={clsx(
@@ -229,16 +230,17 @@ const Dashboard = () => {
               >
                 Surveys
               </div>
+
               <div
-                onClick={() => setActiveMenu("questionnaires")}
+                onClick={() => setActiveMenu("tasks")}
                 className={clsx(
                   "h-[32px] flex text-center items-center px-[9px] rounded-[20px] border border-[#EFE6FD]",
-                  activeMenu === "questionnaires"
+                  activeMenu === "tasks"
                     ? "bg-white text-[#290064] font-bold"
                     : "bg-[inherit] text-white font-medium"
                 )}
               >
-                Questionnarie
+                Tasks
               </div>
             </div>
 
@@ -248,14 +250,91 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="py-10 text-sm">
-          {activeMenu === "tasks" && (
-            <div className="flex flex-col gap-4">
-              {TasksSample.map((i: any) => (
-                <>
+        <div className="py-10 mb-8 text-sm">
+          {activeMenu === "questionnaires" && (
+            <div>
+              {questionnaire?.map((i: any) => (
+                <div key={i.id} className="flex flex-col gap-2">
                   <Link
-                    key={i.id}
-                    href={`/activities/${i.id}`}
+                    href={`/questionnaire/${i.id}`}
+                    className="flex flex-row items-center justify-between text-sm text-white"
+                  >
+                    <div>
+                      <p className="font-bold mb-1">{i.name}</p>
+                      <div className="-ml-2 flex flex-row items-center font-medium">
+                        <Image
+                          src="/assets/coin.png"
+                          alt="coin"
+                          height={32}
+                          width={32}
+                        />
+                        <p>{i.reward * 5000} points</p>
+                      </div>
+                    </div>
+                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
+                      Go
+                    </button>
+                  </Link>
+
+                  <div className="flex self-center mb-6">
+                    <Image
+                      alt="hr"
+                      height={1}
+                      width={240}
+                      className="w-auto h-auto"
+                      src="/assets/horizontal-line.png"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeMenu === "surveys" && (
+            <div>
+              {survey?.map((i: any) => (
+                <div key={i.id} className="flex flex-col gap-2">
+                  <Link
+                    href={`/survey/${i.id}`}
+                    className="flex flex-row items-center justify-between text-sm text-white"
+                  >
+                    <div>
+                      <p className="font-bold mb-1">{i.name}</p>
+                      <div className="-ml-2 flex flex-row items-center font-medium">
+                        <Image
+                          src="/assets/coin.png"
+                          alt="coin"
+                          height={32}
+                          width={32}
+                        />
+                        <p>{i.reward * 5000} points</p>
+                      </div>
+                    </div>
+                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
+                      Go
+                    </button>
+                  </Link>
+
+                  <div className="flex self-center mb-6">
+                    <Image
+                      alt="hr"
+                      height={1}
+                      width={240}
+                      className="w-auto h-auto"
+                      src="/assets/horizontal-line.png"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeMenu === "tasks" && (
+            <div>
+              {TasksSample?.map((i: any) => (
+                <div key={i.id} className="flex flex-col gap-2">
+                  <Link
+                    href={`/tasks/${i.id}`}
                     className="flex flex-row items-center justify-between text-sm text-white"
                   >
                     <div>
@@ -275,7 +354,7 @@ const Dashboard = () => {
                     </button>
                   </Link>
 
-                  <div className="flex self-center">
+                  <div className="flex self-center mb-6">
                     <Image
                       alt="hr"
                       height={1}
@@ -284,85 +363,7 @@ const Dashboard = () => {
                       src="/assets/horizontal-line.png"
                     />
                   </div>
-                </>
-              ))}
-            </div>
-          )}
-          {activeMenu === "surveys" && (
-            <div className="flex flex-col gap-4">
-              {survey.map((i: any) => (
-                <>
-                  <Link
-                    key={i.id}
-                    href={`/activities/${i.id}`}
-                    className="flex flex-row items-center justify-between text-sm text-white"
-                  >
-                    <div>
-                      <p className="font-bold mb-1">{i.name}</p>
-                      <div className="-ml-2 flex flex-row items-center font-medium">
-                        <Image
-                          src="/assets/coin.png"
-                          alt="coin"
-                          height={32}
-                          width={32}
-                        />
-                        <p>{i.reward * 5000} points</p>
-                      </div>
-                    </div>
-                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
-                      Go
-                    </button>
-                  </Link>
-
-                  <div className="flex self-center">
-                    <Image
-                      alt="hr"
-                      height={1}
-                      width={240}
-                      className="w-auto h-auto"
-                      src="/assets/horizontal-line.png"
-                    />
-                  </div>
-                </>
-              ))}
-            </div>
-          )}
-          {activeMenu === "questionnaires" && (
-            <div className="flex flex-col gap-4">
-              {questionnaire?.map((i: any) => (
-                <>
-                  <Link
-                    key={i.id}
-                    href={`/activities/${i.id}`}
-                    className="flex flex-row items-center justify-between text-sm text-white"
-                  >
-                    <div>
-                      <p className="font-bold mb-1">{i.name}</p>
-                      <div className="-ml-2 flex flex-row items-center font-medium">
-                        <Image
-                          src="/assets/coin.png"
-                          alt="coin"
-                          height={32}
-                          width={32}
-                        />
-                        <p>{i.reward * 5000} points</p>
-                      </div>
-                    </div>
-                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
-                      Go
-                    </button>
-                  </Link>
-
-                  <div className="flex self-center">
-                    <Image
-                      alt="hr"
-                      height={1}
-                      width={240}
-                      className="w-auto h-auto"
-                      src="/assets/horizontal-line.png"
-                    />
-                  </div>
-                </>
+                </div>
               ))}
             </div>
           )}

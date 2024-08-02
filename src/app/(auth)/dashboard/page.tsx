@@ -22,6 +22,7 @@ import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import { ArrowSwapHorizontal } from "iconsax-react";
 import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
 import Link from "next/link";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -31,7 +32,7 @@ const TasksSample = [
   { id: 5, task: "Follow us on twitter (X)", rewardPoints: 5000 },
 ];
 
-const PointBalanceCard = () => (
+const PointBalanceCard = ({ points }: { points: number }) => (
   <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[310px] h-auto p-4 my-2 mt-2 border border-[#D6CBFF4D]">
     <div>
       <p className="text-sm font-medium mb-2">Points balance</p>
@@ -50,8 +51,17 @@ const PointBalanceCard = () => (
 
     <div className="flex flex-col gap-3 mt-4">
       <p className="flex self-end text-xs font-medium">20,000/50,000 pts</p>
-      <div className="w-full flex items-center justify-center text-sm font-bold py-3 text-center rounded-full bg-[#A166F5]">
-        Claim points
+
+      <div style={{ position: "relative", width: "100%" }}>
+        <ProgressBar
+          height="42px"
+          completed={(points * 100) / 50000}
+          bgColor="#A166F5"
+          customLabel="n"
+        />
+        <p className="absolute top-2 flex self-center mx-auto px-6">
+          Claim points
+        </p>
       </div>
     </div>
   </div>
@@ -141,7 +151,7 @@ const Dashboard = () => {
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
 
-  const [activeMenu, setActiveMenu] = useState("tasks");
+  const [activeMenu, setActiveMenu] = useState("questionnaires");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -174,6 +184,8 @@ const Dashboard = () => {
     }
   }, []);
 
+  const points = 10000;
+
   return (
     <AuthNavLayout>
       <div className="w-full text-white bg-[#0B0228] p-4 sm:p-6">
@@ -181,7 +193,7 @@ const Dashboard = () => {
           <Topbar />
 
           <div className="flex flex-row gap-1 xxs:gap-4 w-[98%] overflow-auto">
-            <PointBalanceCard />
+            <PointBalanceCard points={points} />
             <WalletBalanceCard />
           </div>
 

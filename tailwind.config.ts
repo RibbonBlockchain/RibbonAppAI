@@ -18,6 +18,7 @@ const config: Config = {
         primary: { DEFAULT: "#7C56FE", "50": "#F2EEFF" },
       },
       backgroundImage: {
+        aiBackground: "url('/assets/AI-background.png')",
         account: "url('/images/user-bg.png')",
         peronalDetails: "url('/images/personal-details.png')",
         walletBg: 'url("/images/connect-wallet-bg.png")',

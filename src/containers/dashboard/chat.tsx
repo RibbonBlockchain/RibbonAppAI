@@ -10,7 +10,7 @@ interface Option {
 interface Question {
   id: number;
   text: string;
-  type: any; // Consider specifying this more precisely
+  type: any;
   isFirst: boolean;
   isLast: boolean;
   taskId: number;
@@ -25,6 +25,9 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   >([]);
   const [input, setInput] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ratingMode, setRatingMode] = useState(false);
+  const [claimReward, setClaimReward] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -36,27 +39,36 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   const handleSend = () => {
     if (input.trim() === "") return;
 
-    // Add user's message to the chat
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender: "user", text: input },
     ]);
 
-    // Clear the input field
     setInput("");
 
-    // Determine if there's a next question
     if (currentQuestionIndex < questions.length - 1) {
       const nextQuestionIndex = currentQuestionIndex + 1;
 
-      // Delay AI's response
       setTimeout(() => {
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "ai", text: questions[nextQuestionIndex].text },
         ]);
         setCurrentQuestionIndex(nextQuestionIndex);
-      }, 1000); // Adjust this delay as needed
+      }, 1500);
+    } else {
+      if (!isSubmitting && !ratingMode && !claimReward) {
+        setIsSubmitting(true);
+        setTimeout(() => {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              sender: "ai",
+              text: "Do you want to submit the questionnaire?",
+            },
+          ]);
+        }, 1000);
+      }
     }
   };
 
@@ -67,6 +79,71 @@ const Chat = ({ questions }: { questions: Question[] }) => {
     }
   };
 
+  const handleOptionClick = (option: string) => {
+    if (option.toLowerCase() === "submit") {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "user", text: "Submitted" },
+        { sender: "ai", text: "Thank you for submitting the questionnaire!" },
+      ]);
+
+      setIsSubmitting(false);
+      setRatingMode(true);
+      setTimeout(() => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "ai", text: "Please rate the questionnaire from 1 to 5." },
+        ]);
+      }, 1000);
+    } else if (option.toLowerCase() === "cancel") {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "user", text: "Cancelled" },
+        {
+          sender: "ai",
+          text: "The questionnaire was not submitted. You can restart if needed.",
+        },
+      ]);
+
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRatingClick = (rating: number) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: rating.toString() },
+      {
+        sender: "ai",
+        text: `Thank you for rating the questionnaire with ${rating}!`,
+      },
+    ]);
+
+    setRatingMode(false);
+    setClaimReward(true);
+    setTimeout(() => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          sender: "ai",
+          text: "You can now claim your reward points by clicking the button below.",
+        },
+      ]);
+    }, 1000);
+  };
+
+  const handleClaimClick = () => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: "Claimed reward" },
+      {
+        sender: "ai",
+        text: "Congratulations! You have claimed your reward points. You can now close the questionnaire and return to the dashboard",
+      },
+    ]);
+    setClaimReward(false);
+  };
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -75,7 +152,7 @@ const Chat = ({ questions }: { questions: Question[] }) => {
 
   return (
     <div className="relative w-full mt-2 p-4 flex flex-col h-auto overflow-auto mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
-      <div className="flex-1 h-auto overflow-y-auto mb-16">
+      <div className="flex-1 h-full overflow-y-auto mb-16">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -112,19 +189,57 @@ const Chat = ({ questions }: { questions: Question[] }) => {
       </div>
 
       <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
-        <div className="flex flex-row items-center">
-          <input
-            type="text"
-            value={input}
-            onKeyDown={handleKeyDown}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-            className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
-          />
-          <button onClick={handleSend} className="absolute right-8 z-10">
-            <Send size="32" color="#ffffff" />
-          </button>
-        </div>
+        {!isSubmitting && !ratingMode && !claimReward ? (
+          <div className="flex flex-row items-center">
+            <input
+              type="text"
+              value={input}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a message..."
+              className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
+            />
+            <button onClick={handleSend} className="absolute right-8 z-10">
+              <Send size="32" color="#ffffff" />
+            </button>
+          </div>
+        ) : ratingMode ? (
+          <div className="flex flex-row items-center justify-center gap-4">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                onClick={() => handleRatingClick(rating)}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                {rating}
+              </button>
+            ))}
+          </div>
+        ) : claimReward ? (
+          <div className="flex flex-row items-center justify-center gap-4">
+            <button
+              onClick={handleClaimClick}
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Claim Reward
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-row items-center justify-center gap-6">
+            <button
+              onClick={() => handleOptionClick("Cancel")}
+              className="bg-red-500 bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleOptionClick("Submit")}
+              className="bg-[#3f3952] bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
+            >
+              Submit
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

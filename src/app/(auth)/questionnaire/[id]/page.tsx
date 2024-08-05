@@ -18,8 +18,6 @@ const QuestionnairePage = ({ params }: any) => {
     isLoading: isLoadingGetTask,
     isPending: isPendingGetTask,
   } = useGetTaskByID({ id: String(params.id) });
-  const questionIds = data?.questions?.map((question: any) => question.id);
-  const taskId = data?.id;
 
   const { mutate: submitTask, isPending } = useSubmitTask();
   isPending && <SpinnerIcon />;

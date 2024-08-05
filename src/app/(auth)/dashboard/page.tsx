@@ -19,10 +19,12 @@ import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import { ArrowSwapHorizontal } from "iconsax-react";
 import ProgressBar from "@ramonak/react-progress-bar";
+import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
 import { ArrowDown, ArrowDownUp, ArrowUp, LucideCopy } from "lucide-react";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import FloatingIcon from "./floating-icon";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -197,6 +199,7 @@ const Dashboard = () => {
       <div className="w-full text-white bg-[#0B0228] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
+          <FloatingIcon />
 
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row gap-2 w-full overflow-auto">

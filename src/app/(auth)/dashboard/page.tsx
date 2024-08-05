@@ -6,6 +6,7 @@ import {
   useGetUncompletedQuestionnaires,
 } from "@/api/user";
 import clsx from "clsx";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useGetAuth } from "@/api/auth";
@@ -16,13 +17,12 @@ import { shorten } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
+import { ArrowSwapHorizontal } from "iconsax-react";
+import ProgressBar from "@ramonak/react-progress-bar";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
 import { ArrowDown, ArrowDownUp, ArrowUp, LucideCopy } from "lucide-react";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import { ArrowSwapHorizontal } from "iconsax-react";
-import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
-import Link from "next/link";
-import ProgressBar from "@ramonak/react-progress-bar";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -33,7 +33,7 @@ const TasksSample = [
 ];
 
 const PointBalanceCard = ({ points }: { points: number }) => (
-  <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[310px] h-auto p-4 my-2 mt-2 border border-[#D6CBFF4D]">
+  <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
     <div>
       <p className="text-sm font-medium mb-2">Points balance</p>
       <div>
@@ -50,25 +50,30 @@ const PointBalanceCard = ({ points }: { points: number }) => (
     </div>
 
     <div className="flex flex-col gap-3 mt-4">
-      <p className="flex self-end text-xs font-medium">20,000/50,000 pts</p>
+      <p className="flex self-end text-xs font-medium">{points}/50,000 pts</p>
 
       <div style={{ position: "relative", width: "100%" }}>
         <ProgressBar
           height="42px"
           completed={(points * 100) / 50000}
           bgColor="#A166F5"
-          customLabel="n"
+          labelColor="#A166F5"
+          customLabel={"."}
+          baseBgColor="#D6CBFF33"
         />
-        <p className="absolute top-2 flex self-center mx-auto px-6">
-          Claim points
-        </p>
+
+        <div className="flex justify-center">
+          <p className="absolute top-2 px-6 text-[#F6F1FE] font-semibold">
+            Claim points
+          </p>
+        </div>
       </div>
     </div>
   </div>
 );
 
 const WalletBalanceCard = () => (
-  <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[310px] h-auto p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
+  <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
     <div>
       <p className="text-sm font-medium mb-2">Your wallet</p>
       <div>
@@ -97,21 +102,21 @@ const WalletBalanceCard = () => (
 
     <div className="w-full pt-5 flex gap-4 items-center justify-between text-xs font-bold">
       <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-4 bg-white justify-center border border-[#D6CBFF] rounded-full ">
+        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowUp stroke="#7C56FE" />
         </div>
         Send
       </div>
 
       <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-4 bg-white justify-center border border-[#D6CBFF] rounded-full ">
+        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowDown stroke="#7C56FE" />
         </div>
         Recieve
       </div>
 
       <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-4 bg-white justify-center border border-[#D6CBFF] rounded-full ">
+        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowDownUp stroke="#7C56FE" />
         </div>
         Swap
@@ -152,6 +157,7 @@ const Dashboard = () => {
   isLoading && <PageLoader />;
 
   const [activeMenu, setActiveMenu] = useState("questionnaires");
+  const [activeCard, setActiveCard] = useState("point");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -184,7 +190,7 @@ const Dashboard = () => {
     }
   }, []);
 
-  const points = 10000;
+  const points = 40000;
 
   return (
     <AuthNavLayout>
@@ -192,9 +198,27 @@ const Dashboard = () => {
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
 
-          <div className="flex flex-row gap-1 xxs:gap-4 w-[98%] overflow-auto">
-            <PointBalanceCard points={points} />
-            <WalletBalanceCard />
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-row gap-2 w-full overflow-auto">
+              {activeCard === "point" && <PointBalanceCard points={points} />}
+              {activeCard === "wallet" && <WalletBalanceCard />}
+            </div>
+            <div className="flex flex-row gap-4 mt-3">
+              <button
+                className={clsx(
+                  "p-1 rounded-full transition ring-2 ring-white",
+                  activeCard === "point" ? "bg-white" : "bg-inherit"
+                )}
+                onClick={() => setActiveCard("point")}
+              ></button>
+              <button
+                className={clsx(
+                  "p-1 rounded-full transition ring-2 ring-white",
+                  activeCard === "wallet" ? "bg-white" : "bg-inherit"
+                )}
+                onClick={() => setActiveCard("wallet")}
+              ></button>
+            </div>
           </div>
 
           <div className="my-6 w-full gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full">
@@ -254,10 +278,6 @@ const Dashboard = () => {
               >
                 Tasks
               </div>
-            </div>
-
-            <div className="w-[44px] h-[44px] rounded-full mr-1">
-              <Image alt="AI" width={44} height={44} src="/assets/AI.png" />
             </div>
           </div>
         </div>

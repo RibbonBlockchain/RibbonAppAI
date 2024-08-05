@@ -19,6 +19,7 @@ const QuestionnairePage = ({ params }: any) => {
     isPending: isPendingGetTask,
   } = useGetTaskByID({ id: String(params.id) });
   const questionIds = data?.questions?.map((question: any) => question.id);
+  const taskId = data?.id;
 
   const { mutate: submitTask, isPending } = useSubmitTask();
   isPending && <SpinnerIcon />;
@@ -35,7 +36,10 @@ const QuestionnairePage = ({ params }: any) => {
             <X onClick={() => router.push("/dashboard")} className="w-6 h-6" />
             <div className="flex flex-row items-center gap-4">
               <Image alt="AI" width={44} height={44} src="/assets/AI.png" />
-              <p>Ribbon AI</p>
+              <div>
+                <p>Ribbon AI</p>
+                <p>{data?.name}</p>
+              </div>
             </div>
           </div>
           <VolumeHigh size="32" color="#ffffff" />

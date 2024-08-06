@@ -8,15 +8,17 @@ import { MicrophoneIcon } from "@heroicons/react/24/solid";
 const FloatingIcon = () => {
   const router = useRouter();
   return (
-    <div className="fixed flex flex-row items-center gap-2 top-[32%] right-2 rounded-full z-50">
-      <Image
-        alt="AI"
-        width={44}
-        height={44}
-        src="/assets/AI.png"
-        onClick={() => router.push("/activity")}
-      />
-      <MicrophoneIcon width={24} height={24} color="white" />
+    <div className="absolute right-16 top-[46%] z-50">
+      <div className="fixed rounded-full p-2 flex flex-row items-center gap-2 bg-[#3f3952] bg-opacity-95">
+        <MicrophoneIcon width={24} height={24} color="white" />
+        <Image
+          alt="AI"
+          width={32}
+          height={32}
+          src="/assets/AI.png"
+          onClick={() => router.push("/bot")}
+        />
+      </div>
     </div>
   );
 };

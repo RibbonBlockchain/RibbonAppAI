@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-
+import { useSubmitTask } from "@/api/user";
 interface Option {
   id: number;
   text: string;
 }
-
 interface Question {
   id: number;
   text: string;
@@ -30,6 +29,8 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   const [claimReward, setClaimReward] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  const { mutate: submitTask, isPending } = useSubmitTask();
+
   useEffect(() => {
     if (questions?.length > 0) {
       setMessages([{ sender: "ai", text: questions[0].text }]);
@@ -46,29 +47,48 @@ const Chat = ({ questions }: { questions: Question[] }) => {
 
     setInput("");
 
-    if (currentQuestionIndex < questions.length - 1) {
-      const nextQuestionIndex = currentQuestionIndex + 1;
+    const currentQuestion = questions[currentQuestionIndex];
 
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: questions[nextQuestionIndex].text },
-        ]);
-        setCurrentQuestionIndex(nextQuestionIndex);
-      }, 1500);
-    } else {
-      if (!isSubmitting && !ratingMode && !claimReward) {
-        setIsSubmitting(true);
+    if (currentQuestion) {
+      console.log(`Current question ID: ${currentQuestion.id}`);
+
+      if (currentQuestionIndex < questions.length - 1) {
+        const nextQuestionIndex = currentQuestionIndex + 1;
+
         setTimeout(() => {
           setMessages((prevMessages) => [
             ...prevMessages,
-            {
-              sender: "ai",
-              text: "Do you want to submit the questionnaire?",
-            },
+            { sender: "ai", text: questions[nextQuestionIndex].text },
           ]);
-        }, 1000);
+          setCurrentQuestionIndex(nextQuestionIndex);
+        }, 1500);
+      } else {
+        if (!isSubmitting && !ratingMode && !claimReward) {
+          setIsSubmitting(true);
+          setTimeout(() => {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                sender: "ai",
+                text: "Do you want to submit the questionnaire?",
+              },
+            ]);
+          }, 1000);
+        }
       }
+
+      const questionIdToSubmit =
+        currentQuestionIndex === questions.length - 1
+          ? questions[questions.length - 1].id
+          : currentQuestion.id;
+
+      submitTask({
+        optionId: 0,
+        questionId: questionIdToSubmit,
+        taskId: currentQuestion.taskId,
+      });
+    } else {
+      console.error("Current question is undefined");
     }
   };
 

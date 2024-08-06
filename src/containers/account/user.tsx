@@ -15,7 +15,7 @@ const User = () => {
             width={83}
             height={79}
             alt="avatar"
-            src={user?.avatar || "/images/avatar.jpg"}
+            src={user?.avatar || ""}
             className="border-2 border-[#A81DA6] rounded-full"
           />
           <Image

@@ -50,8 +50,6 @@ const Chat = ({ questions }: { questions: Question[] }) => {
     const currentQuestion = questions[currentQuestionIndex];
 
     if (currentQuestion) {
-      console.log(`Current question ID: ${currentQuestion.id}`);
-
       if (currentQuestionIndex < questions.length - 1) {
         const nextQuestionIndex = currentQuestionIndex + 1;
 
@@ -88,7 +86,7 @@ const Chat = ({ questions }: { questions: Question[] }) => {
         taskId: currentQuestion.taskId,
       });
     } else {
-      console.error("Current question is undefined");
+      // error
     }
   };
 

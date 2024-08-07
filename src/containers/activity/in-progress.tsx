@@ -30,7 +30,7 @@ const InProgress = () => {
               ratings={i?.ratings}
               totalRatings={i?.totalRatings}
               approximateTime={i?.duration / 60}
-              href={`/dashboard/activity/${i.id}`}
+              href={`/questionnaire/${i.id}`}
             />
           ))}
         </div>
@@ -50,7 +50,7 @@ const InProgress = () => {
               ratings={i?.ratings}
               totalRatings={i?.totalRatings}
               approximateTime={i?.duration / 60}
-              href={`/dashboard/activity/${i.id}`}
+              href={`/survey/${i.id}`}
             />
           ))}
         </div>

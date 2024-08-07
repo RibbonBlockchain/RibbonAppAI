@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
+import { useRateQuestionnaire, useSubmitTask } from "@/api/user";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import { useSubmitTask } from "@/api/user";
+
 interface Option {
   id: number;
   text: string;
 }
+
 interface Question {
   id: number;
   text: string;
@@ -18,9 +20,9 @@ interface Question {
   options: Option[];
 }
 
-const Chat = ({ questions }: { questions: Question[] }) => {
+const QuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const [messages, setMessages] = useState<
-    { sender: "user" | "ai"; text: string }[]
+    { sender: "user" | "ai"; text: string; options?: Option[] }[]
   >([]);
   const [input, setInput] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -30,15 +32,26 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const { mutate: submitTask, isPending } = useSubmitTask();
+  const { mutate: rateTask } = useRateQuestionnaire();
 
   useEffect(() => {
     if (questions?.length > 0) {
-      setMessages([{ sender: "ai", text: questions[0].text }]);
+      const firstQuestion = questions[0];
+      setMessages([
+        {
+          sender: "ai",
+          text: firstQuestion.text,
+          options: firstQuestion.options,
+        },
+      ]);
     }
   }, [questions]);
 
   const handleSend = () => {
-    if (input.trim() === "") return;
+    const currentQuestion = questions[currentQuestionIndex];
+    const currentQuestionHasOptions = currentQuestion?.options?.length > 0;
+
+    if (input.trim() === "" && !currentQuestionHasOptions) return;
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -47,8 +60,6 @@ const Chat = ({ questions }: { questions: Question[] }) => {
 
     setInput("");
 
-    const currentQuestion = questions[currentQuestionIndex];
-
     if (currentQuestion) {
       if (currentQuestionIndex < questions.length - 1) {
         const nextQuestionIndex = currentQuestionIndex + 1;
@@ -56,7 +67,11 @@ const Chat = ({ questions }: { questions: Question[] }) => {
         setTimeout(() => {
           setMessages((prevMessages) => [
             ...prevMessages,
-            { sender: "ai", text: questions[nextQuestionIndex].text },
+            {
+              sender: "ai",
+              text: questions[nextQuestionIndex].text,
+              options: questions[nextQuestionIndex].options,
+            },
           ]);
           setCurrentQuestionIndex(nextQuestionIndex);
         }, 1500);
@@ -97,7 +112,56 @@ const Chat = ({ questions }: { questions: Question[] }) => {
     }
   };
 
-  const handleOptionClick = (option: string) => {
+  const handleOptionClick = (option: Option) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: option.text },
+    ]);
+
+    const currentQuestion = questions[currentQuestionIndex];
+
+    if (currentQuestionIndex < questions.length - 1) {
+      const nextQuestionIndex = currentQuestionIndex + 1;
+
+      setTimeout(() => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            sender: "ai",
+            text: questions[nextQuestionIndex].text,
+            options: questions[nextQuestionIndex].options,
+          },
+        ]);
+        setCurrentQuestionIndex(nextQuestionIndex);
+      }, 1500);
+    } else {
+      if (!isSubmitting && !ratingMode && !claimReward) {
+        setIsSubmitting(true);
+        setTimeout(() => {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              sender: "ai",
+              text: "Do you want to submit the questionnaire?",
+            },
+          ]);
+        }, 1000);
+      }
+    }
+
+    const questionIdToSubmit =
+      currentQuestionIndex === questions.length - 1
+        ? questions[questions.length - 1].id
+        : currentQuestion.id;
+
+    submitTask({
+      optionId: option.id,
+      questionId: questionIdToSubmit,
+      taskId: currentQuestion?.taskId,
+    });
+  };
+
+  const handleSubmitClick = (option: string) => {
     if (option.toLowerCase() === "submit") {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -128,6 +192,9 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   };
 
   const handleRatingClick = (rating: number) => {
+    const currentQuestion = questions[currentQuestionIndex];
+    const taskId = currentQuestion?.taskId;
+
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender: "user", text: rating.toString() },
@@ -139,6 +206,7 @@ const Chat = ({ questions }: { questions: Question[] }) => {
 
     setRatingMode(false);
     setClaimReward(true);
+
     setTimeout(() => {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -148,6 +216,8 @@ const Chat = ({ questions }: { questions: Question[] }) => {
         },
       ]);
     }, 1000);
+
+    rateTask({ rating: rating, questionnaireId: taskId });
   };
 
   const handleClaimClick = () => {
@@ -156,7 +226,7 @@ const Chat = ({ questions }: { questions: Question[] }) => {
       { sender: "user", text: "Claimed reward" },
       {
         sender: "ai",
-        text: "Congratulations! You have claimed your reward points. You can now close the questionnaire and return to the dashboard",
+        text: "Congratulations! You have claimed your reward points. You can now close the questionnaire and return to the dashboard.",
       },
     ]);
     setClaimReward(false);
@@ -191,6 +261,19 @@ const Chat = ({ questions }: { questions: Question[] }) => {
               }`}
             >
               {msg.text}
+              {msg.options && (
+                <div className="mt-2 flex flex-col gap-2">
+                  {msg.options.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleOptionClick(option)}
+                      className="bg-gradient-to-b from-[#0B0228] to-[#121212] text-white px-4 py-2 rounded-md"
+                    >
+                      {option.text}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {msg.sender === "user" && (
               <div className="w-8 h-8 self-end flex-shrink-0">
@@ -245,13 +328,13 @@ const Chat = ({ questions }: { questions: Question[] }) => {
         ) : (
           <div className="flex flex-row items-center justify-center gap-6">
             <button
-              onClick={() => handleOptionClick("Cancel")}
+              onClick={() => handleSubmitClick("Cancel")}
               className="bg-red-500 bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
             >
               Cancel
             </button>
             <button
-              onClick={() => handleOptionClick("Submit")}
+              onClick={() => handleSubmitClick("Submit")}
               className="bg-[#3f3952] bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
             >
               Submit
@@ -263,4 +346,4 @@ const Chat = ({ questions }: { questions: Question[] }) => {
   );
 };
 
-export default Chat;
+export default QuestionnaireChat;

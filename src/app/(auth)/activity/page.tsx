@@ -3,11 +3,11 @@
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
 import React, { useEffect } from "react";
-import { useGetSurveysInProgress, useGetTasksInProgress } from "@/api/user";
 import FloatingIcon from "../dashboard/floating-icon";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import InProgress from "@/containers/activity/in-progress";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import CompletedActivities from "@/containers/activity/completed-tasks";
+import { useGetSurveysInProgress, useGetTasksInProgress } from "@/api/user";
 
 const Activity = () => {
   const { data: user } = useGetAuth({ enabled: true });
@@ -89,7 +89,9 @@ const Activity = () => {
           </div>
         </div>
 
-        {activeTab === "completed" ? <CompletedActivities /> : <InProgress />}
+        <div className="pb-28">
+          {activeTab === "completed" ? <CompletedActivities /> : <InProgress />}
+        </div>
       </div>
     </AuthNavLayout>
   );

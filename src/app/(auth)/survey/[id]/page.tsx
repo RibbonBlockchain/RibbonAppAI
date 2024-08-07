@@ -5,10 +5,11 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { VolumeHigh } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import Chat from "@/containers/dashboard/chat";
+import Chat from "@/containers/dashboard/questionnaire-chat";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetSurveyByID, useSubmitTask } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import SurveyChat from "@/containers/dashboard/survey-chat copy";
 
 const QuestionnairePage = ({ params }: any) => {
   const router = useRouter();
@@ -35,7 +36,10 @@ const QuestionnairePage = ({ params }: any) => {
             <X onClick={() => router.push("/dashboard")} className="w-6 h-6" />
             <div className="flex flex-row items-center gap-4">
               <Image alt="AI" width={44} height={44} src="/assets/AI.png" />
-              <p>Ribbon AI</p>
+              <div>
+                <p>Ribbon AI</p>
+                <p>{data?.name}</p>
+              </div>
             </div>
           </div>
           <VolumeHigh size="32" color="#ffffff" />
@@ -43,7 +47,7 @@ const QuestionnairePage = ({ params }: any) => {
       </div>
 
       <div className="flex-1 overflow-hidden flex">
-        <Chat questions={data?.questions} />
+        <SurveyChat questions={data?.questions} />
       </div>
     </div>
   );

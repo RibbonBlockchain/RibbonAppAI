@@ -3,8 +3,8 @@
 import React from "react";
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
-import { useGetCompletedSurveys, useGetCompletedTasks } from "@/api/user";
 import { ArrowSwapHorizontal } from "iconsax-react";
+import { useGetCompletedSurveys, useGetCompletedTasks } from "@/api/user";
 
 const BalanceDetails = ({
   text,

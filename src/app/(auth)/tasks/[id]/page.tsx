@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { VolumeHigh } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import Chat from "@/containers/dashboard/chat";
+import Chat from "@/containers/dashboard/questionnaire-chat";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetTaskByID, useSubmitTask } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";

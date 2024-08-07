@@ -5,10 +5,11 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { VolumeHigh } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import Chat from "@/containers/dashboard/chat";
+import Chat from "@/containers/dashboard/questionnaire-chat";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetTaskByID, useSubmitTask } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import QuestionnaireChat from "@/containers/dashboard/questionnaire-chat";
 
 const QuestionnairePage = ({ params }: any) => {
   const router = useRouter();
@@ -45,7 +46,7 @@ const QuestionnairePage = ({ params }: any) => {
       </div>
 
       <div className="flex-1 overflow-hidden flex">
-        <Chat questions={data?.questions} />
+        <QuestionnaireChat questions={data?.questions} />
       </div>
     </div>
   );

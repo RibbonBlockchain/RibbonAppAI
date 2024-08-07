@@ -1,42 +1,38 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { Bank, Key, Profile } from "iconsax-react";
-// import {
-//   Key,
-//   Bank,
-//   FAQs,
-//   Balance,
-//   Profile,
-//   Wallets,
-//   Feedback,
-//   ContactUs,
-//   PrivacyPolicy,
-//   TermsOfService,
-// } from "../../../public/images";
+import { BookOpen, ChevronRight, HelpCircle } from "lucide-react";
+import {
+  Bank,
+  CallAdd,
+  Cup,
+  EmptyWallet,
+  Key,
+  Lock1,
+  Profile,
+  Shield,
+} from "iconsax-react";
 
 export const ProfileDetails = [
   {
-    href: "/account/personal-details",
+    href: "/profile/personal-details",
     description: "Personal Details",
     logo: <Profile />,
   },
   {
     href: "/wallet",
     description: "Wallets",
-    // logo: <Wallets />,
-    logo: <Profile />,
+
+    logo: <EmptyWallet />,
   },
   {
-    href: "/account/balance&points",
+    href: "/profile/balance&points",
     description: "Balance & Points",
-    // logo: <Balance />,
-    logo: <Profile />,
+    logo: <Cup />,
   },
 ];
 
 export const Settings = [
   {
-    href: "/account/change-pin",
+    href: "/profile/change-pin",
     description: "Change Pin",
     logo: <Key />,
   },
@@ -51,32 +47,27 @@ export const Support = [
   {
     href: "https://discord.com/channels/834126035980255242/973481637369229332",
     description: "Contact Us",
-    // logo: <ContactUs />,
-    logo: <Profile />,
+    logo: <CallAdd />,
   },
   {
     href: "https://discord.com/channels/834126035980255242/973481740813353000",
     description: "Feedback",
-    // logo: <Feedback />,
-    logo: <Profile />,
+    logo: <BookOpen />,
   },
   {
     href: "https://medium.com/@RibbonProtocol/ribbon-app-faqs-a531e66e1216",
     description: "FAQs",
-    // logo: <FAQs />,
-    logo: <Profile />,
+    logo: <HelpCircle />,
   },
   {
     href: "#",
     description: "Terms of Service",
-    // logo: <TermsOfService />,
-    logo: <Profile />,
+    logo: <Shield />,
   },
   {
     href: "#",
     description: "Privacy Policy",
-    // logo: <PrivacyPolicy />,
-    logo: <Profile />,
+    logo: <Lock1 />,
   },
 ];
 
@@ -94,15 +85,14 @@ export const RouteMenu = ({
       <Link
         href={href}
         target="_blank"
-        className="flex flex-row items-center justify-between py-3 px-[6px] "
+        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50"
       >
         <div className="flex flex-row items-center justify-center gap-3">
           {logo}
           <p className="text-base font-medium">{description}</p>
         </div>
-        <ChevronRight stroke="#6200EE" />
+        <ChevronRight stroke="#fff" />
       </Link>
-      <hr />
     </div>
   );
 };
@@ -120,15 +110,14 @@ const Menu = ({
     <div>
       <Link
         href={href}
-        className="flex flex-row items-center justify-between py-3 px-[6px] "
+        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50"
       >
         <div className="flex flex-row items-center justify-center gap-3">
           {logo}
           <p className="text-base font-medium">{description}</p>
         </div>
-        <ChevronRight stroke="#6200EE" />
+        <ChevronRight stroke="#fff" />
       </Link>
-      <hr />
     </div>
   );
 };

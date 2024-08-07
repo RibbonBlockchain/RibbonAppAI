@@ -49,10 +49,10 @@ const BalanceAndPoints = () => {
         </div>
         <div>
           <Image
-            src="/images/unlock-more.png"
             alt=""
             width={100}
             height={136}
+            src="/images/unlock-more.png"
           />
         </div>
       </div>

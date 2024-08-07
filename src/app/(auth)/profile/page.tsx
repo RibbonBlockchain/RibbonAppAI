@@ -8,57 +8,80 @@ import Menu, {
 } from "@/containers/account/menu";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Logout from "./sections/logout";
+import { useGetAuth } from "@/api/auth";
 import { signIn } from "next-auth/react";
 import User from "@/containers/account/user";
-
-import { ChevronRight, Moon, Scan, Sun } from "lucide-react";
-import SwitchButton from "@/containers/account/switch-button";
+import { ChevronRight, Scan } from "lucide-react";
+import FloatingIcon from "../dashboard/floating-icon";
 import InviteFriends from "@/containers/account/invite-friends";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import FloatingIcon from "../dashboard/floating-icon";
 
 const Account = () => {
   const [theme, setTheme] = React.useState(false);
+  const { data: user } = useGetAuth({ enabled: true });
 
   return (
     <AuthNavLayout>
-      <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
-        <h1 className="text-2xl font-extrabold mt-3">My Account</h1>
+      <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6">
+        <div className="mt-3 flex flex-row items-center justify-between">
+          <h1 className="text-xl font-extrabold">My Account</h1>
+          <div className="flex flex-row items-center">
+            <Image
+              src="/assets/coin.png"
+              alt="coin"
+              height={32}
+              width={32}
+              className="w-[32px] h-[32px]"
+            />
+            <p className="text-sm font-extrabold">
+              {user?.wallet?.balance.toFixed(2)}
+            </p>
+          </div>
+        </div>
+
         <User />
 
         <div className="my-4">
-          <InviteFriends className="bg-[#EAF7ED]" />
+          <InviteFriends />
         </div>
 
         <FloatingIcon />
 
-        <div className="mt-2 flex flex-col gap-[2px]">
-          <p className="text-xs font-bold text-[#434343]">ACCOUNT</p>
+        <div className="flex flex-col gap-[2px] mt-8">
+          <p className="text-xs font-bold">ACCOUNT</p>
 
           <Link href="/account/kyc">
-            <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
+            <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50">
               <div className="flex flex-row items-center justify-center gap-3">
                 <Scan />
-                <p className="text-base font-medium text-red-500">
+                <p className="text-base font-medium">
                   Verify Identity (KYC/AML)
                 </p>
               </div>
 
-              <ChevronRight stroke="#6200EE" />
+              <ChevronRight stroke="#fff" />
             </div>
           </Link>
 
-          {/* <div className="cursor-pointer" onClick={handleWorldId}>
-            <div className="flex flex-row items-center justify-between py-3 px-[6px] ">
+          <div
+            className="cursor-pointer"
+            // onClick={handleWorldId}
+          >
+            <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50">
               <div className="flex flex-row items-center justify-center gap-3">
-                <WorldID />
+                <Image
+                  alt="coin"
+                  width={24}
+                  height={24}
+                  src="/assets/world-id-white.png"
+                />
                 <p className="text-base font-medium">Link World ID</p>
               </div>
-              <ChevronRight stroke="#6200EE" />
+              <ChevronRight stroke="#fff" />
             </div>
-            <hr />
-          </div> */}
+          </div>
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu
@@ -70,10 +93,8 @@ const Account = () => {
           ))}
         </div>
 
-        <div className="flex flex-col gap-[2px]">
-          <p className="text-xs font-bold pt-6 pb-2 text-[#434343]">
-            SETTINGS & SECURITY
-          </p>
+        <div className="flex flex-col gap-[2px] mt-5">
+          <p className="text-xs font-bold pt-6 pb-2">SETTINGS & SECURITY</p>
           {Settings.map(({ href, description, logo }) => (
             <Menu
               href={href}
@@ -82,7 +103,7 @@ const Account = () => {
               description={description}
             />
           ))}
-          <div>
+          {/* <div>
             <div
               onClick={() => setTheme(!theme)}
               className="flex flex-row items-center justify-between py-3 px-[6px] "
@@ -103,11 +124,11 @@ const Account = () => {
             </div>
 
             <hr />
-          </div>
+          </div> */}
         </div>
 
-        <div className="flex flex-col gap-[2px]">
-          <p className="text-xs font-bold pt-6 pb-2 text-[#434343] ">SUPPORT</p>
+        <div className="flex flex-col gap-[2px] mt-5">
+          <p className="text-xs font-bold pt-6 pb-2">SUPPORT</p>
           {Support.map(({ href, description, logo }) => (
             <RouteMenu
               href={href}
@@ -118,7 +139,9 @@ const Account = () => {
           ))}
         </div>
 
-        <Logout />
+        <div className="mb-28">
+          <Logout />
+        </div>
       </div>
     </AuthNavLayout>
   );

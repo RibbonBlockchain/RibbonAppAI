@@ -8,23 +8,19 @@ import {
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import toast from "react-hot-toast";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import PageLoader from "@/components/loader";
 import { useSession } from "next-auth/react";
-import { shorten } from "@/lib/utils/shorten";
-import { copyToClipboard } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
-import { ArrowSwapHorizontal } from "iconsax-react";
-import ProgressBar from "@ramonak/react-progress-bar";
-import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
-import { ArrowDown, ArrowDownUp, ArrowUp, LucideCopy } from "lucide-react";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import FloatingIcon from "./floating-icon";
+import {
+  PointBalanceCard,
+  WalletBalanceCard,
+} from "@/containers/dashboard/cards";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -34,99 +30,6 @@ const TasksSample = [
   { id: 5, task: "Follow us on twitter (X)", rewardPoints: 5000 },
 ];
 
-const PointBalanceCard = ({ points }: { points: number }) => (
-  <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
-    <div>
-      <p className="text-sm font-medium mb-2">Points balance</p>
-      <div>
-        <div className="-ml-2 flex flex-row items-center gap-1 text-[24px] font-bold">
-          <Image src={"/assets/coin.png"} alt="coin" height={32} width={32} />
-          <p>20,000.00 pts</p>
-        </div>
-
-        <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
-          <ArrowSwapHorizontal size="16" color="#ffffff" />
-          <p>2 wld</p>
-        </div>
-      </div>
-    </div>
-
-    <div className="flex flex-col gap-3 mt-4">
-      <p className="flex self-end text-xs font-medium">{points}/50,000 pts</p>
-
-      <div style={{ position: "relative", width: "100%" }}>
-        <ProgressBar
-          height="42px"
-          completed={(points * 100) / 50000}
-          bgColor="#A166F5"
-          labelColor="#A166F5"
-          customLabel={"."}
-          baseBgColor="#D6CBFF33"
-        />
-
-        <div className="flex justify-center">
-          <p className="absolute top-2 px-6 text-[#F6F1FE] font-semibold">
-            Claim points
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const WalletBalanceCard = () => (
-  <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
-    <div>
-      <p className="text-sm font-medium mb-2">Your wallet</p>
-      <div>
-        <div className="text-[24px] font-bold">
-          <p>$ 20,000.00</p>
-        </div>
-
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-xs">
-            {shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")}
-          </p>
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              copyToClipboard(
-                shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")
-              ),
-                toast.success(`copied`);
-            }}
-          >
-            <LucideCopy fill="#fff" stroke="#fff" size={16} />
-          </p>
-        </div>
-      </div>{" "}
-    </div>
-
-    <div className="w-full pt-5 flex gap-4 items-center justify-between text-xs font-bold">
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
-          <ArrowUp stroke="#7C56FE" />
-        </div>
-        Send
-      </div>
-
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
-          <ArrowDown stroke="#7C56FE" />
-        </div>
-        Recieve
-      </div>
-
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
-        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
-          <ArrowDownUp stroke="#7C56FE" />
-        </div>
-        Swap
-      </div>
-    </div>
-  </div>
-);
-
 const Dashboard = () => {
   const session = useSession();
 
@@ -135,6 +38,8 @@ const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
 
   const { data: user } = useGetAuth({ enabled: true });
+
+  const points = user?.wallet?.balance;
 
   const [hideBalance, setHideBalance] = useState(false);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
@@ -192,18 +97,20 @@ const Dashboard = () => {
     }
   }, []);
 
-  const points = 40000;
-
   return (
     <AuthNavLayout>
       <div className="w-full text-white bg-[#0B0228] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
-          <FloatingIcon />
 
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row gap-2 w-full overflow-auto">
-              {activeCard === "point" && <PointBalanceCard points={points} />}
+              {activeCard === "point" && (
+                <PointBalanceCard
+                  points={points.toFixed(2)}
+                  onclick={() => router.push("/wallet")}
+                />
+              )}
               {activeCard === "wallet" && <WalletBalanceCard />}
             </div>
             <div className="flex flex-row gap-4 mt-3">
@@ -224,7 +131,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="my-6 w-full gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full">
+          <div className="my-6 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full">
             <p>Claim daily reward</p>
             <div className="flex flex-row items-center">
               <Image
@@ -285,7 +192,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="py-10 mb-8 text-sm">
+        <div className="py-10 mb-8 text-sm bg-[#0B0228]">
           {activeMenu === "questionnaires" && (
             <div>
               {questionnaire?.map((i: any) => (

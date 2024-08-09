@@ -5,11 +5,10 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { VolumeHigh } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import Chat from "@/containers/dashboard/questionnaire-chat";
 import Topbar from "@/containers/dashboard/top-bar";
 import { useGetSurveyByID, useSubmitTask } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import SurveyChat from "@/containers/dashboard/survey-chat copy";
+import SurveyChat from "@/containers/dashboard/survey-chat";
 
 const QuestionnairePage = ({ params }: any) => {
   const router = useRouter();

@@ -14,7 +14,6 @@ import { useGetAuth } from "@/api/auth";
 import { signIn } from "next-auth/react";
 import User from "@/containers/account/user";
 import { ChevronRight, Scan } from "lucide-react";
-import FloatingIcon from "../dashboard/floating-icon";
 import InviteFriends from "@/containers/account/invite-friends";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
@@ -36,7 +35,7 @@ const Account = () => {
               className="w-[32px] h-[32px]"
             />
             <p className="text-sm font-extrabold">
-              {user?.wallet?.balance.toFixed(2)}
+              {user?.wallet?.balance.toFixed(2)} WLD
             </p>
           </div>
         </div>
@@ -46,8 +45,6 @@ const Account = () => {
         <div className="my-4">
           <InviteFriends />
         </div>
-
-        <FloatingIcon />
 
         <div className="flex flex-col gap-[2px] mt-8">
           <p className="text-xs font-bold">ACCOUNT</p>

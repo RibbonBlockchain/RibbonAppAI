@@ -126,7 +126,7 @@ const PersonalDetails = () => {
               {user?.firstName} {user?.lastName}
             </p>
             <p>SES Score: {SES_Score}</p>
-            <p>Balance: {user?.wallet.balance} WLD</p>
+            <p>Balance: {user?.wallet.balance.toFixed(2)} WLD</p>
           </div>
         </div>
 

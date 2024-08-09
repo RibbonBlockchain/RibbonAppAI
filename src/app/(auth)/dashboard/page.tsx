@@ -192,7 +192,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="py-10 mb-8 text-sm">
+        <div className="py-10 mb-8 text-sm bg-[#0B0228]">
           {activeMenu === "questionnaires" && (
             <div>
               {questionnaire?.map((i: any) => (

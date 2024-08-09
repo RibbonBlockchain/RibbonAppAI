@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
 import React, { useEffect } from "react";
-import FloatingIcon from "../dashboard/floating-icon";
 import InProgress from "@/containers/activity/in-progress";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import CompletedActivities from "@/containers/activity/completed-tasks";
@@ -40,8 +39,6 @@ const Activity = () => {
   return (
     <AuthNavLayout>
       <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
-        <FloatingIcon />
-
         <div className="flex items-center justify-between py-3">
           <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
           <div

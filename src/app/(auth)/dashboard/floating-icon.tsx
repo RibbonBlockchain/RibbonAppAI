@@ -9,12 +9,12 @@ const FloatingIcon = () => {
   const router = useRouter();
   return (
     <div className="absolute right-16 top-[46%] z-50">
-      <div className="fixed rounded-full p-2 flex flex-row items-center gap-2 bg-[#3f3952] bg-opacity-95">
+      <div className="fixed rounded-full pl-2 flex flex-row items-center gap-3 shadow-md shadow-white bg-[#3f3952] bg-opacity-95">
         <MicrophoneIcon width={24} height={24} color="white" />
         <Image
           alt="AI"
-          width={32}
-          height={32}
+          width={50}
+          height={50}
           src="/assets/AI.png"
           onClick={() => router.push("/bot")}
         />

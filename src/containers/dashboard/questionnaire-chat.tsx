@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
+import { useRouter } from "next/navigation";
 import { useRateQuestionnaire, useSubmitTask } from "@/api/user";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
@@ -21,6 +22,8 @@ interface Question {
 }
 
 const QuestionnaireChat = ({ questions }: { questions: Question[] }) => {
+  const router = useRouter();
+
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string; options?: Option[] }[]
   >([]);
@@ -230,6 +233,7 @@ const QuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       },
     ]);
     setClaimReward(false);
+    router.push("/dashboard");
   };
 
   useEffect(() => {

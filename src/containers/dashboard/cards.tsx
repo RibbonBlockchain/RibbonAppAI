@@ -1,10 +1,10 @@
-import { copyToClipboard } from "@/lib/utils";
-import { shorten } from "@/lib/utils/shorten";
-import ProgressBar from "@ramonak/react-progress-bar";
-import { ArrowSwapHorizontal, Wallet2 } from "iconsax-react";
-import { LucideCopy, ArrowUp, ArrowDown, ArrowDownUp } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { shorten } from "@/lib/utils/shorten";
+import { copyToClipboard } from "@/lib/utils";
+import ProgressBar from "@ramonak/react-progress-bar";
+import { ArrowUp, ArrowDown, ArrowDownUp } from "lucide-react";
+import { ArrowSwapHorizontal, Copy, Wallet2 } from "iconsax-react";
 
 export const PointBalanceCard = ({
   points,
@@ -70,7 +70,7 @@ export const WalletBalanceCard = () => (
           <p className="text-xs">
             {shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")}
           </p>
-          <p
+          <div
             className="cursor-pointer"
             onClick={() => {
               copyToClipboard(
@@ -79,10 +79,10 @@ export const WalletBalanceCard = () => (
                 toast.success(`copied`);
             }}
           >
-            <LucideCopy fill="#fff" stroke="#fff" size={16} />
-          </p>
+            <Copy size="18" color="#F6F1FE" variant="Bold" />          
+          </div>
         </div>
-      </div>{" "}
+      </div>
     </div>
 
     <div className="w-full pt-5 flex gap-4 items-center justify-between text-xs font-bold">

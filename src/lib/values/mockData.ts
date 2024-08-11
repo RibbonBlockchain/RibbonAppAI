@@ -61,3 +61,36 @@ export const surveys = [
     completed: true,
   },
 ];
+
+export const linkagesArray = [
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+  },
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+  },
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+  },
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+  },
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+  },
+];

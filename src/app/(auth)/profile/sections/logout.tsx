@@ -1,10 +1,8 @@
 "use client";
 
 import { useLogout } from "@/api/auth";
-import PageLoader from "@/components/loader";
-// import { LogOut } from "../../../../../public/images";
+import { LogoutCurve } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { LogOut } from "lucide-react";
 
 const Logout = () => {
   const { mutate: logout, isPending, isSuccess } = useLogout();
@@ -23,8 +21,7 @@ const Logout = () => {
       onClick={handleLogout}
       className="cursor-pointer flex flex-row items-center justify-center my-10 gap-2 text-base text-[#FF170A]"
     >
-      <LogOut />
-      <p>Log Out</p>
+      <LogoutCurve size="32" color="red" variant="Outline" /> <p>Log Out</p>
     </div>
   );
 };

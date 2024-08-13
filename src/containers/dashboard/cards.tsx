@@ -57,13 +57,21 @@ export const PointBalanceCard = ({
   </div>
 );
 
-export const WalletBalanceCard = () => (
+export const WalletBalanceCard = ({
+  balance,
+  handleWalletTx,
+  handleReceiveToken,
+}: {
+  balance: number;
+  handleWalletTx: any;
+  handleReceiveToken: any;
+}) => (
   <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
     <div>
       <p className="text-sm font-medium mb-2">Your wallet</p>
       <div>
         <div className="text-[24px] font-bold">
-          <p>$ 0</p>
+          <p>$ {balance}</p>
         </div>
 
         <div className="flex flex-row items-center gap-2">
@@ -79,28 +87,37 @@ export const WalletBalanceCard = () => (
                 toast.success(`copied`);
             }}
           >
-            <Copy size="18" color="#F6F1FE" variant="Bold" />          
+            <Copy size="18" color="#F6F1FE" variant="Bold" />
           </div>
         </div>
       </div>
     </div>
 
     <div className="w-full pt-5 flex gap-4 items-center justify-between text-xs font-bold">
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
+      <div
+        onClick={handleWalletTx}
+        className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+      >
         <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowUp stroke="#7C56FE" />
         </div>
         Send
       </div>
 
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
+      <div
+        onClick={handleReceiveToken}
+        className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+      >
         <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowDown stroke="#7C56FE" />
         </div>
         Recieve
       </div>
 
-      <div className="cursor-pointer w-full items-center justify-center flex flex-col gap-2">
+      <div
+        onClick={handleWalletTx}
+        className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+      >
         <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
           <ArrowDownUp stroke="#7C56FE" />
         </div>

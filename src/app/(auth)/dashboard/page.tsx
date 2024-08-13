@@ -9,18 +9,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
-import { useRouter } from "next/navigation";
 import PageLoader from "@/components/loader";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
+import SwipeCards from "@/containers/dashboard/swipe-cards";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import {
-  PointBalanceCard,
-  WalletBalanceCard,
-} from "@/containers/dashboard/cards";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -31,15 +26,9 @@ const TasksSample = [
 ];
 
 const Dashboard = () => {
-  const session = useSession();
-
-  const router = useRouter();
-
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
 
   const { data: user } = useGetAuth({ enabled: true });
-
-  const points = user?.wallet?.balance;
 
   const [hideBalance, setHideBalance] = useState(false);
   const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
@@ -64,7 +53,6 @@ const Dashboard = () => {
   isLoading && <PageLoader />;
 
   const [activeMenu, setActiveMenu] = useState("questionnaires");
-  const [activeCard, setActiveCard] = useState("point");
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -103,33 +91,7 @@ const Dashboard = () => {
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
 
-          <div className="flex flex-col items-center justify-center">
-            <div className="flex flex-row gap-2 w-full overflow-auto">
-              {activeCard === "point" && (
-                <PointBalanceCard
-                  points={points.toFixed(2)}
-                  onclick={() => router.push("/wallet")}
-                />
-              )}
-              {activeCard === "wallet" && <WalletBalanceCard />}
-            </div>
-            <div className="flex flex-row gap-4 mt-3">
-              <button
-                className={clsx(
-                  "p-1 rounded-full transition ring-2 ring-white",
-                  activeCard === "point" ? "bg-white" : "bg-inherit"
-                )}
-                onClick={() => setActiveCard("point")}
-              ></button>
-              <button
-                className={clsx(
-                  "p-1 rounded-full transition ring-2 ring-white",
-                  activeCard === "wallet" ? "bg-white" : "bg-inherit"
-                )}
-                onClick={() => setActiveCard("wallet")}
-              ></button>
-            </div>
-          </div>
+          <SwipeCards />
 
           <div className="my-6 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full">
             <p>Claim daily reward</p>

@@ -16,6 +16,7 @@ import SwipeCards from "@/containers/dashboard/swipe-cards";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import { useGetSupportedBillsByCountry } from "@/api/bills";
 
 const TasksSample = [
   { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
@@ -48,6 +49,9 @@ const Dashboard = () => {
     Math.floor((twelveHoursLater.getTime() - currentTime.getTime()) / 1000),
     0
   );
+
+  const { data } = useGetSupportedBillsByCountry();
+  console.log(data, "supported bill country here");
 
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;

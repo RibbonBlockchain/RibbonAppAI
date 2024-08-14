@@ -1,15 +1,24 @@
 import React from "react";
+import Link from "next/link";
+import { linkagesArray } from "@/lib/values/mockData";
 import LinkagesCard from "@/containers/linkages/linkages-card";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
 import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
-import { linkagesArray } from "@/lib/values/mockData";
 
 const Linkages = () => {
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
       <div className="flex flex-col gap-6">
         <div className="py-4">
-          <p className="text-[24px] font-semibold">Linkages</p>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-[24px] font-semibold">Linkages</p>
+            <Link
+              href="/linkages/create"
+              className="py-2 px-3 text-xs font-semibold border border-[#FFFFFF] rounded-[12px]"
+            >
+              Create your Linkages
+            </Link>
+          </div>
           <p className="text-[13px] font-normal mt-2">
             Based on your responses on our surveys and questionnaires,
             we&apos;`ve suggested some services that could assist you in
@@ -38,7 +47,7 @@ const Linkages = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <p className="text-lg font-semibold">Featured Linkages</p>
           {linkagesArray.map((i) => (
             <FeaturedLinkages

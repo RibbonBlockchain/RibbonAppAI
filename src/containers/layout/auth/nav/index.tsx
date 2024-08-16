@@ -80,21 +80,6 @@ const FooterNav = () => {
         </div>
       </div>
 
-      {/* {!showNav && (
-        <div
-          className={clsx(
-            "fixed bottom-6 w-[100%] max-w-[35px] mx-auto mr-4 flex items-center justify-center self-end z-50 h-[72px] text-xs font-extrabold text-white rounded-full bg-[#3f3952] bg-opacity-75 backdrop-blur-sm"
-          )}
-        >
-          <ArrowCircleLeft
-            size="24"
-            color="#ffffff"
-            className="self-end"
-            onClick={() => setShowNav(true)}
-          />
-        </div>
-      )} */}
-
       {!showNav && (
         <div
           className={clsx(

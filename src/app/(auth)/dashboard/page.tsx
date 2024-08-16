@@ -51,7 +51,7 @@ const Dashboard = () => {
   );
 
   const { data } = useGetSupportedBillsByCountry();
-  console.log(data, "supported bill country here");
+  console.log(data, "data here");
 
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;

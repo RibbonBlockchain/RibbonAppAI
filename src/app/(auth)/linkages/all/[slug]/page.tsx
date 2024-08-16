@@ -129,12 +129,6 @@ const LinkageViewDetails = () => {
           <div className="w-full max-w-[450px] px-4 flex flex-col items-center space-y-4">
             <button
               onClick={() => router.push("/bot")}
-              className="w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-base"
-            >
-              Schedule a Sesssion
-            </button>
-            <button
-              onClick={() => router.push("/bot")}
               className="flex flex-row gap-2 items-center justify-center w-[inherit] bg-white text-[#290064] rounded-[8px] py-3 font-bold text-base"
             >
               <Image
@@ -144,6 +138,12 @@ const LinkageViewDetails = () => {
                 src={"/assets/sparkle.png"}
               />{" "}
               AI support
+            </button>
+            <button
+              onClick={() => router.push("/bot")}
+              className="w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-base"
+            >
+              Schedule a Sesssion
             </button>
           </div>
         </div>

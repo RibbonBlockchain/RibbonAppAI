@@ -8,7 +8,9 @@ import FloatingIcon from "@/app/(auth)/dashboard/floating-icon";
 const AuthNavLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
-  const shouldHideFooterNav = pathname.includes("/bot");
+  const isDynamicStorePage = /^\/store\/[^\/]+/.test(pathname);
+
+  const shouldHideFooterNav = pathname.includes("/bot") || isDynamicStorePage;
 
   return (
     <div className="relative flex flex-col h-screen mx-auto">

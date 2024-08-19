@@ -18,7 +18,7 @@ const Receive = () => {
         toast.success("address copied to clipboard!");
       })
       .catch((err) => {
-        console.error("Could not copy text: ", err);
+        toast.error("Could not copy text");
       });
   };
 

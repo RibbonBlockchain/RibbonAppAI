@@ -10,9 +10,6 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 const DataPurchase = () => {
   const router = useRouter();
 
-  //
-  // const { mutate: buyData } = useBuyData();
-
   return (
     <AuthNavLayout>
       <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">

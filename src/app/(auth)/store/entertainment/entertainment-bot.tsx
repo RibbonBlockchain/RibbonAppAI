@@ -2,14 +2,10 @@
 
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
-import { useBuyData, useGetDataServiceList } from "@/api/store";
+import { useBuyData, useCablePay, useGetDataServiceList } from "@/api/store";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
-type ServiceProvider =
-  | "mtn-data"
-  | "glo-data"
-  | "etisalat-data"
-  | "airtel-data";
+type ServiceProvider = "dstv";
 
 interface DataVariation {
   variation_code: string;
@@ -23,7 +19,7 @@ interface Message {
   text: string;
 }
 
-const DataPurchaseBot: React.FC = () => {
+const EntertainmentBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [selectedService, setSelectedService] =
@@ -39,10 +35,12 @@ const DataPurchaseBot: React.FC = () => {
   const [isPhoneInputEnabled, setIsPhoneInputEnabled] =
     useState<boolean>(false);
   const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
+
   const { data, error, isLoading } = useGetDataServiceList(
     selectedService || ""
   );
-  const { mutate: buyData } = useBuyData();
+  const { mutate: subscribeEntertainment } = useCablePay();
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -70,7 +68,7 @@ const DataPurchaseBot: React.FC = () => {
         sender: "ai",
         text: `You selected ${provider
           .replace("-data", "")
-          .toUpperCase()}. Please select your data variation.`,
+          .toUpperCase()}. Please select your desired subscription.`,
       },
     ]);
   };
@@ -137,12 +135,17 @@ const DataPurchaseBot: React.FC = () => {
   const handlePurchase = async () => {
     if (selectedService && selectedVariation && phoneNumber) {
       setIsPurchasing(true);
+
       try {
-        await buyData({
+        await subscribeEntertainment({
           serviceId: selectedService,
           variationCode: selectedVariation,
           phone: phoneNumber,
+          billersCode: "1212121212",
+          type: "RENEW",
         });
+
+        console.log(selectedService, selectedVariation, phoneNumber);
 
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -214,12 +217,7 @@ const DataPurchaseBot: React.FC = () => {
               Select your service provider
             </p>
             <div className="flex flex-col gap-2">
-              {[
-                { name: "mtn-data", logo: "/assets/mtn.jpeg" },
-                { name: "glo-data", logo: "/assets/glo.jpeg" },
-                { name: "airtel-data", logo: "/assets/airtel.jpeg" },
-                { name: "etisalat-data", logo: "/assets/etisalat.jpeg" },
-              ].map((provider) => (
+              {[{ name: "dstv", logo: "/assets/dstv.jpeg" }].map((provider) => (
                 <button
                   key={provider.name}
                   onClick={() =>
@@ -228,13 +226,13 @@ const DataPurchaseBot: React.FC = () => {
                   className="flex flex-row gap-2 items-center px-4 py-2 rounded-full bg-[#3f3952] bg-opacity-95 text-white"
                 >
                   <Image
-                    alt={provider.name}
-                    src={provider.logo}
                     width={24}
                     height={24}
+                    alt={provider.name}
+                    src={provider.logo}
                     className="w-[24px] h-[24px] rounded-full bg-white"
                   />
-                  {provider.name.replace("-data", "").toUpperCase()}
+                  {provider.name.toUpperCase()}
                 </button>
               ))}
             </div>
@@ -242,16 +240,16 @@ const DataPurchaseBot: React.FC = () => {
         )}
 
         {isVariationSelectionEnabled && data && (
-          <div className="items-end bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto">
+          <div className="text-sm items-end bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto">
             <p className="text-end text-white mb-2">
-              Select your data variation
+              Select your desired subscription
             </p>
             <div className="flex flex-col gap-2 items-end">
               {data.content.varations.map((option: DataVariation) => (
                 <button
                   key={option.variation_code}
                   onClick={() => handleVariationSelect(option.variation_code)}
-                  className="flex flex-row gap-2 px-4 text-end w-f py-2 rounded-full bg-[#3f3952] bg-opacity-95 text-white"
+                  className="flex flex-row gap-2 px-4 text-start w-f py-2 rounded-full bg-[#3f3952] bg-opacity-95 text-white"
                 >
                   {option.name}
                 </button>
@@ -301,4 +299,4 @@ const DataPurchaseBot: React.FC = () => {
   );
 };
 
-export default DataPurchaseBot;
+export default EntertainmentBot;

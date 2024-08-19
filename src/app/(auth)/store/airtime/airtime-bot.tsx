@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
-import { usePurchaseAirtime } from "@/api/bills";
+import { usePurchaseAirtime } from "@/api/store";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
 type ServiceProvider = "mtn" | "glo" | "airtel" | "etisalat";

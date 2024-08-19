@@ -63,7 +63,7 @@ const FooterNav = () => {
                 router.push(route);
               }}
               className={clsx(
-                `flex flex-row gap-2 py-3 px-2 sm:px-4 rounded-full items-center justify-center`,
+                `flex flex-row gap-1 py-3 px-1 sm:px-2 rounded-full items-center justify-center`,
                 pathname.includes(route) && "text-white"
               )}
             >

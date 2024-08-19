@@ -154,8 +154,6 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
         ? questions[questions.length - 1].id
         : currentQuestion.id;
 
-    console.log(option?.id, "options id");
-
     submitSurvey({
       optionId: option?.id | 0,
       questionId: questionIdToSubmit,

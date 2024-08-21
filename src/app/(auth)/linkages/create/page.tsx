@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { ArrowLeft2, Call, Location, Sms } from "iconsax-react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft2, Call, Location, Sms } from "iconsax-react";
+import { useCreateAIModel, useGetTrainingModels } from "@/api/ai";
 
 const options = [
   { id: 1, label: "option 1" },
@@ -24,6 +25,11 @@ const CreateLinkage = () => {
   const handleSelect = (id: string) => {
     setSelectedId(id);
   };
+
+  const [linkageName, setLinkageName] = useState("");
+  const { mutate } = useCreateAIModel();
+
+  const { data } = useGetTrainingModels(1);
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
@@ -49,7 +55,9 @@ const CreateLinkage = () => {
           <input
             type="text"
             placeholder="Linkage name"
-            className="w-full border-b bg-inherit border-white h-[45px] pl-3 text-[#98A2B3] font-medium focus:ring-0 focus:outline-none"
+            value={linkageName}
+            onChange={(e) => setLinkageName(e.target.value)}
+            className="w-full border-b bg-inherit border-white h-[45px] pl-3 font-medium focus:ring-0 focus:outline-none text-white placeholder:text-[#98A2B3]"
           />
         </div>
 
@@ -58,7 +66,7 @@ const CreateLinkage = () => {
           <textarea
             rows={6}
             placeholder="Write about your Linkages and it capabilities"
-            className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-[#98A2B3] focus:ring-0 focus:outline-none"
+            className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
           />
         </div>
 
@@ -68,8 +76,8 @@ const CreateLinkage = () => {
             <Call size="20" color="#ffffff" className="absolute left-3" />
             <input
               type="phone"
-              placeholder="klklk hhjh hjhjh"
-              className="w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+              placeholder="0000 0000 000"
+              className="w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
           </div>
         </div>
@@ -81,7 +89,7 @@ const CreateLinkage = () => {
             <input
               type="email"
               placeholder="ribbon@mail.com"
-              className="w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+              className="w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
           </div>
         </div>
@@ -93,7 +101,7 @@ const CreateLinkage = () => {
             <input
               type="text"
               placeholder="South Africa"
-              className="appearance-none w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+              className="appearance-none w-full bg-inherit pl-10 py-2.5 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
           </div>
         </div>
@@ -125,7 +133,10 @@ const CreateLinkage = () => {
         </div>
 
         <button
-          onClick={() => router.push("/linkages/create/ai-prompt")}
+          onClick={() => {
+            mutate({ name: linkageName }),
+              router.push("/linkages/create/ai-prompt");
+          }}
           className="my-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm"
         >
           Create your AI Prompt

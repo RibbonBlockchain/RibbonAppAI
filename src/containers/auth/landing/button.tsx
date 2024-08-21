@@ -20,7 +20,7 @@ export const WorldIdButton = ({ children }: Props) => {
         width={24}
         height={24}
         alt="world-coin"
-        src="/images/world-coin.svg"
+        src="/assets/world-coin.svg"
       />
     </button>
   );

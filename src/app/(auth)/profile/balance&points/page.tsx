@@ -12,6 +12,8 @@ import UserBalanceAndPoints from "@/containers/account/user-balance&points";
 const BalanceAndPoints = () => {
   const { data: user } = useGetAuth({ enabled: true });
 
+  const balance = user?.wallet.balance;
+
   return (
     <div className="p-4 sm:p-6 bg-[#F7F5FF] h-auto flex flex-col">
       <div className="mb-6">
@@ -29,7 +31,7 @@ const BalanceAndPoints = () => {
           <div className="flex flex-col gap-1">
             <p className="text-[#626262]">
               <span className="text-xl text-black font-bold">
-                {user?.wallet.balance * 5000}
+                {balance.toFixed(2) * 5000}
               </span>{" "}
               /10,000 points
             </p>
@@ -39,7 +41,7 @@ const BalanceAndPoints = () => {
                 labelSize="10px"
                 maxCompleted={10000}
                 isLabelVisible={false}
-                completed={user?.wallet.balance * 5000}
+                completed={balance.toFixed(2) * 5000}
               />
             </div>
           </div>

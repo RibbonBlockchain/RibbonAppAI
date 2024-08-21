@@ -16,11 +16,13 @@ const PricingCard = ({
   pricing,
   options,
   planIcon,
+  onclick,
 }: {
   plan: string;
   pricing: number;
   planIcon: string;
   options: TOptions[];
+  onclick: () => void;
 }) => {
   return (
     <div className="flex flex-col items-start justify-between">
@@ -65,7 +67,10 @@ const PricingCard = ({
         </div>
       </div>
 
-      <button className="mt-6 mb-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm">
+      <button
+        onClick={onclick}
+        className="mt-6 mb-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm"
+      >
         Subscribe at ${pricing}/month
       </button>
     </div>
@@ -77,7 +82,7 @@ const Pricing = () => {
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-4 mt-2">
         <ArrowLeft2
           size="24"
           color="#ffffff"
@@ -101,6 +106,7 @@ const Pricing = () => {
             { id: 6, name: "Visitor details" },
             { id: 7, name: "Real-time analytics" },
           ]}
+          onclick={() => router.push("/transaction/payment-method")}
         />
         <PricingCard
           plan={"Pro"}
@@ -118,6 +124,7 @@ const Pricing = () => {
             { id: 9, name: "Visitor details" },
             { id: 10, name: "Real-time analytics" },
           ]}
+          onclick={() => router.push("/transaction/payment-method")}
         />
         <PricingCard
           plan={"Business"}
@@ -138,6 +145,7 @@ const Pricing = () => {
             { id: 12, name: "Visitor details" },
             { id: 13, name: "Real-time analytics" },
           ]}
+          onclick={() => router.push("/transaction/payment-method")}
         />
         <PricingCard
           plan={"Enterprise"}
@@ -158,6 +166,7 @@ const Pricing = () => {
             { id: 12, name: "Visitor details" },
             { id: 13, name: "Real-time analytics" },
           ]}
+          onclick={() => router.push("/transaction/payment-method")}
         />
       </div>
     </main>

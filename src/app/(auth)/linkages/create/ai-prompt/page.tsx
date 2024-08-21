@@ -12,6 +12,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ChatBot from "@/containers/dashboard/chat-bot";
+import FileUpload from "@/containers/linkages/file-upload";
 
 const AIPrompt = () => {
   const router = useRouter();
@@ -85,7 +86,7 @@ const AIPrompt = () => {
               <input
                 type="text"
                 placeholder="Name your AI"
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
@@ -94,7 +95,7 @@ const AIPrompt = () => {
               <input
                 type="text"
                 placeholder="Write a short description of what your AI does"
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
@@ -103,7 +104,7 @@ const AIPrompt = () => {
               <textarea
                 rows={6}
                 placeholder="What does this AI do? How does it behave? What should it avoid doing?"
-                className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
@@ -117,7 +118,7 @@ const AIPrompt = () => {
               <input
                 type="text"
                 placeholder="Write conversation starters here"
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
@@ -148,25 +149,7 @@ const AIPrompt = () => {
                 is enabled.
               </p>
 
-              <div className="mt-2 flex flex-row gap-4 items-center">
-                {/* <div>{image or file preview here}</div> */}
-
-                <div className="relative flex flex-row items-center">
-                  <input id="fileInput" type="file" className="hidden" />
-                  <label
-                    htmlFor="fileInput"
-                    className="min-w-[110px] px-2.5 appearance-none bg-inherit py-3 rounded-[8px] border border-[#E5E7EB] text-[#98A2B3] cursor-pointer flex items-center"
-                  >
-                    <span className="text-xs">Upload files</span>
-                  </label>
-                  <ArrowUp
-                    size="16"
-                    color="#ffffff"
-                    className="absolute right-2"
-                  />
-                </div>
-                <p>jpg, png, pdf, docs, xlsx...</p>
-              </div>
+              <FileUpload />
             </div>
 
             <div className="flex flex-col gap-2 mt-6">

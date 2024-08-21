@@ -9,6 +9,7 @@ import {
   Lock1,
   Profile,
   Shield,
+  Star,
 } from "iconsax-react";
 
 export const ProfileDetails = [
@@ -16,6 +17,11 @@ export const ProfileDetails = [
     href: "/profile/personal-details",
     description: "Personal Details",
     logo: <Profile />,
+  },
+  {
+    href: "/linkages",
+    description: "Linkages",
+    logo: <Star fill="yellow" />,
   },
   {
     href: "/wallet",
@@ -38,7 +44,7 @@ export const Settings = [
   },
   {
     href: "#",
-    description: "Link bank account",
+    description: "Payment methods",
     logo: <Bank />,
   },
 ];

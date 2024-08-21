@@ -62,7 +62,7 @@ const Account = () => {
             </div>
           </Link>
 
-          <div
+          {/* <div
             className="cursor-pointer"
             // onClick={handleWorldId}
           >
@@ -78,7 +78,7 @@ const Account = () => {
               </div>
               <ChevronRight stroke="#fff" />
             </div>
-          </div>
+          </div> */}
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu

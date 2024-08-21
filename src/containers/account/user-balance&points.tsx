@@ -32,6 +32,8 @@ const BalanceDetails = ({
 
 const UserBalanceAndPoints = () => {
   const { data: user } = useGetAuth({ enabled: true });
+
+  const balance = user?.wallet.balance;
   const pointBalance = user?.wallet.balance * 5000;
   const tokenSpent = user?.wallet.spent || 0;
 
@@ -46,14 +48,14 @@ const UserBalanceAndPoints = () => {
     <div className="bg-white rounded-2xl py-6 px-4">
       <div className="flex flex-row gap-2 items-center justify-center text-lg font-bold">
         <Image
-          src="/assets/coin.png"
           alt="coin"
-          height={32}
           width={32}
+          height={32}
+          src="/assets/coin.png"
           className="w-[32px] h-[32px]"
         />{" "}
         <p className="text-[28px] text-[#7C56FE] font-bold">
-          {user?.wallet.balance} WLD
+          {balance.toFixed(2)} WLD
         </p>
       </div>
 

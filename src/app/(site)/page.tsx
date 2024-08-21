@@ -12,7 +12,7 @@ const Home = () => {
           width={100}
           height={24}
           alt="ribbon logo"
-          src="/images/ribbon.svg"
+          src="/assets/ribbon.svg"
         />
 
         <div className="text-center">

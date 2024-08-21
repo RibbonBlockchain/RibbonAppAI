@@ -2,11 +2,11 @@
 
 import useSWR from "swr";
 import {
+  UX_MODE,
   IProvider,
   WALLET_ADAPTERS,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-  UX_MODE,
 } from "@web3auth/base";
 import {
   IPaymaster,
@@ -24,29 +24,29 @@ import clsx from "clsx";
 import Image from "next/image";
 import { ethers } from "ethers";
 import toast from "react-hot-toast";
-import { ArrowDown, ArrowLeft, ArrowUp } from "lucide-react";
+import { useGetAuth } from "@/api/auth";
 import { ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { shorten } from "@/lib/utils/shorten";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { convertPoints } from "@/lib/utils/convertPoint";
-import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
-import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
-import BackArrowButton from "@/components/button/back-arrow";
-import CustomTokenUI from "@/components/wallet/native-token-ui";
 import { copyToClipboard } from "@/lib/utils";
 import { fetcher } from "@/lib/values/priceAPI";
+import SwapPointToWorldToken from "./swap-points";
+import WithdrawWorldToken from "./withdraw-token";
+import ClaimPointsModal from "./claim-point-modal";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { Copy, Logout, Wallet2 } from "iconsax-react";
+import { convertPoints } from "@/lib/utils/convertPoint";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import WithdrawalProcessing from "./withdrawal-processing";
+import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
+import { ArrowDown, ArrowLeft, ArrowUp } from "lucide-react";
+import BackArrowButton from "@/components/button/back-arrow";
+import CustomTokenUI from "@/components/wallet/native-token-ui";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { useGetAuth } from "@/api/auth";
-import { Copy, Logout, Wallet2 } from "iconsax-react";
-import ClaimPointsModal from "./claim-point-modal";
-import SwapPointToWorldToken from "./swap-points";
-import WithdrawWorldToken from "./withdraw-token";
-import WithdrawalProcessing from "./withdrawal-processing";
+import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
 
 const pointsABI = require("./contract/pointsABI.json");
 
@@ -58,35 +58,21 @@ const config = {
 };
 
 const chainId = 11155420;
-const rpcTarget =
-  "https://opt-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
-// "https://opt-sepolia.g.alchemy.com/v2/_8csWnIUc_XqEFzGwGK_m--nBSfJcKkH";
+const rpcTarget = "https://sepolia.base.org/";
 
 const publicRPC = "https://sepolia.optimism.io/";
 
 const clientId =
   "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
 
-// const chainConfig = {
-//   chainNamespace: CHAIN_NAMESPACES.EIP155,
-//   chainId: "0xA", // hex of 10
-//   rpcTarget: "https://optimism.drpc.org",
-//   displayName: "Optimism Mainnet",
-//   blockExplorerUrl: "https://optimistic.etherscan.io",
-//   ticker: "OP",
-//   tickerName: "OP",
-//   logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
-// };
-
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xaa37dc", // 11155420
-  displayName: "OP Sepolia",
+  chainId: "0x14a34", // 84532
+  displayName: "Base Sepolia",
   tickerName: "ETH",
   ticker: "ETH",
-  // rpcTarget: "https://optimism-sepolia.drpc.org",
   rpcTarget: rpcTarget,
-  blockExplorerUrl: "https://sepolia-optimistic.etherscan.io/",
+  blockExplorerUrl: "https://sepolia-explorer.base.org/",
   logo: "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
 };
 

@@ -64,22 +64,10 @@ const PaymentMethod = () => {
       imageSrc: "/assets/crypto.png",
     },
     {
-      id: "paypal",
-      text: "Paypal",
+      id: "coins",
+      text: "Pay with coins",
       link: "/transaction/add-card",
-      imageSrc: "/assets/paypal.png",
-    },
-    {
-      id: "bank-transfer",
-      text: "Bank transfer",
-      link: "/transaction/add-card",
-      imageSrc: "/assets/bank-transfer.png",
-    },
-    {
-      id: "apple-pay",
-      text: "Apple Pay",
-      link: "/transaction/add-card",
-      imageSrc: "/assets/apple-pay.png",
+      imageSrc: "/assets/coins.png",
     },
   ];
 

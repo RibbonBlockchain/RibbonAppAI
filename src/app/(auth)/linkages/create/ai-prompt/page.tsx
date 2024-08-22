@@ -13,6 +13,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ChatBot from "@/containers/dashboard/chat-bot";
 import FileUpload from "@/containers/linkages/file-upload";
+import {
+  useCreateAIModel,
+  useTrainAIModel,
+  useUploadTrainingFiles,
+} from "@/api/ai";
+import { mutate } from "swr";
 
 const AIPrompt = () => {
   const router = useRouter();
@@ -38,6 +44,27 @@ const AIPrompt = () => {
 
   const handleCheckboxChangeAdditional = () => {
     setIsAgreed((prev) => !prev);
+  };
+
+  const [AIName, setAIName] = useState("");
+  const [description, setDescription] = useState("");
+
+  const { mutate: createAI } = useCreateAIModel();
+  const { mutate: uploadTrainingFiles } = useUploadTrainingFiles();
+  const { mutate: trainAIModel } = useTrainAIModel();
+
+  const handleCreateAI = () => {
+    createAI({ name: AIName });
+  };
+
+  const handleUploadTrainingFiles = () => {
+    const body = { file: [] };
+    uploadTrainingFiles({ id: 1, body });
+  };
+
+  const handleTrainAIModel = () => {
+    const body = { fileId: "" };
+    trainAIModel({ id: 1, body });
   };
 
   return (
@@ -74,27 +101,20 @@ const AIPrompt = () => {
         {selected === "create" && (
           <div className="flex flex-col gap-6">
             <Image
-              src={""}
               width={82}
               height={82}
               alt="linkage"
-              className="rounded-full bg-white self-center"
+              src={"/assets/sample-icon.png"}
+              className="rounded-full self-center"
             />
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">Name</label>
               <input
                 type="text"
+                value={AIName}
                 placeholder="Name your AI"
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">Description</label>
-              <input
-                type="text"
-                placeholder="Write a short description of what your AI does"
+                onChange={(e) => setAIName(e.target.value)}
                 className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
@@ -103,7 +123,9 @@ const AIPrompt = () => {
               <label className="text-sm font-semibold">Instructions</label>
               <textarea
                 rows={6}
-                placeholder="What does this AI do? How does it behave? What should it avoid doing?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Write a short description for your AI. What does this AI do? How does it behave? What should it avoid doing?"
                 className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>

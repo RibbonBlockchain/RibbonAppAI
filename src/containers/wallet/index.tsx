@@ -16,8 +16,8 @@ import {
 } from "@biconomy/account";
 import {
   OpenloginAdapter,
-  OpenloginLoginParams,
   OpenloginUserInfo,
+  OpenloginLoginParams,
 } from "@web3auth/openlogin-adapter";
 import Web3 from "web3";
 import clsx from "clsx";
@@ -63,7 +63,7 @@ const rpcTarget = "https://sepolia.base.org/";
 const publicRPC = "https://sepolia.optimism.io/";
 
 const clientId =
-  "BFNvw32pKnVURo4cx9n1uCc0MO7_iisPEdoX_4JYXvXlebOVYiuOmCXHxI0k3EVYSWiPaxNIY-T5iII8CncmJfU";
+  "BDvkOwqV1M9hoobZcrFN8HFkqg9efsMiDpML7Tmu_uFlVOPNjXrUmKXvFBFidDhn9fmbJ1HJ1v4OsANeC_mg5f0";
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -921,7 +921,7 @@ const WalletComponent = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col p-4 sm:p-6 h-screen bg-cover bg-walletBg">
+        <div className="flex flex-col h-screen">
           <div className="mb-6">
             <BackArrowButton stroke="#FFF" />
             <div className="flex -mt-10 text-white  flex-row items-center justify-center text-base font-semibold">

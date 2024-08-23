@@ -35,12 +35,12 @@ const FeaturedLinkages = ({
         </div>
         <div className="flex flex-col">
           <p className="text-base font-semibold">{title}</p>
-          <p className="mt-1 text-xs font-normal">
-            {description}{" "}
-            <a className="underline cursor-pointer text-[#DFCBFB]">
+          <div className="mt-1 text-xs font-normal">
+            {description}
+            <p className="underline cursor-pointer text-[#DFCBFB]">
               View more details
-            </a>
-          </p>
+            </p>
+          </div>
         </div>
       </Link>
 

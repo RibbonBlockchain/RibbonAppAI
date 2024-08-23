@@ -1,5 +1,10 @@
+import {
+  TTrainAIModel,
+  TCreateAIModel,
+  TCreateLinkageBody,
+  TUploadTrainingFile,
+} from "./types";
 import { TResponse, client } from "../api-client";
-import { TCreateAIModel, TTrainAIModel, TUploadTrainingFile } from "./types";
 
 export const getTrainingModels = async (id: number) => {
   const res = await client.get<TResponse<any>>(`/ai/model/${id}/file`);
@@ -21,5 +26,10 @@ export const uploadTrainingFiles = async (
 
 export const trainAIModel = async (body: TTrainAIModel, id: number) => {
   const res = await client.post(`/ai/model/${id}/train`, body);
+  return res.data;
+};
+
+export const createLinkage = async (body: TCreateLinkageBody) => {
+  const res = await client.post("/linkage", body);
   return res.data;
 };

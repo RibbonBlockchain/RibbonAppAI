@@ -3,9 +3,18 @@ export type TCreateAIModel = {
 };
 
 export type TUploadTrainingFile = {
-  file: [] | File[];
+  file: any;
 };
 
 export type TTrainAIModel = {
   fileId: string;
+};
+
+export type TCreateLinkageBody = {
+  name: string;
+  description: string;
+  phone: string;
+  email: string;
+  location: string;
+  category: string;
 };

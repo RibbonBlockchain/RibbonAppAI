@@ -1,13 +1,19 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { linkagesArray } from "@/lib/values/mockData";
 import LinkagesCard from "@/containers/linkages/linkages-card";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
 import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
 
 const Linkages = () => {
+  const router = useRouter();
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
+      <ArrowLeft onClick={() => router.back()} className="mt-2" />
       <div className="flex flex-col gap-6">
         <div className="py-4">
           <div className="flex flex-row items-center justify-between">

@@ -3,10 +3,16 @@ import {
   createAIModel,
   getTrainingModels,
   uploadTrainingFiles,
+  createLinkage,
 } from "./req";
 import { onError } from "../api-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TCreateAIModel, TTrainAIModel, TUploadTrainingFile } from "./types";
+import {
+  TCreateAIModel,
+  TCreateLinkageBody,
+  TTrainAIModel,
+  TUploadTrainingFile,
+} from "./types";
 
 export const useGetTrainingModels = (id: number) => {
   return useQuery({
@@ -35,5 +41,12 @@ export const useTrainAIModel = () => {
     onError,
     mutationFn: ({ body, id }: { body: TTrainAIModel; id: number }) =>
       trainAIModel(body, id),
+  });
+};
+
+export const useCreateLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCreateLinkageBody) => createLinkage(body),
   });
 };

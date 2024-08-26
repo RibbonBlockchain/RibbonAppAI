@@ -14,7 +14,12 @@ const Logout = () => {
     logout();
   };
 
-  if (isLoading) return <SpinnerIcon />;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center mt-4">
+        <SpinnerIcon />
+      </div>
+    );
 
   return (
     <div

@@ -31,8 +31,8 @@ const LinkagesHome = () => {
 
         <div>
           <button
-            onClick={() => router.push("/linkages/all")}
-            className="w-full py-3 bg-[#F6F1FE] rounded-[12px] text-sm font-medium text-[#290064]"
+            onClick={() => router.push("/linkages/explore")}
+            className="w-full py-3 bg-[#F6F1FE] rounded-[12px] text-sm font-semibold text-[#290064]"
           >
             Explore Linkages
           </button>

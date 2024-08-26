@@ -62,35 +62,57 @@ export const surveys = [
   },
 ];
 
+export const featuredLinkagesArray = [
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+    author: "XYZ Gym",
+  },
+  {
+    image: "/assets/image-ph.png",
+    description:
+      "Access to mental health professionals and support groups in your community",
+    title: "Community Mental Health Support",
+    author: "XYZ Gym",
+  },
+];
+
 export const linkagesArray = [
   {
     image: "/assets/image-ph.png",
     description:
       "Access to mental health professionals and support groups in your community",
     title: "Community Mental Health Support",
+    author: "XYZ Gym",
   },
   {
     image: "/assets/image-ph.png",
     description:
       "Access to mental health professionals and support groups in your community",
     title: "Community Mental Health Support",
+    author: "XYZ Gym",
   },
   {
     image: "/assets/image-ph.png",
     description:
       "Access to mental health professionals and support groups in your community",
     title: "Community Mental Health Support",
+    author: "XYZ Gym",
   },
   {
     image: "/assets/image-ph.png",
     description:
       "Access to mental health professionals and support groups in your community",
     title: "Community Mental Health Support",
+    author: "XYZ Gym",
   },
   {
     image: "/assets/image-ph.png",
     description:
       "Access to mental health professionals and support groups in your community",
     title: "Community Mental Health Support",
+    author: "XYZ Gym",
   },
 ];

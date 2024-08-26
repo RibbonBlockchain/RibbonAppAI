@@ -1,5 +1,12 @@
 import { TResponse, client } from "../api-client";
-import { TBuyData, TCableMerchant, TCablePay, TPurchaseAirtime } from "./types";
+import {
+  TBuyData,
+  TCableMerchant,
+  TCablePay,
+  TElectricityMerchant,
+  TElectricityPay,
+  TPurchaseAirtime,
+} from "./types";
 
 export const getServicesBalance = async () => {
   const res = await client.get<TResponse<any>>("/vtpass/balance");
@@ -8,7 +15,7 @@ export const getServicesBalance = async () => {
 
 export const getDataServiceLists = async (serviceId: string) => {
   const res = await client.get<TResponse<any>>(
-    `/vtpass/data-variations?serviceId=${serviceId}`
+    `/vtpass/service-variations?serviceId=${serviceId}`
   );
   return res.data.data;
 };
@@ -31,5 +38,16 @@ export const verifyCableMerchant = async (body: TCableMerchant) => {
 
 export const cablePay = async (body: TCablePay) => {
   const res = await client.post("/vtpass/cable-pay", body);
+  return res.data;
+};
+
+//Electricity
+export const verifyElectricityMerchant = async (body: TElectricityMerchant) => {
+  const res = await client.post("/vtpass/verify-merchant", body);
+  return res.data;
+};
+
+export const electricityPay = async (body: TElectricityPay) => {
+  const res = await client.post("/vtpass/electricity-pay", body);
   return res.data;
 };

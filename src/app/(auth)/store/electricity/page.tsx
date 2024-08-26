@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import ChatBot from "@/containers/dashboard/chat-bot";
+import ElectricityBot from "./electricity-bot";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
@@ -26,7 +26,7 @@ const Electricity = () => {
           <VolumeHigh size="32" color="#ffffff" />
         </div>
 
-        <ChatBot />
+        <ElectricityBot />
       </div>
     </AuthNavLayout>
   );

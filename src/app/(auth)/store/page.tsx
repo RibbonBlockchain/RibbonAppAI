@@ -21,10 +21,10 @@ const Store = () => {
     { href: "/store/data-purchase", icon: <Wifi />, name: "Data" },
     { href: "/store/airtime", icon: <DocumentText />, name: "Airtime" },
     { href: "/store/electricity", icon: <Electricity />, name: "Electricity" },
+    { href: "/store/entertainment", icon: <Monitor />, name: "Entertainment" },
     { href: "/store/betting", icon: <Global />, name: "Betting" },
     { href: "/store/shopping", icon: <ShoppingCart />, name: "Shopping" },
     { href: "/store/transports", icon: <Driving />, name: "Transports" },
-    { href: "/store/entertainment", icon: <Monitor />, name: "Entertainment" },
     { href: "/store/voucher", icon: <Gift />, name: "Voucher" },
   ];
 

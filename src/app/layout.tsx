@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const inter = localFont({
   display: "swap",
-  src: "../../public/fonts/inter.woff2",
+  src: "../../public/fonts/Nunito-Regular.ttf",
 });
 
 const RootLayout = async ({

@@ -12,15 +12,16 @@ const LinkagesHome = () => {
     <AuthNavLayout>
       <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
         <Image
-          src={"/assets/linkages.png"}
-          alt=""
           width={300}
           height={470}
+          alt="linkages-logo"
           className="w-full h-auto"
+          src={"/assets/linkages.png"}
         />
 
         <div className="py-10">
           <p className="text-[24px] font-semibold">Linkages</p>
+
           <p className="text-[13px] font-normal mt-2">
             Based on your responses on our surveys and questionnaires,
             we&apos;`ve suggested some services that could assist you in

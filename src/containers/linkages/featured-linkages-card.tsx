@@ -5,14 +5,16 @@ import Image from "next/image";
 const FeaturedLinkages = ({
   image,
   title,
+  author,
   description,
 }: {
   image: string;
   title: string;
+  author: string;
   description: string;
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-[#dac4fa14] text-white p-2 rounded-[10px]">
       <Link
         href={`/linkages/all/${title}`}
         className="flex flex-row items-center gap-4"
@@ -33,24 +35,17 @@ const FeaturedLinkages = ({
             className="rounded-full w-[64px] h-[64px]"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-1.5">
           <p className="text-base font-semibold">{title}</p>
-          <div className="mt-1 text-xs font-normal">
-            {description}
-            <p className="underline cursor-pointer text-[#DFCBFB]">
+          <p className="text-xs font-normal">{description}</p>
+          <div className="flex flex-row items-center justify-between text-xs">
+            <p>By {author}</p>
+            <button className="underline cursor-pointer text-[#DFCBFB]">
               View more details
-            </p>
+            </button>
           </div>
         </div>
       </Link>
-
-      <Image
-        alt="hr"
-        height={1}
-        width={240}
-        className="w-auto h-auto mt-4"
-        src="/assets/horizontal-line.png"
-      />
     </div>
   );
 };

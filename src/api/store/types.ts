@@ -22,3 +22,17 @@ export type TCablePay = {
   phone: string;
   type: string;
 };
+
+export type TElectricityMerchant = {
+  serviceId: string;
+  billersCode: string;
+  type: string;
+};
+
+export type TElectricityPay = {
+  serviceId: string;
+  billersCode: string;
+  variationCode: string;
+  phone: string;
+  amount: string;
+};

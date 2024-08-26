@@ -5,10 +5,19 @@ import {
   getServicesBalance,
   getDataServiceLists,
   verifyCableMerchant,
+  verifyElectricityMerchant,
+  electricityPay,
 } from "./req";
 import { onError } from "../api-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TBuyData, TCableMerchant, TCablePay, TPurchaseAirtime } from "./types";
+import {
+  TBuyData,
+  TCableMerchant,
+  TCablePay,
+  TElectricityMerchant,
+  TElectricityPay,
+  TPurchaseAirtime,
+} from "./types";
 
 export const useGetServicesBalance = () => {
   return useQuery({
@@ -51,5 +60,20 @@ export const useCablePay = () => {
   return useMutation({
     onError,
     mutationFn: (body: TCablePay) => cablePay(body),
+  });
+};
+
+// electricity
+export const useVerifyElectricityMerchant = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TElectricityMerchant) => verifyElectricityMerchant(body),
+  });
+};
+
+export const useElectricityPay = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TElectricityPay) => electricityPay(body),
   });
 };

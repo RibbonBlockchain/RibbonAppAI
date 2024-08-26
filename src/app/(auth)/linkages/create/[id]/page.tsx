@@ -1,27 +1,24 @@
 "use client";
 
-import {
-  ArrowUp,
-  AddCircle,
-  ArrowLeft2,
-  InfoCircle,
-  CloseCircle,
-} from "iconsax-react";
 import clsx from "clsx";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Upload } from "lucide-react";
+import { useCreateLinkageAI } from "@/api/ai";
+import React, { ChangeEvent, useState } from "react";
 import ChatBot from "@/containers/dashboard/chat-bot";
+import { useParams, useRouter } from "next/navigation";
 import FileUpload from "@/containers/linkages/file-upload";
-import {
-  useCreateAIModel,
-  useTrainAIModel,
-  useUploadTrainingFiles,
-} from "@/api/ai";
-import { mutate } from "swr";
+import { AddCircle, ArrowLeft2, InfoCircle, CloseCircle } from "iconsax-react";
+
+type Starter = {
+  text: string;
+};
 
 const AIPrompt = () => {
   const router = useRouter();
+  const params = useParams();
+  const id = Number(params.id);
+
   const [selected, setSelected] = useState("create");
 
   const [activeInfo, setActiveInfo] = useState<string | null>(null);
@@ -48,23 +45,62 @@ const AIPrompt = () => {
 
   const [AIName, setAIName] = useState("");
   const [description, setDescription] = useState("");
+  const [instruction, setInstruction] = useState("");
 
-  const { mutate: createAI } = useCreateAIModel();
-  const { mutate: uploadTrainingFiles } = useUploadTrainingFiles();
-  const { mutate: trainAIModel } = useTrainAIModel();
+  const [image, setImage] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
 
-  const handleCreateAI = () => {
-    createAI({ name: AIName });
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImagePreview(URL.createObjectURL(file));
+    setImage(file as any);
   };
 
-  const handleUploadTrainingFiles = () => {
-    const body = { file: [] };
-    uploadTrainingFiles({ id: 1, body });
+  const { mutate } = useCreateLinkageAI();
+
+  const handleCreateLinkageAI = () => {
+    const [prompt, prompts1, prompts2] = starters
+      .map((starter) => starter.text)
+      .concat(["", "", ""]);
+
+    const formData = new FormData();
+
+    formData.append("name", AIName);
+    formData.append("description", description);
+    formData.append("instruction", instruction);
+    formData.append("prompts", prompt);
+    formData.append("prompts1", prompts1);
+    formData.append("prompts2", prompts2);
+
+    if (image) formData.append("image", image);
+
+    mutate(
+      { body: formData as any, id },
+      { onSuccess: () => router.push("/linkages/subscription") }
+    );
   };
 
-  const handleTrainAIModel = () => {
-    const body = { fileId: "" };
-    trainAIModel({ id: 1, body });
+  const isSubmitDisabled = !AIName || !description || !instruction || !prompt;
+
+  const [starters, setStarters] = useState<Starter[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  // Handle adding a new starter
+  const handleAddClick = () => {
+    if (inputValue.trim()) {
+      setStarters([...starters, { text: inputValue.trim() }]);
+      setInputValue("");
+    }
+  };
+
+  const handleRemoveClick = (index: number) => {
+    setStarters(starters.filter((_, i) => i !== index));
   };
 
   return (
@@ -100,13 +136,28 @@ const AIPrompt = () => {
 
         {selected === "create" && (
           <div className="flex flex-col gap-6">
-            <Image
-              width={82}
-              height={82}
-              alt="linkage"
-              src={"/assets/sample-icon.png"}
-              className="rounded-full self-center"
-            />
+            <div className="flex flex-col items-center justify-center">
+              <Image
+                width={82}
+                height={82}
+                alt="linkage"
+                src={imagePreview || "/assets/sample-icon.png"}
+                className="rounded-full"
+              />
+              <div className="flex flex-row gap-1 mt-1">
+                <label className="cursor-pointer text-sm font-medium flex flex-row items-center gap-2">
+                  <span className="">Upload</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    placeholder="upload image"
+                    onChange={handleImageChange}
+                  />
+                  <Upload height={16} width={16} />
+                </label>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">Name</label>
@@ -115,7 +166,18 @@ const AIPrompt = () => {
                 value={AIName}
                 placeholder="Name your AI"
                 onChange={(e) => setAIName(e.target.value)}
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium">Description</label>
+              <input
+                type="text"
+                value={description}
+                placeholder="Write a short description for your AI."
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
@@ -123,43 +185,54 @@ const AIPrompt = () => {
               <label className="text-sm font-semibold">Instructions</label>
               <textarea
                 rows={6}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Write a short description for your AI. What does this AI do? How does it behave? What should it avoid doing?"
-                className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
+                placeholder="What does this AI do? How does it behave? What should it avoid doing?"
+                className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB86] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center justify-between">
-                <p className="text-sm font-medium">Conversation starters</p>
-                <button className="flex flex-row items-center gap-1">
-                  Add <AddCircle size="14" color="#ffffff" />
+                <p className="text-sm font-medium">
+                  Conversation starters (maximum of 3)
+                </p>
+                <button
+                  disabled={starters.length === 3}
+                  onClick={handleAddClick}
+                  className={clsx(
+                    "flex flex-row items-center gap-1 hover:bg-[#3f3856] py-1 px-2 rounded-[10px]",
+                    starters.length === 3
+                      ? "cursor-not-allowed bg-red-400"
+                      : "bg-green-400"
+                  )}
+                >
+                  Add <AddCircle size={14} color="#ffffff" />
                 </button>
               </div>
               <input
                 type="text"
+                value={inputValue}
+                onChange={handleInputChange}
                 placeholder="Write conversation starters here"
-                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+                className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
-            </div>
 
-            <div className="flex flex-col gap-4 w-[90%]">
-              <div className="flex flex-row items-center justify-between">
-                One example conversational starter here{" "}
-                <CloseCircle size="20" color="#ffffff" />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                Two example conversational starter here{" "}
-                <CloseCircle size="20" color="#ffffff" />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                Three example conversational starter here{" "}
-                <CloseCircle size="20" color="#ffffff" />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                Four example conversational starter here{" "}
-                <CloseCircle size="20" color="#ffffff" />
+              <div className="flex flex-col gap-4 w-[90%] mt-4">
+                {starters.map((starter, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row items-center justify-between"
+                  >
+                    {starter.text}
+                    <button
+                      onClick={() => handleRemoveClick(index)}
+                      className="flex items-center justify-center"
+                    >
+                      <CloseCircle size={20} color="#ffffff" />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -173,7 +246,6 @@ const AIPrompt = () => {
 
               <FileUpload />
             </div>
-
             <div className="flex flex-col gap-2 mt-6">
               <h1 className="text-sm font-semibold">Capabilities</h1>
 
@@ -193,7 +265,7 @@ const AIPrompt = () => {
                 ].map((option) => (
                   <label
                     key={option.value}
-                    className={`relative flex items-center space-x-2 py-1 cursor-pointer gap-1 rounded-lg`}
+                    className={`relative flex flex-row items-center space-x-2 py-1 cursor-pointer gap-1 rounded-lg`}
                   >
                     <input
                       type="checkbox"
@@ -223,25 +295,29 @@ const AIPrompt = () => {
                 ))}
               </div>
             </div>
-
             <div className="flex flex-col gap-2 mt-6">
               <h1 className="text-sm font-semibold">Additional Settings</h1>
-              <div className="flex items-start rounded-lg">
+              <div className="flex flex-row items-center rounded-lg">
                 <input
                   type="checkbox"
                   checked={isAgreed}
                   onChange={handleCheckboxChangeAdditional}
-                  className="form-checkbox h-4 w-4 mt-[3px]"
+                  className="form-checkbox h-4 w-4"
                 />
                 <span className="pl-2 text-white">
                   Use conversation data in your AI to improve our models
                 </span>
               </div>
             </div>
-
             <button
-              onClick={() => router.push("/linkages/subscription")}
-              className="my-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm"
+              disabled={isSubmitDisabled}
+              onClick={handleCreateLinkageAI}
+              className={clsx(
+                "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
+                isSubmitDisabled
+                  ? "bg-gray-600 text-white cursor-not-allowed"
+                  : "bg-white text-[#290064]"
+              )}
             >
               Publish AI Linkage
             </button>

@@ -1,10 +1,12 @@
 "use client";
 
+import clsx from "clsx";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import React, { useState } from "react";
+import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCreateLinkage } from "@/api/ai";
+import React, { ChangeEvent, useState } from "react";
 import { ArrowLeft2, Call, Location, Sms } from "iconsax-react";
 
 const options = [
@@ -29,26 +31,47 @@ const CreateLinkage = () => {
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
 
   const handleSelect = (id: string, label: string) => {
     setSelectedId(id);
     setCategory(label);
   };
 
-  const { mutate } = useCreateLinkage();
-  const handleCreateLinkage = () => {
-    const body = {
-      name,
-      description,
-      phone,
-      email,
-      location,
-      category,
-    };
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    mutate(body, { onSuccess: () => toast.success("Linkage created") });
-    router.push("/linkages/create/ai-prompt");
+    setImagePreview(URL.createObjectURL(file));
+    setImage(file as any);
   };
+
+  const { mutate } = useCreateLinkage();
+
+  const handleCreateLinkage = () => {
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("phone", phone);
+    formData.append("email", email);
+    formData.append("location", location);
+    formData.append("category", category);
+
+    if (image) formData.append("image", image);
+
+    mutate(formData as any, {
+      onSuccess: (data) => {
+        console.log(data, "on success data");
+        router.push(`/linkages/create/${data?.data.id}`),
+          toast.success("Linkage created");
+      },
+    });
+  };
+
+  const isSubmitDisabled =
+    !name || !description || !phone || !email || !location || !category;
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
@@ -64,13 +87,29 @@ const CreateLinkage = () => {
         </h1>
 
         <div className="flex flex-row items-center gap-2">
-          <Image
-            width={60}
-            height={60}
-            alt="linkage"
-            className="rounded-full"
-            src={"/assets/sample-icon.png"}
-          />
+          <div className="">
+            <Image
+              width={60}
+              height={60}
+              alt="linkage"
+              src={imagePreview || "/assets/sample-icon.png"}
+              className="rounded-full"
+            />
+            <div className="flex flex-row gap-1 mt-1">
+              <label className="cursor-pointer text-sm font-medium flex flex-row items-center gap-2">
+                <span className="">Upload</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  placeholder="upload image"
+                  onChange={handleImageChange}
+                />
+                <Upload height={16} width={16} />
+              </label>
+            </div>
+          </div>
+
           <input
             type="text"
             value={name}
@@ -160,8 +199,14 @@ const CreateLinkage = () => {
         </div>
 
         <button
+          disabled={isSubmitDisabled}
           onClick={handleCreateLinkage}
-          className="my-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm"
+          className={clsx(
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
+            isSubmitDisabled
+              ? "bg-gray-600 text-white cursor-not-allowed"
+              : "bg-white text-[#290064]"
+          )}
         >
           Create your AI Prompt
         </button>

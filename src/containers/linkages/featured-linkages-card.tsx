@@ -4,19 +4,21 @@ import Image from "next/image";
 
 const FeaturedLinkages = ({
   image,
-  title,
+  name,
   author,
   description,
+  slug,
 }: {
   image: string;
-  title: string;
+  name: string;
   author: string;
   description: string;
+  slug: string;
 }) => {
   return (
-    <div className="flex flex-col bg-[#dac4fa14] text-white p-2 rounded-[10px]">
+    <div className="w-full flex flex-col bg-[#dac4fa14] text-white px-2 py-4 rounded-[10px]">
       <Link
-        href={`/linkages/all/${title}`}
+        href={`/linkages/explore/${slug}`}
         className="flex flex-row items-center gap-4"
       >
         <div className="relative min-w-fit flex flex-row">
@@ -35,8 +37,8 @@ const FeaturedLinkages = ({
             className="rounded-full w-[64px] h-[64px]"
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <p className="text-base font-semibold">{title}</p>
+        <div className="w-full flex flex-col gap-1.5">
+          <p className="text-base font-semibold">{name}</p>
           <p className="text-xs font-normal">{description}</p>
           <div className="flex flex-row items-center justify-between text-xs">
             <p>By {author}</p>

@@ -35,7 +35,9 @@ export const PointBalanceCard = ({
     </div>
 
     <div className="flex flex-col gap-3 mt-4">
-      <p className="flex self-end text-xs font-medium">{points}/50,000 pts</p>
+      <p className="flex self-end text-xs font-medium">
+        {points * 5000}/50,000 pts
+      </p>
 
       <div style={{ position: "relative", width: "100%" }}>
         <ProgressBar
@@ -83,8 +85,7 @@ export const WalletBalanceCard = ({
             onClick={() => {
               copyToClipboard(
                 shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")
-              ),
-                toast.success(`copied`);
+              );
             }}
           >
             <Copy size="18" color="#F6F1FE" variant="Bold" />

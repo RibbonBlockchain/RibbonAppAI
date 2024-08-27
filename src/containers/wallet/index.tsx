@@ -58,8 +58,9 @@ const config = {
 };
 
 const chainId = 11155420;
-const rpcTarget = "https://sepolia.base.org/";
-
+// const rpcTarget = "https://sepolia.base.org/";
+const rpcTarget =
+  "https://base-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
 const publicRPC = "https://sepolia.optimism.io/";
 
 const clientId =
@@ -417,7 +418,7 @@ const WalletComponent = () => {
   };
 
   // send transaction
-  const sendWorldToken = async (destination: any, amount: any) => {
+  const sendUSDCToken = async (destination: any, amount: any) => {
     try {
       const paymaster: IPaymaster = await createPaymaster({
         paymasterUrl: config.biconomyPaymasterApiKey,
@@ -446,7 +447,7 @@ const WalletComponent = () => {
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
-          to: "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5",
+          to: "0x036cbd53842c5426634e7929541ec2318f3dcf7e",
           data: data,
         },
         {
@@ -508,9 +509,9 @@ const WalletComponent = () => {
   const pointToWLD = Number(point) / 5000;
 
   // world token
-  const [wldToken, setWldToken] = useState("");
-  const [worldTokenName, setWorldTokenName] = useState("");
-  localStorage.setItem("wldTokenBalance", wldToken);
+  const [usdcToken, setUsdcToken] = useState("");
+  const [usdcTokenName, setusdcTokenName] = useState("");
+  localStorage.setItem("usdcTokenBalance", usdcToken);
 
   const getWorldToken = async () => {
     try {
@@ -518,7 +519,7 @@ const WalletComponent = () => {
 
       const myaddress = (await web3.eth.getAccounts())[0];
 
-      const ADDRESS = "0x04EC0289FC8ddAE121C0588f62dAe0fa3EE362d5";
+      const ADDRESS = "0x036cbd53842c5426634e7929541ec2318f3dcf7e";
 
       const contract = new web3.eth.Contract(pointsABI, ADDRESS);
 
@@ -529,10 +530,10 @@ const WalletComponent = () => {
       const divisor: BigNumber = new BigNumber(10).pow(decimal);
 
       const result: BigNumber = numberBig.dividedBy(divisor);
-      setWldToken(result.toString());
+      setUsdcToken(result.toString());
 
       const tokenName: string = await contract.methods.name().call();
-      setWorldTokenName(tokenName);
+      setusdcTokenName(tokenName);
     } catch (error) {
       // toast.error(`Error sending transaction`);
     }
@@ -559,7 +560,7 @@ const WalletComponent = () => {
   useEffect(() => {
     getPointToken();
     getWorldToken();
-  }, [point, wldToken, pointName, worldTokenName, authenticateUser()]);
+  }, [point, usdcToken, pointName, usdcTokenName, authenticateUser()]);
 
   const [showWallet, setShowWallet] = useState(true);
 
@@ -660,7 +661,7 @@ const WalletComponent = () => {
                   setMaxAmount={() => setSwapValue(Number(point))}
                   USDvalue={(Number(swapValue) / 5000) * currentPrice}
                   pointsBalance={point}
-                  wldBalance={wldToken}
+                  wldBalance={usdcToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
                     swapPoints(
@@ -687,10 +688,7 @@ const WalletComponent = () => {
                   handleClick={() => {
                     setShowPending(true),
                       toast.success("Transaction initiated"),
-                      sendWorldToken(
-                        destination,
-                        convertPoints(Number(amount))
-                      );
+                      sendUSDCToken(destination, convertPoints(Number(amount)));
                     setSendTx(false);
                     setDestination("");
                     setAmount("");
@@ -702,7 +700,7 @@ const WalletComponent = () => {
                   amount={amount}
                   handleAmountInput={(e: any) => setAmount(e.target.value)}
                   isPending={undefined}
-                  wldTokenBalance={wldToken}
+                  wldTokenBalance={usdcToken}
                   USDvalue={Number(amount) * currentPrice}
                 />
               )}
@@ -727,7 +725,7 @@ const WalletComponent = () => {
                   isOpen={openWLDTxPage}
                   closeModal={() => setOpenWLDTxPage(false)}
                   handleClick={() => setSendTx(true)}
-                  wldBalance={wldToken}
+                  wldBalance={usdcToken}
                   tokenName={"World (WLD)"}
                   tokenUnit={"WLD"}
                 />
@@ -769,8 +767,8 @@ const WalletComponent = () => {
               </div>
 
               <CustomTokenUI
-                wldTokenBalance={wldToken}
-                balanceUSD={(Number(wldToken) * currentPrice).toFixed(5)}
+                wldTokenBalance={usdcToken}
+                balanceUSD={(Number(usdcToken) * currentPrice).toFixed(5)}
               />
 
               <button
@@ -888,17 +886,17 @@ const WalletComponent = () => {
                           </div>
                           <div>
                             <p className="text-base font-normal">
-                              {worldTokenName}
+                              {usdcTokenName}
                             </p>
                             <p className="text-xs text-[#626262]">
-                              {worldTokenName}
+                              {usdcTokenName}
                             </p>
                           </div>
                         </div>
                         <div className="text-end">
-                          <p className="text-sm font-normal">{wldToken} WLD</p>
+                          <p className="text-sm font-normal">{usdcToken} WLD</p>
                           <p className="text-xs text-[#626262]">
-                            {Number(wldToken) * currentPrice} USD
+                            {Number(usdcToken) * currentPrice} USD
                           </p>
                         </div>
                       </div>

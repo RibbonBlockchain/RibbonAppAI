@@ -1,12 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import PageLoader from "@/components/loader";
-import { Call, Location, Sms } from "iconsax-react";
+import { copyToClipboard } from "@/lib/utils";
+import { shorten } from "@/lib/utils/shorten";
+import toast, { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import RatingCompleted from "@/containers/activity/rate-completed";
-import { useGetDiscoveryLinkages, useGetLinkageBySlug } from "@/api/ai";
+import { Call, Copy, Location, Sms, WalletMoney } from "iconsax-react";
+import {
+  useGetDiscoveryLinkages,
+  useGetLinkageAIById,
+  useGetLinkageAIBySlug,
+  useGetLinkageBySlug,
+  useGetLinkagesAI,
+  useGetLinkagesAIFile,
+} from "@/api/ai";
 import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
 
 const LinkageRatingsCard = () => {
@@ -43,9 +53,14 @@ const LinkageViewDetails = () => {
     params: { page: 1, pageSize: 5, query: "" },
   });
 
+  // list all AIs under the linkage
+  const { data: getLinkagesAi } = useGetLinkagesAI(data?.data?.id);
+
   return (
     <>
       {isLoading && <PageLoader />}
+
+      <Toaster />
 
       {data && (
         <main className="relative min-h-screen w-full text-white bg-[#0B0228]">
@@ -74,10 +89,28 @@ const LinkageViewDetails = () => {
                   <Location size="18" color="#ffffff" variant="Bold" />{" "}
                   {data?.data.location}
                 </div>
+                <div className="flex flex-row items-start gap-3 text-xs font-normal">
+                  <WalletMoney size="18" color="#ffffff" />
+                  <div className="flex flex-col gap-1">
+                    <p>Wallet address</p>
+                    <div
+                      onClick={() =>
+                        copyToClipboard(data?.data.walletAddress, () =>
+                          toast.success("Wallet address copied")
+                        )
+                      }
+                      className="flex flex-row items-center gap-1 font-semibold"
+                    >
+                      {shorten(data?.data.walletAddress)}
+                      <Copy size="16" color="#ffffff" variant="Bold" />
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div
                 onClick={() => router.push("/bot")}
-                className="relative flex flex-row mt-8 mr-6"
+                className="relative flex flex-row"
               >
                 <Image
                   width={10}
@@ -94,6 +127,20 @@ const LinkageViewDetails = () => {
                   src={"/assets/linkage-AI.png"}
                 />
               </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-sm font-bold">My Linkages AI</p>
+
+              {getLinkagesAi?.data?.map((item: any) => (
+                <div
+                  key={item.id}
+                  className="text-[13px] font-normal cursor-pointer"
+                  onClick={() => router.push(`/linkages/bot/${item.slug}`)}
+                >
+                  {item.id}: {item.name} - {item.slug}
+                </div>
+              ))}
             </div>
 
             <div className="flex flex-col gap-2">

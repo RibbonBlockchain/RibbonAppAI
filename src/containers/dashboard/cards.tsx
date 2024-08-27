@@ -84,7 +84,8 @@ export const WalletBalanceCard = ({
             className="cursor-pointer"
             onClick={() => {
               copyToClipboard(
-                shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")
+                shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec"),
+                () => toast.success("Wallet address copied")
               );
             }}
           >

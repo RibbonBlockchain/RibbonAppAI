@@ -20,12 +20,10 @@ export function getOrdinalIndicator(day: number): string {
   return `${day}${suffix}`;
 }
 
-export const copyToClipboard = (text: any) => {
+export const copyToClipboard = (text: any, successMessage: () => void) => {
   navigator.clipboard
     .writeText(text)
-    .then(() => {
-      toast.success("Text copied to clipboard!");
-    })
+    .then(successMessage)
     .catch((error) => {
       toast.error("Error copying text: ", error);
     });

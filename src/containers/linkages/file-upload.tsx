@@ -1,16 +1,18 @@
 import { ArrowUp } from "iconsax-react";
 import { useUploadLinkageAIFile } from "@/api/ai";
 import React, { useState, ChangeEvent } from "react";
+import { useParams } from "next/navigation";
 
 const FileUpload = () => {
+  const params = useParams();
+  const id = Number(params.id);
+
   const { mutate } = useUploadLinkageAIFile();
 
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | ArrayBuffer | null>(
     null
   );
-
-  console.log(filePreview, "here");
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -28,7 +30,7 @@ const FileUpload = () => {
 
     // Assuming the mutate function accepts FormData directly
     mutate(
-      { id: 8, file: formData as any },
+      { id, file: formData as any },
       {
         onSuccess: () => console.log("File uploaded successfully"),
         onError: (error) => console.error("Upload failed", error),

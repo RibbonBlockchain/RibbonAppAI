@@ -760,7 +760,9 @@ const WalletComponent = () => {
                     variant="Bold"
                     className="cursor-pointer"
                     onClick={() => {
-                      copyToClipboard(SAAddress), toast.success(`copied`);
+                      copyToClipboard(SAAddress, () =>
+                        toast.success(`Wallet address copied`)
+                      );
                     }}
                   />
                 </div>

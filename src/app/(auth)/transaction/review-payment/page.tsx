@@ -75,7 +75,7 @@ const ReviewPayment = () => {
       </div>
 
       <button
-        onClick={() => router.push("#")}
+        onClick={() => router.push("/linkages/explore")}
         className="mt-16 mb-10 w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-sm"
       >
         Checkout

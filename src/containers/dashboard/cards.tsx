@@ -25,7 +25,7 @@ export const PointBalanceCard = ({
 
           <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
             <ArrowSwapHorizontal size="16" color="#ffffff" />
-            <p>{points} wld</p>
+            <p>{points} usdc</p>
           </div>
         </div>
       </div>

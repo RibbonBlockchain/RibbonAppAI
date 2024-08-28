@@ -19,8 +19,8 @@ export const ProfileDetails = [
     logo: <Profile />,
   },
   {
-    href: "/linkages",
-    description: "Linkages",
+    href: "/my-linkages",
+    description: "Manage Linkages",
     logo: <Star fill="yellow" />,
   },
   {
@@ -91,7 +91,7 @@ export const RouteMenu = ({
       <Link
         href={href}
         target="_blank"
-        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50"
+        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-[#C3B1FF4D]"
       >
         <div className="flex flex-row items-center justify-center gap-3">
           {logo}
@@ -116,7 +116,7 @@ const Menu = ({
     <div>
       <Link
         href={href}
-        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50"
+        className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-[#C3B1FF4D]"
       >
         <div className="flex flex-row items-center justify-center gap-3">
           {logo}

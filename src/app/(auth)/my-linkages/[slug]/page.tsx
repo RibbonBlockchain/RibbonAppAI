@@ -67,13 +67,16 @@ const MyLinkageDetails = () => {
   const { data } = useGetLinkageBySlug(slug);
   const { data: listLinkagesAI } = useGetLinkagesAI(data?.data.id);
 
-  const { data: linkageAIdata } = useGetLinkageAIById({
+  const { data: linkageAIdata, refetch } = useGetLinkageAIById({
     AiId: selectedAI?.id as number,
     linkageId: selectedAI?.linkageId as number,
   });
 
+  console.log(selectedAI, "slected");
+
   const [count, setCount] = useState(0);
   useEffect(() => {
+    refetch();
     if (linkageAIdata?.data && linkageAIdata?.data?.prompts) {
       setCount(count + 1);
     }
@@ -98,7 +101,7 @@ const MyLinkageDetails = () => {
             <option value="" disabled>
               Select your bot
             </option>
-            {listLinkagesAI.data.map((i: any) => (
+            {listLinkagesAI?.data.map((i: any) => (
               <option key={i.id} value={i.linkageId} className="bg-inherit ">
                 <div className="flex flex-row gap-1">
                   <Image
@@ -116,7 +119,7 @@ const MyLinkageDetails = () => {
         </div>
       </div>
 
-      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto">
+      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto overflow-hidden">
         {tabs.map((tab) => (
           <button
             key={tab.value}

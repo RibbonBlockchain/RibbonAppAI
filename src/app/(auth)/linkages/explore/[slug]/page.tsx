@@ -46,14 +46,16 @@ const LinkageViewDetails = () => {
 
   const { data, isLoading } = useGetLinkageBySlug(slug);
 
-  const { data: discoveryLinkages } = useGetDiscoveryLinkages({
+  const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
     params: { page: 1, pageSize: 5, query: "" },
   });
 
   // list all AIs under the linkage
   const { data: getLinkagesAi } = useGetLinkagesAI(data?.data?.id);
 
-  useEffect(() => {}, [data]);
+  useEffect(() => {
+    refetch();
+  }, [data]);
 
   return (
     <>
@@ -87,24 +89,6 @@ const LinkageViewDetails = () => {
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <Location size="18" color="#ffffff" variant="Bold" />{" "}
                   {data?.data.location}
-                </div>
-                <div className="flex flex-row items-start gap-3 text-xs font-normal">
-                  <WalletMoney size="18" color="#ffffff" />
-                  <div className="flex flex-col gap-1">
-                    <p>Wallet address</p>
-                    <div
-                      onClick={() =>
-                        copyToClipboard(
-                          data?.data?.walletAddress?.addressId,
-                          () => toast.success("Wallet address copied")
-                        )
-                      }
-                      className="flex flex-row items-center gap-1 font-semibold"
-                    >
-                      {shorten(data?.data?.walletAddress?.addressId)}
-                      <Copy size="16" color="#ffffff" variant="Bold" />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

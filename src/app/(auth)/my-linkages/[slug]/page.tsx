@@ -116,7 +116,7 @@ const MyLinkageDetails = () => {
         </div>
       </div>
 
-      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto">
+      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto overflow-hidden">
         {tabs.map((tab) => (
           <button
             key={tab.value}

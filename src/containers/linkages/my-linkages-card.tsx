@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const FeaturedLinkages = ({
+const MyLinkagesCard = ({
   image,
   name,
   author,
@@ -18,7 +18,7 @@ const FeaturedLinkages = ({
   return (
     <div className="w-full flex flex-col bg-[#dac4fa14] text-white px-2 py-4 rounded-[10px]">
       <Link
-        href={`/linkages/explore/${slug}`}
+        href={`/my-linkages/${slug}`}
         className="flex flex-row items-center gap-4"
       >
         <div className="relative min-w-fit flex flex-row">
@@ -52,4 +52,4 @@ const FeaturedLinkages = ({
   );
 };
 
-export default FeaturedLinkages;
+export default MyLinkagesCard;

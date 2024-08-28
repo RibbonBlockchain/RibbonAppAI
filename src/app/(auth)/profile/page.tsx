@@ -50,7 +50,7 @@ const Account = () => {
           <p className="text-xs font-bold">ACCOUNT</p>
 
           <Link href="/account/kyc">
-            <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50">
+            <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-[#C3B1FF4D]">
               <div className="flex flex-row items-center justify-center gap-3">
                 <Scan />
                 <p className="text-base font-medium">
@@ -61,24 +61,6 @@ const Account = () => {
               <ChevronRight stroke="#fff" />
             </div>
           </Link>
-
-          {/* <div
-            className="cursor-pointer"
-            // onClick={handleWorldId}
-          >
-            <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-gray-50">
-              <div className="flex flex-row items-center justify-center gap-3">
-                <Image
-                  alt="coin"
-                  width={24}
-                  height={24}
-                  src="/assets/world-id-white.png"
-                />
-                <p className="text-base font-medium">Link World ID</p>
-              </div>
-              <ChevronRight stroke="#fff" />
-            </div>
-          </div> */}
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu
@@ -100,28 +82,6 @@ const Account = () => {
               description={description}
             />
           ))}
-          {/* <div>
-            <div
-              onClick={() => setTheme(!theme)}
-              className="flex flex-row items-center justify-between py-3 px-[6px] "
-            >
-              {theme ? (
-                <div className="flex flex-row items-center justify-center gap-3">
-                  <Moon />
-                  <p className="text-base font-medium">Dark Mode</p>
-                </div>
-              ) : (
-                <div className="flex flex-row items-center justify-center gap-3">
-                  <Sun />
-                  <p className="text-base font-medium">Light Mode</p>
-                </div>
-              )}
-
-              <SwitchButton />
-            </div>
-
-            <hr />
-          </div> */}
         </div>
 
         <div className="flex flex-col gap-[2px] mt-5">

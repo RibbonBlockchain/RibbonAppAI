@@ -1,6 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import {
+  useGetLinkagesAI,
+  useGetLinkageBySlug,
+  useGetDiscoveryLinkages,
+} from "@/api/ai";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import PageLoader from "@/components/loader";
 import { copyToClipboard } from "@/lib/utils";
@@ -9,14 +14,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import RatingCompleted from "@/containers/activity/rate-completed";
 import { Call, Copy, Location, Sms, WalletMoney } from "iconsax-react";
-import {
-  useGetDiscoveryLinkages,
-  useGetLinkageAIById,
-  useGetLinkageAIBySlug,
-  useGetLinkageBySlug,
-  useGetLinkagesAI,
-  useGetLinkagesAIFile,
-} from "@/api/ai";
 import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
 
 const LinkageRatingsCard = () => {
@@ -55,6 +52,8 @@ const LinkageViewDetails = () => {
 
   // list all AIs under the linkage
   const { data: getLinkagesAi } = useGetLinkagesAI(data?.data?.id);
+
+  useEffect(() => {}, [data]);
 
   return (
     <>
@@ -95,50 +94,59 @@ const LinkageViewDetails = () => {
                     <p>Wallet address</p>
                     <div
                       onClick={() =>
-                        copyToClipboard(data?.data.walletAddress, () =>
-                          toast.success("Wallet address copied")
+                        copyToClipboard(
+                          data?.data?.walletAddress?.addressId,
+                          () => toast.success("Wallet address copied")
                         )
                       }
                       className="flex flex-row items-center gap-1 font-semibold"
                     >
-                      {shorten(data?.data.walletAddress)}
+                      {shorten(data?.data?.walletAddress?.addressId)}
                       <Copy size="16" color="#ffffff" variant="Bold" />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div
-                onClick={() => router.push("/bot")}
-                className="relative flex flex-row"
-              >
-                <Image
-                  width={10}
-                  height={10}
-                  alt="display"
-                  src={"/assets/small-star.png"}
-                  className="w-[10px] h-[10px] absolute right-0"
-                />
-                <Image
-                  width={42}
-                  height={42}
-                  alt="display"
-                  className="w-[50px] h-auto"
-                  src={"/assets/linkage-AI.png"}
-                />
-              </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-bold">My Linkages AI</p>
+              <div className="flex flex-row items-center justify-between">
+                <p className="text-sm font-bold">My Linkages AI</p>
+                <button className="text-sm font-medium px-1.5 py-1 rounded-md bg-white text-[#290064]">
+                  Add new AI
+                </button>
+              </div>
 
               {getLinkagesAi?.data?.map((item: any) => (
                 <div
                   key={item.id}
-                  className="text-[13px] font-normal cursor-pointer"
-                  onClick={() => router.push(`/linkages/bot/${item.slug}`)}
+                  className="text-[13px] font-normal cursor-pointer flex flex-row gap-4 items-center"
+                  onClick={() =>
+                    router.push(`/linkages/explore/${slug}/${item.slug}`)
+                  }
                 >
-                  {item.id}: {item.name} - {item.slug}
+                  <div
+                    onClick={() => router.push("/bot")}
+                    className="relative max-w-fit flex flex-row"
+                  >
+                    <Image
+                      width={10}
+                      height={10}
+                      alt="display"
+                      src={"/assets/small-star.png"}
+                      className="w-[10px] h-[10px] absolute right-0"
+                    />
+                    <Image
+                      width={42}
+                      height={42}
+                      alt="display"
+                      className="w-[50px] h-auto"
+                      src={item.image || "/assets/sample-icon.png"}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-base font-bold">{item.name}</p>
+                  </div>
                 </div>
               ))}
             </div>

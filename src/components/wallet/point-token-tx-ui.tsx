@@ -29,7 +29,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex h-[screen] overflow-auto items-center justify-center text-center">
+          <div className="flex h-[screen] overflow-auto scroll-hidden items-center justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

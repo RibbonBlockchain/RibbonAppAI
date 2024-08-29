@@ -214,7 +214,7 @@ const ElectricityBot: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
+    <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
       <div className="flex-1 h-full overflow-y-auto mb-16">
         {messages.map((msg, index) => (
           <div
@@ -251,7 +251,7 @@ const ElectricityBot: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="self-center bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto">
+      <div className="self-center bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto scroll-hidden">
         {isServiceSelectionEnabled && (
           <div className="flex flex-col items-end mb-2">
             <p className="mb-2 text-center text-white">
@@ -338,7 +338,7 @@ const ElectricityBot: React.FC = () => {
         )}
 
         {isVariationSelectionEnabled && data && (
-          <div className="text-sm items-end bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto">
+          <div className="text-sm items-end bottom-4 w-[90%] max-w-[450px] max-h-[250px] overflow-auto scroll-hidden">
             <p className="text-end text-white mb-2">
               Select your desired subscription
             </p>

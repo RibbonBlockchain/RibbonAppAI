@@ -59,7 +59,7 @@ const SwipeCards = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="flex flex-row gap-2 w-full overflow-auto">
+      <div className="flex flex-row gap-2 w-full overflow-auto scroll-hidden">
         {activeCard === "point" && (
           <PointBalanceCard
             points={points.toFixed(2)}

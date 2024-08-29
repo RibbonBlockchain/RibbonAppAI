@@ -1,19 +1,22 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import StarSvg from "@/public/assets/star";
 
 const MyLinkagesCard = ({
-  image,
   name,
+  slug,
+  image,
   author,
   description,
-  slug,
+  featured,
 }: {
-  image: string;
   name: string;
+  slug: string;
+  image: string;
   author: string;
   description: string;
-  slug: string;
+  featured?: boolean;
 }) => {
   return (
     <div className="w-full flex flex-col bg-[#dac4fa14] text-white px-2 py-4 rounded-[10px]">
@@ -38,10 +41,22 @@ const MyLinkagesCard = ({
           />
         </div>
         <div className="w-full flex flex-col gap-1.5">
-          <p className="text-base font-semibold">{name}</p>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-base font-semibold">{name}</p>
+            {featured && (
+              <p className="text-[11px] font-medium text-[#98A2B3]">
+                Sponsored
+              </p>
+            )}
+          </div>{" "}
           <p className="text-xs font-normal line-clamp-3">{description}</p>
           <div className="flex flex-row items-center justify-between text-xs">
-            <p>By {author}</p>
+            <div className="flex flex-row gap-2 items-center">
+              <p>By {author}</p>
+              <div className="flex flex-row gap-1 items-center">
+                <StarSvg fill="#f2c80d" /> <p>(4.5)</p>
+              </div>
+            </div>
             <button className="underline cursor-pointer text-[#DFCBFB]">
               View more details
             </button>

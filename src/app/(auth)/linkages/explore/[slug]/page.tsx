@@ -5,16 +5,15 @@ import {
   useGetLinkageBySlug,
   useGetDiscoveryLinkages,
 } from "@/api/ai";
-import React, { useEffect } from "react";
 import Image from "next/image";
 import PageLoader from "@/components/loader";
 import { copyToClipboard } from "@/lib/utils";
-import { shorten } from "@/lib/utils/shorten";
 import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import RatingCompleted from "@/containers/activity/rate-completed";
-import { Call, Copy, Location, Sms, WalletMoney } from "iconsax-react";
-import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
+import FeaturedLinkages from "@/containers/linkages/linkages-card";
+import { Call, Coin1, Copy, Location, Sms, WalletMoney } from "iconsax-react";
 
 const LinkageRatingsCard = () => {
   return (
@@ -53,9 +52,11 @@ const LinkageViewDetails = () => {
   // list all AIs under the linkage
   const { data: getLinkagesAi } = useGetLinkagesAI(data?.data?.id);
 
+  const [following, setFollowing] = useState(false);
+
   useEffect(() => {
     refetch();
-  }, [data]);
+  }, [data, getLinkagesAi]);
 
   return (
     <>
@@ -74,10 +75,28 @@ const LinkageViewDetails = () => {
             src={"/assets/linkage-details.png"}
           />
 
-          <div className="flex flex-col gap-6 p-4 sm:p-6 pb-24">
+          <div className="w-full flex flex-col gap-6 p-4 sm:p-6 pb-24">
             <div className="flex flex-row items-center justify-between">
-              <div className="flex flex-col gap-3">
-                <p className="text-lg font-bold">{data?.data.name}</p>
+              <div className="w-full flex flex-col gap-3">
+                <div className="flex flex-row items-center justify-between mb-1">
+                  <p className="text-lg font-bold">{data?.data.name}</p>
+
+                  <div
+                    className="flex items-center justify-center"
+                    onClick={() => setFollowing(!following)}
+                  >
+                    {following ? (
+                      <button className="px-2 py-1 text-xs text-[#0B0228] bg-white rounded-md">
+                        Following
+                      </button>
+                    ) : (
+                      <button className="px-2 py-1 text-xs text-[#0B0228] bg-white rounded-md">
+                        Follow
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <Call size="18" color="#ffffff" variant="Bold" />
                   {data?.data.phone}
@@ -91,8 +110,23 @@ const LinkageViewDetails = () => {
                   {data?.data.location}
                 </div>
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
+                  <Coin1 size="18" color="#ffffff" variant="Bold" /> Linkage
+                  Value: $ {data?.data.walletAddress.balance}
+                </div>
+                <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}
-                  {data?.data?.walletAddress}
+                  <div
+                    onClick={() =>
+                      copyToClipboard(
+                        data?.data?.walletAddress?.addressId,
+                        () => toast.success("Wallet address copied")
+                      )
+                    }
+                    className="flex flex-row items-center gap-1 font-semibold text-sm"
+                  >
+                    {data?.data?.walletAddress?.addressId}
+                    <Copy size="16" color="#ffffff" variant="Bold" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -108,10 +142,7 @@ const LinkageViewDetails = () => {
                     router.push(`/linkages/explore/${slug}/${item.slug}`)
                   }
                 >
-                  <div
-                    onClick={() => router.push("/bot")}
-                    className="relative max-w-fit flex flex-row"
-                  >
+                  <div className="relative max-w-fit flex flex-row">
                     <Image
                       width={10}
                       height={10}
@@ -175,7 +206,7 @@ const LinkageViewDetails = () => {
             <div className="w-full fixed bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-4">
               <div className="w-full max-w-[450px] px-4 flex flex-col items-center space-y-4">
                 <button
-                  onClick={() => router.push("/bot")}
+                  onClick={() => router.push(`/linkages/explore/${slug}`)}
                   className="flex flex-row gap-2 items-center justify-center w-[inherit] bg-white text-[#290064] rounded-[8px] py-3 font-bold text-base"
                 >
                   <Image
@@ -187,7 +218,7 @@ const LinkageViewDetails = () => {
                   AI support
                 </button>
                 <button
-                  onClick={() => router.push("/bot")}
+                  onClick={() => router.push(`/linkages/explore/${slug}`)}
                   className="w-full bg-white text-[#290064] rounded-[8px] py-3 font-bold text-base"
                 >
                   Schedule a Sesssion

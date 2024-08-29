@@ -1,26 +1,26 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from "react";
 import {
-  ArrowLeft2,
-  Calendar,
   Copy,
-  Document,
-  DollarCircle,
   Monero,
+  Calendar,
+  Document,
+  ArrowLeft2,
   WalletMoney,
+  DollarCircle,
 } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
 import {
-  useGetLinkageAIById,
-  useGetLinkageAIBySlug,
-  useGetLinkageBySlug,
   useGetLinkagesAI,
+  useGetLinkageAIById,
+  useGetLinkageBySlug,
 } from "@/api/ai";
-import { copyToClipboard } from "@/lib/utils";
-import toast from "react-hot-toast";
-import { shorten } from "@/lib/utils/shorten";
 import Image from "next/image";
+import Retrain from "./retrain";
+import toast from "react-hot-toast";
+import { copyToClipboard } from "@/lib/utils";
+import { shorten } from "@/lib/utils/shorten";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 interface AIdata {
   id: number;
@@ -37,7 +37,7 @@ interface AIdata {
 }
 
 const tabs = [
-  { name: "AI Bot", value: "aibot" },
+  { name: "AI Bot", value: "ai-bot" },
   { name: "Retrain", value: "retrain" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Activity", value: "activity" },
@@ -49,17 +49,21 @@ const MyLinkageDetails = () => {
   const params = useParams();
   const slug = params.slug as string;
 
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedLinkageId = parseInt(event.target.value);
-    const selectedObject = listLinkagesAI.data.find(
-      (i: any) => i.linkageId === selectedLinkageId
-    );
-    setSelectedAI(selectedObject || null);
+  useEffect(() => {
+    if (listLinkagesAI?.data.length > 0) {
+      setSelectedAI(listLinkagesAI?.data[0]);
+    }
+  }, []);
+
+  const handleSelect = (aiData: AIdata) => {
+    setSelectedAI(aiData);
+    setIsOpen(false);
   };
 
-  const [selectedTab, setSelectedTab] = useState("chat-bot");
+  const [selectedTab, setSelectedTab] = useState("ai-bot");
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
@@ -72,11 +76,9 @@ const MyLinkageDetails = () => {
     linkageId: selectedAI?.linkageId as number,
   });
 
-  console.log(selectedAI, "slected");
-
   const [count, setCount] = useState(0);
   useEffect(() => {
-    refetch();
+    // refetch();
     if (linkageAIdata?.data && linkageAIdata?.data?.prompts) {
       setCount(count + 1);
     }
@@ -92,34 +94,51 @@ const MyLinkageDetails = () => {
           onClick={() => router.back()}
         />
 
-        <div className="text-sm font-bold flex flex-col gap-2">
-          <select
-            value={selectedAI?.linkageId || ""}
-            onChange={handleChange}
-            className="p-2 border border-gray-300 rounded-md bg-inherit"
+        <div className="relative text-sm font-bold min-w-fit px-2">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 border border-gray-300 rounded-md bg-[#0B0228] w-full text-left"
           >
-            <option value="" disabled>
-              Select your bot
-            </option>
-            {listLinkagesAI?.data.map((i: any) => (
-              <option key={i.id} value={i.linkageId} className="bg-inherit ">
-                <div className="flex flex-row gap-1">
+            {selectedAI ? (
+              <div className="flex items-center gap-2">
+                <Image
+                  width={20}
+                  height={20}
+                  alt={selectedAI.name}
+                  className="w-[20px] h-[20px] rounded-full"
+                  src={selectedAI.image || "/assets/sample-icon.png"}
+                />
+                <span>{selectedAI.name}</span>
+              </div>
+            ) : (
+              "Select your bot"
+            )}
+          </button>
+
+          {isOpen && (
+            <div className="absolute left-0 mt-2 w-full border border-gray-300 bg-[#0B0228] rounded-md shadow-lg z-10">
+              {listLinkagesAI?.data?.map((aiData: any) => (
+                <div
+                  key={aiData.id}
+                  onClick={() => handleSelect(aiData)}
+                  className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-200"
+                >
                   <Image
                     width={20}
                     height={20}
-                    alt="display"
+                    alt={aiData.name}
                     className="w-[20px] h-[20px] rounded-full"
-                    src={i.image || "/assets/sample-icon.png"}
+                    src={aiData.image || "/assets/sample-icon.png"}
                   />
-                  <p>{i.name}</p>
+                  <span>{aiData.name}</span>
                 </div>
-              </option>
-            ))}
-          </select>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto overflow-hidden">
+      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
         {tabs.map((tab) => (
           <button
             key={tab.value}
@@ -135,81 +154,85 @@ const MyLinkageDetails = () => {
         ))}
       </div>
 
-      <div className="mt-10">
-        {selectedTab === "aibot" && (
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-row gap-4 items-center">
-              <Image
-                width={42}
-                height={42}
-                alt="display"
-                className="w-[50px] h-auto"
-                src={selectedAI?.image || "/assets/sample-icon.png"}
-              />
-              <p className="flex flex-grow text-lg font-bold py-3 border-b border-[#C3B1FF4D]">
-                {selectedAI?.name}
-              </p>
-            </div>
-            <div className="flex flex-col items-start gap-2 text-xs font-normal">
-              <div className="flex flex-row gap-2 items-center">
-                <WalletMoney size="18" color="#ffffff" />
-                <p className="font-normal text-xs">Wallet address</p>
+      {selectedAI && (
+        <div className="mt-10">
+          {selectedTab === "ai-bot" && (
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-row gap-4 items-center">
+                <Image
+                  width={42}
+                  height={42}
+                  alt="display"
+                  className="w-[50px] h-auto"
+                  src={selectedAI?.image || "/assets/sample-icon.png"}
+                />
+                <p className="flex flex-grow text-lg font-bold py-3 border-b border-[#C3B1FF4D]">
+                  {selectedAI?.name}
+                </p>
               </div>
-              <div
-                onClick={() =>
-                  copyToClipboard(data?.data?.walletAddress?.addressId, () =>
-                    toast.success("Wallet address copied")
-                  )
-                }
-                className="flex flex-row items-center gap-1 font-semibold text-sm"
-              >
-                {shorten(data?.data?.walletAddress?.addressId)}
-                <Copy size="16" color="#ffffff" variant="Bold" />
+              <div className="flex flex-col items-start gap-2 text-xs font-normal">
+                <div className="flex flex-row gap-2 items-center">
+                  <WalletMoney size="18" color="#ffffff" />
+                  <p className="font-normal text-xs">Wallet address</p>
+                </div>
+                <div
+                  onClick={() =>
+                    copyToClipboard(data?.data?.walletAddress?.addressId, () =>
+                      toast.success("Wallet address copied")
+                    )
+                  }
+                  className="flex flex-row items-center gap-1 font-semibold text-sm"
+                >
+                  {shorten(data?.data?.walletAddress?.addressId)}
+                  <Copy size="16" color="#ffffff" variant="Bold" />
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col items-start gap-2 text-xs font-normal">
-              <div className="flex flex-row gap-2 items-center">
-                <DollarCircle size="18" color="#ffffff" />
-                <p className="font-normal text-xs">Balance</p>
+              <div className="flex flex-col items-start gap-2 text-xs font-normal">
+                <div className="flex flex-row gap-2 items-center">
+                  <DollarCircle size="18" color="#ffffff" />
+                  <p className="font-normal text-xs">Balance</p>
+                </div>
+                <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                  $ xxx
+                </p>
               </div>
-              <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                $ xxx
-              </p>
-            </div>
-            <div className="flex flex-col items-start gap-2 text-xs font-normal">
-              <div className="flex flex-row gap-2 items-center">
-                <Document size="18" color="#ffffff" />
-                <p className="font-normal text-xs">Sources</p>
-              </div>
+              <div className="flex flex-col items-start gap-2 text-xs font-normal">
+                <div className="flex flex-row gap-2 items-center">
+                  <Document size="18" color="#ffffff" />
+                  <p className="font-normal text-xs">Sources</p>
+                </div>
 
-              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2">
+                  <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                    0 Link
+                  </p>
+                  <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                    0 File
+                  </p>
+                  <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                    {count} conversational starters
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col items-start gap-2 text-xs font-normal">
+                <div className="flex flex-row gap-2 items-center">
+                  <Calendar size="18" color="#ffffff" />
+                  <p className="font-normal text-xs">Last trained</p>
+                </div>
                 <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                  0 Link
-                </p>
-                <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                  0 File
-                </p>
-                <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                  {count} conversational starters
+                  xxxx
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-start gap-2 text-xs font-normal">
-              <div className="flex flex-row gap-2 items-center">
-                <Calendar size="18" color="#ffffff" />
-                <p className="font-normal text-xs">Last trained</p>
-              </div>
-              <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                xxxx
-              </p>
-            </div>
-          </div>
-        )}
-        {selectedTab === "retrain" && <div>Retrain AI</div>}
-        {selectedTab === "questionnaires" && <div>Manage Questionnaire</div>}
-        {selectedTab === "activity" && <div>Activity </div>}
-        {selectedTab === "settings" && <div>Settings </div>}
-      </div>
+          )}
+
+          {selectedTab === "retrain" && <Retrain />}
+
+          {selectedTab === "questionnaires" && <div>Manage Questionnaire</div>}
+          {selectedTab === "activity" && <div>Activity </div>}
+          {selectedTab === "settings" && <div>Settings </div>}
+        </div>
+      )}
     </main>
   );
 };

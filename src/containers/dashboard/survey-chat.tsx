@@ -239,7 +239,7 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
   }, [messages]);
 
   return (
-    <div className="relative w-full mt-2 p-4 flex flex-col h-auto overflow-auto mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
+    <div className="relative w-full mt-2 p-4 flex flex-col h-auto overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
       <div className="flex-1 h-full overflow-y-auto mb-16">
         {messages.map((msg, index) => (
           <div

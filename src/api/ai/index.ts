@@ -61,6 +61,7 @@ export const useTrainAIModel = () => {
 // LINKAGES
 export const useGetLinkages = () => {
   return useQuery({
+    enabled: true,
     queryKey: ["linkages"],
     queryFn: () => getLinkages(),
   });
@@ -68,14 +69,16 @@ export const useGetLinkages = () => {
 
 export const useGetLinkageById = (id: number) => {
   return useQuery({
-    queryKey: ["linkage-id"],
+    enabled: !!id,
+    queryKey: ["linkage-id", id],
     queryFn: () => getLinkageById(id),
   });
 };
 
 export const useGetLinkageBySlug = (slug: string) => {
   return useQuery({
-    queryKey: ["linkage-slug"],
+    enabled: !!slug,
+    queryKey: ["linkage-slug", slug],
     queryFn: () => getLinkageBySlug(slug),
   });
 };
@@ -95,7 +98,8 @@ export const useGetDiscoveryLinkages = ({
 
 export const useGetLinkagesAI = (id: number) => {
   return useQuery({
-    queryKey: ["linkage-ai"],
+    enabled: !!id,
+    queryKey: ["linkage-ai", id],
     queryFn: () => getLinkagesAI(id),
   });
 };
@@ -108,7 +112,8 @@ export const useGetLinkageAIById = ({
   AiId: number;
 }) => {
   return useQuery({
-    queryKey: ["linkage-ai-id"],
+    enabled: !!linkageId,
+    queryKey: ["linkage-ai-id", linkageId, AiId],
     queryFn: () => getLinkageAIById({ linkageId, AiId }),
   });
 };
@@ -122,7 +127,8 @@ export const useGetLinkageAIBySlug = (slug: string) => {
 
 export const useGetLinkagesAIFile = (id: number) => {
   return useQuery({
-    queryKey: ["linkage-ai-file"],
+    enabled: !!id,
+    queryKey: ["linkage-ai-file", id],
     queryFn: () => getLinkagesAIFiles(id),
   });
 };

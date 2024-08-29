@@ -3,10 +3,10 @@
 import React from "react";
 import QRCode from "qrcode.react";
 import toast from "react-hot-toast";
+import { Copy } from "iconsax-react";
 import { InfoIcon, Share } from "lucide-react";
 import BackArrowButton from "@/components/button/back-arrow";
 import AddressDisplay from "@/components/wallet/address-display";
-import { Copy } from "iconsax-react";
 
 const Receive = () => {
   const walletAddress = localStorage.getItem("address");
@@ -35,18 +35,18 @@ const Receive = () => {
         <InfoIcon size={18} />
         <div className="flex flex-col gap-1 text-xs text-[#434343]">
           <p>
-            Only send Worldcoin{" "}
-            <span className="capitalize font-semibold">(OPTIMISM)</span> assets
-            to this address.
+            Only send USDC{" "}
+            <span className="capitalize font-semibold">(BASE Sepolia)</span>{" "}
+            assets to this address.
           </p>
           <p> Other assets will be lost forever.</p>
         </div>
       </div>
 
       <div className="flex flex-row items-center justify-center gap-1 font-semibold ">
-        WLD
+        USDC
         <p className="px-3 py-1 text-sm font-semibold ml-3 border rounded-lg bg-gray-200 text-[#434343]">
-          OP Mainnet
+          Base Sepolia
         </p>
       </div>
 

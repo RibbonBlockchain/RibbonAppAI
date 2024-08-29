@@ -42,6 +42,15 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
+  .scroll-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scroll-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 input[type="number"]::-webkit-outer-spin-button,

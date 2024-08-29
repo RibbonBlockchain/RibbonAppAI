@@ -7,7 +7,7 @@ const RatingCompleted = ({ rating }: { rating: number }) => {
       stars.push(
         <span
           key={i}
-          className={`text-base ${
+          className={`text-[20px] ${
             i <= rating ? "text-yellow-500" : "text-gray-300"
           }`}
         >

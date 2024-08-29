@@ -35,7 +35,7 @@ const Account = () => {
               className="w-[32px] h-[32px]"
             />
             <p className="text-sm font-extrabold">
-              {user?.wallet?.balance.toFixed(2)} WLD
+              {user?.wallet?.balance.toFixed(2)} USDC
             </p>
           </div>
         </div>

@@ -47,6 +47,7 @@ import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
+import SwapPointToUsdcToken from "./swap-points";
 
 const pointsABI = require("./contract/pointsABI.json");
 
@@ -654,14 +655,14 @@ const WalletComponent = () => {
             {/* // swap points modal */}
             <div>
               {swapTx && (
-                <SwapPointToWorldToken
+                <SwapPointToUsdcToken
                   isOpen={swapTx}
                   isPending={isPending}
                   pointInput={swapValue}
                   setMaxAmount={() => setSwapValue(Number(point))}
                   USDvalue={(Number(swapValue) / 5000) * currentPrice}
                   pointsBalance={point}
-                  wldBalance={usdcToken}
+                  usdcBalance={usdcToken}
                   closeModal={() => setSwapTx(false)}
                   handleClick={() => {
                     swapPoints(
@@ -700,7 +701,7 @@ const WalletComponent = () => {
                   amount={amount}
                   handleAmountInput={(e: any) => setAmount(e.target.value)}
                   isPending={undefined}
-                  wldTokenBalance={usdcToken}
+                  usdcTokenBalance={usdcToken}
                   USDvalue={Number(amount) * currentPrice}
                 />
               )}
@@ -726,8 +727,8 @@ const WalletComponent = () => {
                   closeModal={() => setOpenWLDTxPage(false)}
                   handleClick={() => setSendTx(true)}
                   wldBalance={usdcToken}
-                  tokenName={"World (WLD)"}
-                  tokenUnit={"WLD"}
+                  tokenName={"Usdc (USDC)"}
+                  tokenUnit={"USDC"}
                 />
               )}
             </div>
@@ -894,7 +895,9 @@ const WalletComponent = () => {
                           </div>
                         </div>
                         <div className="text-end">
-                          <p className="text-sm font-normal">{usdcToken} WLD</p>
+                          <p className="text-sm font-normal">
+                            {usdcToken} USDC
+                          </p>
                           <p className="text-xs text-[#626262]">
                             {Number(usdcToken) * currentPrice} USD
                           </p>

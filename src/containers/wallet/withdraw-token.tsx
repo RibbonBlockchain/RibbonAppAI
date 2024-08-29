@@ -15,11 +15,11 @@ type Props = {
   amount: string;
   handleAmountInput: (e: any) => void;
   isPending: any;
-  wldTokenBalance: any;
+  usdcTokenBalance: any;
   USDvalue: any;
 };
 
-const WithdrawWorldToken: React.FC<Props> = (props) => {
+const WithdrawUSDCToken: React.FC<Props> = (props) => {
   const router = useRouter();
 
   return (
@@ -71,9 +71,9 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
                           />
                         </div>
                         <div>
-                          <p className="text-base font-semibold">Worldcoin</p>
+                          <p className="text-base font-semibold">USDC</p>
                           <p className="text-xs text-[#626262]">
-                            Balance: {props.wldTokenBalance} WLD
+                            Balance: {props.usdcTokenBalance} USDC
                           </p>
                         </div>
                       </div>
@@ -114,7 +114,7 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
                           className="border-gray-200 border py-2 px-3 rounded-md w-[60%]"
                           placeholder="0"
                         />
-                        <p>WLD</p>
+                        <p>USDC</p>
                       </div>
 
                       <div className="flex gap-1 px-2 flex-row">
@@ -143,4 +143,4 @@ const WithdrawWorldToken: React.FC<Props> = (props) => {
   );
 };
 
-export default WithdrawWorldToken;
+export default WithdrawUSDCToken;

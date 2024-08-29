@@ -29,7 +29,7 @@ const TokenTxUI: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex h-[screen] overflow-auto items-center justify-center text-center">
+          <div className="flex h-[screen] overflow-auto scroll-hidden items-center justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -50,7 +50,7 @@ const TokenTxUI: React.FC<Props> = (props) => {
                   <div className="flex flex-col gap-2 -mt-6 text-black items-center justify-center  text-base font-semibold">
                     <p> {props.tokenName}</p>
                     <p className="text-center text-xs font-medium text-[#546881]">
-                      OPTIMISM | OP Mainnet
+                      Base | Base Sepolia
                     </p>
                   </div>
                 </div>
@@ -62,11 +62,11 @@ const TokenTxUI: React.FC<Props> = (props) => {
                         <Image
                           width={35}
                           height={35}
-                          src={"/images/world-coin.png"}
                           alt="coin logo"
                           className="rounded-full"
+                          src={"/images/world-coin.png"}
                         />{" "}
-                        WLD
+                        USDC
                       </div>
                       <p>
                         {props.wldBalance} {props.tokenUnit}

@@ -29,7 +29,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex h-[screen] overflow-auto items-center justify-center text-center">
+          <div className="flex h-[screen] overflow-auto scroll-hidden items-center justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -50,7 +50,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                   <div className="flex -mt-8 text-black  flex-col gap-2 items-center justify-center  text-base font-semibold">
                     <p> Points (PTS)</p>
                     <p className="text-center text-xs font-medium text-[#546881]">
-                      OPTIMISM | OP Mainnet
+                      Base | Base Sepolia
                     </p>
                   </div>
                 </div>

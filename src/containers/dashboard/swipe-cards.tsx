@@ -13,6 +13,7 @@ const SwipeCards = () => {
   const { data: user } = useGetAuth({ enabled: true });
 
   const points = user?.wallet?.balance;
+  const convertedPoints = (Number(points) * 5000) as number;
 
   const useCoinDetails = () => {
     const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
@@ -58,11 +59,12 @@ const SwipeCards = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="flex flex-row gap-2 w-full overflow-auto">
+      <div className="flex flex-row gap-2 w-full overflow-auto scroll-hidden">
         {activeCard === "point" && (
           <PointBalanceCard
             points={points.toFixed(2)}
             onclick={() => router.push("/wallet")}
+            convertedPoints={convertedPoints.toFixed(2)}
           />
         )}
         {activeCard === "wallet" && (

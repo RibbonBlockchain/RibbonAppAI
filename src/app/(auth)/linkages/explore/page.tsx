@@ -1,19 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SearchComponent from "@/components/search";
-import FeaturedLinkages from "@/containers/linkages/featured-linkages-card";
-import { linkagesArray } from "@/lib/values/mockData";
+import LinkagesCard from "@/containers/linkages/linkages-card";
+import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import { useGetDiscoveryLinkages, useGetLinkages } from "@/api/ai";
+import Image from "next/image";
+import { Add } from "iconsax-react";
 
 const tabs = [
   { name: "For you", value: "for-you" },
   { name: "Following", value: "following" },
   { name: "My Linkages", value: "my-linkages" },
   { name: "DMs (Direct Messages)", value: "dms" },
+];
+
+const statuses = [
+  { id: 1, image: "" },
+  { id: 2, image: "" },
+  { id: 3, image: "" },
+  { id: 4, image: "" },
+  { id: 5, image: "" },
+  { id: 6, image: "" },
 ];
 
 const Linkages = () => {
@@ -35,9 +46,12 @@ const Linkages = () => {
   const { data: linkages } = useGetLinkages();
 
   return (
-    <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
-      <ArrowLeft onClick={() => router.back()} className="mt-2" />
-      <div className="flex flex-col gap-6">
+    <main className="relative min-h-screen w-full text-white bg-[rgb(11,2,40)] p-4 sm:p-6 pb-24">
+      <ArrowLeft onClick={() => router.back()} className="mt-2 mb-4" />
+
+      <SearchComponent />
+
+      <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-3 py-4">
           <div className="flex flex-row items-center justify-between">
             <p className="text-[24px] font-semibold">Linkages</p>
@@ -48,11 +62,36 @@ const Linkages = () => {
               Create your Linkages
             </Link>
           </div>
-
-          <SearchComponent />
         </div>
 
-        <div className="px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto">
+        <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
+          <div className="relative min-w-[82px] flex flex-row ">
+            <Image
+              alt="alt"
+              width={82}
+              height={82}
+              src={"/assets/status-circle.png"}
+              className="rounded-full w-[82px] h-[82px]"
+            />
+            <Add
+              size="24"
+              color="#ffffff"
+              className="absolute bottom-0 right-0 bg-[#A166F5] border-[3px] border-[#0B0228] rounded-full"
+            />
+          </div>
+
+          {statuses.map((i) => (
+            <Image
+              key={i.id}
+              alt="alt"
+              width={82}
+              height={82}
+              src={i.image || "/assets/sample-icon.png"}
+              className="rounded-full w-[82px] h-[82px] border-[3px] border-[#FFF]"
+            />
+          ))}
+        </div>
+        <div className="px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
           {tabs.map((tab) => (
             <button
               key={tab.value}
@@ -83,13 +122,14 @@ const Linkages = () => {
                     </div>
 
                     {discoveryLinkages?.data?.data.map((i: any) => (
-                      <FeaturedLinkages
+                      <LinkagesCard
                         key={i.name}
                         name={i.name}
                         image={i.image}
                         description={i.description}
                         author={i.userId}
                         slug={i.slug}
+                        featured={true}
                       />
                     ))}
                   </div>
@@ -104,7 +144,7 @@ const Linkages = () => {
                     </div>
 
                     {discoveryLinkages?.data?.data.map((i: any) => (
-                      <FeaturedLinkages
+                      <LinkagesCard
                         key={i.name}
                         name={i.name}
                         image={i.image}
@@ -122,7 +162,7 @@ const Linkages = () => {
           {/* Following */}
           <div>
             {selectedTab === "following" && (
-              <div className="bg-red-500">
+              <div className="">
                 <p>Linkages you follow will appear here</p>
               </div>
             )}
@@ -134,19 +174,14 @@ const Linkages = () => {
               <div>
                 {linkages?.data && (
                   <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-lg font-semibold">My Linkages</p>
-                      <p className="text-sm">Linkages you created</p>
-                    </div>
-
                     {linkages?.data.map((i: any) => (
                       <FeaturedLinkages
                         key={i.name}
                         name={i.name}
-                        image={i.image}
-                        description={i.description}
-                        author={i.userId}
                         slug={i.slug}
+                        image={i.image}
+                        author={i.userId}
+                        description={i.description}
                       />
                     ))}
                   </div>

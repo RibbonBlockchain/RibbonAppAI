@@ -90,16 +90,15 @@ const LinkageViewDetails = () => {
                   <Location size="18" color="#ffffff" variant="Bold" />{" "}
                   {data?.data.location}
                 </div>
+                <div className="flex flex-row items-center gap-3 text-xs font-normal">
+                  <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}
+                  {data?.data?.walletAddress}
+                </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <div className="flex flex-row items-center justify-between">
-                <p className="text-sm font-bold">My Linkages AI</p>
-                <button className="text-sm font-medium px-1.5 py-1 rounded-md bg-white text-[#290064]">
-                  Add new AI
-                </button>
-              </div>
+              <p className="text-sm font-bold">My Linkages AI</p>
 
               {getLinkagesAi?.data?.map((item: any) => (
                 <div

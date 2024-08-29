@@ -2,6 +2,7 @@ import { ArrowUp } from "iconsax-react";
 import { useUploadLinkageAIFile } from "@/api/ai";
 import React, { useState, ChangeEvent } from "react";
 import { useParams } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 const FileUpload = () => {
   const params = useParams();
@@ -40,6 +41,7 @@ const FileUpload = () => {
 
   return (
     <div className="mt-2 flex flex-col gap-4 items-start">
+      <Toaster />
       <div className="flex flex-wrap gap-4">
         <div className="w-[110px] h-[110px] bg-inherit border border-[#FFFFFF36] rounded-[8px] flex items-center justify-center relative">
           {filePreview && (

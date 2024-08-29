@@ -15,11 +15,11 @@ type Props = {
   handlePointInput: (e: any) => void;
   isPending: any;
   pointsBalance: any;
-  wldBalance: any;
+  usdcBalance: any;
   USDvalue: any;
 };
 
-const SwapPointToWorldToken: React.FC<Props> = (props) => {
+const SwapPointToUsdcToken: React.FC<Props> = (props) => {
   const router = useRouter();
 
   return (
@@ -120,9 +120,9 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
                           />
                         </div>
                         <div>
-                          <p className="text-base font-normal">Worldcoin</p>
+                          <p className="text-base font-normal">USDC</p>
                           <p className="text-xs text-[#626262]">
-                            {props.wldBalance} WLD
+                            {props.usdcBalance} USDC
                           </p>
                         </div>
                       </div>
@@ -133,7 +133,7 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
 
                     <div className="flex mt-4 flex-row items-center justify-between">
                       <div className="flex flex-col gap-1">
-                        <p>{Number(props.pointInput) / 5000} WLD</p>
+                        <p>{Number(props.pointInput) / 5000} USDC</p>
                         <p>$ {props.USDvalue}</p>
                       </div>
                       <p className="text-xs">To</p>
@@ -159,4 +159,4 @@ const SwapPointToWorldToken: React.FC<Props> = (props) => {
   );
 };
 
-export default SwapPointToWorldToken;
+export default SwapPointToUsdcToken;

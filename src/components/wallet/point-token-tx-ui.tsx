@@ -50,7 +50,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                   <div className="flex -mt-8 text-black  flex-col gap-2 items-center justify-center  text-base font-semibold">
                     <p> Points (PTS)</p>
                     <p className="text-center text-xs font-medium text-[#546881]">
-                      OPTIMISM | OP Mainnet
+                      Base | Base Sepolia
                     </p>
                   </div>
                 </div>

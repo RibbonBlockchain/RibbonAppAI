@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import SwipeCards from "@/containers/dashboard/swipe-cards";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import ClaimDailyRewardModal from "@/components/modal/claim-daily-reward";
+import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 
 const TasksSample = [
@@ -31,23 +31,10 @@ const Dashboard = () => {
   const { data: user } = useGetAuth({ enabled: true });
 
   const [hideBalance, setHideBalance] = useState(false);
-  const [showDailyRewardModal, setShowDailyRewardModal] = useState(false);
 
   const { data: questionnaire, isLoading } = useGetUncompletedQuestionnaires();
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
-
-  // lastclickTime, currentTime, twelveHoursLater, remainingTime
-  const clickedTime = new Date(user?.lastClaimTime);
-  const twelveHoursLater = new Date(
-    clickedTime.getTime() + 12 * 60 * 60 * 1000
-  );
-
-  const currentTime = new Date();
-  const remainingTime = Math.max(
-    Math.floor((twelveHoursLater.getTime() - currentTime.getTime()) / 1000),
-    0
-  );
 
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
@@ -93,25 +80,7 @@ const Dashboard = () => {
 
           <SwipeCards />
 
-          <div className="my-6 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full">
-            <p>Claim daily reward</p>
-            <div className="flex flex-row items-center">
-              <Image
-                src="/assets/coin.png"
-                alt="coin"
-                height={32}
-                width={32}
-                className="w-[32px] h-[32px]"
-              />
-              <p>5000 pts</p>
-            </div>
-            <p
-              onClick={() => setShowDailyRewardModal(true)}
-              className="px-2 py-1 text-[#290064] bg-white shadow shadow-white border rounded-full"
-            >
-              Claim
-            </p>
-          </div>
+          <RewardButton />
 
           <div className="w-full flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row gap-2">
@@ -273,14 +242,6 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-
-      <ClaimDailyRewardModal
-        closeModal={() => {
-          setShowDailyRewardModal(false);
-        }}
-        disabled={remainingTime > 0}
-        isOpen={showDailyRewardModal}
-      />
     </AuthNavLayout>
   );
 };

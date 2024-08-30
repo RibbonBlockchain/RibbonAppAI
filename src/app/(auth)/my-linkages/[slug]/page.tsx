@@ -2,25 +2,24 @@
 
 import {
   Copy,
-  Monero,
   Calendar,
   Document,
   ArrowLeft2,
   WalletMoney,
   DollarCircle,
 } from "iconsax-react";
-import {
-  useGetLinkagesAI,
-  useGetLinkageAIById,
-  useGetLinkageBySlug,
-} from "@/api/ai";
+import { useGetLinkageBySlug } from "@/api/linkage";
 import Image from "next/image";
 import Retrain from "./retrain";
+import Activity from "./activity";
 import toast from "react-hot-toast";
+import LinkageWallet from "./wallet";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import UploadQuestionnaire from "./upload-questionnaire";
+import Settings from "./settings";
 
 interface AIdata {
   id: number;
@@ -39,6 +38,7 @@ interface AIdata {
 const tabs = [
   { name: "AI Bot", value: "ai-bot" },
   { name: "Retrain", value: "retrain" },
+  { name: "Wallet", value: "wallet" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Activity", value: "activity" },
   { name: "Settings", value: "settings" },
@@ -52,12 +52,6 @@ const MyLinkageDetails = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
-  useEffect(() => {
-    if (listLinkagesAI?.data.length > 0) {
-      setSelectedAI(listLinkagesAI?.data[0]);
-    }
-  }, []);
-
   const handleSelect = (aiData: AIdata) => {
     setSelectedAI(aiData);
     setIsOpen(false);
@@ -69,20 +63,10 @@ const MyLinkageDetails = () => {
   };
 
   const { data } = useGetLinkageBySlug(slug);
-  const { data: listLinkagesAI } = useGetLinkagesAI(data?.data.id);
 
-  const { data: linkageAIdata, refetch } = useGetLinkageAIById({
-    AiId: selectedAI?.id as number,
-    linkageId: selectedAI?.linkageId as number,
-  });
+  const listLinkagesAI = [{}];
 
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    // refetch();
-    if (linkageAIdata?.data && linkageAIdata?.data?.prompts) {
-      setCount(count + 1);
-    }
-  }, [data, selectedAI, linkageAIdata]);
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-3 sm:p-6 pb-8">
@@ -117,7 +101,7 @@ const MyLinkageDetails = () => {
 
           {isOpen && (
             <div className="absolute left-0 mt-2 w-full border border-gray-300 bg-[#0B0228] rounded-md shadow-lg z-10">
-              {listLinkagesAI?.data?.map((aiData: any) => (
+              {listLinkagesAI?.map((aiData: any) => (
                 <div
                   key={aiData.id}
                   onClick={() => handleSelect(aiData)}
@@ -228,9 +212,13 @@ const MyLinkageDetails = () => {
 
           {selectedTab === "retrain" && <Retrain />}
 
-          {selectedTab === "questionnaires" && <div>Manage Questionnaire</div>}
-          {selectedTab === "activity" && <div>Activity </div>}
-          {selectedTab === "settings" && <div>Settings </div>}
+          {selectedTab === "wallet" && <LinkageWallet />}
+
+          {selectedTab === "questionnaires" && <UploadQuestionnaire />}
+
+          {selectedTab === "activity" && <Activity />}
+
+          {selectedTab === "settings" && <Settings />}
         </div>
       )}
     </main>

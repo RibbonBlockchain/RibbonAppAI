@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import { useChatLinkage, useGetLinkageBySlug } from "@/api/linkage";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<
@@ -9,9 +10,28 @@ const ChatBot = () => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  const alternatePrompts = [
+    "Hello! How can I assist you today?",
+    "Hi there! What can I help you with right now?",
+    "Greetings! Is there something specific you're looking for today?",
+    "Hey! I'm here to help with any questions you might have. What’s up?",
+    "Welcome! How can I make your experience better today?",
+    "Hi! What’s on your mind today?",
+    "Hello! If you need any help or information, just let me know.",
+    "Good day! Did you know I can assist with [specific feature]? How can I help you?",
+    "Hey there! How’s it going? Need any help with something?",
+    "Hi! It’s great to see you. What can I do for you today?",
+  ];
+
+  const { mutate, data: chatData } = useChatLinkage();
+  const { data } = useGetLinkageBySlug("slug");
+
+  const prompts = data?.data?.prompts || alternatePrompts;
+
   useEffect(() => {
-    // Initial message from AI
-    setMessages([{ sender: "ai", text: "Hello! How can I assist you today?" }]);
+    // Randomly select an initial message from AI
+    const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+    setMessages([{ sender: "ai", text: randomPrompt }]);
   }, []);
 
   const handleSend = () => {
@@ -22,6 +42,8 @@ const ChatBot = () => {
       { sender: "user", text: input },
     ]);
 
+    // mutate({ slug: "slug", body: { message: input } });
+
     // Simulate a response from AI after a short delay
     setInput("");
     setTimeout(() => {
@@ -29,7 +51,7 @@ const ChatBot = () => {
         ...prevMessages,
         {
           sender: "ai",
-          text: "Thanks for your message! How else can I assist you?",
+          text: chatData?.data.message,
         },
       ]);
     }, 1500);

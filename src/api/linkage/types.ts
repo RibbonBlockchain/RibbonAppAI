@@ -1,15 +1,3 @@
-export type TCreateAIModel = {
-  name: string;
-};
-
-export type TUploadTrainingFile = {
-  file: any;
-};
-
-export type TTrainAIModel = {
-  fileId: string;
-};
-
 export type TCreateLinkageBody = {
   name: string;
   description: string;
@@ -17,9 +5,13 @@ export type TCreateLinkageBody = {
   email: string;
   location: string;
   category: string;
+  image: string;
+  instruction: string;
+  prompts: string;
+  prompts1?: string;
 };
 
-export type TCreateLinkageAIBody = {
+export type TTrainLinkage = {
   name: string;
   description: string;
   instruction: string;
@@ -28,13 +20,8 @@ export type TCreateLinkageAIBody = {
   prompts2?: string;
 };
 
-export type TTrainLinkageAI = {
-  name: string;
-  description: string;
-  instruction: string;
-  prompts: string;
-  prompts1?: string;
-  prompts2?: string;
+export type TChatLinkageBody = {
+  message: string;
 };
 
 export interface getDiscoveryLinkagesParams {

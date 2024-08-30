@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useGetLinkagesAI,
-  useGetLinkageBySlug,
-  useGetDiscoveryLinkages,
-} from "@/api/ai";
+import { useGetLinkageBySlug, useGetDiscoveryLinkages } from "@/api/linkage";
 import Image from "next/image";
 import PageLoader from "@/components/loader";
 import { copyToClipboard } from "@/lib/utils";
@@ -14,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import RatingCompleted from "@/containers/activity/rate-completed";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import { Call, Coin1, Copy, Location, Sms, WalletMoney } from "iconsax-react";
+import { shortenTransaction } from "@/lib/utils/shorten";
 
 const LinkageRatingsCard = () => {
   return (
@@ -43,20 +40,19 @@ const LinkageViewDetails = () => {
   const params = useParams();
   const slug = params.slug as string;
 
+  console.log(slug, "slug");
+
   const { data, isLoading } = useGetLinkageBySlug(slug);
 
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
     params: { page: 1, pageSize: 5, query: "" },
   });
 
-  // list all AIs under the linkage
-  const { data: getLinkagesAi } = useGetLinkagesAI(data?.data?.id);
-
   const [following, setFollowing] = useState(false);
 
   useEffect(() => {
     refetch();
-  }, [data, getLinkagesAi]);
+  }, [data]);
 
   return (
     <>
@@ -72,7 +68,7 @@ const LinkageViewDetails = () => {
             alt="display"
             className="w-full h-auto"
             onClick={() => router.back()}
-            src={"/assets/linkage-details.png"}
+            src={data?.data.banner || "/assets/linkage-details.png"}
           />
 
           <div className="w-full flex flex-col gap-6 p-4 sm:p-6 pb-24">
@@ -117,14 +113,13 @@ const LinkageViewDetails = () => {
                   <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}
                   <div
                     onClick={() =>
-                      copyToClipboard(
-                        data?.data?.walletAddress?.addressId,
-                        () => toast.success("Wallet address copied")
+                      copyToClipboard(data?.data?.walletAddress, () =>
+                        toast.success("Wallet address copied")
                       )
                     }
-                    className="flex flex-row items-center gap-1 font-semibold text-sm"
+                    className="flex flex-row items-center gap-1 font-semibold text-xs"
                   >
-                    {data?.data?.walletAddress?.addressId}
+                    {shortenTransaction(data?.data?.walletAddress)}
                     <Copy size="16" color="#ffffff" variant="Bold" />
                   </div>
                 </div>
@@ -134,35 +129,30 @@ const LinkageViewDetails = () => {
             <div className="flex flex-col gap-2">
               <p className="text-sm font-bold">My Linkages AI</p>
 
-              {getLinkagesAi?.data?.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="text-[13px] font-normal cursor-pointer flex flex-row gap-4 items-center"
-                  onClick={() =>
-                    router.push(`/linkages/explore/${slug}/${item.slug}`)
-                  }
-                >
-                  <div className="relative max-w-fit flex flex-row">
-                    <Image
-                      width={10}
-                      height={10}
-                      alt="display"
-                      src={"/assets/small-star.png"}
-                      className="w-[10px] h-[10px] absolute right-0"
-                    />
-                    <Image
-                      width={42}
-                      height={42}
-                      alt="display"
-                      className="w-[50px] h-auto"
-                      src={item.image || "/assets/sample-icon.png"}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-base font-bold">{item.name}</p>
-                  </div>
+              <div
+                className="text-[13px] font-normal cursor-pointer flex flex-row gap-4 items-center"
+                onClick={() => router.push(`/linkages/explore/${slug}/chat`)}
+              >
+                <div className="relative max-w-fit flex flex-row">
+                  <Image
+                    width={10}
+                    height={10}
+                    alt="display"
+                    src={"/assets/small-star.png"}
+                    className="w-[10px] h-[10px] absolute right-0"
+                  />
+                  <Image
+                    width={42}
+                    height={42}
+                    alt="display"
+                    className="w-[50px] h-auto"
+                    src={data?.data.logo || "/assets/sample-icon.png"}
+                  />
                 </div>
-              ))}
+                <div>
+                  <p className="text-base font-bold">{data?.data?.name}</p>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col gap-2">

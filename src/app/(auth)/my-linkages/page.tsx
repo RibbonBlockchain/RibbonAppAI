@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useGetLinkages } from "@/api/ai";
+import { useGetLinkages } from "@/api/linkage";
 import { ArrowLeft2 } from "iconsax-react";
 import { useRouter } from "next/navigation";
 import MyLinkagesCard from "@/containers/linkages/my-linkages-card";

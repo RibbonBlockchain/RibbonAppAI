@@ -1,15 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { Add } from "iconsax-react";
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SearchComponent from "@/components/search";
 import LinkagesCard from "@/containers/linkages/linkages-card";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
-import { useGetDiscoveryLinkages, useGetLinkages } from "@/api/ai";
-import Image from "next/image";
-import { Add } from "iconsax-react";
+import {
+  useGetDiscoveryLinkages,
+  useGetLinkages,
+  usePublishLinkage,
+} from "@/api/linkage";
+import FileUpload from "@/containers/linkages/file-upload";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -44,6 +49,7 @@ const Linkages = () => {
   });
 
   const { data: linkages } = useGetLinkages();
+  const { mutate } = usePublishLinkage();
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[rgb(11,2,40)] p-4 sm:p-6 pb-24">
@@ -51,7 +57,7 @@ const Linkages = () => {
 
       <SearchComponent />
 
-      <div className="flex flex-col gap-4">
+      <div className="w-full flex flex-col gap-4">
         <div className="flex flex-col gap-3 py-4">
           <div className="flex flex-row items-center justify-between">
             <p className="text-[24px] font-semibold">Linkages</p>
@@ -91,6 +97,7 @@ const Linkages = () => {
             />
           ))}
         </div>
+
         <div className="px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
           {tabs.map((tab) => (
             <button
@@ -107,99 +114,88 @@ const Linkages = () => {
           ))}
         </div>
 
-        <div className="flex">
+        <div className="w-full flex">
           {/* // For you */}
-          <div>
-            {selectedTab === "for-you" && (
-              <div className="flex flex-col gap-10">
-                {discoveryLinkages?.data?.data && (
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-lg font-semibold">Featured Linkages</p>
-                      <p className="text-sm">
-                        Top Picks from this week activities
-                      </p>
-                    </div>
-
-                    {discoveryLinkages?.data?.data.map((i: any) => (
-                      <LinkagesCard
-                        key={i.name}
-                        name={i.name}
-                        image={i.image}
-                        description={i.description}
-                        author={i.userId}
-                        slug={i.slug}
-                        featured={true}
-                      />
-                    ))}
+          {selectedTab === "for-you" && (
+            <div className="w-full flex flex-col gap-10">
+              {discoveryLinkages?.data?.data && (
+                <div className="w-full flex flex-col gap-3">
+                  <div>
+                    <p className="text-lg font-semibold">Featured Linkages</p>
+                    <p className="text-sm">
+                      Top Picks from this week activities
+                    </p>
                   </div>
-                )}
-                {discoveryLinkages?.data?.data && (
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-lg font-semibold">
-                        Recommended for you
-                      </p>
-                      <p className="text-sm">Linkages based on your response</p>
-                    </div>
-
-                    {discoveryLinkages?.data?.data.map((i: any) => (
-                      <LinkagesCard
-                        key={i.name}
-                        name={i.name}
-                        image={i.image}
-                        description={i.description}
-                        author={i.userId}
-                        slug={i.slug}
-                      />
-                    ))}
+                  {discoveryLinkages?.data?.data.map((i: any) => (
+                    <LinkagesCard
+                      key={i.name}
+                      name={i.name}
+                      image={i.image}
+                      description={i.description}
+                      author={i.userId}
+                      slug={i.slug}
+                      featured={true}
+                    />
+                  ))}
+                </div>
+              )}
+              {discoveryLinkages?.data?.data && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <p className="text-lg font-semibold">Recommended for you</p>
+                    <p className="text-sm">Linkages based on your response</p>
                   </div>
-                )}
-              </div>
-            )}
-          </div>
+
+                  {discoveryLinkages?.data?.data.map((i: any) => (
+                    <LinkagesCard
+                      key={i.name}
+                      name={i.name}
+                      image={i.image}
+                      description={i.description}
+                      author={i.userId}
+                      slug={i.slug}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Following */}
-          <div>
-            {selectedTab === "following" && (
-              <div className="">
-                <p>Linkages you follow will appear here</p>
-              </div>
-            )}
-          </div>
+          {selectedTab === "following" && (
+            <div className="">
+              <p>Linkages you follow will appear here</p>
+            </div>
+          )}
 
           {/* my linkages */}
-          <div>
-            {selectedTab === "my-linkages" && (
-              <div>
-                {linkages?.data && (
-                  <div className="flex flex-col gap-3">
-                    {linkages?.data.map((i: any) => (
-                      <FeaturedLinkages
-                        key={i.name}
-                        name={i.name}
-                        slug={i.slug}
-                        image={i.image}
-                        author={i.userId}
-                        description={i.description}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          {selectedTab === "my-linkages" && (
+            <div>
+              {linkages?.data && (
+                <div className="flex flex-col gap-3">
+                  {linkages?.data.map((i: any) => (
+                    <FeaturedLinkages
+                      key={i.name}
+                      name={i.name}
+                      slug={i.slug}
+                      image={i.image}
+                      author={i.userId}
+                      description={i.description}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* DMs */}
-          <div>
-            {selectedTab === "dms" && (
-              <div>
-                <p>
-                  DMs and interactions you have with linkages will appear here
-                </p>
-              </div>
-            )}
-          </div>
+          {selectedTab === "dms" && (
+            <div>
+              <p>
+                DMs and interactions you have with linkages will appear here
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </main>

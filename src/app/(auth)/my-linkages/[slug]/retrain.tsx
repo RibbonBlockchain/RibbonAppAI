@@ -1,13 +1,11 @@
 "use client";
 
 import clsx from "clsx";
-import React, { ChangeEvent, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Upload } from "lucide-react";
-import { AddCircle, CloseCircle, InfoCircle } from "iconsax-react";
-import FileUpload from "@/containers/linkages/file-upload";
+import React, { ChangeEvent, useState } from "react";
 import ChatBot from "@/containers/dashboard/chat-bot";
+import FileUpload from "@/containers/linkages/file-upload";
+import { AddCircle, CloseCircle, InfoCircle } from "iconsax-react";
 
 type Starter = {
   text: string;
@@ -40,20 +38,7 @@ const Retrain = () => {
     setIsAgreed((prev) => !prev);
   };
 
-  const [AIName, setAIName] = useState("");
-  const [description, setDescription] = useState("");
   const [instruction, setInstruction] = useState("");
-
-  const [image, setImage] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setImagePreview(URL.createObjectURL(file));
-    setImage(file as any);
-  };
 
   const handleCreateLinkageAI = () => {
     const [prompt, prompts1, prompts2] = starters
@@ -63,7 +48,7 @@ const Retrain = () => {
     console.log("retrain logic");
   };
 
-  const isSubmitDisabled = !AIName || !description || !instruction || !prompt;
+  const isSubmitDisabled = !instruction || !prompt;
 
   const [starters, setStarters] = useState<Starter[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -91,7 +76,7 @@ const Retrain = () => {
           onClick={() => setSelected("retrain")}
           className={clsx(
             "w-full text-center py-2 rounded-full",
-            selected === "create" && " bg-[#0B0228]"
+            selected === "retrain" && " bg-[#0B0228]"
           )}
         >
           Retrain
@@ -109,49 +94,12 @@ const Retrain = () => {
 
       {selected === "retrain" && (
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center justify-center">
-            <Image
-              width={82}
-              height={82}
-              alt="linkage"
-              src={imagePreview || "/assets/sample-icon.png"}
-              className="rounded-full"
-            />
-            <div className="flex flex-row gap-1 mt-1">
-              <label className="cursor-pointer text-sm font-medium flex flex-row items-center gap-2">
-                <span className="">Upload</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  placeholder="upload image"
-                  onChange={handleImageChange}
-                />
-                <Upload height={16} width={16} />
-              </label>
-            </div>
-          </div>
-
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Name</label>
-            <input
-              type="text"
-              value={AIName}
-              placeholder="Name your AI"
-              onChange={(e) => setAIName(e.target.value)}
-              className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Description</label>
-            <input
-              type="text"
-              value={description}
-              placeholder="Write a short description for your AI."
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
-            />
+            <label className="text-sm font-semibold">Data Sources</label>
+            <p className="text-xs font-light">
+              Enhance your chatbot knowledge base by adding and managing data
+              sources
+            </p>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -207,6 +155,25 @@ const Retrain = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold">Add website links</label>
+            <p className="text-xs font-light">
+              Enhance your bot’s knowledge by adding content from websites. You
+              can manually enter specific URLs.
+            </p>
+
+            <label className="text-sm font-medium">
+              Enter URLs (one per line)
+            </label>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder=""
+              className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+            />
           </div>
 
           <div className="flex flex-col gap-2 mt-6">
@@ -292,7 +259,7 @@ const Retrain = () => {
                 : "bg-white text-[#290064]"
             )}
           >
-            Publish AI Linkage
+            Retrain AI Linkage
           </button>
         </div>
       )}

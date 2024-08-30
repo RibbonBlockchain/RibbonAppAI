@@ -1,14 +1,10 @@
+import { X } from "lucide-react";
 import { ArrowUp } from "iconsax-react";
 import { Toaster } from "react-hot-toast";
-import { useParams } from "next/navigation";
 import React, { useState, ChangeEvent } from "react";
-import { X } from "lucide-react";
 import { useUploadLinkageFile } from "@/api/linkage";
 
-const FileUpload = () => {
-  const params = useParams();
-  const id = Number(params.id);
-
+const FileUpload = ({ id }: { id: number }) => {
   const { mutate } = useUploadLinkageFile();
 
   const [file, setFile] = useState<File | null>(null);

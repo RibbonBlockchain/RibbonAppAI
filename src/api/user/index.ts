@@ -134,9 +134,9 @@ export const useClaimDailyRewards = () => {
   return useMutation({
     onError,
     mutationFn: () => claimDailyReward(),
-    onSuccess: () => {
-      window.location.reload();
-    },
+    // onSuccess: () => {
+    //   window.location.reload();
+    // },
   });
 };
 

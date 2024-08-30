@@ -1,16 +1,13 @@
-import AddressDisplay from "@/components/wallet/address-display";
 import clsx from "clsx";
-import QRCode from "qrcode.react";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
 import Image from "next/image";
+import QRCode from "qrcode.react";
+import toast from "react-hot-toast";
+import React, { useState } from "react";
 import { Copy, InfoCircle, Share } from "iconsax-react";
-import { Info } from "lucide-react";
+import AddressDisplay from "@/components/wallet/address-display";
 
-const LinkageWallet = () => {
+const LinkageWallet = ({ walletAddress }: { walletAddress: string }) => {
   const [selected, setSelected] = useState("deposit");
-
-  const walletAddress = "0xEFC3571deb12b1bc658d116751C75c8a29B5Ac812";
 
   const handleClick = () => {
     navigator.clipboard
@@ -102,7 +99,11 @@ const LinkageWallet = () => {
             </div>
           </div>
         )}
-        {selected === "history" && <div>History page</div>}
+        {selected === "history" && (
+          <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
+            Your transaction history will be displayed here
+          </div>
+        )}
       </div>
     </div>
   );

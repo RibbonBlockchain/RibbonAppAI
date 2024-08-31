@@ -1,10 +1,10 @@
 import React from "react";
 
 const splitTextAtLength = (text: any, length: any) => {
-  if (text.length <= length) {
+  if (text?.length <= length) {
     return [text];
   }
-  return [text.slice(0, length), text.slice(length)];
+  return [text?.slice(0, length), text?.slice(length)];
 };
 
 const AddressDisplay = ({ address }: { address: any }) => {

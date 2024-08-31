@@ -24,6 +24,7 @@ import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
 import UploadQuestionnaire from "./upload-questionnaire";
+import { formatLastTrainedDate } from "@/lib/utils/format-date";
 
 interface AIdata {
   id: number;
@@ -54,9 +55,15 @@ const MyLinkageDetails: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
+  console.log(selectedAI, "here");
+
   const { data: linkagesList } = useGetLinkages();
   const { data } = useGetLinkageById(selectedAI?.id as number);
-  // const { data: linkageFile } = useGetLinkagesFile(Number(selectedAI?.id));
+  const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
+
+  const lastTrainedDate: Date = new Date(
+    linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
+  );
 
   const [selectedTab, setSelectedTab] = useState("ai-bot");
 
@@ -200,13 +207,13 @@ const MyLinkageDetails: React.FC = () => {
 
                 <div className="flex flex-col gap-2">
                   <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                    0 Link
+                    0 Link(s)
                   </p>
                   <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                    0 File
+                    {linkageFile?.data.length} File(s)
                   </p>
                   <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                    {data?.data?.prompts.length} conversational starters
+                    {data?.data?.prompts.length} conversational starter(s)
                   </p>
                 </div>
               </div>
@@ -216,7 +223,7 @@ const MyLinkageDetails: React.FC = () => {
                   <p className="font-normal text-xs">Last trained</p>
                 </div>
                 <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                  xxxx
+                  {formatLastTrainedDate(lastTrainedDate)}
                 </p>
               </div>
             </div>

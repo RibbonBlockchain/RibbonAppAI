@@ -13,8 +13,10 @@ import {
   useGetDiscoveryLinkages,
   useGetLinkages,
   usePublishLinkage,
+  useUploadLinkageFile,
 } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import FileUpload from "@/containers/linkages/file-upload";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -40,16 +42,14 @@ const Linkages = () => {
     setSelectedTab(tab);
   };
 
-  const {
-    data: discoveryLinkages,
-    isLoading,
-    refetch,
-  } = useGetDiscoveryLinkages({
+  const { data: discoveryLinkages } = useGetDiscoveryLinkages({
     params: { page: 1, pageSize: 5, query: "" },
   });
 
   const { data: linkages } = useGetLinkages();
-  const { mutate } = usePublishLinkage();
+
+  // const { mutate } = usePublishLinkage();
+  // const { mutate: uploadFile } = useUploadLinkageFile();
 
   return (
     <AuthNavLayout>
@@ -57,6 +57,9 @@ const Linkages = () => {
         <ArrowLeft onClick={() => router.back()} className="mt-2 mb-4" />
 
         <SearchComponent />
+
+        {/* <FileUpload id={20} />
+        <div onClick={() => mutate(20)}>Publish</div> */}
 
         <div className="w-full flex flex-col gap-4">
           <div className="flex flex-col gap-3 py-4">

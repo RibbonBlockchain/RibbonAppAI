@@ -20,9 +20,14 @@ import React, {
   useState,
 } from "react";
 import { Toaster } from "react-hot-toast";
+import { useAtom } from "jotai";
+import { createLinkageAtom } from "@/lib/atoms/auth.atom";
 
 const TrainLinkage = () => {
   const router = useRouter();
+
+  const [linkagesProps] = useAtom(createLinkageAtom);
+  const [published, setPublished] = useState(false);
 
   const [selected, setSelected] = useState("train");
   const [activeInfo, setActiveInfo] = useState<string | null>(null);
@@ -33,8 +38,6 @@ const TrainLinkage = () => {
   };
 
   const { mutate } = usePublishLinkage();
-  const id = localStorage.getItem("dataId");
-  const slug = localStorage.getItem("dataSlug");
 
   const isSubmitDisabled = false;
 
@@ -62,13 +65,11 @@ const TrainLinkage = () => {
   const handleUpload = () => {
     if (!file) return;
 
-    const id = localStorage.getItem("dataId");
-
     const formData = new FormData();
     formData.append("file", file);
 
     trainAILinkage(
-      { id: Number(id), file: formData as any },
+      { id: Number(linkagesProps?.id), file: formData as any },
       {
         onSuccess: () => console.log("File uploaded successfully"),
         onError: (error) => console.error("Upload failed", error),
@@ -77,7 +78,9 @@ const TrainLinkage = () => {
   };
 
   // chat-preview immplementation
-  const { data: linkageData } = useGetLinkageBySlug(slug as string);
+  const { data: linkageData } = useGetLinkageBySlug(
+    linkagesProps.slug as string
+  );
   const { mutateAsync } = useChatLinkage();
 
   const [messages, setMessages] = useState<
@@ -101,7 +104,7 @@ const TrainLinkage = () => {
       ]);
 
       const response = await mutateAsync({
-        slug: "videsky",
+        slug: linkagesProps?.slug,
         body: { message },
       });
 
@@ -282,7 +285,11 @@ const TrainLinkage = () => {
 
             <button
               disabled={isSubmitDisabled}
-              onClick={() => mutate(Number(id))}
+              onClick={() =>
+                mutate(Number(linkagesProps?.id), {
+                  onSuccess: () => setPublished(true),
+                })
+              }
               className={clsx(
                 "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
                 isSubmitDisabled
@@ -292,12 +299,23 @@ const TrainLinkage = () => {
             >
               Publish AI Linkage
             </button>
+
+            {published && (
+              <button
+                onClick={() => router.push("/linkages/explore")}
+                className={clsx(
+                  "w-full rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]"
+                )}
+              >
+                Explore Linkages
+              </button>
+            )}
           </div>
         )}
 
         {/* chat preview */}
         {selected === "preview" && (
-          <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
+          <div className="relative w-full mt-2 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
             <div className="flex-1 h-full overflow-y-auto mb-16">
               {messages.map((msg, index) => (
                 <div

@@ -50,6 +50,11 @@ export const authAtom = atom({
   country: JSON.stringify(countries?.[0]),
 });
 
+export const createLinkageAtom = atom({
+  id: null,
+  slug: "",
+});
+
 export const logoutAtom = atom(null, (_, set) => {
   signOut();
   removeToken();

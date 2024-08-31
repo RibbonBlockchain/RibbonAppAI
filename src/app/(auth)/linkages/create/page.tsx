@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { useCreateLinkage } from "@/api/linkage";
 import React, { ChangeEvent, useState } from "react";
 import { categoryOptions } from "@/lib/values/prompts";
+import { useAtom } from "jotai";
+import { createLinkageAtom } from "@/lib/atoms/auth.atom";
 
 type Starter = {
   text: string;
@@ -24,6 +26,7 @@ type Starter = {
 
 const CreateLinkage = () => {
   const router = useRouter();
+  const [linkageProps, setLinkageProps] = useAtom(createLinkageAtom);
 
   const [isAgreed, setIsAgreed] = useState<boolean>(false);
 
@@ -39,8 +42,12 @@ const CreateLinkage = () => {
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
-  const [image, setImage] = useState("");
+
+  const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
+
+  const [logo, setLogo] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState("");
 
   const handleSelect = (id: string, label: string) => {
     setSelectedId(id);
@@ -52,7 +59,15 @@ const CreateLinkage = () => {
     if (!file) return;
 
     setImagePreview(URL.createObjectURL(file));
-    setImage(file as any);
+    setImage(file);
+  };
+
+  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoPreview(URL.createObjectURL(file));
+    setLogo(file);
   };
 
   const { mutate } = useCreateLinkage();
@@ -63,7 +78,6 @@ const CreateLinkage = () => {
       .concat(["", "", ""]);
 
     const formData = new FormData();
-
     formData.append("name", name);
     formData.append("description", description);
     formData.append("instruction", instruction);
@@ -76,23 +90,26 @@ const CreateLinkage = () => {
     formData.append("prompts", prompt2);
 
     if (image) formData.append("image", image);
+    if (logo) formData.append("image", logo);
 
-    router.push("/linkages/create/train"), toast.success("Linkage created");
+    mutate(formData as any, {
+      onSuccess: (data) => {
+        const { id, slug } = data?.data || {};
+        console.log(id, slug);
 
-    // mutate(formData as any, {
-    //   onSuccess: (data) => {
-    //     console.log(data, "on success data");
-    //     const { id, slug } = data?.data;
+        // Update atom state
+        setLinkageProps({ id, slug });
 
-    //     localStorage.setItem("dataId", id.toString());
-    //     localStorage.setItem("dataSlug", slug);
-
-    //     router.push("/linkages/create/train"), toast.success("Linkage created");
-    //   },
-    // });
+        router.push("/linkages/create/train");
+        toast.success("Linkage created");
+      },
+      onError: (error) => {
+        toast.error("Failed to create linkage");
+      },
+    });
   };
 
-  //conversational starters
+  // Conversational starters
   const [starters, setStarters] = useState<Starter[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -145,12 +162,12 @@ const CreateLinkage = () => {
             />
             <div className="absolute flex flex-row gap-1 mt-1">
               <label className="cursor-pointer text-sm font-medium flex flex-col items-center justify-center text-center gap-1 max-w-[200px]">
-                <Camera size="24" color="#ffffff" />{" "}
+                <Camera size="24" color="#ffffff" />
                 <span className="text-xs font-semibold">
                   Click to upload Linkage banner
                 </span>
                 <span className="text-[10px] font-light leading-3">
-                  A catchy banner improve users engagement with your Linkage
+                  A catchy banner improves user engagement with your Linkage
                 </span>
                 <input
                   type="file"
@@ -168,7 +185,7 @@ const CreateLinkage = () => {
               width={82}
               height={82}
               alt="linkage"
-              src={imagePreview || "/assets/sample-icon.png"}
+              src={logoPreview || "/assets/sample-icon.png"}
               className="rounded-full border border-[#0B0228]"
             />
             <div className="flex flex-row gap-1 mt-1">
@@ -179,7 +196,7 @@ const CreateLinkage = () => {
                   accept="image/*"
                   className="hidden"
                   placeholder="upload image"
-                  onChange={handleImageChange}
+                  onChange={handleLogoChange}
                 />
                 <Upload height={16} width={16} />
               </label>
@@ -348,7 +365,7 @@ const CreateLinkage = () => {
         </div>
 
         <button
-          disabled={false}
+          disabled={isSubmitDisabled}
           onClick={handleCreateLinkage}
           className={clsx(
             "my-10 w-full rounded-[8px] py-3 font-bold text-sm",

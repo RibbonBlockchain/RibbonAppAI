@@ -32,7 +32,7 @@ const FileUpload = ({ id }: { id: number }) => {
     formData.append("file", file);
 
     mutate(
-      { id, file: formData as any },
+      { id: id, file: formData as any },
       {
         onSuccess: () => console.log("File uploaded successfully"),
         onError: (error) => console.error("Upload failed", error),

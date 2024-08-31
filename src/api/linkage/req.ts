@@ -54,7 +54,7 @@ export const getDiscoverLinkages = async ({
 };
 
 export const getLinkagesFiles = async (id: number) => {
-  const res = await client.get(`linkage/${id}}/file`);
+  const res = await client.get(`linkage/${id}/file`);
   return res.data;
 };
 

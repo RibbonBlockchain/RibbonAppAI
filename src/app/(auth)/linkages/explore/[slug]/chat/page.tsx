@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Send, User } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
+import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import { useChatLinkage, useGetLinkageBySlug } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
@@ -13,7 +14,7 @@ const LinkageAIChatInterface = () => {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data } = useGetLinkageBySlug(slug);
+  const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
 
   const [messages, setMessages] = useState<
@@ -22,25 +23,9 @@ const LinkageAIChatInterface = () => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const alternatePrompts = [
-    "Hello! How can I assist you today?",
-    "Hi there! What can I help you with right now?",
-    "Greetings! Is there something specific you're looking for today?",
-    "Hey! I'm here to help with any questions you might have. What’s up?",
-    "Welcome! How can I make your experience better today?",
-    "Hi! What’s on your mind today?",
-    "Hello! If you need any help or information, just let me know.",
-    "Good day! Did you know I can assist with [specific feature]? How can I help you?",
-    "Hey there! How’s it going? Need any help with something?",
-    "Hi! It’s great to see you. What can I do for you today?",
-  ];
+  useEffect(() => {}, [data]);
 
   const prompts = data?.data?.prompts || alternatePrompts;
-
-  useEffect(() => {
-    const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-    setMessages([{ sender: "ai", text: randomPrompt }]);
-  }, [prompts]);
 
   const sendMessage = async (message: string) => {
     try {
@@ -84,10 +69,20 @@ const LinkageAIChatInterface = () => {
   };
 
   useEffect(() => {
+    if (prompts.length > 0) {
+      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+      setMessages([{ sender: "ai", text: randomPrompt }]);
+    }
+  }, [prompts]);
+
+  useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  if (isLoading) return <p className="text-white">Loading...</p>;
+  if (isError) return <p className="text-white">Error loading data.</p>;
 
   return (
     <AuthNavLayout>
@@ -110,7 +105,6 @@ const LinkageAIChatInterface = () => {
           <VolumeHigh size="32" color="#ffffff" />
         </div>
 
-        {/* chat component */}
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
           <div className="flex-1 h-full overflow-y-auto mb-16">
             {messages.map((msg, index) => (

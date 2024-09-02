@@ -40,8 +40,6 @@ const LinkageViewDetails = () => {
   const params = useParams();
   const slug = params.slug as string;
 
-  console.log(slug, "slug");
-
   const { data, isLoading } = useGetLinkageBySlug(slug);
 
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({

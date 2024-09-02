@@ -65,7 +65,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                           <Image
                             width={35}
                             height={35}
-                            src={"/images/world-coin.png"}
+                            src={"/assets/usdc.png"}
                             alt="coin logo"
                             className="rounded-full"
                           />
@@ -98,7 +98,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                       <InfoIcon stroke="#000" width={14} height={14} />
                     </div>
                     <input
-                      value={"Optimism Mainnet"}
+                      value={"Base Etherium L2"}
                       className="w-full text-sm text-gray-500 py-3.5 px-2 border-[1px] border-[#F2EEFF] rounded-md"
                     />
                   </div>

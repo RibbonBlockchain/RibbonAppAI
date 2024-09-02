@@ -9,7 +9,12 @@ import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import { useChatLinkage, useGetLinkageBySlug } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
-const LinkageAIChatInterface = () => {
+interface Message {
+  sender: "user" | "ai";
+  text: string;
+}
+
+const LinkageAIChatInterface: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
@@ -17,15 +22,13 @@ const LinkageAIChatInterface = () => {
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
 
-  const [messages, setMessages] = useState<
-    { sender: "user" | "ai"; text: string }[]
-  >([]);
-  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {}, [data]);
-
-  const prompts = data?.data?.prompts || alternatePrompts;
+  const prompts: string[] =
+    (data?.data?.prompts || []).filter((prompt: any) => prompt.trim() !== "") ||
+    alternatePrompts;
 
   const sendMessage = async (message: string) => {
     try {
@@ -34,7 +37,7 @@ const LinkageAIChatInterface = () => {
         { sender: "user", text: message },
       ]);
 
-      const response = await mutateAsync({ slug: slug, body: { message } });
+      const response = await mutateAsync({ slug, body: { message } });
 
       const aiMessage =
         response?.data?.message || "Sorry, I didn't get a response.";
@@ -72,8 +75,12 @@ const LinkageAIChatInterface = () => {
     if (prompts.length > 0) {
       const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
       setMessages([{ sender: "ai", text: randomPrompt }]);
+    } else {
+      setMessages([
+        { sender: "ai", text: "Hello! How can I assist you today?" },
+      ]);
     }
-  }, [prompts]);
+  }, []);
 
   useEffect(() => {
     if (messagesEndRef.current) {

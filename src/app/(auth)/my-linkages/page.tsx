@@ -55,8 +55,6 @@ const MyLinkageDetails: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
-  console.log(selectedAI, "here");
-
   const { data: linkagesList } = useGetLinkages();
   const { data } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);

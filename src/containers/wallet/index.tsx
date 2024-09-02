@@ -576,7 +576,7 @@ const WalletComponent = () => {
   const [showClaimModal, setShowClaimModal] = useState(false);
 
   const useCoinDetails = () => {
-    const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
+    const apiUrl = `https://api.coingecko.com/api/v3/coins/usd-coin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
 
     const { isLoading, error, data } = useSWR(apiUrl, fetcher);
 
@@ -857,7 +857,7 @@ const WalletComponent = () => {
                               height={35}
                               alt="coin logo"
                               className="rounded-full bg-white"
-                              src={"/images/ribbon.svg"}
+                              src={"/assets/ribbon.svg"}
                             />
                           </div>
                           <div>
@@ -882,7 +882,7 @@ const WalletComponent = () => {
                               height={35}
                               alt="coin logo"
                               className="rounded-full bg-white"
-                              src={"/images/world-coin.png"}
+                              src={"/assets/usdc.png"}
                             />
                           </div>
                           <div>

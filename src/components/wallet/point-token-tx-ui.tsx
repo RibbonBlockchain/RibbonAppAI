@@ -39,7 +39,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-[95%] max-w-[480px] h-full px-4 py-10  transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-[95%] max-w-[480px] h-full px-4 py-10 mt-10 transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
                 <div className="mb-16">
                   <div
                     onClick={props.closeModal}
@@ -62,7 +62,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                         <Image
                           width={35}
                           height={35}
-                          src={"/images/ribbon.svg"}
+                          src={"/assets/ribbon.svg"}
                           alt="coin logo"
                           className="rounded-full"
                         />

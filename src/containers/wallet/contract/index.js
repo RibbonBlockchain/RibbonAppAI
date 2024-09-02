@@ -13,7 +13,6 @@ function App() {
   const [name, setName] = useState(null);
   const [pointsAmounttoClaim, setpointsAmounttoClaim] = useState(null);
   const [pointsAmounttoSwap, setpointsAmounttoSwap] = useState(null);
-  console.log(name);
   const pointAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const vaultAddress = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be";
   const worldcoin = "0x0165878A594ca255338adfa4d48449f69242Eb8F";

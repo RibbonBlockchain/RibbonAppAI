@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useClaimDailyRewards } from "@/api/user";
 import React, { useState, useEffect } from "react";
+import { useGetAuth } from "@/api/auth";
 
 const formatTime = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
@@ -18,6 +19,7 @@ const RewardButton: React.FC = () => {
   const [countdown, setCountdown] = useState<number>(0);
 
   const { mutate } = useClaimDailyRewards();
+  const { data: user, refetch } = useGetAuth({ enabled: true });
 
   useEffect(() => {
     const storedTime = localStorage.getItem("rewardCooldown");
@@ -57,6 +59,7 @@ const RewardButton: React.FC = () => {
     if (isDisabled) return;
 
     mutate();
+    refetch();
 
     const cooldownTime = 12 * 60 * 60 * 1000;
     const endTime = Date.now() + cooldownTime;

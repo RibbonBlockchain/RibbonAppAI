@@ -1,5 +1,12 @@
 "use client";
 
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import {
   useChatLinkage,
   usePublishLinkage,
@@ -8,19 +15,12 @@ import {
 } from "@/api/linkage";
 import clsx from "clsx";
 import Image from "next/image";
-import { ArrowUp, Send, User, X } from "lucide-react";
+import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import { ArrowUp, Send, User, X } from "lucide-react";
 import { ArrowLeft2, InfoCircle } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Toaster } from "react-hot-toast";
-import { useAtom } from "jotai";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
 
 const TrainLinkage = () => {
@@ -71,7 +71,7 @@ const TrainLinkage = () => {
     trainAILinkage(
       { id: Number(linkagesProps?.id), file: formData as any },
       {
-        onSuccess: () => console.log("File uploaded successfully"),
+        onSuccess: () => toast.success("File uploaded successfully"),
         onError: (error) => console.error("Upload failed", error),
       }
     );
@@ -148,6 +148,7 @@ const TrainLinkage = () => {
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
+      <Toaster />
       <ArrowLeft2
         size="24"
         color="#ffffff"

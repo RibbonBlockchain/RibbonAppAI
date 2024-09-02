@@ -145,8 +145,6 @@ const EntertainmentBot: React.FC = () => {
           type: "RENEW",
         });
 
-        console.log(selectedService, selectedVariation, phoneNumber);
-
         setMessages((prevMessages) => [
           ...prevMessages,
           {

@@ -1,19 +1,19 @@
 "use client";
 
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { alternatePrompts } from "@/lib/values/prompts";
 import FileUpload from "@/containers/linkages/file-upload";
 import { useChatLinkage, useGetLinkageById } from "@/api/linkage";
 import { AddCircle, CloseCircle, InfoCircle, Send, User } from "iconsax-react";
-import React, {
-  ChangeEvent,
-  useEffect,
-  useState,
-  KeyboardEvent,
-  useRef,
-} from "react";
-import { alternatePrompts } from "@/lib/values/prompts";
 
 type Starter = {
   text: string;
@@ -48,7 +48,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
 
   const [instruction, setInstruction] = useState("");
 
-  const handleCreateLinkageAI = () => {
+  const handleRetrainLinkageAI = () => {
     const [prompt, prompts1, prompts2] = starters
       .map((starter) => starter.text)
       .concat(["", "", ""]);
@@ -326,7 +326,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
           </div>
           <button
             disabled={isSubmitDisabled}
-            onClick={handleCreateLinkageAI}
+            onClick={handleRetrainLinkageAI}
             className={clsx(
               "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
               isSubmitDisabled

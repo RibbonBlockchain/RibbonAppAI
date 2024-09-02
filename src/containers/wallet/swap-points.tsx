@@ -68,7 +68,7 @@ const SwapPointToUsdcToken: React.FC<Props> = (props) => {
                           <Image
                             width={35}
                             height={35}
-                            src={"/images/ribbon.svg"}
+                            src={"/assets/ribbon.svg"}
                             alt="coin logo"
                             className="rounded-full"
                           />
@@ -114,7 +114,7 @@ const SwapPointToUsdcToken: React.FC<Props> = (props) => {
                           <Image
                             width={35}
                             height={35}
-                            src={"/images/world-coin.png"}
+                            src={"/assets/usdc.png"}
                             alt="coin logo"
                             className="rounded-full"
                           />

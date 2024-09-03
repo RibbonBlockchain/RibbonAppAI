@@ -54,7 +54,7 @@ const Activity = () => {
             />{" "}
             {switchBalance
               ? `${user?.wallet.balance} WLD`
-              : `${pointBalance.toLocaleString()} ribbons`}
+              : `${pointBalance.toLocaleString()} ribbon`}
           </div>
         </div>
 

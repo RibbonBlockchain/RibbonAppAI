@@ -786,7 +786,7 @@ const WalletComponent = () => {
                     <SpinnerIcon />
                   </div>
                 ) : (
-                  "Claim ribbons"
+                  "Claim ribbon"
                 )}
               </button>
 
@@ -869,7 +869,7 @@ const WalletComponent = () => {
                             </p>
                           </div>
                         </div>
-                        <p className="text-sm">{point} ribbons</p>
+                        <p className="text-sm">{point} ribbon</p>
                       </div>
 
                       {/* // world token */}

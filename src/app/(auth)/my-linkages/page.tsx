@@ -238,7 +238,9 @@ const MyLinkageDetails: React.FC = () => {
             <LinkageWallet walletAddress={data?.data?.walletAddress} />
           )}
 
-          {selectedTab === "questionnaires" && <UploadQuestionnaire />}
+          {selectedTab === "questionnaires" && (
+            <UploadQuestionnaire linkageId={selectedAI?.id} />
+          )}
 
           {selectedTab === "activity" && <Activity />}
 

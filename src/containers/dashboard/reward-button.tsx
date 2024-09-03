@@ -89,7 +89,7 @@ const RewardButton: React.FC = () => {
               width={32}
               className="w-[32px] h-[32px]"
             />
-            <p>5000 ribbons</p>
+            <p>5000 ribbon</p>
           </div>
         </div>
       )}

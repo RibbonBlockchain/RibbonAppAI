@@ -1,8 +1,7 @@
-import InputBox from "@/components/questionnarie/input-box";
+import React, { useState } from "react";
+import { UploadCloudIcon } from "lucide-react";
+import { ArrowLeft, Edit } from "iconsax-react";
 import QuestionnaireTemplate from "@/containers/questionnaire/quetionnaire-templates";
-import { Arrow, ArrowLeft, Edit } from "iconsax-react";
-import { UploadCloudIcon, X } from "lucide-react";
-import React, { ChangeEvent, useState } from "react";
 
 const tabs = [
   { name: "All questionnaires", value: "questionnaires" },
@@ -15,7 +14,7 @@ const options = [
   { value: "image", label: "Image" },
 ];
 
-const UploadQuestionnaire = () => {
+const UploadQuestionnaire = ({ linkageId }: { linkageId: number }) => {
   const [selected, setSelected] = useState("add-maually");
   const [updating, setUpdating] = useState(false);
 
@@ -23,8 +22,6 @@ const UploadQuestionnaire = () => {
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
-
-  const [questionnareName, setQuestionnaireName] = useState("");
 
   return (
     <section className="w-full flex flex-col gap-6">
@@ -108,18 +105,7 @@ const UploadQuestionnaire = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-semibold">Questionnaire name</p>
-                <input
-                  type="text"
-                  value={questionnareName}
-                  onChange={(e) => setQuestionnaireName(e.target.value)}
-                  placeholder="Name of questionnaire"
-                  className="py-2.5 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-                />
-              </div>
-
-              <QuestionnaireTemplate />
+              <QuestionnaireTemplate linkageId={linkageId} />
             </div>
           )}
 

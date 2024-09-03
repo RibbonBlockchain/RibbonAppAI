@@ -9,10 +9,13 @@ import {
   uploadLinkageFile,
   getDiscoverLinkages,
   initiateWalletTransfer,
+  uploadLinkageQuestionnaire,
+  getLinkageQuestionnaire,
 } from "./req";
 import {
   TChatLinkageBody,
   TCreateLinkageBody,
+  TUploadLinkageQuestionnaireBody,
   getDiscoveryLinkagesParams,
 } from "./types";
 import { onError } from "../api-client";
@@ -98,5 +101,25 @@ export const useInitiateWalletTransfer = () => {
     onError,
     mutationFn: ({ address }: { address: string }) =>
       initiateWalletTransfer(address),
+  });
+};
+
+export const useUploadLinkageQuestionnaire = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TUploadLinkageQuestionnaireBody) =>
+      uploadLinkageQuestionnaire(body),
+  });
+};
+
+export const useGetLinkageQuestionnaire = ({
+  linkageId,
+}: {
+  linkageId: number;
+}) => {
+  return useQuery({
+    enabled: !!linkageId,
+    queryKey: ["linkage-file", linkageId],
+    queryFn: () => getLinkageQuestionnaire(linkageId),
   });
 };

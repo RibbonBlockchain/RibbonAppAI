@@ -55,3 +55,21 @@ export type TDiscoveryLinkageResponse = {
   data: DiscoveryLinkageData[];
   pagination: Pagination;
 };
+
+export type TUploadLinkageQuestionnaireBody = {
+  name: string;
+  linkageId: number;
+  questions: LinkageQuestion[];
+};
+type QuestionType = "BOOLEAN" | "MULTIPLE_CHOICE" | "TEXT";
+
+interface LinkageQuestion {
+  text: string;
+  type: QuestionType;
+  options: Options[];
+}
+
+interface Options {
+  value: string;
+  label: string;
+}

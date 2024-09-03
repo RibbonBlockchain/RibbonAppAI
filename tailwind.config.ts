@@ -19,7 +19,7 @@ const config: Config = {
       },
       backgroundImage: {
         aiBackground: "url('/assets/AI-background.png')",
-        account: "url('/images/user-bg.png')",
+        // account: "url('/images/user-bg.png')",
         peronalDetails: "url('/images/personal-details.png')",
         walletBg: 'url("/images/connect-wallet-bg.png")',
       },

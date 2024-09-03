@@ -141,7 +141,7 @@ const Dashboard = () => {
                           height={32}
                           width={32}
                         />
-                        <p>{i.reward * 5000} ribbons</p>
+                        <p>{i.reward * 5000} ribbon</p>
                       </div>
                     </div>
                     <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
@@ -180,7 +180,7 @@ const Dashboard = () => {
                           height={32}
                           width={32}
                         />
-                        <p>{i.reward * 5000} ribbons</p>
+                        <p>{i.reward * 5000} ribbon</p>
                       </div>
                     </div>
                     <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
@@ -219,7 +219,7 @@ const Dashboard = () => {
                           height={32}
                           width={32}
                         />
-                        <p>{i.rewardPoints} ribbons</p>
+                        <p>{i.rewardPoints} ribbon</p>
                       </div>
                     </div>
                     <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">

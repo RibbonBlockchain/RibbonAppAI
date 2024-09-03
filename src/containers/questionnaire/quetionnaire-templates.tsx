@@ -1,27 +1,35 @@
 import React, { useState } from "react";
 import Question from "./question-template";
 import { Plus } from "lucide-react";
+import { useUploadLinkageQuestionnaire } from "@/api/linkage";
 
-interface Option {
+export type TUploadLinkageQuestionnaireBody = {
+  name: string;
+  linkageId: number;
+  questions: LinkageQuestion[];
+};
+
+type QuestionType = "BOOLEAN" | "MULTIPLE_CHOICE" | "TEXT";
+
+interface LinkageQuestion {
+  text: string;
+  type: QuestionType;
+  options: Options[];
+}
+
+interface Options {
   value: string;
   label: string;
 }
 
-interface Question {
-  id: number;
-  name: string;
-  selectedValue: string;
-  optionType: "text" | "image"; // New field to specify the type of options
-  options: Option[];
-}
+const Questionnaire = ({ linkageId }: { linkageId: number }) => {
+  const { mutate } = useUploadLinkageQuestionnaire();
 
-const Questionnaire: React.FC = () => {
-  const [questions, setQuestions] = useState<Question[]>([
+  const [questionnaireName, setQuestionnaireName] = useState("");
+  const [questions, setQuestions] = useState<LinkageQuestion[]>([
     {
-      id: Date.now(),
-      name: "",
-      selectedValue: "",
-      optionType: "text",
+      text: "",
+      type: "TEXT",
       options: [{ value: "", label: "" }],
     },
   ]);
@@ -30,27 +38,39 @@ const Questionnaire: React.FC = () => {
     setQuestions([
       ...questions,
       {
-        id: Date.now(),
-        name: "",
-        selectedValue: "",
-        optionType: "text",
+        text: "",
+        type: "TEXT",
         options: [{ value: "", label: "" }],
       },
     ]);
   };
 
-  const handleChangeQuestion = (id: number, name: string) => {
-    setQuestions(questions.map((q) => (q.id === id ? { ...q, name } : q)));
+  const handleRemoveQuestion = (index: number) => {
+    setQuestions(questions.filter((_, i) => i !== index));
   };
 
-  const handleChangeOption = (id: number, value: string, index: number) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === id
+  const handleSubmitLinkageQuestionnaireManually = () => {
+    mutate({ linkageId, name: questionnaireName, questions });
+  };
+
+  const handleChangeQuestion = (index: number, text: string) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) => (i === index ? { ...q, text } : q))
+    );
+  };
+
+  const handleChangeOption = (
+    questionIndex: number,
+    optionIndex: number,
+    value: string
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) =>
+        i === questionIndex
           ? {
               ...q,
-              options: q.options.map((opt, i) =>
-                i === index ? { ...opt, label: value } : opt
+              options: q.options.map((opt, j) =>
+                j === optionIndex ? { ...opt, value } : opt
               ),
             }
           : q
@@ -58,62 +78,100 @@ const Questionnaire: React.FC = () => {
     );
   };
 
-  const handleSelectChange = (id: number, value: string) => {
-    setQuestions(
-      questions.map((q) => (q.id === id ? { ...q, selectedValue: value } : q))
+  const handleChangeOptionLabel = (
+    questionIndex: number,
+    optionIndex: number,
+    label: string
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) =>
+        i === questionIndex
+          ? {
+              ...q,
+              options: q.options.map((opt, j) =>
+                j === optionIndex ? { ...opt, label } : opt
+              ),
+            }
+          : q
+      )
     );
   };
 
-  const handleAddOption = (id: number) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === id && q.options.length < 3
+  const handleSelectChange = (index: number, type: QuestionType) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) => (i === index ? { ...q, type } : q))
+    );
+  };
+
+  const handleAddOption = (index: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) =>
+        i === index && q.options.length < 3
           ? { ...q, options: [...q.options, { value: "", label: "" }] }
           : q
       )
     );
   };
 
-  const handleRemoveOption = (id: number, index: number) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === id
-          ? { ...q, options: q.options.filter((_, i) => i !== index) }
+  const handleRemoveOption = (questionIndex: number, optionIndex: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) =>
+        i === questionIndex
+          ? { ...q, options: q.options.filter((_, j) => j !== optionIndex) }
           : q
       )
     );
   };
 
-  const handleChangeOptionType = (id: number, type: "text" | "image") => {
-    setQuestions(
-      questions.map((q) => (q.id === id ? { ...q, optionType: type } : q))
+  const handleChangeOptionType = (index: number, type: QuestionType) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) => (i === index ? { ...q, type } : q))
     );
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 mb-10">
+    <div className="w-full flex flex-col gap-6 mb-20">
+      <input
+        type="text"
+        value={questionnaireName}
+        onChange={(e) => setQuestionnaireName(e.target.value)}
+        placeholder="Enter questionnaire name"
+        className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+      />
       {questions.map((question, index) => (
         <Question
-          key={question.id}
+          key={index}
           number={index + 1}
           question={question}
-          onChangeQuestion={(name) => handleChangeQuestion(question.id, name)}
-          onChangeOption={(value, index) =>
-            handleChangeOption(question.id, value, index)
+          onChangeQuestion={(text) => handleChangeQuestion(index, text)}
+          onChangeOption={(value, optionIndex) =>
+            handleChangeOption(index, optionIndex, value)
           }
-          onSelectChange={(value) => handleSelectChange(question.id, value)}
-          onAddOption={() => handleAddOption(question.id)}
-          onRemoveOption={(index) => handleRemoveOption(question.id, index)}
-          onChangeOptionType={(type) =>
-            handleChangeOptionType(question.id, type)
+          onChangeOptionLabel={(label, optionIndex) =>
+            handleChangeOptionLabel(index, optionIndex, label)
           }
+          onSelectChange={(type) => handleSelectChange(index, type)}
+          onAddOption={() => handleAddOption(index)}
+          onRemoveOption={(optionIndex) =>
+            handleRemoveOption(index, optionIndex)
+          }
+          onChangeOptionType={(type) => handleChangeOptionType(index, type)}
+          onRemoveQuestion={() => handleRemoveQuestion(index)}
         />
       ))}
+
       <button
         onClick={handleAddQuestion}
-        className="flex flex-row items-center flex-end justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
+        className="flex flex-row items-center justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
       >
-        <Plus size={14} /> Add more questions
+        Add Question <Plus size={14} />
+      </button>
+
+      <button
+        onClick={handleSubmitLinkageQuestionnaireManually}
+        className="flex justify-center py-2.5 mt-8 text-sm text-start font-medium w-full rounded-[8px] bg-white text-[#290064]"
+      >
+        Upload Questionnaire
       </button>
     </div>
   );

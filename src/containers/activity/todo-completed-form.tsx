@@ -42,7 +42,7 @@ const TodoCompletedForm = (props: Props) => {
           </p>
           <div className="flex flex-row items-center">
             <p className="mr-1.5">
-              Earned {rewardPoints.toLocaleString()} points
+              Earned {rewardPoints.toLocaleString()} ribbons
             </p>
           </div>
 

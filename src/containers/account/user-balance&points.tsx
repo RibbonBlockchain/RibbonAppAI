@@ -60,7 +60,7 @@ const UserBalanceAndPoints = () => {
       </div>
 
       <div className="flex flex-row items-center justify-center text-[#626262] gap-1 mt-2 text-xs">
-        <ArrowSwapHorizontal /> <p>{pointBalance.toLocaleString()} points</p>
+        <ArrowSwapHorizontal /> <p>{pointBalance.toLocaleString()} ribbons</p>
       </div>
 
       <div className="grid grid-cols-2 items-center justify-center mt-6">

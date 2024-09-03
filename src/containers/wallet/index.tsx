@@ -53,15 +53,16 @@ const pointsABI = require("./contract/pointsABI.json");
 
 const config = {
   biconomyPaymasterApiKey:
-    "https://paymaster.biconomy.io/api/v1/11155420/aS0A_slW9.c8557306-0d4d-45ac-a178-544c2891e4ac",
+    "https://paymaster.biconomy.io/api/v1/84532/WDFmAVQcv.9a1d0607-3ab5-46bb-9279-cc2bb1240d44",
   bundlerUrl:
-    "https://bundler.biconomy.io/api/v2/11155420/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44", // <-- Read about this at https://docs.biconomy.io/dashboard#bundler-url
+    "https://bundler.biconomy.io/api/v2/84532/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44", // <-- Read about this at https://docs.biconomy.io/dashboard#bundler-url
 };
 
-const chainId = 11155420;
+const chainId = 84532;
 // const rpcTarget = "https://sepolia.base.org/";
 const rpcTarget =
   "https://base-sepolia.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
+
 const publicRPC = "https://sepolia.optimism.io/";
 
 const clientId =
@@ -383,6 +384,7 @@ const WalletComponent = () => {
       const interfacedata = new ethers.utils.Interface([
         "function permitSwapToPaymentCoin(address user,uint amount,uint256 deadline,uint8 v,bytes32 r,bytes32 s)",
       ]);
+
       const data = interfacedata.encodeFunctionData("permitSwapToPaymentCoin", [
         saAddress,
         convertPoints(swapValue) as string,
@@ -448,7 +450,7 @@ const WalletComponent = () => {
       // @ts-ignore
       const userOpResponse = await smartWallet.sendTransaction(
         {
-          to: "0x036cbd53842c5426634e7929541ec2318f3dcf7e",
+          to: "0xf8e002410e8b370CFf1142ee860D1e8A11BA8Ea9",
           data: data,
         },
         {
@@ -482,7 +484,7 @@ const WalletComponent = () => {
 
       const myaddress = (await web3.eth.getAccounts())[0];
 
-      const ADDRESS = "0x28B841ab4C9fAD21ee837a66d8F533FF97CecaFF";
+      const ADDRESS = "0xf8e002410e8b370CFf1142ee860D1e8A11BA8Ea9";
 
       const contract = new web3.eth.Contract(pointsABI, ADDRESS);
 
@@ -509,7 +511,7 @@ const WalletComponent = () => {
   };
   const pointToWLD = Number(point) / 5000;
 
-  // world token
+  // usdc token
   const [usdcToken, setUsdcToken] = useState("");
   const [usdcTokenName, setusdcTokenName] = useState("");
   localStorage.setItem("usdcTokenBalance", usdcToken);
@@ -784,7 +786,7 @@ const WalletComponent = () => {
                     <SpinnerIcon />
                   </div>
                 ) : (
-                  "Claim points"
+                  "Claim ribbons"
                 )}
               </button>
 
@@ -861,13 +863,13 @@ const WalletComponent = () => {
                             />
                           </div>
                           <div>
-                            <p className="text-base font-normal">PTS</p>
+                            <p className="text-base font-normal">RIBB</p>
                             <p className="text-xs text-[#626262]">
                               {pointName}
                             </p>
                           </div>
                         </div>
-                        <p className="text-sm">{point} points</p>
+                        <p className="text-sm">{point} ribbons</p>
                       </div>
 
                       {/* // world token */}

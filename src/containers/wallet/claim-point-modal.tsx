@@ -50,7 +50,7 @@ const ClaimPointsModal: React.FC<Props> = (props) => {
                 <div className="mb-16">
                   <ArrowLeft stroke="#939393" onClick={props.closeModal} />
                   <div className="flex -mt-6 text-black  flex-row items-center justify-center text-base font-semibold">
-                    Claim virtual points
+                    Claim virtual ribbons
                   </div>
                 </div>
 

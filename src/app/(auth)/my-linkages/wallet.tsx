@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import React, { useState } from "react";
 import { Copy, InfoCircle, Share } from "iconsax-react";
 import AddressDisplay from "@/components/wallet/address-display";
+import { shortenTransaction } from "@/lib/utils/shorten";
+import { copyToClipboard } from "@/lib/utils";
 
 const LinkageWallet = ({ walletAddress }: { walletAddress: string }) => {
   const [selected, setSelected] = useState("deposit");
@@ -23,8 +25,19 @@ const LinkageWallet = ({ walletAddress }: { walletAddress: string }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-center justify-center">
-        <p className="text-sm font-normal">Wallet address</p>
-        <p className="text-[30px] font-bold">$ wallet balance</p>
+        <div
+          onClick={() =>
+            copyToClipboard(walletAddress, () =>
+              toast.success("Wallet address copied")
+            )
+          }
+          className="flex flex-row items-center gap-1 font-normal text-sm"
+        >
+          {shortenTransaction(walletAddress)}
+          <Copy size="16" color="#ffffff" variant="Bold" />
+        </div>
+
+        <p className="text-[28px] font-bold">$ 0</p>
       </div>
 
       <div className="flex flex-row bg-[#3f3856] p-1 rounded-full">

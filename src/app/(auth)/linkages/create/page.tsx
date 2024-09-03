@@ -237,7 +237,12 @@ const CreateLinkage = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium">Mobile number</label>
+          <label className="text-sm font-medium">
+            Mobile number{" "}
+            <span className="text-xs font-normal">
+              (include country code e.g. +234)
+            </span>
+          </label>
           <div className="relative flex flex-row items-center">
             <Call size="20" color="#ffffff" className="absolute left-3" />
             <input

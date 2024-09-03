@@ -58,7 +58,7 @@ const SwapPointToUsdcToken: React.FC<Props> = (props) => {
 
                 <div className="flex flex-col gap-6 w-full">
                   <p className="text-xs text-[#626262]">
-                    NOTE: You can only swap a minimum of 10000 points
+                    NOTE: You can only swap a minimum of 10000 ribbons
                   </p>
 
                   <div className="border rounded-[10px] p-4">
@@ -74,9 +74,9 @@ const SwapPointToUsdcToken: React.FC<Props> = (props) => {
                           />
                         </div>
                         <div>
-                          <p className="text-base font-normal">PTS</p>
+                          <p className="text-base font-normal">RIBB</p>
                           <p className="text-xs text-[#626262]">
-                            {props.pointsBalance} Points
+                            {props.pointsBalance} Ribbons
                           </p>
                         </div>
                       </div>

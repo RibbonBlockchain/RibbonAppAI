@@ -1,13 +1,12 @@
 import React from "react";
 import { Plus, X } from "lucide-react";
+import { QuestionType } from "@/api/linkage/types";
 
 // Define types
 interface Option {
   value: string;
-  label: string;
+  label?: string;
 }
-
-type QuestionType = "BOOLEAN" | "MULTIPLE_CHOICE" | "TEXT";
 
 interface LinkageQuestion {
   text: string;
@@ -73,11 +72,10 @@ const Question: React.FC<QuestionProps> = ({
           id={`options-select-${number}`}
           value={question.type}
           onChange={(e) => onChangeOptionType(e.target.value as QuestionType)}
-          className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
+          className="w-full py-3 px-2 rounded-lg border border-[#E5E7EB] text-sm font-normal text-white bg-inherit"
         >
           <option value="BOOLEAN">Boolean</option>
-          <option value="MULTIPLE_CHOICE">Multiple Choice</option>
-          <option value="TEXT">Text</option>
+          <option value="MULTISELECT">Multi Select</option>
         </select>
       </div>
 
@@ -92,11 +90,11 @@ const Question: React.FC<QuestionProps> = ({
         </label>
         {question.options.map((option, index) => (
           <div key={index} className="flex flex-row gap-4 items-center">
-            {question.type === "TEXT" ? (
+            {question.type === "MULTISELECT" ? (
               <input
                 type="text"
                 value={option.label}
-                onChange={(e) => onChangeOptionLabel(e.target.value, index)} // Updated to use onChangeOptionLabel
+                onChange={(e) => onChangeOptionLabel(e.target.value, index)}
                 placeholder={`Option ${index + 1}`}
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
               />
@@ -106,6 +104,7 @@ const Question: React.FC<QuestionProps> = ({
                 onChange={(e) => onChangeOption(e.target.value, index)}
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
               >
+                <option value="">Select</option>
                 <option value="true">True</option>
                 <option value="false">False</option>
               </select>

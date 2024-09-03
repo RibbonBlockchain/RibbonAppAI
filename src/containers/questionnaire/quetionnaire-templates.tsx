@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import Question from "./question-template";
 import { Plus } from "lucide-react";
 import { useUploadLinkageQuestionnaire } from "@/api/linkage";
+import { QuestionType } from "@/api/linkage/types";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
   linkageId: number;
   questions: LinkageQuestion[];
 };
-
-type QuestionType = "BOOLEAN" | "MULTIPLE_CHOICE" | "TEXT";
 
 interface LinkageQuestion {
   text: string;
@@ -19,7 +18,7 @@ interface LinkageQuestion {
 
 interface Options {
   value: string;
-  label: string;
+  label?: string;
 }
 
 const Questionnaire = ({ linkageId }: { linkageId: number }) => {
@@ -29,8 +28,8 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const [questions, setQuestions] = useState<LinkageQuestion[]>([
     {
       text: "",
-      type: "TEXT",
-      options: [{ value: "", label: "" }],
+      type: "MULTISELECT",
+      options: [{ value: "" }],
     },
   ]);
 
@@ -39,8 +38,8 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
       ...questions,
       {
         text: "",
-        type: "TEXT",
-        options: [{ value: "", label: "" }],
+        type: "MULTISELECT",
+        options: [{ value: "" }],
       },
     ]);
   };
@@ -50,7 +49,7 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   };
 
   const handleSubmitLinkageQuestionnaireManually = () => {
-    mutate({ linkageId, name: questionnaireName, questions });
+    mutate({ body: { name: questionnaireName, questions }, linkageId });
   };
 
   const handleChangeQuestion = (index: number, text: string) => {

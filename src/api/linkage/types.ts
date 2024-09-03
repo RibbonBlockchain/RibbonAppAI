@@ -58,10 +58,10 @@ export type TDiscoveryLinkageResponse = {
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
-  linkageId: number;
   questions: LinkageQuestion[];
 };
-type QuestionType = "BOOLEAN" | "MULTIPLE_CHOICE" | "TEXT";
+
+export type QuestionType = "BOOLEAN" | "MULTISELECT";
 
 interface LinkageQuestion {
   text: string;
@@ -71,5 +71,5 @@ interface LinkageQuestion {
 
 interface Options {
   value: string;
-  label: string;
+  label?: string;
 }

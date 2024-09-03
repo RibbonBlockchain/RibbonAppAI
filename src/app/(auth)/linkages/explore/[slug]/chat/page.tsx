@@ -10,10 +10,8 @@ import {
   useChatLinkage,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
-  useGetLinkageQuestionnaireById,
 } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import QuestionnaireChat from "@/containers/dashboard/questionnaire-chat";
 
 interface Message {
   sender: "user" | "ai";
@@ -33,10 +31,9 @@ const LinkageAIChatInterface: React.FC = () => {
     linkageId: id,
   });
 
-  const { data: linkageQ } = useGetLinkageQuestionnaireById({
-    linkageId: id,
-    questionnaireId: 18,
-  });
+  const handleSelect = (questionnaire: any) => {
+    console.log("Selected Questionnaire Details:", questionnaire);
+  };
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
@@ -128,6 +125,21 @@ const LinkageAIChatInterface: React.FC = () => {
           <VolumeHigh size="32" color="#ffffff" />
         </div>
 
+        {/* available questionnaires */}
+        <div className="p-4 sm:p-6 py-6 flex flex-col border-b border-[#C3B1FF4D]">
+          {linkageQuestionnaire?.data.map((i: any) => (
+            <div
+              key={i.id}
+              onClick={() =>
+                router.push(`/linkages/explore/${slug}/chat/${i.id}`)
+              }
+              className="flex items-center justify-between py-2 mb-30"
+            >
+              <span>{i.name}</span>
+            </div>
+          ))}
+        </div>
+
         {/* AI interaction */}
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
           <div className="flex-1 h-full overflow-y-auto mb-16">
@@ -186,19 +198,6 @@ const LinkageAIChatInterface: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* chat component */}
-        <div>
-          <div>
-            {linkageQuestionnaire?.data.map((i: any) => (
-              <div key={i.id}>
-                {i.name} - {i.id} - {i.linkageId}
-              </div>
-            ))}
-          </div>
-
-          <QuestionnaireChat questions={linkageQuestionnaire?.questions} />
         </div>
       </div>
     </AuthNavLayout>

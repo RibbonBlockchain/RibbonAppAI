@@ -90,7 +90,10 @@ const Question: React.FC<QuestionProps> = ({
         </label>
         {question.options.map((option, index) => (
           <div key={index} className="flex flex-row gap-4 items-center">
-            {question.type === "MULTISELECT" ? (
+            {question.type === "MULTICHOICE" ||
+            "MULTISELECT" ||
+            "SHORT_ANSWER" ||
+            "LONG_ANSWER" ? (
               <input
                 type="text"
                 value={option.label}
@@ -105,8 +108,8 @@ const Question: React.FC<QuestionProps> = ({
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
               >
                 <option value="">Select</option>
-                <option value="true">True</option>
-                <option value="false">False</option>
+                <option value="true">True / Yes</option>
+                <option value="false">False / No</option>
               </select>
             ) : (
               <input

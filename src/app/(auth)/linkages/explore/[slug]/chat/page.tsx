@@ -10,8 +10,10 @@ import {
   useChatLinkage,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
+  useGetLinkageQuestionnaireById,
 } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import QuestionnaireChat from "@/containers/dashboard/questionnaire-chat";
 
 interface Message {
   sender: "user" | "ai";
@@ -26,8 +28,14 @@ const LinkageAIChatInterface: React.FC = () => {
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
 
+  const id = data?.data?.id;
   const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
-    linkageId: 25,
+    linkageId: id,
+  });
+
+  const { data: linkageQ } = useGetLinkageQuestionnaireById({
+    linkageId: id,
+    questionnaireId: 18,
   });
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -120,6 +128,7 @@ const LinkageAIChatInterface: React.FC = () => {
           <VolumeHigh size="32" color="#ffffff" />
         </div>
 
+        {/* AI interaction */}
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
           <div className="flex-1 h-full overflow-y-auto mb-16">
             {messages.map((msg, index) => (
@@ -177,6 +186,19 @@ const LinkageAIChatInterface: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* chat component */}
+        <div>
+          <div>
+            {linkageQuestionnaire?.data.map((i: any) => (
+              <div key={i.id}>
+                {i.name} - {i.id} - {i.linkageId}
+              </div>
+            ))}
+          </div>
+
+          <QuestionnaireChat questions={linkageQuestionnaire?.questions} />
         </div>
       </div>
     </AuthNavLayout>

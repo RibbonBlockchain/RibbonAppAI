@@ -61,7 +61,20 @@ export type TUploadLinkageQuestionnaireBody = {
   questions: LinkageQuestion[];
 };
 
-export type QuestionType = "BOOLEAN" | "MULTISELECT";
+export type QuestionType =
+  | "BOOLEAN"
+  | "MULTICHOICE"
+  | "MULTISELECT"
+  | "SHORT_ANSWER"
+  | "LONG_ANSWER"
+  | "CHECKBOX"
+  | "ROUND_BOX"
+  | "BUBBLE"
+  | "DATE"
+  | "TIME"
+  | "SINGLE_CHOICE"
+  | "MULTIPLE_CHOICE"
+  | "IMAGES";
 
 interface LinkageQuestion {
   text: string;
@@ -73,3 +86,8 @@ interface Options {
   value: string;
   label?: string;
 }
+
+export type TSubmitLinkageQuestionnaireAnswer = {
+  optionId: number;
+  questionId: number;
+};

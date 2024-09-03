@@ -67,14 +67,14 @@ const ClaimPointsModal: React.FC<Props> = (props) => {
                         width={32}
                         className="w-[32px] h-[32px]"
                       />
-                      {props.pointsBalance} points
+                      {props.pointsBalance} ribbon
                     </p>
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row items-center justify-between">
                       <p className="text-xs font-semibold">
-                        Input amount (pts)
+                        Input amount (ribbon)
                       </p>
                       <button
                         onClick={props.setMaxAmount}

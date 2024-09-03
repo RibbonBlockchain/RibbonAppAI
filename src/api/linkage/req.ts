@@ -2,6 +2,7 @@ import {
   TChatLinkageBody,
   TCreateLinkageBody,
   TDiscoveryLinkageResponse,
+  TSubmitLinkageQuestionnaireAnswer,
   TUploadLinkageQuestionnaireBody,
   getDiscoveryLinkagesParams,
 } from "./types";
@@ -77,5 +78,31 @@ export const uploadLinkageQuestionnaire = async ({
 
 export const getLinkageQuestionnaire = async (linkageId: number) => {
   const res = await client.get(`/linkage/${linkageId}/questionnaire`);
+  return res.data;
+};
+
+export const getLinkageQuestionnaireById = async (
+  linkageId: number,
+  questionnaireId: number
+) => {
+  const res = await client.get(
+    `/linkage/${linkageId}/questionnaire/${questionnaireId}`
+  );
+  return res.data;
+};
+
+export const submitLinkageQuestionnaireAnswer = async ({
+  linkageId,
+  questionnaireId,
+  body,
+}: {
+  linkageId: number;
+  questionnaireId: number;
+  body: TSubmitLinkageQuestionnaireAnswer;
+}) => {
+  const res = await client.post(
+    `linkage/${linkageId}/questionnaire/${questionnaireId}/respond`,
+    body
+  );
   return res.data;
 };

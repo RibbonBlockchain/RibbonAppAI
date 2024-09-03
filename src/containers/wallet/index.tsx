@@ -36,7 +36,10 @@ import WithdrawWorldToken from "./withdraw-token";
 import ClaimPointsModal from "./claim-point-modal";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { Copy, Logout, Wallet2 } from "iconsax-react";
-import { convertPoints } from "@/lib/utils/convertPoint";
+import {
+  convertPoints,
+  convertPoints18decimal,
+} from "@/lib/utils/convertPoint";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import WithdrawalProcessing from "./withdrawal-processing";
 import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
@@ -284,7 +287,7 @@ const WalletComponent = () => {
 
   const onWithdrawSuccess = () => {
     setShowClaimModal(false), setShowPending(false), setClaimValue("0");
-    toast.success("Points claimed");
+    toast.success("Ribbon claimed");
   };
 
   // usersClaimPointsFromVirtualWallet
@@ -313,7 +316,7 @@ const WalletComponent = () => {
       ]);
       const data = interfacedata?.encodeFunctionData("permitClaimPoints", [
         saAddress,
-        convertPoints(Number(claimValue)) as string,
+        convertPoints18decimal(Number(claimValue)) as string,
         claimPointsData?.data?.deadline,
         claimPointsData?.data?.v,
         claimPointsData?.data?.r as string,
@@ -387,7 +390,7 @@ const WalletComponent = () => {
 
       const data = interfacedata.encodeFunctionData("permitSwapToPaymentCoin", [
         saAddress,
-        convertPoints(swapValue) as string,
+        convertPoints18decimal(swapValue) as string,
         swapPointsData?.data?.deadline,
         swapPointsData?.data?.v,
         swapPointsData?.data?.r,
@@ -484,7 +487,7 @@ const WalletComponent = () => {
 
       const myaddress = (await web3.eth.getAccounts())[0];
 
-      const ADDRESS = "0xf8e002410e8b370CFf1142ee860D1e8A11BA8Ea9";
+      const ADDRESS = "0xd472c545aC4A482Ef08A2f73e007d4C403901c81";
 
       const contract = new web3.eth.Contract(pointsABI, ADDRESS);
 
@@ -637,7 +640,7 @@ const WalletComponent = () => {
                       toast.success("Transaction initiated");
                     claimPoints(
                       {
-                        amount: convertPoints(Number(claimValue)),
+                        amount: convertPoints18decimal(Number(claimValue)),
                         address: SAAddress,
                       },
                       { onSuccess: onClaimPointsSuccess }
@@ -669,7 +672,7 @@ const WalletComponent = () => {
                   handleClick={() => {
                     swapPoints(
                       {
-                        amount: convertPoints(Number(swapValue)),
+                        amount: convertPoints18decimal(Number(swapValue)),
                         address: SAAddress,
                       },
                       { onSuccess: onSwapPointsSuccess }

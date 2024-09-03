@@ -11,7 +11,7 @@ const User = () => {
   // };
 
   return (
-    <div className="bg-account bg-cover flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
+    <div className="bg-cover flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
       <div className="flex flex-row gap-4">
         <div className="relative flex flex-row">
           <Image

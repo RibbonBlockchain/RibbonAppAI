@@ -22,6 +22,10 @@ const LinkageAIChatInterface: React.FC = () => {
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
 
+  // const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
+  //   linkageId: 25,
+  // });
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);

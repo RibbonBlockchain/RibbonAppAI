@@ -33,7 +33,7 @@ const BalanceAndPoints = () => {
               <span className="text-xl text-black font-bold">
                 {balance.toFixed(2) * 5000}
               </span>{" "}
-              /10,000 ribbons
+              /10,000 ribbon
             </p>
             <div className="w-full">
               <ProgressBar
@@ -60,7 +60,7 @@ const BalanceAndPoints = () => {
       </div>
 
       <div className="mb-12">
-        <p className="text-[#080808] text-[14px]">Earn more ribbons</p>
+        <p className="text-[#080808] text-[14px]">Earn more ribbon</p>
         <InviteFriends className="bg-[#FFFFFF]" />
         <CompleteActivities />
       </div>

@@ -49,7 +49,7 @@ const Pending = (props: Props) => {
 
           <div className="flex flex-row items-center text-[11px]">
             <p className="text-[#434343]">
-              Claim {rewardPoints.toLocaleString()} ribbons
+              Claim {rewardPoints.toLocaleString()} ribbon
             </p>
           </div>
           {<RatingCompleted rating={props.ratings} />}

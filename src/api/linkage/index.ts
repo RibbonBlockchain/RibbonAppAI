@@ -107,8 +107,13 @@ export const useInitiateWalletTransfer = () => {
 export const useUploadLinkageQuestionnaire = () => {
   return useMutation({
     onError,
-    mutationFn: (body: TUploadLinkageQuestionnaireBody) =>
-      uploadLinkageQuestionnaire(body),
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TUploadLinkageQuestionnaireBody;
+      linkageId: number;
+    }) => uploadLinkageQuestionnaire({ body, linkageId }),
   });
 };
 

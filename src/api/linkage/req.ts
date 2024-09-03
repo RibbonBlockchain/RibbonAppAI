@@ -64,14 +64,18 @@ export const initiateWalletTransfer = async (address: string) => {
   return res.data;
 };
 
-export const uploadLinkageQuestionnaire = async (
-  body: TUploadLinkageQuestionnaireBody
-) => {
-  const res = await client.post("/linkage/questionnaire", body);
+export const uploadLinkageQuestionnaire = async ({
+  linkageId,
+  body,
+}: {
+  body: TUploadLinkageQuestionnaireBody;
+  linkageId: number;
+}) => {
+  const res = await client.post(`linkage/${linkageId}/questionnaire`, body);
   return res.data;
 };
 
 export const getLinkageQuestionnaire = async (linkageId: number) => {
-  const res = await client.get(`/linkage/questionnaire/${linkageId}`);
+  const res = await client.get(`/linkage/${linkageId}/questionnaire`);
   return res.data;
 };

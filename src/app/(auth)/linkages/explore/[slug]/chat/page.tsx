@@ -6,7 +6,11 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import { useChatLinkage, useGetLinkageBySlug } from "@/api/linkage";
+import {
+  useChatLinkage,
+  useGetLinkageBySlug,
+  useGetLinkageQuestionnaire,
+} from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 interface Message {
@@ -22,9 +26,9 @@ const LinkageAIChatInterface: React.FC = () => {
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
 
-  // const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
-  //   linkageId: 25,
-  // });
+  const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
+    linkageId: 25,
+  });
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");

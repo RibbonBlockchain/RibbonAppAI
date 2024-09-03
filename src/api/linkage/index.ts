@@ -11,6 +11,7 @@ import {
   initiateWalletTransfer,
   uploadLinkageQuestionnaire,
   getLinkageQuestionnaire,
+  getLinkageQuestionnaireById,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -124,7 +125,21 @@ export const useGetLinkageQuestionnaire = ({
 }) => {
   return useQuery({
     enabled: !!linkageId,
-    queryKey: ["linkage-file", linkageId],
+    queryKey: ["linkage-questionniare", linkageId],
     queryFn: () => getLinkageQuestionnaire(linkageId),
+  });
+};
+
+export const useGetLinkageQuestionnaireById = ({
+  linkageId,
+  questionnaireId,
+}: {
+  linkageId: number;
+  questionnaireId: number;
+}) => {
+  return useQuery({
+    enabled: !!linkageId,
+    queryKey: ["linkage-questionniare-id", linkageId],
+    queryFn: () => getLinkageQuestionnaireById(linkageId, questionnaireId),
   });
 };

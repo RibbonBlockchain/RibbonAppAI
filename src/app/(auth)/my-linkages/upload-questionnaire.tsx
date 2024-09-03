@@ -9,11 +9,6 @@ const tabs = [
   { name: "Uploaded files", value: "uploaded-files" },
 ];
 
-const options = [
-  { value: "multchoice", label: "Multi-Choice" },
-  { value: "image", label: "Image" },
-];
-
 const UploadQuestionnaire = ({ linkageId }: { linkageId: number }) => {
   const [selected, setSelected] = useState("add-maually");
   const [updating, setUpdating] = useState(false);

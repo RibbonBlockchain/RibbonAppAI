@@ -1,8 +1,8 @@
+import { Plus } from "lucide-react";
 import React, { useState } from "react";
 import Question from "./question-template";
-import { Plus } from "lucide-react";
-import { useUploadLinkageQuestionnaire } from "@/api/linkage";
 import { QuestionType } from "@/api/linkage/types";
+import { useUploadLinkageQuestionnaire } from "@/api/linkage";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;

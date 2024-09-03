@@ -212,7 +212,7 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
         ...prevMessages,
         {
           sender: "ai",
-          text: "You can now claim your reward points by clicking the button below.",
+          text: "You can now claim your reward ribbons by clicking the button below.",
         },
       ]);
     }, 1000);
@@ -226,7 +226,7 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
       { sender: "user", text: "Claimed reward" },
       {
         sender: "ai",
-        text: "Congratulations! You have claimed your reward points. You can now close the questionnaire and return to the dashboard.",
+        text: "Congratulations! You have claimed your reward ribbons. You can now close the questionnaire and return to the dashboard.",
       },
     ]);
     setClaimReward(false);

@@ -18,11 +18,11 @@ export const PointBalanceCard = ({
   <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
     <div className="flex flex-row items-start justify-between">
       <div>
-        <p className="text-sm font-medium mb-2">Points balance</p>
+        <p className="text-sm font-medium mb-2">Ribbon balance</p>
         <div>
           <div className="-ml-2 flex flex-row items-center gap-1 text-[20px] xxs:text-[24px] font-bold">
             <Image src={"/assets/coin.png"} alt="coin" height={32} width={32} />
-            <p>{convertedPoints} pts</p>
+            <p>{convertedPoints} ribb</p>
           </div>
 
           <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
@@ -38,7 +38,7 @@ export const PointBalanceCard = ({
 
     <div className="flex flex-col gap-3 mt-4">
       <p className="flex self-end text-xs font-medium">
-        {convertedPoints}/50,000 pts
+        {convertedPoints}/50,000 ribb
       </p>
 
       <div style={{ position: "relative", width: "100%" }}>
@@ -53,7 +53,7 @@ export const PointBalanceCard = ({
 
         <div className="flex justify-center">
           <p className="absolute top-2 px-6 text-[#F6F1FE] font-semibold">
-            Claim points
+            Claim ribbons
           </p>
         </div>
       </div>

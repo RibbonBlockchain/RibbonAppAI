@@ -48,7 +48,7 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                     <ArrowLeft stroke="#939393" />
                   </div>
                   <div className="flex -mt-8 text-black  flex-col gap-2 items-center justify-center  text-base font-semibold">
-                    <p> Points (PTS)</p>
+                    <p> Ribbons (RIBB)</p>
                     <p className="text-center text-xs font-medium text-[#546881]">
                       Base | Base Sepolia
                     </p>
@@ -66,9 +66,9 @@ const PointsTokenTxUI: React.FC<Props> = (props) => {
                           alt="coin logo"
                           className="rounded-full"
                         />
-                        PTS
+                        RIBB
                       </div>
-                      <p>{props.pointBalance} Points</p>
+                      <p>{props.pointBalance} Ribbons</p>
                     </div>
 
                     <div className="flex flex-row items-center gap-6 text-xs font-light">

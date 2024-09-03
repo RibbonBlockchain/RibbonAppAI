@@ -56,7 +56,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
     console.log("retrain logic");
   };
 
-  const isSubmitDisabled = !instruction || !prompt;
+  const isSubmitDisabled = false;
 
   const [starters, setStarters] = useState<Starter[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -177,7 +177,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold">Instructions</label>
             <textarea
               rows={6}
@@ -186,9 +186,9 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
               placeholder="What does this AI do? How does it behave? What should it avoid doing?"
               className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB86] text-[13px] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
-          </div>
+          </div> */}
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <div className="flex flex-row items-center justify-between">
               <p className="text-sm font-medium">
                 Conversation starters (maximum of 3)
@@ -230,8 +230,8 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
                 </div>
               ))}
             </div>
-          </div>
-
+          </div> */}
+          {/* 
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold">Add website links</label>
             <p className="text-xs font-light">
@@ -249,18 +249,8 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
               placeholder=""
               className="w-full bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
-          </div>
+          </div> */}
 
-          <div className="flex flex-col gap-2 mt-6">
-            <h1 className="text-sm font-semibold">Knowledge</h1>
-            <p className="text-xs font-light">
-              If you upload files here, conversations with your AI may include
-              the file contents. Files can be downloaded when Code interpreter
-              is enabled.
-            </p>
-
-            <FileUpload id={id} />
-          </div>
           <div className="flex flex-col gap-2 mt-6">
             <h1 className="text-sm font-semibold">Capabilities</h1>
 
@@ -268,10 +258,10 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
               {[
                 {
                   value: "option1",
-                  label: "Web browsing",
-                  info: "Access the web for the latest information",
+                  label: "File search",
+                  info: "AI can look through uploaded files and provide intelligent interactions with users.",
                 },
-                { value: "option2", label: "DALL.E image generation" },
+                { value: "option2", label: "API integrations" },
                 {
                   value: "option3",
                   label: "Code interpreter",
@@ -282,13 +272,6 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
                   key={option.value}
                   className={`relative flex flex-row items-center space-x-2 py-1 cursor-pointer gap-1 rounded-lg`}
                 >
-                  <input
-                    type="checkbox"
-                    value={option.value}
-                    checked={selectedValues.includes(option.value)}
-                    onChange={() => handleCheckboxChange(option.value)}
-                    className="form-checkbox h-4 w-4"
-                  />
                   <span className="text-white">{option.label}</span>
 
                   {option.info && (
@@ -310,6 +293,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
               ))}
             </div>
           </div>
+
           <div className="flex flex-col gap-2 mt-6">
             <h1 className="text-sm font-semibold">Additional Settings</h1>
             <div className="flex flex-row items-center rounded-lg">
@@ -324,7 +308,19 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
               </span>
             </div>
           </div>
-          <button
+
+          <div className="flex flex-col gap-2 mt-6">
+            <h1 className="text-sm font-semibold">Knowledge</h1>
+            <p className="text-xs font-light">
+              If you upload files here, conversations with your AI may include
+              the file contents. Files can be downloaded when Code interpreter
+              is enabled.
+            </p>
+
+            <FileUpload id={id} />
+          </div>
+
+          {/* <button
             disabled={isSubmitDisabled}
             onClick={handleRetrainLinkageAI}
             className={clsx(
@@ -335,7 +331,7 @@ const Retrain = ({ id, slug }: { id: number; slug: string }) => {
             )}
           >
             Retrain AI Linkage
-          </button>
+          </button> */}
         </div>
       )}
 

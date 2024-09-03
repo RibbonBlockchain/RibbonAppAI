@@ -23,7 +23,7 @@ const CompleteActivities = () => {
         <div className="flex flex-col">
           <p className="text-base font-semibold">Complete activities</p>
           <p className="text-xs font-medium text-[#626262]">
-            Complete more activities and earn more points
+            Complete more activities and earn more ribbons
           </p>
         </div>
       </div>

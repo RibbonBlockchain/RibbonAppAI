@@ -41,7 +41,7 @@ const FileUpload = ({ id }: { id: number }) => {
   };
 
   return (
-    <div className="mt-2 flex flex-col gap-4 items-start">
+    <div className="w-full mt-2 flex flex-col gap-4 items-start">
       <Toaster />
       <div className="w-full flex flex-wrap gap-4">
         {filePreview && (
@@ -56,7 +56,7 @@ const FileUpload = ({ id }: { id: number }) => {
         )}
       </div>
 
-      <div className="flex flex-col gap-4 flex-start items-start">
+      <div className="w-full flex flex-col gap-4 flex-start items-start">
         <div className="flex flex-row gap-2 items-center">
           <div className="relative flex flex-row items-center">
             <input
@@ -80,10 +80,18 @@ const FileUpload = ({ id }: { id: number }) => {
 
         <button
           onClick={handleUpload}
+          className={
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]"
+          }
+        >
+          Retrain AI Linkage
+        </button>
+        {/* <button
+          onClick={handleUpload}
           className="px-4 py-2 bg-blue-500 text-white rounded-[8px] text-xs"
         >
           Upload
-        </button>
+        </button> */}
       </div>
     </div>
   );

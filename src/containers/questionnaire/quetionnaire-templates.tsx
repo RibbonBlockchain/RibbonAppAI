@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Question from "./question-template";
 import { QuestionType } from "@/api/linkage/types";
 import { useUploadLinkageQuestionnaire } from "@/api/linkage";
+import { useRouter } from "next/navigation";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
@@ -22,6 +23,8 @@ interface Options {
 }
 
 const Questionnaire = ({ linkageId }: { linkageId: number }) => {
+  const router = useRouter();
+
   const { mutate } = useUploadLinkageQuestionnaire();
 
   const [questionnaireName, setQuestionnaireName] = useState("");
@@ -49,7 +52,10 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   };
 
   const handleSubmitLinkageQuestionnaireManually = () => {
-    mutate({ body: { name: questionnaireName, questions }, linkageId });
+    mutate(
+      { body: { name: questionnaireName, questions }, linkageId },
+      { onSuccess: () => router.push("/my-linkages") }
+    );
   };
 
   const handleChangeQuestion = (index: number, text: string) => {

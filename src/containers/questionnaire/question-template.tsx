@@ -76,6 +76,7 @@ const Question: React.FC<QuestionProps> = ({
         >
           <option value="BOOLEAN">Boolean</option>
           <option value="MULTISELECT">Multi Select</option>
+          <option value="MULTICHOICE">Multi Choice</option>
         </select>
       </div>
 
@@ -90,10 +91,15 @@ const Question: React.FC<QuestionProps> = ({
         </label>
         {question.options.map((option, index) => (
           <div key={index} className="flex flex-row gap-4 items-center">
-            {question.type === "MULTICHOICE" ||
-            "MULTISELECT" ||
-            "SHORT_ANSWER" ||
-            "LONG_ANSWER" ? (
+            {question.type === "MULTISELECT" ? (
+              <input
+                type="text"
+                value={option.label}
+                onChange={(e) => onChangeOptionLabel(e.target.value, index)}
+                placeholder={`Option ${index + 1}`}
+                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+              />
+            ) : question.type === "MULTICHOICE" ? (
               <input
                 type="text"
                 value={option.label}

@@ -177,7 +177,6 @@ const LinkageAIChatInterface: React.FC = () => {
         {selected === "questionnaire" && (
           <div className="p-4 sm:p-6 py-6 flex flex-col overflow-auto scroll-hidden mb-20">
             {/* available questionnaires */}
-
             {linkageQuestionnaire?.data.map((i: any) => (
               <div key={i.id} className="flex flex-col gap-2 py-2">
                 <Link

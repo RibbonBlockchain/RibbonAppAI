@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Send, User } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 
 interface Option {
   id: number;
@@ -104,7 +105,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
         questionnaireId: Number(params.id),
       },
       {
-        onSuccess: () => console.log("Reward claimed"),
+        onSuccess: () => toast.success("0.01 usdc claimed"),
       }
     );
   };

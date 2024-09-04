@@ -13,6 +13,7 @@ import {
   getLinkageQuestionnaire,
   getLinkageQuestionnaireById,
   submitLinkageQuestionnaireAnswer,
+  uploadLinkageStatus,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -159,5 +160,13 @@ export const useSubmitLinkageQuestionnaireAnswer = () => {
       questionnaireId: number;
     }) =>
       submitLinkageQuestionnaireAnswer({ body, linkageId, questionnaireId }),
+  });
+};
+
+export const useUploadLinkageStatus = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ file, linkageId }: { file: any; linkageId: number }) =>
+      uploadLinkageStatus({ file, linkageId }),
   });
 };

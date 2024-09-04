@@ -1,11 +1,11 @@
-import Image from "next/image";
-import { Send, User } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
-import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import {
   useGetLinkageBySlug,
   useSubmitLinkageQuestionnaireAnswer,
 } from "@/api/linkage";
+import Image from "next/image";
+import { Send, User } from "iconsax-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
 interface Option {
   id: number;
@@ -172,7 +172,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
 
     submitTask(
       {
-        body: { optionId: 0, questionId: questionIdToSubmit },
+        body: { optionId: option.id, questionId: questionIdToSubmit },
         linkageId: data?.data?.id,
         questionnaireId: Number(params.id),
       },

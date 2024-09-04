@@ -4,6 +4,9 @@ import Question from "./question-template";
 import { QuestionType } from "@/api/linkage/types";
 import { useUploadLinkageQuestionnaire } from "@/api/linkage";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import clsx from "clsx";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
@@ -24,17 +27,22 @@ interface Options {
 
 const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const router = useRouter();
+  const { mutate, isPending } = useUploadLinkageQuestionnaire();
 
-  const { mutate } = useUploadLinkageQuestionnaire();
-
-  const [questionnaireName, setQuestionnaireName] = useState("");
-  const [questions, setQuestions] = useState<LinkageQuestion[]>([
+  // Define default values
+  const defaultQuestionnaireName = "";
+  const defaultQuestions: LinkageQuestion[] = [
     {
       text: "",
-      type: "MULTISELECT",
+      type: "BOOLEAN",
       options: [{ value: "" }],
     },
-  ]);
+  ];
+
+  const [questionnaireName, setQuestionnaireName] = useState(
+    defaultQuestionnaireName
+  );
+  const [questions, setQuestions] = useState(defaultQuestions);
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -54,7 +62,14 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const handleSubmitLinkageQuestionnaireManually = () => {
     mutate(
       { body: { name: questionnaireName, questions }, linkageId },
-      { onSuccess: () => router.push("/my-linkages") }
+      {
+        onSuccess: () => {
+          toast.success("Questionnaire successfully added");
+          setQuestionnaireName(defaultQuestionnaireName);
+          setQuestions(defaultQuestions);
+          router.push("/my-linkages");
+        },
+      }
     );
   };
 
@@ -136,6 +151,7 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
 
   return (
     <div className="w-full flex flex-col gap-6 mb-20">
+      <Toaster />
       <input
         type="text"
         value={questionnaireName}
@@ -167,16 +183,19 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
 
       <button
         onClick={handleAddQuestion}
-        className="flex flex-row items-center justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
+        className="flex flex-row flex-end items-center justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
       >
         Add Question <Plus size={14} />
       </button>
 
       <button
         onClick={handleSubmitLinkageQuestionnaireManually}
-        className="flex justify-center py-2.5 mt-8 text-sm text-start font-medium w-full rounded-[8px] bg-white text-[#290064]"
+        className={clsx(
+          "flex justify-center py-2.5 mt-8 text-sm text-start font-medium w-full rounded-[8px] text-[#290064]",
+          isPending ? "bg-gray-500" : "bg-white"
+        )}
       >
-        Upload Questionnaire
+        {isPending ? <SpinnerIconPurple /> : "Upload Questionnaire"}
       </button>
     </div>
   );

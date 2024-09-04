@@ -156,3 +156,8 @@ export const withdrawPoints = async (body: TWithdrawPointsBody) => {
   const res = await client.post("/user/withdraw-point", body);
   return res.data;
 };
+
+export const addWallet = async (address: string) => {
+  const res = await client.post("/user/wallet", { address });
+  return res.data;
+};

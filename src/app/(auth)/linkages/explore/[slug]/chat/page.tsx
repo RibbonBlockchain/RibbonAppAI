@@ -12,6 +12,8 @@ import {
   useGetLinkageQuestionnaire,
 } from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { useAddWallet } from "@/api/user";
+import toast, { Toaster } from "react-hot-toast";
 
 interface Message {
   sender: "user" | "ai";
@@ -30,6 +32,26 @@ const LinkageAIChatInterface: React.FC = () => {
   const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
     linkageId: id,
   });
+
+  const [hideAddWallet, setHideAddWallet] = useState(true);
+  const { mutate: addWallet } = useAddWallet();
+  const userWalletAddress: string = localStorage.getItem("address") as string;
+
+  const handleAddWallet = () => {
+    if (userWalletAddress === null) {
+      toast.error("Wallet address not found");
+    } else {
+      addWallet(
+        { address: userWalletAddress },
+        {
+          onSuccess: () => {
+            toast.success("Wallet linked successfully"),
+              setHideAddWallet(false);
+          },
+        }
+      );
+    }
+  };
 
   const handleSelect = (questionnaire: any) => {
     console.log("Selected Questionnaire Details:", questionnaire);
@@ -106,6 +128,7 @@ const LinkageAIChatInterface: React.FC = () => {
 
   return (
     <AuthNavLayout>
+      <Toaster />
       <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
         <div className="p-4 sm:p-6 py-6 flex flex-row items-center justify-between border-b border-[#C3B1FF4D]">
           <div className="flex flex-row items-center gap-4">
@@ -119,6 +142,9 @@ const LinkageAIChatInterface: React.FC = () => {
               />
               <div>
                 <p className="text-lg font-bold">{data?.data?.name}</p>
+                {hideAddWallet && (
+                  <button onClick={handleAddWallet}>Link my wallet</button>
+                )}
               </div>
             </div>
           </div>
@@ -126,7 +152,7 @@ const LinkageAIChatInterface: React.FC = () => {
         </div>
 
         {/* available questionnaires */}
-        <div className="p-4 sm:p-6 py-6 flex flex-col border-b border-[#C3B1FF4D]">
+        <div className="p-4 sm:p-6 py-6 flex flex-col border-b border-[#C3B1FF4D] max-h-[200px] overflow-auto scroll-hidden">
           {linkageQuestionnaire?.data.map((i: any) => (
             <div
               key={i.id}

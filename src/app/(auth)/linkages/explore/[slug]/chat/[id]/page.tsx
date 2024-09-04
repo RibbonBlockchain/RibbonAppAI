@@ -8,7 +8,6 @@ import React from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
-import QuestionnaireChat from "@/containers/dashboard/questionnaire-chat";
 import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questionnaire-chat";
 
 const LinkageQuestionnairePage = () => {

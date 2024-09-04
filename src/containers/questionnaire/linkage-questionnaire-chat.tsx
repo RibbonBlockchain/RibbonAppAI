@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
-import { useRouter } from "next/navigation";
-import { useRateQuestionnaire, useSubmitTask } from "@/api/user";
+import { useRateQuestionnaire } from "@/api/user";
+import { useParams, useRouter } from "next/navigation";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import { useSubmitLinkageQuestionnaireAnswer } from "@/api/linkage";
 
 interface Option {
   id: number;
-  text: string;
+  value: string;
 }
 
 interface Question {
@@ -15,7 +16,7 @@ interface Question {
   type: any;
   isFirst: boolean;
   isLast: boolean;
-  taskId: number;
+  questionnaireId: number;
   createdAt: string;
   updatedAt: string;
   options: Option[];
@@ -23,6 +24,7 @@ interface Question {
 
 const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const router = useRouter();
+  const params = useParams();
 
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string; options?: Option[] }[]
@@ -34,7 +36,9 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const [claimReward, setClaimReward] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const { mutate: submitTask, isPending } = useSubmitTask();
+  const { mutate: submitTask, isPending } =
+    useSubmitLinkageQuestionnaireAnswer();
+
   const { mutate: rateTask } = useRateQuestionnaire();
 
   useEffect(() => {
@@ -98,11 +102,16 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
           ? questions[questions.length - 1].id
           : currentQuestion.id;
 
-      submitTask({
-        optionId: 0,
-        questionId: questionIdToSubmit,
-        taskId: currentQuestion.taskId,
-      });
+      submitTask(
+        {
+          body: { optionId: 0, questionId: questionIdToSubmit },
+          linkageId: Number(params.id),
+          questionnaireId: currentQuestion.questionnaireId,
+        },
+        {
+          onSuccess: () => console.log("reward claimed"),
+        }
+      );
     } else {
       // error
     }
@@ -118,7 +127,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const handleOptionClick = (option: Option) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { sender: "user", text: option.text },
+      { sender: "user", text: option.value },
     ]);
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -157,11 +166,16 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
         ? questions[questions.length - 1].id
         : currentQuestion.id;
 
-    submitTask({
-      optionId: option.id,
-      questionId: questionIdToSubmit,
-      taskId: currentQuestion?.taskId,
-    });
+    submitTask(
+      {
+        body: { optionId: option.id, questionId: questionIdToSubmit },
+        linkageId: Number(params.id),
+        questionnaireId: currentQuestion.questionnaireId,
+      },
+      {
+        onSuccess: () => console.log("Reward claimed"),
+      }
+    );
   };
 
   const handleSubmitClick = (option: string) => {
@@ -196,7 +210,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
 
   const handleRatingClick = (rating: number) => {
     const currentQuestion = questions[currentQuestionIndex];
-    const taskId = currentQuestion?.taskId;
+    const taskId = currentQuestion?.questionnaireId;
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -220,7 +234,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       ]);
     }, 1000);
 
-    rateTask({ rating: rating, questionnaireId: taskId });
+    // rateTask({ rating: rating, questionnaireId: taskId });
   };
 
   const handleClaimClick = () => {
@@ -233,7 +247,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       },
     ]);
     setClaimReward(false);
-    router.push("/dashboard");
+    router.push("/linkages/explore");
   };
 
   useEffect(() => {
@@ -273,7 +287,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
                       onClick={() => handleOptionClick(option)}
                       className="bg-gradient-to-b from-[#0B0228] to-[#121212] text-white px-4 py-2 rounded-md"
                     >
-                      {option.text}
+                      {option.value}
                     </button>
                   ))}
                 </div>

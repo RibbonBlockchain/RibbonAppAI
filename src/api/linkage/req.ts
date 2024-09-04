@@ -106,3 +106,14 @@ export const submitLinkageQuestionnaireAnswer = async ({
   );
   return res.data;
 };
+
+export const uploadLinkageStatus = async ({
+  linkageId,
+  file,
+}: {
+  file: any;
+  linkageId: number;
+}) => {
+  const res = await client.post(`linkage/${linkageId}/file`, file);
+  return res.data;
+};

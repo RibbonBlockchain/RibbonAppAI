@@ -1,8 +1,12 @@
 "use client";
 
+import {
+  useGetLinkages,
+  useGetDiscoveryLinkages,
+  useGetDiscoveryLinkageStatus,
+} from "@/api/linkage";
 import Link from "next/link";
 import Image from "next/image";
-import { Add } from "iconsax-react";
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -10,8 +14,7 @@ import SearchComponent from "@/components/search";
 import LinkagesCard from "@/containers/linkages/linkages-card";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { useGetDiscoveryLinkages, useGetLinkages } from "@/api/linkage";
-import AddStatusModal from "@/containers/linkages/add-status-modal";
+import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -20,20 +23,15 @@ const tabs = [
   { name: "DMs (Direct Messages)", value: "dms" },
 ];
 
-const statuses = [
-  { id: 1, image: "" },
-  { id: 2, image: "" },
-  { id: 3, image: "" },
-  { id: 4, image: "" },
-  { id: 5, image: "" },
-  { id: 6, image: "" },
-];
-
 const Linkages = () => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState("for-you");
   const [query, setQuery] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState<
+    { url: string; caption?: string }[]
+  >([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
@@ -53,12 +51,21 @@ const Linkages = () => {
 
   const { data: linkages } = useGetLinkages();
 
-  const handleAddStatusClick = () => {
-    setIsModalOpen(true);
+  const { data } = useGetDiscoveryLinkageStatus({
+    params: { page: 1, pageSize: 20 },
+  });
+
+  const openModal = (
+    images: { url: string; caption?: string }[],
+    index: number
+  ) => {
+    setModalImages(images);
+    setCurrentImageIndex(index);
+    setModalOpen(true);
   };
 
-  const handleModalProceed = () => {
-    router.push("/linkages/explore/status");
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -85,32 +92,23 @@ const Linkages = () => {
           </div>
 
           <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
-            <button
-              onClick={handleAddStatusClick}
-              className="relative min-w-[82px] flex flex-row"
-            >
-              <Image
-                alt="alt"
-                width={82}
-                height={82}
-                src={"/assets/status-circle.png"}
-                className="rounded-full w-[82px] h-[82px]"
-              />
-              <Add
-                size="24"
-                color="#ffffff"
-                className="absolute bottom-0 right-0 bg-[#A166F5] border-[3px] border-[#0B0228] rounded-full"
-              />
-            </button>
-
-            {statuses.map((i) => (
+            {data?.data?.data.map((i: any, index: number) => (
               <Image
                 key={i.id}
                 alt="alt"
                 width={82}
                 height={82}
-                src={i.image || "/assets/sample-icon.png"}
+                src={i.media || "/assets/sample-icon.png"}
                 className="rounded-full w-[82px] h-[82px] border-[3px] border-[#FFF]"
+                onClick={() =>
+                  openModal(
+                    data?.data?.data.map((img: any) => ({
+                      url: img.media || "/assets/sample-icon.png",
+                      caption: img.caption, // Assuming the API provides a caption field
+                    })),
+                    index
+                  )
+                }
               />
             ))}
           </div>
@@ -132,7 +130,6 @@ const Linkages = () => {
           </div>
 
           <div className="w-full flex">
-            {/* // For you */}
             {selectedTab === "for-you" && (
               <div className="w-full flex flex-col gap-10">
                 {discoveryLinkages?.data?.data && (
@@ -180,14 +177,12 @@ const Linkages = () => {
               </div>
             )}
 
-            {/* Following */}
             {selectedTab === "following" && (
               <div>
                 <p>Linkages you follow will appear here</p>
               </div>
             )}
 
-            {/* my linkages */}
             {selectedTab === "my-linkages" && (
               <div>
                 {linkages?.data && (
@@ -207,7 +202,6 @@ const Linkages = () => {
               </div>
             )}
 
-            {/* DMs */}
             {selectedTab === "dms" && (
               <div>
                 <p>
@@ -218,12 +212,13 @@ const Linkages = () => {
           </div>
         </div>
 
-        {/* Render the modal */}
-        <AddStatusModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onProceed={handleModalProceed}
-        />
+        {modalOpen && (
+          <DisplayStatusModal
+            images={modalImages}
+            currentIndex={currentImageIndex}
+            onClose={closeModal}
+          />
+        )}
       </main>
     </AuthNavLayout>
   );

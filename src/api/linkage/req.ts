@@ -4,7 +4,9 @@ import {
   TDiscoveryLinkageResponse,
   TSubmitLinkageQuestionnaireAnswer,
   TUploadLinkageQuestionnaireBody,
+  TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
+  getDiscoveryLinkagesStatusParams,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -51,6 +53,19 @@ export const getDiscoverLinkages = async ({
   const { page, pageSize, query } = params;
   const res = await client.get<TResponse<TDiscoveryLinkageResponse>>(
     `/linkage/discover?page=${page}&pageSize=${pageSize}&q=${query}`
+  );
+  return res.data;
+};
+
+export const getDiscoveryLinkageStatus = async ({
+  params,
+}: {
+  params: getDiscoveryLinkagesStatusParams;
+}) => {
+  const { page, pageSize } = params;
+
+  const res = await client.get(
+    `/linkage/discover/status?page=${page}&pageSize=${pageSize}`
   );
   return res.data;
 };
@@ -109,11 +124,11 @@ export const submitLinkageQuestionnaireAnswer = async ({
 
 export const uploadLinkageStatus = async ({
   linkageId,
-  file,
+  body,
 }: {
-  file: any;
+  body: TUploadLinkageStatusBody;
   linkageId: number;
 }) => {
-  const res = await client.post(`linkage/${linkageId}/file`, file);
+  const res = await client.post(`linkage/${linkageId}/status`, body);
   return res.data;
 };

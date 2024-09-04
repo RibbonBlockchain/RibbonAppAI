@@ -10,7 +10,16 @@ import { shortenTransaction } from "@/lib/utils/shorten";
 import RatingCompleted from "@/containers/activity/rate-completed";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import { useGetLinkageBySlug, useGetDiscoveryLinkages } from "@/api/linkage";
-import { Call, Coin1, Copy, Location, Sms, WalletMoney } from "iconsax-react";
+import {
+  Add,
+  Call,
+  Coin1,
+  Copy,
+  Location,
+  Sms,
+  WalletMoney,
+} from "iconsax-react";
+import AddStatusModal from "@/containers/linkages/add-status-modal";
 
 const LinkageRatingsCard = () => {
   return (
@@ -46,6 +55,16 @@ const LinkageViewDetails = () => {
     params: { page: 1, pageSize: 5, query: "" },
   });
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleAddStatusClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalProceed = () => {
+    router.push(`/linkages/explore/${slug}/status`);
+  };
+
   const [following, setFollowing] = useState(false);
 
   useEffect(() => {
@@ -68,6 +87,27 @@ const LinkageViewDetails = () => {
             onClick={() => router.back()}
             src={data?.data.banner || "/assets/linkage-details.png"}
           />
+
+          <div className="p-4 sm:p-6">
+            <button
+              onClick={handleAddStatusClick}
+              className="relative min-w-[65px] flex flex-row"
+            >
+              <Image
+                alt="alt"
+                width={65}
+                height={65}
+                src={"/assets/status-circle.png"}
+                className="rounded-full w-[65px] h-[65px]"
+              />
+              <Add
+                size="24"
+                color="#ffffff"
+                className="absolute bottom-0 right-0 bg-[#A166F5] border-[3px] border-[#0B0228] rounded-full"
+              />
+            </button>
+            <p className="mt-1 text-sm">Post a status for your linkage</p>
+          </div>
 
           <div className="w-full flex flex-col gap-6 p-4 sm:p-6 pb-24">
             <div className="flex flex-row items-center justify-between">
@@ -214,6 +254,13 @@ const LinkageViewDetails = () => {
               </div>
             </div>
           </div>
+
+          {/* Render the modal */}
+          <AddStatusModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onProceed={handleModalProceed}
+          />
         </main>
       )}
     </>

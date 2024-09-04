@@ -71,7 +71,11 @@ const Question: React.FC<QuestionProps> = ({
         <select
           id={`options-select-${number}`}
           value={question.type}
-          onChange={(e) => onChangeOptionType(e.target.value as QuestionType)}
+          onChange={(e) => {
+            const newType = e.target.value as QuestionType;
+            onChangeOptionType(newType);
+            onSelectChange(newType);
+          }}
           className="w-full py-3 px-2 rounded-lg border border-[#E5E7EB] text-sm font-normal text-white bg-inherit"
         >
           <option value="BOOLEAN">Boolean</option>
@@ -84,26 +88,19 @@ const Question: React.FC<QuestionProps> = ({
 
       <div className="flex flex-col gap-3 px-2">
         <label
-          htmlFor={`options-select-${number}`}
+          htmlFor={`options-input-${number}`}
           className="text-sm font-semibold"
         >
           Type your options here
         </label>
         {question.options.map((option, index) => (
           <div key={index} className="flex flex-row gap-4 items-center">
-            {question.type === "MULTISELECT" ? (
+            {question.type === "MULTISELECT" ||
+            question.type === "MULTICHOICE" ? (
               <input
                 type="text"
-                value={option.label}
-                onChange={(e) => onChangeOptionLabel(e.target.value, index)}
-                placeholder={`Option ${index + 1}`}
-                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-              />
-            ) : question.type === "MULTICHOICE" ? (
-              <input
-                type="text"
-                value={option.label}
-                onChange={(e) => onChangeOptionLabel(e.target.value, index)}
+                value={option.value}
+                onChange={(e) => onChangeOption(e.target.value, index)}
                 placeholder={`Option ${index + 1}`}
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
               />
@@ -113,7 +110,6 @@ const Question: React.FC<QuestionProps> = ({
                 onChange={(e) => onChangeOption(e.target.value, index)}
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
               >
-                <option value="">Select</option>
                 <option value="true">True / Yes</option>
                 <option value="false">False / No</option>
               </select>

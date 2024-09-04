@@ -12,10 +12,12 @@ import {
   uploadLinkageQuestionnaire,
   getLinkageQuestionnaire,
   getLinkageQuestionnaireById,
+  submitLinkageQuestionnaireAnswer,
 } from "./req";
 import {
   TChatLinkageBody,
   TCreateLinkageBody,
+  TSubmitLinkageQuestionnaireAnswer,
   TUploadLinkageQuestionnaireBody,
   getDiscoveryLinkagesParams,
 } from "./types";
@@ -141,5 +143,21 @@ export const useGetLinkageQuestionnaireById = ({
     enabled: !!linkageId,
     queryKey: ["linkage-questionniare-id", linkageId],
     queryFn: () => getLinkageQuestionnaireById(linkageId, questionnaireId),
+  });
+};
+
+export const useSubmitLinkageQuestionnaireAnswer = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+      questionnaireId,
+    }: {
+      body: TSubmitLinkageQuestionnaireAnswer;
+      linkageId: number;
+      questionnaireId: number;
+    }) =>
+      submitLinkageQuestionnaireAnswer({ body, linkageId, questionnaireId }),
   });
 };

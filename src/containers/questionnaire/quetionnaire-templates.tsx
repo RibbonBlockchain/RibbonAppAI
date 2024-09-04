@@ -4,6 +4,7 @@ import Question from "./question-template";
 import { QuestionType } from "@/api/linkage/types";
 import { useUploadLinkageQuestionnaire } from "@/api/linkage";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
@@ -24,17 +25,22 @@ interface Options {
 
 const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const router = useRouter();
-
   const { mutate } = useUploadLinkageQuestionnaire();
 
-  const [questionnaireName, setQuestionnaireName] = useState("");
-  const [questions, setQuestions] = useState<LinkageQuestion[]>([
+  // Define default values
+  const defaultQuestionnaireName = "";
+  const defaultQuestions: LinkageQuestion[] = [
     {
       text: "",
       type: "MULTISELECT",
       options: [{ value: "" }],
     },
-  ]);
+  ];
+
+  const [questionnaireName, setQuestionnaireName] = useState(
+    defaultQuestionnaireName
+  );
+  const [questions, setQuestions] = useState(defaultQuestions);
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -54,7 +60,14 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const handleSubmitLinkageQuestionnaireManually = () => {
     mutate(
       { body: { name: questionnaireName, questions }, linkageId },
-      { onSuccess: () => router.push("/my-linkages") }
+      {
+        onSuccess: () => {
+          toast.success("Questionnaire successfully added");
+          setQuestionnaireName(defaultQuestionnaireName);
+          setQuestions(defaultQuestions);
+          router.push("/my-linkages");
+        },
+      }
     );
   };
 
@@ -136,6 +149,7 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
 
   return (
     <div className="w-full flex flex-col gap-6 mb-20">
+      <Toaster />
       <input
         type="text"
         value={questionnaireName}

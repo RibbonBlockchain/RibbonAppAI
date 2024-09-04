@@ -34,6 +34,7 @@ import {
   submitSurvey,
   rateSurvey,
   getCompletedSurveys,
+  addWallet,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -292,5 +293,12 @@ export const useWithdrawPoints = () => {
   return useMutation({
     onError,
     mutationFn: (body: TWithdrawPointsBody) => withdrawPoints(body),
+  });
+};
+
+export const useAddWallet = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ address }: { address: string }) => addWallet(address),
   });
 };

@@ -14,6 +14,7 @@ import {
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { useAddWallet } from "@/api/user";
 import toast, { Toaster } from "react-hot-toast";
+import clsx from "clsx";
 
 interface Message {
   sender: "user" | "ai";
@@ -24,6 +25,8 @@ const LinkageAIChatInterface: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
+
+  const [selected, setSelected] = useState("ai-bot");
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -51,10 +54,6 @@ const LinkageAIChatInterface: React.FC = () => {
         }
       );
     }
-  };
-
-  const handleSelect = (questionnaire: any) => {
-    console.log("Selected Questionnaire Details:", questionnaire);
   };
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -151,80 +150,109 @@ const LinkageAIChatInterface: React.FC = () => {
           <VolumeHigh size="32" color="#ffffff" />
         </div>
 
-        {/* available questionnaires */}
-        <div className="p-4 sm:p-6 py-6 flex flex-col border-b border-[#C3B1FF4D] max-h-[200px] overflow-auto scroll-hidden">
-          {linkageQuestionnaire?.data.map((i: any) => (
-            <div
-              key={i.id}
-              onClick={() =>
-                router.push(`/linkages/explore/${slug}/chat/${i.id}`)
-              }
-              className="flex items-center justify-between py-2 mb-30"
-            >
-              <span>{i.name}</span>
-            </div>
-          ))}
+        <div className="flex flex-row items-center justify-center self-center bg-[#3f3856] p-1 rounded-full mt-2 w-[90%]">
+          <p
+            onClick={() => setSelected("ai-bot")}
+            className={clsx(
+              "w-full text-center py-2 rounded-full",
+              selected === "ai-bot" && " bg-[#0B0228]"
+            )}
+          >
+            AI Chat
+          </p>
+          <p
+            onClick={() => setSelected("questionnaire")}
+            className={clsx(
+              "w-full text-center py-2 rounded-full",
+              selected === "questionnaire" && " bg-[#0B0228]"
+            )}
+          >
+            Questionnaires
+          </p>
         </div>
 
-        {/* AI interaction */}
-        <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
-          <div className="flex-1 h-full overflow-y-auto mb-16">
-            {messages.map((msg, index) => (
+        {selected === "questionnaire" && (
+          <div className="p-4 sm:p-6 py-6 flex flex-col overflow-auto scroll-hidden mb-20">
+            {/* available questionnaires */}
+            <p className="text-lg font-bold">
+              {data?.data?.name}&apos;s Questionnaires
+            </p>
+
+            {linkageQuestionnaire?.data.map((i: any) => (
               <div
-                key={index}
-                className={`mb-6 flex flex-row gap-2 items-start ${
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+                key={i.id}
+                onClick={() =>
+                  router.push(`/linkages/explore/${slug}/chat/${i.id}`)
+                }
+                className="flex flex-row gap-1 py-1.5"
               >
-                {msg.sender === "ai" && (
-                  <div className="w-8 h-8 self-end flex-shrink-0">
-                    <Image
-                      alt="AI"
-                      width={32}
-                      height={32}
-                      src="/assets/AI.png"
-                    />
-                  </div>
-                )}
-                <div
-                  className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
-                    msg.sender === "user"
-                      ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
-                      : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
-                  }`}
-                >
-                  {msg.text}
-                </div>
-                {msg.sender === "user" && (
-                  <div className="w-8 h-8 self-end flex-shrink-0">
-                    <User
-                      size="32"
-                      fill="gray"
-                      className="flex bg-white rounded-full"
-                    />
-                  </div>
-                )}
+                {i.name} - {i.reward} usdc reward
               </div>
             ))}
-            <div ref={messagesEndRef} />
           </div>
+        )}
 
-          <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
-            <div className="flex flex-row items-center">
-              <input
-                type="text"
-                value={input}
-                onKeyDown={handleKeyDown}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type a message..."
-                className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
-              />
-              <button onClick={handleSend} className="absolute right-8 z-10">
-                <Send size="32" color="#ffffff" />
-              </button>
+        {selected === "ai-bot" && (
+          <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
+            {/* AI interaction */}
+            <div className="flex-1 h-full overflow-y-auto mb-16">
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`mb-6 flex flex-row gap-2 items-start ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {msg.sender === "ai" && (
+                    <div className="w-8 h-8 self-end flex-shrink-0">
+                      <Image
+                        alt="AI"
+                        width={32}
+                        height={32}
+                        src="/assets/AI.png"
+                      />
+                    </div>
+                  )}
+                  <div
+                    className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
+                      msg.sender === "user"
+                        ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
+                        : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  {msg.sender === "user" && (
+                    <div className="w-8 h-8 self-end flex-shrink-0">
+                      <User
+                        size="32"
+                        fill="gray"
+                        className="flex bg-white rounded-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
+              <div className="flex flex-row items-center">
+                <input
+                  type="text"
+                  value={input}
+                  onKeyDown={handleKeyDown}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type a message..."
+                  className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
+                />
+                <button onClick={handleSend} className="absolute right-8 z-10">
+                  <Send size="32" color="#ffffff" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </AuthNavLayout>
   );

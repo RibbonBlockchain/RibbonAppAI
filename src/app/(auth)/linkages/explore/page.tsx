@@ -9,14 +9,8 @@ import { useRouter } from "next/navigation";
 import SearchComponent from "@/components/search";
 import LinkagesCard from "@/containers/linkages/linkages-card";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
-import {
-  useGetDiscoveryLinkages,
-  useGetLinkages,
-  usePublishLinkage,
-  useUploadLinkageFile,
-} from "@/api/linkage";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import FileUpload from "@/containers/linkages/file-upload";
+import { useGetDiscoveryLinkages, useGetLinkages } from "@/api/linkage";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -42,24 +36,31 @@ const Linkages = () => {
     setSelectedTab(tab);
   };
 
+  const [query, setQuery] = useState<string>("");
+
+  const handleQueryChange = (newQuery: string) => {
+    setQuery(newQuery);
+  };
+
+  const handleSearchSubmit = (query: string) => {
+    console.log("Search submitted with query:", query);
+  };
+
   const { data: discoveryLinkages } = useGetDiscoveryLinkages({
-    params: { page: 1, pageSize: 5, query: "" },
+    params: { page: 1, pageSize: 5, query },
   });
 
   const { data: linkages } = useGetLinkages();
-
-  // const { mutate } = usePublishLinkage();
-  // const { mutate: uploadFile } = useUploadLinkageFile();
 
   return (
     <AuthNavLayout>
       <main className="relative min-h-screen w-full text-white bg-[rgb(11,2,40)] p-4 sm:p-6 pb-28">
         <ArrowLeft onClick={() => router.back()} className="mt-2 mb-4" />
 
-        <SearchComponent />
-
-        {/* <FileUpload id={20} />
-        <div onClick={() => mutate(20)}>Publish</div> */}
+        <SearchComponent
+          onQueryChange={handleQueryChange}
+          onSearchSubmit={handleSearchSubmit}
+        />
 
         <div className="w-full flex flex-col gap-4">
           <div className="flex flex-col gap-3 py-4">

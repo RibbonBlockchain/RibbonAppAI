@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
-import { useRateQuestionnaire } from "@/api/user";
 import { useParams, useRouter } from "next/navigation";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import { useSubmitLinkageQuestionnaireAnswer } from "@/api/linkage";
+import {
+  useGetLinkageBySlug,
+  useSubmitLinkageQuestionnaireAnswer,
+} from "@/api/linkage";
 
 interface Option {
   id: number;
@@ -17,6 +19,7 @@ interface Question {
   isFirst: boolean;
   isLast: boolean;
   questionnaireId: number;
+  linkageId: number;
   createdAt: string;
   updatedAt: string;
   options: Option[];
@@ -25,6 +28,7 @@ interface Question {
 const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const router = useRouter();
   const params = useParams();
+  const slug = params.slug as string;
 
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string; options?: Option[] }[]
@@ -39,7 +43,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const { mutate: submitTask, isPending } =
     useSubmitLinkageQuestionnaireAnswer();
 
-  const { mutate: rateTask } = useRateQuestionnaire();
+  const { data } = useGetLinkageBySlug(slug);
 
   useEffect(() => {
     if (questions?.length > 0) {
@@ -105,8 +109,8 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       submitTask(
         {
           body: { optionId: 0, questionId: questionIdToSubmit },
-          linkageId: Number(params.id),
-          questionnaireId: currentQuestion.questionnaireId,
+          linkageId: data?.data?.id,
+          questionnaireId: Number(params.id),
         },
         {
           onSuccess: () => console.log("reward claimed"),
@@ -168,9 +172,9 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
 
     submitTask(
       {
-        body: { optionId: option.id, questionId: questionIdToSubmit },
-        linkageId: Number(params.id),
-        questionnaireId: currentQuestion.questionnaireId,
+        body: { optionId: 0, questionId: questionIdToSubmit },
+        linkageId: data?.data?.id,
+        questionnaireId: Number(params.id),
       },
       {
         onSuccess: () => console.log("Reward claimed"),

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
+import { useRateQuestionnaire } from "@/api/user";
 import { useParams, useRouter } from "next/navigation";
-import { useAddWallet, useRateQuestionnaire } from "@/api/user";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import { useSubmitLinkageQuestionnaireAnswer } from "@/api/linkage";
 

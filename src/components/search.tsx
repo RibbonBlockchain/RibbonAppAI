@@ -1,17 +1,27 @@
 import { Search } from "lucide-react";
 import React, { useState } from "react";
 
-const SearchComponent: React.FC = () => {
+// Define props interface
+interface SearchComponentProps {
+  onQueryChange: (query: string) => void;
+  onSearchSubmit: (query: string) => void;
+}
+
+const SearchComponent: React.FC<SearchComponentProps> = ({
+  onQueryChange,
+  onSearchSubmit,
+}) => {
   const [query, setQuery] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    onQueryChange(newQuery); // Call the prop function on query change
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Search query:", query);
-    // search logic here
+    onSearchSubmit(query); // Call the prop function on form submit
   };
 
   return (

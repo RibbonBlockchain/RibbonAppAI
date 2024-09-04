@@ -33,11 +33,8 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string; options?: Option[] }[]
   >([]);
-  const [input, setInput] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [ratingMode, setRatingMode] = useState(false);
-  const [claimReward, setClaimReward] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const { mutate: submitTask, isPending } =
@@ -57,76 +54,6 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       ]);
     }
   }, [questions]);
-
-  const handleSend = () => {
-    const currentQuestion = questions[currentQuestionIndex];
-    const currentQuestionHasOptions = currentQuestion?.options?.length > 0;
-
-    if (input.trim() === "" && !currentQuestionHasOptions) return;
-
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: input },
-    ]);
-
-    setInput("");
-
-    if (currentQuestion) {
-      if (currentQuestionIndex < questions.length - 1) {
-        const nextQuestionIndex = currentQuestionIndex + 1;
-
-        setTimeout(() => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              sender: "ai",
-              text: questions[nextQuestionIndex].text,
-              options: questions[nextQuestionIndex].options,
-            },
-          ]);
-          setCurrentQuestionIndex(nextQuestionIndex);
-        }, 1500);
-      } else {
-        if (!isSubmitting && !ratingMode && !claimReward) {
-          setIsSubmitting(true);
-          setTimeout(() => {
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                sender: "ai",
-                text: "Do you want to submit the questionnaire?",
-              },
-            ]);
-          }, 1000);
-        }
-      }
-
-      const questionIdToSubmit =
-        currentQuestionIndex === questions.length - 1
-          ? questions[questions.length - 1].id
-          : currentQuestion.id;
-
-      submitTask(
-        {
-          body: { optionId: 0, questionId: questionIdToSubmit },
-          linkageId: data?.data?.id,
-          questionnaireId: Number(params.id),
-        },
-        {
-          onSuccess: () => console.log("reward claimed"),
-        }
-      );
-    } else {
-      // error
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSend();
-    }
-  };
 
   const handleOptionClick = (option: Option) => {
     setMessages((prevMessages) => [
@@ -151,14 +78,14 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
         setCurrentQuestionIndex(nextQuestionIndex);
       }, 1500);
     } else {
-      if (!isSubmitting && !ratingMode && !claimReward) {
+      if (!isSubmitting) {
         setIsSubmitting(true);
         setTimeout(() => {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
               sender: "ai",
-              text: "Do you want to submit the questionnaire?",
+              text: "You have reached the end of this question, click finish to answer more questionnaires.",
             },
           ]);
         }, 1000);
@@ -180,78 +107,6 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
         onSuccess: () => console.log("Reward claimed"),
       }
     );
-  };
-
-  const handleSubmitClick = (option: string) => {
-    if (option.toLowerCase() === "submit") {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "user", text: "Submitted" },
-        { sender: "ai", text: "Thank you for submitting the questionnaire!" },
-      ]);
-
-      setIsSubmitting(false);
-      setRatingMode(true);
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: "Please rate the questionnaire from 1 to 5." },
-        ]);
-      }, 1000);
-    } else if (option.toLowerCase() === "cancel") {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "user", text: "Cancelled" },
-        {
-          sender: "ai",
-          text: "The questionnaire was not submitted. You can restart if needed.",
-        },
-      ]);
-
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleRatingClick = (rating: number) => {
-    const currentQuestion = questions[currentQuestionIndex];
-    const taskId = currentQuestion?.questionnaireId;
-
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: rating.toString() },
-      {
-        sender: "ai",
-        text: `Thank you for rating the questionnaire with ${rating}!`,
-      },
-    ]);
-
-    setRatingMode(false);
-    setClaimReward(true);
-
-    setTimeout(() => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          sender: "ai",
-          text: "You can now claim your reward ribbon by clicking the button below.",
-        },
-      ]);
-    }, 1000);
-
-    // rateTask({ rating: rating, questionnaireId: taskId });
-  };
-
-  const handleClaimClick = () => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: "Claimed reward" },
-      {
-        sender: "ai",
-        text: "Congratulations! You have claimed your reward ribbon. You can now close the questionnaire and return to the dashboard.",
-      },
-    ]);
-    setClaimReward(false);
-    router.push("/linkages/explore");
   };
 
   useEffect(() => {
@@ -312,54 +167,15 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
       </div>
 
       <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
-        {!isSubmitting && !ratingMode && !claimReward ? (
-          <div className="flex flex-row items-center">
-            <input
-              type="text"
-              value={input}
-              onKeyDown={handleKeyDown}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message..."
-              className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
-            />
-            <button onClick={handleSend} className="absolute right-8 z-10">
-              <Send size="32" color="#ffffff" />
-            </button>
-          </div>
-        ) : ratingMode ? (
-          <div className="flex flex-row items-center justify-center gap-4">
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <button
-                key={rating}
-                onClick={() => handleRatingClick(rating)}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                {rating}
-              </button>
-            ))}
-          </div>
-        ) : claimReward ? (
-          <div className="flex flex-row items-center justify-center gap-4">
-            <button
-              onClick={handleClaimClick}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Claim Reward
-            </button>
-          </div>
+        {!isSubmitting ? (
+          <></>
         ) : (
           <div className="flex flex-row items-center justify-center gap-6">
             <button
-              onClick={() => handleSubmitClick("Cancel")}
-              className="bg-red-500 bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => handleSubmitClick("Submit")}
+              onClick={() => router.back()}
               className="bg-[#3f3952] bg-opacity-75 backdrop-blur-sm text-white px-4 py-2 rounded-[14px]"
             >
-              Submit
+              Finish
             </button>
           </div>
         )}

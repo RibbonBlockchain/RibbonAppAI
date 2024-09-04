@@ -11,6 +11,7 @@ import LinkagesCard from "@/containers/linkages/linkages-card";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { useGetDiscoveryLinkages, useGetLinkages } from "@/api/linkage";
+import AddStatusModal from "@/containers/linkages/add-status-modal";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -30,13 +31,13 @@ const statuses = [
 
 const Linkages = () => {
   const router = useRouter();
-
   const [selectedTab, setSelectedTab] = useState("for-you");
+  const [query, setQuery] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
-
-  const [query, setQuery] = useState<string>("");
 
   const handleQueryChange = (newQuery: string) => {
     setQuery(newQuery);
@@ -51,6 +52,14 @@ const Linkages = () => {
   });
 
   const { data: linkages } = useGetLinkages();
+
+  const handleAddStatusClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalProceed = () => {
+    router.push("/linkages/explore/status");
+  };
 
   return (
     <AuthNavLayout>
@@ -76,7 +85,10 @@ const Linkages = () => {
           </div>
 
           <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
-            <div className="relative min-w-[82px] flex flex-row ">
+            <button
+              onClick={handleAddStatusClick}
+              className="relative min-w-[82px] flex flex-row"
+            >
               <Image
                 alt="alt"
                 width={82}
@@ -89,7 +101,7 @@ const Linkages = () => {
                 color="#ffffff"
                 className="absolute bottom-0 right-0 bg-[#A166F5] border-[3px] border-[#0B0228] rounded-full"
               />
-            </div>
+            </button>
 
             {statuses.map((i) => (
               <Image
@@ -170,7 +182,7 @@ const Linkages = () => {
 
             {/* Following */}
             {selectedTab === "following" && (
-              <div className="">
+              <div>
                 <p>Linkages you follow will appear here</p>
               </div>
             )}
@@ -205,6 +217,13 @@ const Linkages = () => {
             )}
           </div>
         </div>
+
+        {/* Render the modal */}
+        <AddStatusModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onProceed={handleModalProceed}
+        />
       </main>
     </AuthNavLayout>
   );

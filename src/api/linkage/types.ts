@@ -30,6 +30,11 @@ export interface getDiscoveryLinkagesParams {
   query: string;
 }
 
+export interface getDiscoveryLinkagesStatusParams {
+  page: number;
+  pageSize: number;
+}
+
 interface Pagination {
   pageSize: number;
   endIndex: number;
@@ -91,3 +96,5 @@ export type TSubmitLinkageQuestionnaireAnswer = {
   optionId: number;
   questionId: number;
 };
+
+export type TUploadLinkageStatusBody = { file: any; caption: string };

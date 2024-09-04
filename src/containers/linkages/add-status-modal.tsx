@@ -58,27 +58,6 @@ const AddStatusModal: React.FC<ModalProps> = ({
           <InfoCircle size={16} />
           <p> $1 will be charged from your USDC wallet</p>
         </div>
-
-        {/* <div className="flex gap-4">
-          <button
-            className="py-2 px-4 bg-blue-500 text-white rounded"
-            onClick={() => {
-              onProceed();
-              onClose();
-            }}
-          >
-            Upload Image
-          </button>
-          <button
-            className="py-2 px-4 bg-green-500 text-white rounded"
-            onClick={() => {
-              onProceed();
-              onClose();
-            }}
-          >
-            Upload Text
-          </button>
-        </div> */}
       </div>
     </div>
   );

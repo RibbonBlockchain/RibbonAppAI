@@ -4,9 +4,9 @@ import {
 } from "@/api/linkage";
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
+import toast, { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import toast from "react-hot-toast";
 
 interface Option {
   id: number;
@@ -118,6 +118,7 @@ const LinkageQuestionnaireChat = ({ questions }: { questions: Question[] }) => {
 
   return (
     <div className="relative w-full mt-2 p-4 flex flex-col h-auto overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
+      <Toaster />
       <div className="flex-1 h-full overflow-y-auto mb-16">
         {messages.map((msg, index) => (
           <div

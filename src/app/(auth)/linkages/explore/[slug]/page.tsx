@@ -1,16 +1,16 @@
 "use client";
 
-import { useGetLinkageBySlug, useGetDiscoveryLinkages } from "@/api/linkage";
 import Image from "next/image";
 import PageLoader from "@/components/loader";
 import { copyToClipboard } from "@/lib/utils";
 import toast, { Toaster } from "react-hot-toast";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { shortenTransaction } from "@/lib/utils/shorten";
 import RatingCompleted from "@/containers/activity/rate-completed";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
+import { useGetLinkageBySlug, useGetDiscoveryLinkages } from "@/api/linkage";
 import { Call, Coin1, Copy, Location, Sms, WalletMoney } from "iconsax-react";
-import { shortenTransaction } from "@/lib/utils/shorten";
 
 const LinkageRatingsCard = () => {
   return (
@@ -105,7 +105,7 @@ const LinkageViewDetails = () => {
                 </div>
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <Coin1 size="18" color="#ffffff" variant="Bold" /> Linkage
-                  Value: $ {data?.data.walletAddress.balance}
+                  Value: $ {data?.data.walletAddress.balance} xxx
                 </div>
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}

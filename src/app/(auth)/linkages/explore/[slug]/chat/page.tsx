@@ -15,6 +15,7 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { useAddWallet } from "@/api/user";
 import toast, { Toaster } from "react-hot-toast";
 import clsx from "clsx";
+import Link from "next/link";
 
 interface Message {
   sender: "user" | "ai";
@@ -141,8 +142,10 @@ const LinkageAIChatInterface: React.FC = () => {
               />
               <div>
                 <p className="text-lg font-bold">{data?.data?.name}</p>
-                {hideAddWallet && (
-                  <button onClick={handleAddWallet}>Link my wallet</button>
+                {hideAddWallet ? (
+                  <button onClick={handleAddWallet}>Connect wallet</button>
+                ) : (
+                  <p>Wallet connected</p>
                 )}
               </div>
             </div>
@@ -174,19 +177,29 @@ const LinkageAIChatInterface: React.FC = () => {
         {selected === "questionnaire" && (
           <div className="p-4 sm:p-6 py-6 flex flex-col overflow-auto scroll-hidden mb-20">
             {/* available questionnaires */}
-            <p className="text-lg font-bold">
-              {data?.data?.name}&apos;s Questionnaires
-            </p>
 
             {linkageQuestionnaire?.data.map((i: any) => (
-              <div
-                key={i.id}
-                onClick={() =>
-                  router.push(`/linkages/explore/${slug}/chat/${i.id}`)
-                }
-                className="flex flex-row gap-1 py-1.5"
-              >
-                {i.name} - {i.reward} usdc reward
+              <div key={i.id} className="flex flex-col gap-2 py-2">
+                <Link
+                  href={`/linkages/explore/${slug}/chat/${i.id}`}
+                  className="flex flex-row items-center justify-between text-sm text-white border-b border-[#C3B1FF4D] mb-2"
+                >
+                  <div className="">
+                    <p className="font-semibold mb-1">{i.name}</p>
+                    <div className="-ml-2 flex flex-row items-center font-medium mb-2">
+                      <Image
+                        src="/assets/coin.png"
+                        alt="coin"
+                        height={32}
+                        width={32}
+                      />
+                      <p>{i.reward} usdc / question</p>
+                    </div>
+                  </div>
+                  <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full mb-2">
+                    Go
+                  </button>
+                </Link>
               </div>
             ))}
           </div>

@@ -16,12 +16,12 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    onQueryChange(newQuery); // Call the prop function on query change
+    onQueryChange(newQuery);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSearchSubmit(query); // Call the prop function on form submit
+    onSearchSubmit(query);
   };
 
   return (

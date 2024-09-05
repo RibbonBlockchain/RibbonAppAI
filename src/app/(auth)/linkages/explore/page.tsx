@@ -4,6 +4,7 @@ import {
   useGetLinkages,
   useGetDiscoveryLinkages,
   useGetDiscoveryLinkageStatus,
+  useGetDiscoveryFeaturedLinkages,
 } from "@/api/linkage";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,6 +16,7 @@ import LinkagesCard from "@/containers/linkages/linkages-card";
 import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import DisplayStatusModal from "@/containers/linkages/display-status-modal";
+import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -27,7 +29,8 @@ const Linkages = () => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState("for-you");
   const [query, setQuery] = useState<string>("");
-  const [modalOpen, setModalOpen] = useState(false);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [featureModalOpen, setFeatureModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState<
     { url: string; caption?: string }[]
   >([]);
@@ -46,7 +49,11 @@ const Linkages = () => {
   };
 
   const { data: discoveryLinkages } = useGetDiscoveryLinkages({
-    params: { page: 1, pageSize: 5, query },
+    params: { page: 1, pageSize: 10, query },
+  });
+
+  const { data: featuredLinkages } = useGetDiscoveryFeaturedLinkages({
+    params: { page: 1, pageSize: 10 },
   });
 
   const { data: linkages } = useGetLinkages();
@@ -61,11 +68,11 @@ const Linkages = () => {
   ) => {
     setModalImages(images);
     setCurrentImageIndex(index);
-    setModalOpen(true);
+    setStatusModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
+    setStatusModalOpen(false);
   };
 
   return (
@@ -93,23 +100,27 @@ const Linkages = () => {
 
           <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
             {data?.data?.data.map((i: any, index: number) => (
-              <Image
+              <div
                 key={i.id}
-                alt="alt"
-                width={82}
-                height={82}
-                src={i.media || "/assets/sample-icon.png"}
-                className="rounded-full w-[82px] h-[82px] border-[3px] border-[#FFF]"
+                className="flex-shrink-0 w-20 h-20 relative"
                 onClick={() =>
                   openModal(
                     data?.data?.data.map((img: any) => ({
                       url: img.media || "/assets/sample-icon.png",
-                      caption: img.caption, // Assuming the API provides a caption field
+                      caption: img.caption,
                     })),
                     index
                   )
                 }
-              />
+              >
+                <Image
+                  alt="alt"
+                  layout="fill" // Makes the image fill the parent container
+                  objectFit="cover" // Ensures the image covers the container without distortion
+                  src={i.media || "/assets/sample-icon.png"}
+                  className="rounded-full border-[3px] border-[#FFF]"
+                />
+              </div>
             ))}
           </div>
 
@@ -132,27 +143,36 @@ const Linkages = () => {
           <div className="w-full flex">
             {selectedTab === "for-you" && (
               <div className="w-full flex flex-col gap-10">
-                {discoveryLinkages?.data?.data && (
+                {featuredLinkages?.data && (
                   <div className="w-full flex flex-col gap-3">
                     <div>
-                      <p className="text-lg font-semibold">Featured Linkages</p>
-                      <p className="text-sm">
-                        Top Picks from this week activities
-                      </p>
+                      <div className="flex flex-row items-center justify-between">
+                        <p className="text-lg font-semibold">
+                          Featured Linkages
+                        </p>
+                        <button
+                          onClick={() => setFeatureModalOpen(true)}
+                          className="py-1.5 px-2 text-[13px] bg-[#3f3953] rounded-[12px] text-white"
+                        >
+                          Feature your linkage
+                        </button>
+                      </div>
+                      <p className="text-sm">This week&apos;s top picks </p>
                     </div>
-                    {discoveryLinkages?.data?.data.map((i: any) => (
+                    {featuredLinkages?.data?.data?.map((i: any) => (
                       <LinkagesCard
-                        key={i.name}
-                        name={i.name}
-                        image={i.image}
-                        description={i.description}
-                        author={i.userId}
-                        slug={i.slug}
+                        key={i.linkage.id}
+                        name={i.linkage.name}
+                        image={i.linkage.image}
+                        description={i.linkage.description}
+                        author={i.linkage.userId}
+                        slug={i.linkage.slug}
                         featured={true}
                       />
                     ))}
                   </div>
                 )}
+
                 {discoveryLinkages?.data?.data && (
                   <div className="flex flex-col gap-3">
                     <div>
@@ -212,11 +232,18 @@ const Linkages = () => {
           </div>
         </div>
 
-        {modalOpen && (
+        {statusModalOpen && (
           <DisplayStatusModal
             images={modalImages}
             currentIndex={currentImageIndex}
             onClose={closeModal}
+          />
+        )}
+
+        {featureModalOpen && (
+          <FeatureLinkageModal
+            isOpen={featureModalOpen}
+            onClose={() => setFeatureModalOpen(false)}
           />
         )}
       </main>

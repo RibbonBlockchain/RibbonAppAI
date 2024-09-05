@@ -15,6 +15,8 @@ import {
   submitLinkageQuestionnaireAnswer,
   uploadLinkageStatus,
   getDiscoveryLinkageStatus,
+  featureLinkage,
+  getDiscoverFeaturedLinkages,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -23,7 +25,7 @@ import {
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
-  getDiscoveryLinkagesStatusParams,
+  getPageandSizeParams,
 } from "./types";
 import { onError } from "../api-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -95,10 +97,23 @@ export const useGetDiscoveryLinkages = ({
   });
 };
 
+export const useGetDiscoveryFeaturedLinkages = ({
+  params,
+}: {
+  params: getPageandSizeParams;
+}) => {
+  const { page, pageSize } = params;
+
+  return useQuery({
+    queryKey: ["discovery-featured-linkages"],
+    queryFn: () => getDiscoverFeaturedLinkages({ params }),
+  });
+};
+
 export const useGetDiscoveryLinkageStatus = ({
   params,
 }: {
-  params: getDiscoveryLinkagesStatusParams;
+  params: getPageandSizeParams;
 }) => {
   const { page, pageSize } = params;
 
@@ -189,5 +204,13 @@ export const useUploadLinkageStatus = () => {
       body: TUploadLinkageStatusBody;
       linkageId: number;
     }) => uploadLinkageStatus({ body, linkageId }),
+  });
+};
+
+export const useFeatureLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ linkageId }: { linkageId: number }) =>
+      featureLinkage(linkageId),
   });
 };

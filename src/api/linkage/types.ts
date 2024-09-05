@@ -30,7 +30,7 @@ export interface getDiscoveryLinkagesParams {
   query: string;
 }
 
-export interface getDiscoveryLinkagesStatusParams {
+export interface getPageandSizeParams {
   page: number;
   pageSize: number;
 }

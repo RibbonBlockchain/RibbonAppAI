@@ -6,7 +6,7 @@ import {
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
-  getDiscoveryLinkagesStatusParams,
+  getPageandSizeParams,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -57,10 +57,22 @@ export const getDiscoverLinkages = async ({
   return res.data;
 };
 
+export const getDiscoverFeaturedLinkages = async ({
+  params,
+}: {
+  params: getPageandSizeParams;
+}) => {
+  const { page, pageSize } = params;
+  const res = await client.get<TResponse<TDiscoveryLinkageResponse>>(
+    `/linkage/discover/featured?page=${page}&pageSize=${pageSize}`
+  );
+  return res.data;
+};
+
 export const getDiscoveryLinkageStatus = async ({
   params,
 }: {
-  params: getDiscoveryLinkagesStatusParams;
+  params: getPageandSizeParams;
 }) => {
   const { page, pageSize } = params;
 
@@ -130,5 +142,10 @@ export const uploadLinkageStatus = async ({
   linkageId: number;
 }) => {
   const res = await client.post(`linkage/${linkageId}/status`, body);
+  return res.data;
+};
+
+export const featureLinkage = async (linkageId: number) => {
+  const res = await client.post(`/linkage/${linkageId}/feature`);
   return res.data;
 };

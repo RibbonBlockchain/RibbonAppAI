@@ -17,6 +17,10 @@ import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
+import {
+  formatDateAndTimeAgo,
+  formatStatusDate,
+} from "@/lib/values/format-dateandtime-ago";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -32,7 +36,13 @@ const Linkages = () => {
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [featureModalOpen, setFeatureModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState<
-    { url: string; caption?: string }[]
+    {
+      url: string;
+      caption?: string;
+      linkageName: string;
+      linkageLogo?: string;
+      updatedTime: string;
+    }[]
   >([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -63,7 +73,13 @@ const Linkages = () => {
   });
 
   const openModal = (
-    images: { url: string; caption?: string }[],
+    images: {
+      url: string;
+      caption?: string;
+      linkageName: string;
+      linkageLogo?: string;
+      updatedTime: string;
+    }[],
     index: number
   ) => {
     setModalImages(images);
@@ -108,6 +124,11 @@ const Linkages = () => {
                     data?.data?.data.map((img: any) => ({
                       url: img.media || "/assets/sample-icon.png",
                       caption: img.caption,
+                      linkageName: img.linkage.name,
+                      linkageLogo: img.linkageLogo || "/assets/sample-icon.png",
+                      updatedTime: `${formatStatusDate(img.updatedAt)} - ${
+                        formatDateAndTimeAgo(img.updatedAt).relativeTime
+                      }`,
                     })),
                     index
                   )
@@ -115,8 +136,8 @@ const Linkages = () => {
               >
                 <Image
                   alt="alt"
-                  layout="fill" // Makes the image fill the parent container
-                  objectFit="cover" // Ensures the image covers the container without distortion
+                  layout="fill"
+                  objectFit="cover"
                   src={i.media || "/assets/sample-icon.png"}
                   className="rounded-full border-[3px] border-[#FFF]"
                 />

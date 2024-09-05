@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { ArrowLeft2 } from "iconsax-react";
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface Image {
   url: string;
   caption?: string;
+  linkageLogo?: string;
+  linkageName: string;
+  updatedTime: string;
 }
 
 interface ImageModalProps {
@@ -65,14 +68,13 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
   }, []);
 
   const resetTimer = () => {
-    // Clear the existing timer and set a new one
     clearInterval(interval);
     interval = setInterval(() => {
       handleNext();
     }, 7000);
   };
 
-  const { url, caption } = images[index];
+  const { url, caption, linkageLogo, linkageName, updatedTime } = images[index];
 
   let interval: NodeJS.Timeout;
 
@@ -85,13 +87,28 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
           className="my-2"
           onClick={onClose}
         />
-        <p className="text-[20px] font-bold">Status Updates</p>
+
+        <div className="flex flex-row items-center gap-2">
+          <Image
+            src={linkageLogo || "/assets/sample-logo.png"}
+            alt="Linkage Logo"
+            width={56}
+            height={56}
+            className="max-w-[56px] max-h-[56px] rounded-full"
+          />
+          <div className="flex flex-col text-white">
+            <p className="text-sm font-bold">{linkageName}</p>
+            <p className="text-xs font-normal">{updatedTime}</p>
+          </div>
+        </div>
       </div>
+
+      <div></div>
 
       <div className="flex flex-col items-center justify-center">
         <ArrowLeft
           onClick={handlePrev}
-          className="absolute left-0 text-clack text-xl cursor-pointer z-50"
+          className="absolute left-0 text-white text-xl cursor-pointer z-50"
         />
 
         <div className="relative flex items-center self-center justify-center max-w-full max-h-full min-h-[400px] mx-6">
@@ -106,7 +123,7 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
 
         <ArrowRight
           onClick={handleNext}
-          className="absolute right-0 text-clack text-xl cursor-pointer z-50"
+          className="absolute right-0 text-white text-xl cursor-pointer z-50"
         />
       </div>
 

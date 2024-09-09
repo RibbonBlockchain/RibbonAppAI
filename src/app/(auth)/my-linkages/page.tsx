@@ -62,6 +62,7 @@ const MyLinkageDetails: React.FC = () => {
 
   const { data: coinPrice } = useCoinDetails();
   const currentPrice = coinPrice?.market_data.current_price.usd as number;
+  //
 
   const lastTrainedDate: Date = new Date(
     linkageFile?.data[linkageFile?.data?.length - 1].updatedAt

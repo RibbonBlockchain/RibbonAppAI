@@ -1,7 +1,18 @@
 "use client";
 
-import { Copy, Calendar, Document, ArrowLeft2, WalletMoney, DollarCircle } from "iconsax-react";
-import { useGetLinkageById, useGetLinkages, useGetLinkagesFile } from "@/api/linkage";
+import {
+  Copy,
+  Calendar,
+  Document,
+  ArrowLeft2,
+  WalletMoney,
+  DollarCircle,
+} from "iconsax-react";
+import {
+  useGetLinkageById,
+  useGetLinkages,
+  useGetLinkagesFile,
+} from "@/api/linkage";
 import Image from "next/image";
 import Retrain from "./retrain";
 import Activity from "./activity";
@@ -14,6 +25,9 @@ import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
 import UploadQuestionnaire from "./upload-questionnaire";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
+import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
+
+// resolve conflict
 
 interface AIdata {
   id: number;
@@ -48,9 +62,12 @@ const MyLinkageDetails: React.FC = () => {
   const { data } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
 
-  const lastTrainedDate: Date = linkageFile?.data
-    ? new Date(linkageFile?.data?.[linkageFile?.data?.length - 1]?.updatedAt)
-    : new Date();
+  const { data: coinPrice } = useCoinDetails();
+  const currentPrice = coinPrice?.market_data.current_price.usd as number;
+
+  const lastTrainedDate: Date = new Date(
+    linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
+  );
 
   const [selectedTab, setSelectedTab] = useState("ai-bot");
 
@@ -77,7 +94,12 @@ const MyLinkageDetails: React.FC = () => {
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-3 sm:p-6 pb-8">
       <div className="flex flex-row items-center justify-between gap-4 mt-2">
-        <ArrowLeft2 size="24" color="#ffffff" className="my-2 cursor-pointer" onClick={() => router.back()} />
+        <ArrowLeft2
+          size="24"
+          color="#ffffff"
+          className="my-2 cursor-pointer"
+          onClick={() => router.back()}
+        />
 
         <div className="relative text-sm font-bold min-w-fit px-2">
           <button
@@ -129,7 +151,9 @@ const MyLinkageDetails: React.FC = () => {
             key={tab.value}
             onClick={() => handleTabClick(tab.value)}
             className={`min-w-fit px-3 py-3 ${
-              selectedTab === tab.value ? "text-white border-b-2 border-b-white" : "bg-transparent text-[#F2EEFF]"
+              selectedTab === tab.value
+                ? "text-white border-b-2 border-b-white"
+                : "bg-transparent text-[#F2EEFF]"
             }`}
           >
             {tab.name}
@@ -149,7 +173,9 @@ const MyLinkageDetails: React.FC = () => {
                   className="w-[50px] h-auto"
                   src={selectedAI?.image || "/assets/sample-icon.png"}
                 />
-                <p className="flex flex-grow text-lg font-bold py-3 border-b border-[#C3B1FF4D]">{selectedAI?.name}</p>
+                <p className="flex flex-grow text-lg font-bold py-3 border-b border-[#C3B1FF4D]">
+                  {selectedAI?.name}
+                </p>
               </div>
               <div className="flex flex-col items-start gap-2 text-xs font-normal">
                 <div className="flex flex-row gap-2 items-center">
@@ -158,7 +184,9 @@ const MyLinkageDetails: React.FC = () => {
                 </div>
                 <div
                   onClick={() =>
-                    copyToClipboard(data?.data?.walletAddress?.addressId, () => toast.success("Wallet address copied"))
+                    copyToClipboard(data?.data?.walletAddress?.addressId, () =>
+                      toast.success("Wallet address copied")
+                    )
                   }
                   className="flex flex-row items-center gap-1 font-semibold text-sm"
                 >
@@ -171,7 +199,9 @@ const MyLinkageDetails: React.FC = () => {
                   <DollarCircle size="18" color="#ffffff" />
                   <p className="font-normal text-xs">Balance</p>
                 </div>
-                <p className="flex flex-row items-center gap-1 font-semibold text-sm">$ xxx</p>
+                <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                  $ {data?.data.wallet?.balance * currentPrice}
+                </p>
               </div>
               <div className="flex flex-col items-start gap-2 text-xs font-normal">
                 <div className="flex flex-row gap-2 items-center">
@@ -180,7 +210,9 @@ const MyLinkageDetails: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <p className="flex flex-row items-center gap-1 font-semibold text-sm">0 Link(s)</p>
+                  <p className="flex flex-row items-center gap-1 font-semibold text-sm">
+                    0 Link(s)
+                  </p>
                   <p className="flex flex-row items-center gap-1 font-semibold text-sm">
                     {linkageFile?.data.length} File(s)
                   </p>
@@ -201,11 +233,23 @@ const MyLinkageDetails: React.FC = () => {
             </div>
           )}
 
-          {selectedTab === "retrain" && <Retrain id={selectedAI?.id as number} slug={selectedAI?.slug as string} />}
+          {selectedTab === "retrain" && (
+            <Retrain
+              id={selectedAI?.id as number}
+              slug={selectedAI?.slug as string}
+            />
+          )}
 
-          {selectedTab === "wallet" && <LinkageWallet walletAddress={data?.data?.walletAddress} />}
+          {selectedTab === "wallet" && (
+            <LinkageWallet
+              walletAddress={data?.data?.walletAddress}
+              walletBalance={data?.data?.wallet?.balance * currentPrice}
+            />
+          )}
 
-          {selectedTab === "questionnaires" && <UploadQuestionnaire linkageId={selectedAI?.id} />}
+          {selectedTab === "questionnaires" && (
+            <UploadQuestionnaire linkageId={selectedAI?.id} />
+          )}
 
           {selectedTab === "activity" && <Activity />}
 

@@ -20,9 +20,11 @@ export const PointBalanceCard = ({
       <div>
         <p className="text-sm font-medium mb-2">Ribbon balance</p>
         <div>
-          <div className="-ml-2 flex flex-row items-center gap-1 text-[20px] xxs:text-[24px] font-bold">
+          <div className="-ml-2 flex flex-row items-center gap-1 text-[18px] xxs:text-[24px] font-bold">
             <Image src={"/assets/coin.png"} alt="coin" height={32} width={32} />
-            <p>{convertedPoints} ribbon</p>
+            <p>
+              {convertedPoints} <span className="text-sm">ribbon</span>
+            </p>
           </div>
 
           <div className="flex flex-row items-center gap-1 text-[12px] font-bold">

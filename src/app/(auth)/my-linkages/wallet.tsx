@@ -8,7 +8,13 @@ import AddressDisplay from "@/components/wallet/address-display";
 import { shortenTransaction } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
 
-const LinkageWallet = ({ walletAddress }: { walletAddress: string }) => {
+const LinkageWallet = ({
+  walletAddress,
+  walletBalance,
+}: {
+  walletAddress: string;
+  walletBalance: number;
+}) => {
   const [selected, setSelected] = useState("deposit");
 
   const handleClick = () => {
@@ -37,7 +43,7 @@ const LinkageWallet = ({ walletAddress }: { walletAddress: string }) => {
           <Copy size="16" color="#ffffff" variant="Bold" />
         </div>
 
-        <p className="text-[28px] font-bold">$ 0</p>
+        <p className="text-[28px] font-bold">$ {walletBalance}</p>
       </div>
 
       <div className="flex flex-row bg-[#3f3856] p-1 rounded-full">

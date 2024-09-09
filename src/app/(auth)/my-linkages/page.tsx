@@ -25,6 +25,7 @@ import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
 import UploadQuestionnaire from "./upload-questionnaire";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
+import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
 
 interface AIdata {
   id: number;
@@ -58,6 +59,9 @@ const MyLinkageDetails: React.FC = () => {
   const { data: linkagesList } = useGetLinkages();
   const { data } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
+
+  const { data: coinPrice } = useCoinDetails();
+  const currentPrice = coinPrice?.market_data.current_price.usd as number;
 
   const lastTrainedDate: Date = new Date(
     linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
@@ -194,7 +198,7 @@ const MyLinkageDetails: React.FC = () => {
                   <p className="font-normal text-xs">Balance</p>
                 </div>
                 <p className="flex flex-row items-center gap-1 font-semibold text-sm">
-                  $ xxx
+                  $ {data?.data.wallet?.balance * currentPrice}
                 </p>
               </div>
               <div className="flex flex-col items-start gap-2 text-xs font-normal">
@@ -235,7 +239,10 @@ const MyLinkageDetails: React.FC = () => {
           )}
 
           {selectedTab === "wallet" && (
-            <LinkageWallet walletAddress={data?.data?.walletAddress} />
+            <LinkageWallet
+              walletAddress={data?.data?.walletAddress}
+              walletBalance={data?.data?.wallet?.balance * currentPrice}
+            />
           )}
 
           {selectedTab === "questionnaires" && (

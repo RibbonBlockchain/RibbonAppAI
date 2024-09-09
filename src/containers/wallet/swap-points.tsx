@@ -74,7 +74,7 @@ const SwapPointToUsdcToken: React.FC<Props> = (props) => {
                           />
                         </div>
                         <div>
-                          <p className="text-base font-normal">RIBB</p>
+                          <p className="text-base font-normal">Ribbon</p>
                           <p className="text-xs text-[#626262]">
                             {props.pointsBalance} Ribbons
                           </p>

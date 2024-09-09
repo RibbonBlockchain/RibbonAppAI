@@ -85,11 +85,17 @@ const Question: React.FC<QuestionProps> = ({
             onChangeOptionType(newType);
             onSelectChange(newType);
           }}
-          className="w-full py-3 px-2 rounded-lg border border-[#E5E7EB] text-sm font-normal text-white bg-inherit"
+          className="appearance-none w-full py-3 px-2 rounded-lg border border-[#E5E7EB] text-sm font-normal text-white bg-inherit"
         >
-          <option value="BOOLEAN">Boolean</option>
-          <option value="MULTISELECT">Multi Select</option>
-          <option value="MULTICHOICE">Multi Choice</option>
+          <option className="bg-[#0B0228] py-1.5" value="BOOLEAN">
+            Boolean
+          </option>
+          <option className="bg-[#0B0228] py-1.5" value="MULTISELECT">
+            Multi Select
+          </option>
+          <option className="bg-[#0B0228] py-1.5" value="MULTICHOICE">
+            Multi Choice
+          </option>
         </select>
       </div>
 
@@ -119,9 +125,15 @@ const Question: React.FC<QuestionProps> = ({
                 onChange={(e) => onChangeOption(e.target.value, index)}
                 className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
               >
-                <option value="">Select an option</option>
-                <option value="Yes">True / Yes</option>
-                <option value="No">False / No</option>
+                <option className="bg-[#0B0228] py-1.5" value="">
+                  Select an option
+                </option>
+                <option className="bg-[#0B0228] py-1.5" value="Yes">
+                  True / Yes
+                </option>
+                <option className="bg-[#0B0228] py-1.5" value="No">
+                  False / No
+                </option>
               </select>
             ) : (
               <input

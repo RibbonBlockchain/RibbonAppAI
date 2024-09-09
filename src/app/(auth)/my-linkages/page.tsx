@@ -27,6 +27,8 @@ import UploadQuestionnaire from "./upload-questionnaire";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
 
+// resolve conflict
+
 interface AIdata {
   id: number;
   name: string;

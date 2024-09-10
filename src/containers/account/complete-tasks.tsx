@@ -18,7 +18,7 @@ const CompleteActivities = () => {
           width={52}
           height={54}
           alt="avatar"
-          src="/images/gift-box.png"
+          src="/assets/gift-box.png"
         />
         <div className="flex flex-col">
           <p className="text-base font-semibold">Complete activities</p>
@@ -32,7 +32,7 @@ const CompleteActivities = () => {
         width={37}
         height={35}
         alt="avatar"
-        src="/images/continue.png"
+        src="/assets/continue.png"
       />
     </div>
   );

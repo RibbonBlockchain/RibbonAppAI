@@ -20,12 +20,12 @@ const BalanceDetails = ({
       <Image
         src={logo}
         alt="trophy"
-        width={30}
-        height={30}
-        className="h-[35px]"
+        width={35}
+        height={35}
+        className="h-[35px] w-[35px]"
       />
       <p className="text-lg font-bold">{value}</p>
-      <p className="text-xs font-medium text-[#626262]">{text}</p>
+      <p className="text-xs font-medium text-center text-[#626262]">{text}</p>
     </div>
   );
 };
@@ -55,7 +55,7 @@ const UserBalanceAndPoints = () => {
           className="w-[32px] h-[32px]"
         />{" "}
         <p className="text-[28px] text-[#7C56FE] font-bold">
-          {balance.toFixed(2)} WLD
+          {balance.toFixed(2)} USDC
         </p>
       </div>
 
@@ -66,33 +66,33 @@ const UserBalanceAndPoints = () => {
       <div className="grid grid-cols-2 items-center justify-center mt-6">
         <BalanceDetails
           value={pointBalance.toLocaleString()}
-          text={"Points earned"}
-          logo={"/images/points-earned.png"}
+          text={"Ribbon earned"}
+          logo={"/assets/points-earned.png"}
         />
         <BalanceDetails
           value={user?.numberOfClaims}
           text={"Daily rewards claimed"}
-          logo={"/images/daily-rewards-claimed.png"}
+          logo={"/assets/daily-rewards-claimed.png"}
         />
         <BalanceDetails
           value={tokenSpent}
           text={"Tokens spent"}
-          logo={"/images/tokens-spent.png"}
+          logo={"/assets/tokens-spent.png"}
         />
         <BalanceDetails
           value={filterQuestionnaires?.length | 0}
           text={"Completed questionnaires"}
-          logo={"/images/tasks-completed.png"}
+          logo={"/assets/tasks-completed.png"}
         />
         <BalanceDetails
           value={0}
           text={"Completed tasks"}
-          logo={"/images/tasks-completed.png"}
+          logo={"/assets/tasks-completed.png"}
         />
         <BalanceDetails
           value={completedSurveys?.data.length | 0}
           text={"Completed surveys"}
-          logo={"/images/tasks-completed.png"}
+          logo={"/assets/tasks-completed.png"}
         />
       </div>
     </div>

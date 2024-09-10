@@ -21,8 +21,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { ArrowUp, Send, User, X } from "lucide-react";
 import { ArrowLeft2, InfoCircle } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
+import { SpinnerIcon } from "@/components/icons/spinner";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
-
 const TrainLinkage = () => {
   const router = useRouter();
 
@@ -37,12 +37,12 @@ const TrainLinkage = () => {
     setActiveInfo(optionValue === activeInfo ? null : optionValue);
   };
 
-  const { mutate } = usePublishLinkage();
+  const { mutate, isPending: isPublishing } = usePublishLinkage();
 
-  const isSubmitDisabled = false;
+  const isSubmitDisabled = isPublishing;
 
   // train ai linkage
-  const { mutate: trainAILinkage } = useUploadLinkageFile();
+  const { mutate: trainAILinkage, isPending } = useUploadLinkageFile();
 
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | ArrayBuffer | null>(
@@ -233,14 +233,22 @@ const TrainLinkage = () => {
 
                   <button
                     onClick={handleUpload}
-                    className="px-4 py-2 bg-[#3f3856] text-white rounded-[8px] text-xs"
+                    className={clsx(
+                      "px-4 py-2 bg-[#3f3856] text-white rounded-[8px] text-xs flex items-center justify-center text-center",
+                      isPending
+                        ? "border-stone-300 bg-stone-400/50"
+                        : "bg-white"
+                    )}
                   >
-                    Upload file to train Linkage
+                    {isPending ? (
+                      <SpinnerIcon />
+                    ) : (
+                      "Upload file to train Linkage"
+                    )}
                   </button>
                 </div>
               </div>
             </div>
-
             <div className="flex flex-col gap-2 mt-6">
               <h1 className="text-sm font-semibold">Capabilities</h1>
 
@@ -292,15 +300,14 @@ const TrainLinkage = () => {
                 })
               }
               className={clsx(
-                "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
+                "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
                 isSubmitDisabled
-                  ? "bg-gray-600 text-white cursor-not-allowed"
+                  ? "border-stone-300 bg-stone-400/50 text-white cursor-not-allowed"
                   : "bg-white text-[#290064]"
               )}
             >
-              Publish AI Linkage
+              {isPublishing ? <SpinnerIcon /> : "Publish AI Linkage"}
             </button>
-
             {published && (
               <button
                 onClick={() => router.push("/linkages/explore")}

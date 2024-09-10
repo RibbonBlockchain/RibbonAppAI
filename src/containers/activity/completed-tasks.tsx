@@ -229,7 +229,7 @@ const CompletedActivities = () => {
                                   className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
                                 >
                                   <p className="text-xs">Daily rewards</p>
-                                  <p className="text-sm">100 pts</p>
+                                  <p className="text-sm">100 ribbon</p>
                                 </div>
                               ) : (
                                 <TodoCompletedForm
@@ -324,12 +324,12 @@ const CompletedActivities = () => {
         )}
       </div>
 
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <div className="bg-[#F2EEFF] mb-2 flex flex-row items-center justify-between text-[#A81DA6] text-xs px-3 py-1 font-bold rounded-md">
           <p>Tasks</p>
           <Image width={40} alt="tasks" height={40} src="/images/tasks.png" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -30,10 +30,10 @@ const BalanceAndPoints = () => {
           <p className="text-xs font-bold">Unlock Withdrawals</p>
           <div className="flex flex-col gap-1">
             <p className="text-[#626262]">
-              <span className="text-xl text-black font-bold">
+              <span className="text-[16px] text-black font-bold">
                 {balance.toFixed(2) * 5000}
-              </span>{" "}
-              /10,000 ribbon
+              </span>
+              <span className="text-sm"> /10,000 ribbon</span>
             </p>
             <div className="w-full">
               <ProgressBar
@@ -54,7 +54,7 @@ const BalanceAndPoints = () => {
             alt=""
             width={100}
             height={136}
-            src="/images/unlock-more.png"
+            src="/assets/unlock-more.png"
           />
         </div>
       </div>

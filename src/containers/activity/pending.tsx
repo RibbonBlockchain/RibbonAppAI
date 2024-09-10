@@ -44,7 +44,7 @@ const Pending = (props: Props) => {
               props.priority ? "text-black" : "text-gradient-2"
             }`}
           >
-            {props.taskTitle} questionnaire
+            {props.taskTitle}
           </Link>
 
           <div className="flex flex-row items-center text-[11px]">
@@ -73,7 +73,7 @@ const Pending = (props: Props) => {
             src="/assets/coin.png"
             className="w-[32px] h-[32px] -ml-2 -mr-2"
           />
-          {props.reward} WLD
+          {props.reward} ribbon
         </div>
         {
           <p className="text-[10px] font-medium text-[#626262] self-end">

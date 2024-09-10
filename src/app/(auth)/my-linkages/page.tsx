@@ -27,8 +27,6 @@ import UploadQuestionnaire from "./upload-questionnaire";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
 
-// resolve conflict
-
 interface AIdata {
   id: number;
   name: string;
@@ -184,7 +182,7 @@ const MyLinkageDetails: React.FC = () => {
                 </div>
                 <div
                   onClick={() =>
-                    copyToClipboard(data?.data?.walletAddress?.addressId, () =>
+                    copyToClipboard(data?.data?.walletAddress, () =>
                       toast.success("Wallet address copied")
                     )
                   }

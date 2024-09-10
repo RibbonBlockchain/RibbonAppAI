@@ -1,11 +1,13 @@
+import clsx from "clsx";
 import { X } from "lucide-react";
 import { ArrowUp } from "iconsax-react";
 import { Toaster } from "react-hot-toast";
 import React, { useState, ChangeEvent } from "react";
 import { useUploadLinkageFile } from "@/api/linkage";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
 const FileUpload = ({ id }: { id: number }) => {
-  const { mutate } = useUploadLinkageFile();
+  const { mutate, isPending } = useUploadLinkageFile();
 
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | ArrayBuffer | null>(
@@ -80,11 +82,12 @@ const FileUpload = ({ id }: { id: number }) => {
 
         <button
           onClick={handleUpload}
-          className={
-            "my-10 w-full rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]"
-          }
+          className={clsx(
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm text-[#290064] flex items-center justify-center",
+            isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
+          )}
         >
-          Retrain AI Linkage
+          {isPending ? <SpinnerIcon /> : "Retrain AI Linkage"}
         </button>
         {/* <button
           onClick={handleUpload}

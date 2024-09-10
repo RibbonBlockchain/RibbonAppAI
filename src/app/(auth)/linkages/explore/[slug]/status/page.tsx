@@ -1,9 +1,11 @@
 "use client";
 
+import clsx from "clsx";
 import toast from "react-hot-toast";
 import { ArrowLeft2 } from "iconsax-react";
 import React, { useState, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { SpinnerIcon } from "@/components/icons/spinner";
 import { useGetLinkageBySlug, useUploadLinkageStatus } from "@/api/linkage";
 
 const CreateStatus = () => {
@@ -11,7 +13,7 @@ const CreateStatus = () => {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { mutate } = useUploadLinkageStatus();
+  const { mutate, isPending } = useUploadLinkageStatus();
   const { data } = useGetLinkageBySlug(slug);
 
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null);
@@ -141,9 +143,12 @@ const CreateStatus = () => {
           <button
             type="submit"
             disabled={!file}
-            className={`py-2 w-full rounded-md text-white bg-blue-500 hover:bg-blue-600`}
+            className={clsx(
+              `py-2 w-full rounded-md text-white bg-blue-500 hover:bg-blue-600`,
+              isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
+            )}
           >
-            Upload status
+            {isPending ? <SpinnerIcon /> : "Upload status"}
           </button>
         </div>
       </form>

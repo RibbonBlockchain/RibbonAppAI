@@ -34,7 +34,7 @@ const LinkageQuestionnairePage = () => {
           <div className="flex flex-row items-center gap-4">
             <Image alt="AI" width={44} height={44} src="/assets/AI.png" />
             <div className="flex flex-row gap-1">
-              <p>{linkageQ?.data?.name}</p> Questionnaire
+              <p>{linkageQ?.data?.name}</p>
             </div>
           </div>
         </div>

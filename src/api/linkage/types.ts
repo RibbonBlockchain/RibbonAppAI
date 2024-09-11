@@ -64,6 +64,7 @@ export type TDiscoveryLinkageResponse = {
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
   questions: LinkageQuestion[];
+  type: string;
 };
 
 export type QuestionType =
@@ -98,3 +99,5 @@ export type TSubmitLinkageQuestionnaireAnswer = {
 };
 
 export type TUploadLinkageStatusBody = { file: any; caption: string };
+
+export type TDisburseLoanBody = { amount: number };

@@ -10,6 +10,7 @@ import {
   Profile,
   Shield,
   Star,
+  WalletMoney,
 } from "iconsax-react";
 
 export const ProfileDetails = [
@@ -26,8 +27,12 @@ export const ProfileDetails = [
   {
     href: "/wallet",
     description: "Wallets",
-
     logo: <EmptyWallet />,
+  },
+  {
+    href: "/loan-wallet",
+    description: "Loan wallet",
+    logo: <WalletMoney />,
   },
   {
     href: "/profile/balance&points",

@@ -1,6 +1,7 @@
 import {
   TChatLinkageBody,
   TCreateLinkageBody,
+  TDisburseLoanBody,
   TDiscoveryLinkageResponse,
   TSubmitLinkageQuestionnaireAnswer,
   TUploadLinkageQuestionnaireBody,
@@ -147,5 +148,29 @@ export const uploadLinkageStatus = async ({
 
 export const featureLinkage = async (linkageId: number) => {
   const res = await client.post(`/linkage/${linkageId}/feature`);
+  return res.data;
+};
+
+// LOAN
+export const disburseLoan = async ({
+  linkageId,
+  body,
+}: {
+  body: TDisburseLoanBody;
+  linkageId: number;
+}) => {
+  const res = await client.post(`linkage/${linkageId}/loan`, body);
+  return res.data;
+};
+
+export const createWallet = async () => {
+  const res = await client.post(`user/wallet/create`, {
+    provider: "COINBASE",
+  });
+  return res.data;
+};
+
+export const getUserWallet = async () => {
+  const res = await client.get(`user/wallet`);
   return res.data;
 };

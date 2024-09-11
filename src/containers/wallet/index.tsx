@@ -51,6 +51,7 @@ import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
 import SwapPointToUsdcToken from "./swap-points";
+import { useCoinDetails } from "../dashboard/swipe-cards";
 
 const pointsABI = require("./contract/pointsABI.json");
 
@@ -579,18 +580,6 @@ const WalletComponent = () => {
   const [openWLDTxPage, setOpenWLDTxPage] = useState(false);
   const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
   const [showClaimModal, setShowClaimModal] = useState(false);
-
-  const useCoinDetails = () => {
-    const apiUrl = `https://api.coingecko.com/api/v3/coins/usd-coin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
-
-    const { isLoading, error, data } = useSWR(apiUrl, fetcher);
-
-    return {
-      isLoading,
-      error,
-      data,
-    };
-  };
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;

@@ -143,10 +143,10 @@ const LinkageViewDetails = () => {
                   <Location size="18" color="#ffffff" variant="Bold" />{" "}
                   {data?.data.location}
                 </div>
-                <div className="flex flex-row items-center gap-3 text-xs font-normal">
+                {/* <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <Coin1 size="18" color="#ffffff" variant="Bold" /> Linkage
                   Value: $ {data?.data.walletAddress.balance} xxx
-                </div>
+                </div> */}
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}
                   <div

@@ -1,9 +1,8 @@
 import clsx from "clsx";
-import useSWR from "swr";
 import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { fetcher, useCoinDetails } from "@/lib/values/priceAPI";
+import { useCoinDetails } from "@/lib/values/priceAPI";
 import { PointBalanceCard, WalletBalanceCard } from "./cards";
 
 const SwipeCards = () => {

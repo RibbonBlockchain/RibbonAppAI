@@ -18,8 +18,6 @@ const RewardButton: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
 
-  const [moodModal, setMoodModal] = useState(false);
-
   const { mutate } = useClaimDailyRewards();
 
   useEffect(() => {
@@ -59,8 +57,7 @@ const RewardButton: React.FC = () => {
   const claimReward = () => {
     if (isDisabled) return;
 
-    setMoodModal(true);
-    // mutate();
+    mutate();
 
     const cooldownTime = 12 * 60 * 60 * 1000;
     const endTime = Date.now() + cooldownTime;
@@ -71,7 +68,7 @@ const RewardButton: React.FC = () => {
   };
 
   return (
-    <div className="my-6 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full h-[40px]">
+    <div className="mt-6 mb-4 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full h-[40px]">
       {isDisabled ? (
         <div className="w-full flex flex-row items-center text-center justify-center">
           {formatTime(countdown)}
@@ -93,10 +90,6 @@ const RewardButton: React.FC = () => {
             <p>5000 ribbon</p>
           </div>
         </div>
-      )}
-
-      {moodModal && (
-        <MoodModal isOpen={moodModal} onClose={() => setMoodModal(false)} />
       )}
     </div>
   );

@@ -25,8 +25,8 @@ import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
 import UploadQuestionnaire from "./loan-survey";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
-import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
 import LoanSurvey from "./loan-survey";
+import { useCoinDetails } from "@/lib/values/priceAPI";
 
 interface AIdata {
   id: number;

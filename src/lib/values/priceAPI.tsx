@@ -11,8 +11,9 @@ export async function fetcher(url: string) {
   return res.json();
 }
 
-const useCoinDetails = () => {
-  const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
+export const useCoinDetails = () => {
+  // Updated API URL to fetch details for USDC
+  const apiUrl = `https://api.coingecko.com/api/v3/coins/usd-coin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
 
   const { isLoading, error, data } = useSWR(apiUrl, fetcher);
 
@@ -23,11 +24,14 @@ const useCoinDetails = () => {
   };
 };
 
-const WorldCoinPrice = () => {
+const UsdcCoinPrice = () => {
   const { data, error, isLoading } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
 
-  return <div>Current World Price: {currentPrice}</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
+  return <div>Current USDC Price: ${currentPrice}</div>;
 };
 
-export default WorldCoinPrice;
+export default UsdcCoinPrice;

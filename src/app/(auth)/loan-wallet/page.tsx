@@ -7,17 +7,21 @@ import { Copy } from "iconsax-react";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
+import { useGetUserWallet } from "@/api/linkage";
+import { useCoinDetails } from "@/lib/values/priceAPI";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
-import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowUp } from "lucide-react";
 
 const LoanWallet = () => {
   const router = useRouter();
-  const loanWalletAddress = "0xEFC3571deb12b1bc658d116751C75c8a29B5Ac812";
-  const loanBalance = 0;
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
+
+  const { data: loanWallet } = useGetUserWallet();
+  const loanWalletDetails = loanWallet?.data[1];
+
+  console.log(loanWalletDetails, "here");
 
   return (
     <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
@@ -37,14 +41,16 @@ const LoanWallet = () => {
         <div className="flex flex-col gap-2 mb-10 overflow-hidden">
           <div className="mt-4">
             <div className="flex flex-row gap-5 items-center justify-center ">
-              <p className="text-[16px]">{shorten(loanWalletAddress)}</p>
+              <p className="text-[16px]">
+                {shorten(loanWalletDetails?.address)}
+              </p>
               <Copy
                 size="18"
                 color="#F6F1FE"
                 variant="Bold"
                 className="cursor-pointer"
                 onClick={() => {
-                  copyToClipboard(loanWalletAddress, () =>
+                  copyToClipboard(loanWalletDetails?.balance, () =>
                     toast.success(`Wallet address copied`)
                   );
                 }}
@@ -53,8 +59,10 @@ const LoanWallet = () => {
           </div>
 
           <CustomTokenUI
-            wldTokenBalance={loanBalance}
-            balanceUSD={(Number(loanBalance) * currentPrice).toFixed(5)}
+            wldTokenBalance={loanWalletDetails?.balance}
+            balanceUSD={(
+              Number(loanWalletDetails?.balance) * currentPrice
+            ).toFixed(5)}
           />
 
           <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-between text-xs font-bold">

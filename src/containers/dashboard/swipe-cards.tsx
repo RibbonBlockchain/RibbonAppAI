@@ -3,20 +3,8 @@ import useSWR from "swr";
 import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { fetcher } from "@/lib/values/priceAPI";
+import { fetcher, useCoinDetails } from "@/lib/values/priceAPI";
 import { PointBalanceCard, WalletBalanceCard } from "./cards";
-
-export const useCoinDetails = () => {
-  const apiUrl = `https://api.coingecko.com/api/v3/coins/worldcoin-wld?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
-
-  const { isLoading, error, data } = useSWR(apiUrl, fetcher);
-
-  return {
-    isLoading,
-    error,
-    data,
-  };
-};
 
 const SwipeCards = () => {
   const router = useRouter();

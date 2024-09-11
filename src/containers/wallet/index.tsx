@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { shorten } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
-import { fetcher } from "@/lib/values/priceAPI";
+import { fetcher, useCoinDetails } from "@/lib/values/priceAPI";
 import SwapPointToWorldToken from "./swap-points";
 import WithdrawWorldToken from "./withdraw-token";
 import ClaimPointsModal from "./claim-point-modal";
@@ -51,7 +51,6 @@ import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
 import SwapPointToUsdcToken from "./swap-points";
-import { useCoinDetails } from "../dashboard/swipe-cards";
 
 const pointsABI = require("./contract/pointsABI.json");
 

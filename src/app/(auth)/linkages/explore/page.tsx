@@ -126,9 +126,7 @@ const Linkages = () => {
                       caption: img.caption,
                       linkageName: img.linkage.name,
                       linkageLogo: img.linkageLogo || "/assets/sample-icon.png",
-                      updatedTime: `${formatStatusDate(img.updatedAt)} - ${
-                        formatDateAndTimeAgo(img.updatedAt).relativeTime
-                      }`,
+                      updatedTime: ``,
                     })),
                     index
                   )

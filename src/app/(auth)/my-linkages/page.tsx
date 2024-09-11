@@ -23,9 +23,10 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
-import UploadQuestionnaire from "./upload-questionnaire";
+import UploadQuestionnaire from "./loan-survey";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import { useCoinDetails } from "@/containers/dashboard/swipe-cards";
+import LoanSurvey from "./loan-survey";
 
 interface AIdata {
   id: number;
@@ -46,6 +47,7 @@ const tabs = [
   { name: "Retrain", value: "retrain" },
   { name: "Wallet", value: "wallet" },
   { name: "Questionnaires", value: "questionnaires" },
+  { name: "Loan Survey", value: "loan" },
   { name: "Activity", value: "activity" },
   { name: "Settings", value: "settings" },
 ];
@@ -143,7 +145,7 @@ const MyLinkageDetails: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 px-1 flex flex-row gap-6 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
+      <div className="mt-6 px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
         {tabs.map((tab) => (
           <button
             key={tab.value}
@@ -248,6 +250,8 @@ const MyLinkageDetails: React.FC = () => {
           {selectedTab === "questionnaires" && (
             <UploadQuestionnaire linkageId={selectedAI?.id} />
           )}
+
+          {selectedTab === "loan" && <LoanSurvey linkageId={selectedAI?.id} />}
 
           {selectedTab === "activity" && <Activity />}
 

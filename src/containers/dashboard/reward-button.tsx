@@ -1,7 +1,7 @@
 import Image from "next/image";
+import MoodModal from "./mood-modal";
 import { useClaimDailyRewards } from "@/api/user";
 import React, { useState, useEffect } from "react";
-import { useGetAuth } from "@/api/auth";
 
 const formatTime = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
@@ -18,8 +18,9 @@ const RewardButton: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
 
+  const [moodModal, setMoodModal] = useState(false);
+
   const { mutate } = useClaimDailyRewards();
-  const { data: user, refetch } = useGetAuth({ enabled: true });
 
   useEffect(() => {
     const storedTime = localStorage.getItem("rewardCooldown");
@@ -58,8 +59,8 @@ const RewardButton: React.FC = () => {
   const claimReward = () => {
     if (isDisabled) return;
 
-    mutate();
-    refetch();
+    setMoodModal(true);
+    // mutate();
 
     const cooldownTime = 12 * 60 * 60 * 1000;
     const endTime = Date.now() + cooldownTime;
@@ -77,8 +78,8 @@ const RewardButton: React.FC = () => {
         </div>
       ) : (
         <div
-          className="flex flex-row items-center justify-center w-full gap-4"
           onClick={claimReward}
+          className="flex flex-row items-center justify-center w-full gap-4"
         >
           <p>Claim daily reward</p>
           <div className="flex flex-row items-center">
@@ -92,6 +93,10 @@ const RewardButton: React.FC = () => {
             <p>5000 ribbon</p>
           </div>
         </div>
+      )}
+
+      {moodModal && (
+        <MoodModal isOpen={moodModal} onClose={() => setMoodModal(false)} />
       )}
     </div>
   );

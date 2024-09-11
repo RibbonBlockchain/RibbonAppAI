@@ -27,7 +27,7 @@ const LinkageAIChatInterface: React.FC = () => {
   const params = useParams();
   const slug = params.slug as string;
 
-  const [selected, setSelected] = useState("ai-bot");
+  const [selected, setSelected] = useState("questionnaire");
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -155,15 +155,6 @@ const LinkageAIChatInterface: React.FC = () => {
 
         <div className="flex flex-row items-center justify-center self-center bg-[#3f3856] p-1 rounded-full mt-2 w-[90%]">
           <p
-            onClick={() => setSelected("ai-bot")}
-            className={clsx(
-              "w-full text-center py-2 rounded-full",
-              selected === "ai-bot" && " bg-[#0B0228]"
-            )}
-          >
-            AI Chat
-          </p>
-          <p
             onClick={() => setSelected("questionnaire")}
             className={clsx(
               "w-full text-center py-2 rounded-full",
@@ -171,6 +162,15 @@ const LinkageAIChatInterface: React.FC = () => {
             )}
           >
             Questionnaires
+          </p>
+          <p
+            onClick={() => setSelected("ai-bot")}
+            className={clsx(
+              "w-full text-center py-2 rounded-full",
+              selected === "ai-bot" && " bg-[#0B0228]"
+            )}
+          >
+            AI Chat
           </p>
         </div>
 

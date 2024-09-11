@@ -40,6 +40,7 @@ import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
 import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const initialQuestionnaireState = {
   id: "",
@@ -135,9 +136,10 @@ export const useClaimDailyRewards = () => {
   return useMutation({
     onError,
     mutationFn: () => claimDailyReward(),
-    // onSuccess: () => {
-    //   window.location.reload();
-    // },
+    onSuccess: () => {
+      // window.location.reload();
+      toast.success("Daily reward claimed");
+    },
   });
 };
 

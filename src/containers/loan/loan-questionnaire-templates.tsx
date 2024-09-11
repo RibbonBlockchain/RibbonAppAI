@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
-import Question from "./question-template";
+import Question from "../questionnaire/question-template";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { QuestionType } from "@/api/linkage/types";
@@ -25,12 +25,17 @@ interface Options {
   label?: string;
 }
 
-const Questionnaire = ({ linkageId }: { linkageId: number }) => {
+const UploadLoanQuestionniareTemplate = ({
+  linkageId,
+}: {
+  linkageId: number;
+}) => {
   const router = useRouter();
   const { mutate, isPending } = useUploadLinkageQuestionnaire();
 
   // Define default values
   const defaultQuestionnaireName = "";
+  const defaultLoanAmount = "0";
   const defaultQuestions: LinkageQuestion[] = [
     {
       text: "",
@@ -42,6 +47,7 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   const [questionnaireName, setQuestionnaireName] = useState(
     defaultQuestionnaireName
   );
+  const [loanAmount, setLoanAmount] = useState(defaultLoanAmount);
   const [questions, setQuestions] = useState(defaultQuestions);
 
   const handleAddQuestion = () => {
@@ -61,10 +67,7 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
 
   const handleSubmitLinkageQuestionnaireManually = () => {
     mutate(
-      {
-        body: { type: "QUESTIONNAIRE", name: questionnaireName, questions },
-        linkageId,
-      },
+      { body: { type: "LOAN", name: questionnaireName, questions }, linkageId },
       {
         onSuccess: () => {
           toast.success("Questionnaire successfully added");
@@ -155,13 +158,29 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   return (
     <div className="w-full flex flex-col gap-6 mb-20">
       <Toaster />
-      <input
-        type="text"
-        value={questionnaireName}
-        onChange={(e) => setQuestionnaireName(e.target.value)}
-        placeholder="Enter questionnaire name"
-        className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-      />
+
+      <div className="flex flex-col gap-2 mt-4">
+        <p className="text-sm font-semibold">Loan Name</p>
+        <input
+          type="text"
+          value={questionnaireName}
+          onChange={(e) => setQuestionnaireName(e.target.value)}
+          placeholder="Enter loan name"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-semibold">Loan Amount</p>
+        <input
+          type="text"
+          value={loanAmount}
+          onChange={(e) => setLoanAmount(e.target.value)}
+          placeholder="Enter loan amount"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+        />
+      </div>
+
       {questions.map((question, index) => (
         <Question
           key={index}
@@ -194,14 +213,14 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
       <button
         onClick={handleSubmitLinkageQuestionnaireManually}
         className={clsx(
-          "flex justify-center py-2.5 mt-8 text-sm text-start font-medium w-full rounded-[8px] text-[#290064]",
+          "flex justify-center py-2.5 mt-8 text-sm text-start font-semibold w-full rounded-[8px] text-[#290064]",
           isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
         )}
       >
-        {isPending ? <SpinnerIcon /> : "Upload Questionnaire"}
+        {isPending ? <SpinnerIcon /> : "Create loan service"}
       </button>
     </div>
   );
 };
 
-export default Questionnaire;
+export default UploadLoanQuestionniareTemplate;

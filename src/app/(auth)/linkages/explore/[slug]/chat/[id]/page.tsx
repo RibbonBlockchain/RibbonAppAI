@@ -9,6 +9,8 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
 import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questionnaire-chat";
+import LoanSurveyTemplate from "@/containers/loan/loan-questionnaire-templates";
+import LoanApplication from "@/containers/loan/loan-application-template";
 
 const LinkageQuestionnairePage = () => {
   const router = useRouter();
@@ -26,6 +28,8 @@ const LinkageQuestionnairePage = () => {
     questionnaireId,
   });
 
+  const loanAmount = "0";
+
   return (
     <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
       <div className="p-4 sm:p-6 py-6 flex flex-row items-center justify-between border-b border-[#C3B1FF4D]">
@@ -42,7 +46,11 @@ const LinkageQuestionnairePage = () => {
       </div>
 
       <div className="flex-1 overflow-hidden flex">
-        <LinkageQuestionnaireChat questions={linkageQ?.data?.questions} />
+        {linkageQ?.data?.type === "LOAN" ? (
+          <LoanApplication linkageId={linkageId} />
+        ) : (
+          <LinkageQuestionnaireChat questions={linkageQ?.data?.questions} />
+        )}
       </div>
     </div>
   );

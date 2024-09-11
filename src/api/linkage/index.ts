@@ -17,10 +17,14 @@ import {
   getDiscoveryLinkageStatus,
   featureLinkage,
   getDiscoverFeaturedLinkages,
+  createWallet,
+  getUserWallet,
+  disburseLoan,
 } from "./req";
 import {
   TChatLinkageBody,
   TCreateLinkageBody,
+  TDisburseLoanBody,
   TSubmitLinkageQuestionnaireAnswer,
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
@@ -212,5 +216,35 @@ export const useFeatureLinkage = () => {
     onError,
     mutationFn: ({ linkageId }: { linkageId: number }) =>
       featureLinkage(linkageId),
+  });
+};
+
+/// LOAN
+
+export const useDisburseLoan = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TDisburseLoanBody;
+      linkageId: number;
+    }) => disburseLoan({ body, linkageId }),
+  });
+};
+
+export const useCreateWallet = ({ onSuccess }: { onSuccess: () => void }) => {
+  return useMutation({
+    onError,
+    mutationFn: () => createWallet(),
+    onSuccess: onSuccess,
+  });
+};
+
+export const useGetUserWallet = () => {
+  return useQuery({
+    queryKey: ["user-wallet"],
+    queryFn: () => getUserWallet(),
   });
 };

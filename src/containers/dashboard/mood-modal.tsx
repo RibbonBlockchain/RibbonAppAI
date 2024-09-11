@@ -2,7 +2,6 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
-import { useClaimDailyRewards } from "@/api/user";
 
 interface ModalProps {
   isOpen: boolean;
@@ -66,14 +65,11 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   >("selectMood");
   const [selectedReason, setSelectedReason] = useState<string>("");
 
-  const { mutate } = useClaimDailyRewards();
-
   if (!isOpen) return null;
 
   const handleSetMoodClick = () => {
     if (selectedMood) {
       setView("selectReason");
-      mutate();
     }
   };
 
@@ -91,7 +87,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         {view === "selectMood" && (
           <section className="flex flex-col items-center justify-between gap-4 flex-grow">
             <div className="text-2xl font-bold text-center mb-4">
-              Hi Tolu, how do you feel today
+              Hi there!, how do you feel today
             </div>
 
             <Image

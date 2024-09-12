@@ -590,7 +590,7 @@ const WalletComponent = () => {
   return (
     <>
       {loggedIn ? (
-        <>
+        <div className="p-4 sm:p-6">
           <div className="min-h-screen bg-[inherit] flex flex-col">
             <div className="mb-6">
               <ArrowLeft
@@ -915,9 +915,9 @@ const WalletComponent = () => {
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
-        <div className="flex flex-col h-screen">
+        <div className="bg-walletBg bg-cover p-4 sm:p-6 flex flex-col h-screen">
           <div className="mb-6">
             <BackArrowButton stroke="#FFF" />
             <div className="flex -mt-10 text-white  flex-row items-center justify-center text-base font-semibold">

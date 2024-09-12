@@ -21,7 +21,7 @@ const config: Config = {
         aiBackground: "url('/assets/AI-background.png')",
         // account: "url('/images/user-bg.png')",
         peronalDetails: "url('/images/personal-details.png')",
-        walletBg: 'url("/images/connect-wallet-bg.png")',
+        walletBg: 'url("/assets/wallet-bg-cover.png")',
       },
     },
   },

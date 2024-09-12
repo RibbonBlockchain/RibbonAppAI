@@ -21,15 +21,13 @@ const LoanWallet = () => {
   const { data: loanWallet } = useGetUserWallet();
   const loanWalletDetails = loanWallet?.data[1];
 
-  console.log(loanWalletDetails, "here");
-
   return (
     <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
       <div className="min-h-screen bg-[inherit] flex flex-col">
         <div className="mt-4">
           <ArrowLeft
             stroke="#939393"
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.back()}
             className="flex w-[40px] cursor-pointer"
           />
 
@@ -59,7 +57,7 @@ const LoanWallet = () => {
           </div>
 
           <CustomTokenUI
-            wldTokenBalance={loanWalletDetails?.balance}
+            wldTokenBalance={loanWalletDetails?.balance.toFixed(4)}
             balanceUSD={(
               Number(loanWalletDetails?.balance) * currentPrice
             ).toFixed(5)}

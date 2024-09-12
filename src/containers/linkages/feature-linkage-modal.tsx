@@ -3,7 +3,9 @@ import { X } from "lucide-react";
 import React, { useState } from "react";
 import { InfoCircle } from "iconsax-react";
 import { useFeatureLinkage, useGetLinkages } from "@/api/linkage";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { SpinnerIcon } from "@/components/icons/spinner";
+import clsx from "clsx";
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,7 +16,7 @@ const FeatureLinkageModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
   const { data: linkages } = useGetLinkages();
-  const { mutate: featureLinkage } = useFeatureLinkage();
+  const { mutate: featureLinkage, isPending } = useFeatureLinkage();
 
   const handleItemClick = (itemId: number) => {
     setSelectedItem(itemId);
@@ -41,6 +43,7 @@ const FeatureLinkageModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-opacity-70 bg-black flex items-center justify-center z-50">
+      <Toaster />
       <div className="flex flex-col max-w-[300px] gap-4 bg-[#3f3952] bg-opacity-75 backdrop-blur-sm p-4 rounded-lg shadow-lg">
         <X onClick={onClose} className="flex self-start cursor-pointer" />
 
@@ -82,10 +85,15 @@ const FeatureLinkageModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <button
-          className="flex justify-center py-2.5 mt-4 text-sm text-start font-medium w-full rounded-[8px] text-[#290064] bg-white"
+          className={clsx(
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
+            isPending
+              ? "border-stone-300 bg-stone-400/50 text-white cursor-not-allowed"
+              : "bg-white text-[#290064]"
+          )}
           onClick={handleFeatureLinkage}
         >
-          Pay
+          {isPending ? <SpinnerIcon /> : "Pay"}
         </button>
 
         <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">

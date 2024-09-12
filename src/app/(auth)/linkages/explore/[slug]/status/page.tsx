@@ -71,6 +71,8 @@ const CreateStatus = () => {
     );
   };
 
+  const isUploadDisabled = !file || isPending;
+
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
       <div className="flex flex-row items-center gap-4 mt-2 mb-6">
@@ -142,10 +144,12 @@ const CreateStatus = () => {
         <div className="absolute bottom-6 w-full px-6 flex self-center justify-center items-center">
           <button
             type="submit"
-            disabled={!file}
+            disabled={isUploadDisabled}
             className={clsx(
-              `py-2 w-full rounded-md text-white bg-blue-500 hover:bg-blue-600`,
-              isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
+              "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
+              isUploadDisabled
+                ? "border-stone-300 bg-stone-400/50 text-white cursor-not-allowed"
+                : "bg-white text-[#290064]"
             )}
           >
             {isPending ? <SpinnerIcon /> : "Upload status"}

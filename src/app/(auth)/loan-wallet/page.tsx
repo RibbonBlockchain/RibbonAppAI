@@ -19,7 +19,9 @@ const LoanWallet = () => {
   const currentPrice = data?.market_data.current_price.usd as number;
 
   const { data: loanWallet } = useGetUserWallet();
-  const loanWalletDetails = loanWallet?.data[1];
+  const loanWalletDetails = loanWallet?.data?.find(
+    (item: any) => item.provider === "COINBASE"
+  );
 
   return (
     <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
@@ -48,7 +50,7 @@ const LoanWallet = () => {
                 variant="Bold"
                 className="cursor-pointer"
                 onClick={() => {
-                  copyToClipboard(loanWalletDetails?.balance, () =>
+                  copyToClipboard(loanWalletDetails?.address, () =>
                     toast.success(`Wallet address copied`)
                   );
                 }}
@@ -57,7 +59,7 @@ const LoanWallet = () => {
           </div>
 
           <CustomTokenUI
-            wldTokenBalance={loanWalletDetails?.balance.toFixed(4)}
+            wldTokenBalance={loanWalletDetails?.balance.toFixed(2)}
             balanceUSD={(
               Number(loanWalletDetails?.balance) * currentPrice
             ).toFixed(5)}

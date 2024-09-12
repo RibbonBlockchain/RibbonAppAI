@@ -55,6 +55,9 @@ const tabs = [
 const MyLinkageDetails: React.FC = () => {
   const router = useRouter();
 
+  const { data: coinPrice } = useCoinDetails();
+  const currentPrice = coinPrice?.market_data.current_price.usd as number;
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
@@ -62,8 +65,7 @@ const MyLinkageDetails: React.FC = () => {
   const { data } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
 
-  const { data: coinPrice } = useCoinDetails();
-  const currentPrice = coinPrice?.market_data.current_price.usd as number;
+  const walletBalance = data?.data?.wallet?.balance * currentPrice;
 
   const lastTrainedDate: Date = new Date(
     linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
@@ -243,7 +245,7 @@ const MyLinkageDetails: React.FC = () => {
           {selectedTab === "wallet" && (
             <LinkageWallet
               walletAddress={data?.data?.walletAddress}
-              walletBalance={data?.data?.wallet?.balance * currentPrice}
+              walletBalance={walletBalance?.toFixed(4)}
             />
           )}
 

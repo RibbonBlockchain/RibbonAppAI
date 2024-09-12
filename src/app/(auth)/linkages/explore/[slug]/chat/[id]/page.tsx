@@ -8,9 +8,30 @@ import React from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
-import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questionnaire-chat";
-import LoanSurveyTemplate from "@/containers/loan/loan-questionnaire-templates";
 import LoanApplication from "@/containers/loan/loan-application-template";
+import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questionnaire-chat";
+
+const questions = [
+  {
+    id: 1,
+    text: "Welcome! Kindly connect your loan wallet to continue. Don't worry, if you don't have a loan wallet, one will be created for you.",
+    options: [
+      { id: 1, value: "Connect Wallet" },
+      { id: 2, value: "Come back later" },
+    ],
+  },
+  {
+    id: 2,
+    text: "Your loan wallet has been connected. Your wallet loan balance is $balance usdc.",
+    options: [],
+  },
+  {
+    id: 3,
+    text: "Please enter the loan amount (usdc) you wish to disburse.",
+    options: [],
+  },
+  { id: 4, text: "Your loan has been successfully disbursed.", options: [] },
+];
 
 const LinkageQuestionnairePage = () => {
   const router = useRouter();
@@ -28,7 +49,7 @@ const LinkageQuestionnairePage = () => {
     questionnaireId,
   });
 
-  const loanAmount = "0";
+  // console.log(linkageQ?.data?.questions, "here");
 
   return (
     <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
@@ -47,7 +68,7 @@ const LinkageQuestionnairePage = () => {
 
       <div className="flex-1 overflow-hidden flex">
         {linkageQ?.data?.type === "LOAN" ? (
-          <LoanApplication linkageId={linkageId} />
+          <LoanApplication linkageId={linkageId} questions={questions} />
         ) : (
           <LinkageQuestionnaireChat questions={linkageQ?.data?.questions} />
         )}

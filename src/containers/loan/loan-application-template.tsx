@@ -23,31 +23,35 @@ interface Message {
 
 interface LoanApplicationProps {
   linkageId: number;
+  questions: any[];
 }
 
-const questions = [
-  {
-    id: 1,
-    text: "Welcome! Kindly connect your loan wallet to continue. Don't worry, if you don't have a loan wallet, one will be created for you.",
-    options: [
-      { id: 1, value: "Connect Wallet" },
-      { id: 2, value: "Come back later" },
-    ],
-  },
-  {
-    id: 2,
-    text: "Your loan wallet has been connected. Your wallet loan balance is $balance usdc.",
-    options: [],
-  },
-  {
-    id: 3,
-    text: "Please enter the loan amount (usdc) you wish to disburse.",
-    options: [],
-  },
-  { id: 4, text: "Your loan has been successfully disbursed.", options: [] },
-];
+// const questions = [
+//   {
+//     id: 1,
+//     text: "Welcome! Kindly connect your loan wallet to continue. Don't worry, if you don't have a loan wallet, one will be created for you.",
+//     options: [
+//       { id: 1, value: "Connect Wallet" },
+//       { id: 2, value: "Come back later" },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     text: "Your loan wallet has been connected. Your wallet loan balance is $balance usdc.",
+//     options: [],
+//   },
+//   {
+//     id: 3,
+//     text: "Please enter the loan amount (usdc) you wish to disburse.",
+//     options: [],
+//   },
+//   { id: 4, text: "Your loan has been successfully disbursed.", options: [] },
+// ];
 
-const LoanApplication: React.FC<LoanApplicationProps> = ({ linkageId }) => {
+const LoanApplication: React.FC<LoanApplicationProps> = ({
+  linkageId,
+  questions,
+}) => {
   const router = useRouter();
 
   const [messages, setMessages] = useState<Message[]>([]);

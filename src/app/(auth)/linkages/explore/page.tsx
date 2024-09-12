@@ -6,6 +6,10 @@ import {
   useGetDiscoveryLinkageStatus,
   useGetDiscoveryFeaturedLinkages,
 } from "@/api/linkage";
+import {
+  formatStatusDate,
+  formatDateAndTimeAgo,
+} from "@/lib/values/format-dateandtime-ago";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -17,10 +21,6 @@ import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
-import {
-  formatDateAndTimeAgo,
-  formatStatusDate,
-} from "@/lib/values/format-dateandtime-ago";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -54,13 +54,14 @@ const Linkages = () => {
     setQuery(newQuery);
   };
 
-  const handleSearchSubmit = (query: string) => {
-    console.log("Search submitted with query:", query);
-  };
-
-  const { data: discoveryLinkages } = useGetDiscoveryLinkages({
+  const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
     params: { page: 1, pageSize: 10, query },
   });
+
+  const handleSearchSubmit = (query: string) => {
+    refetch();
+    console.log(query, "here");
+  };
 
   const { data: featuredLinkages } = useGetDiscoveryFeaturedLinkages({
     params: { page: 1, pageSize: 10 },

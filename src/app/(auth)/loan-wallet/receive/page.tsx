@@ -6,11 +6,13 @@ import QRCode from "qrcode.react";
 import toast from "react-hot-toast";
 import { Copy } from "iconsax-react";
 import { InfoIcon, Share } from "lucide-react";
+import { useGetUserWallet } from "@/api/linkage";
 import BackArrowButton from "@/components/button/back-arrow";
 import AddressDisplay from "@/components/wallet/address-display";
 
 const Receive = () => {
-  const loanWalletAddress = "0xEFC3571deb12b1bc658d116751C75c8a29B5Ac812";
+  const { data: loanWallet } = useGetUserWallet();
+  const loanWalletAddress = loanWallet?.data[1]?.address;
 
   const handleClick = () => {
     navigator.clipboard

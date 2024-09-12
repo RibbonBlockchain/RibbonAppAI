@@ -6,7 +6,7 @@ const InviteFriends = ({ className }: { className?: string }) => {
   return (
     <div
       className={clsx(
-        "my-2 p-2 text-black flex items-center justify-between rounded-[18px] border border-[#D6CBFF33]",
+        "my-2 p-2 text-white flex items-center justify-between rounded-[18px] border border-[#D6CBFF33]",
         className
       )}
     >

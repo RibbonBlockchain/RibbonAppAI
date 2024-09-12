@@ -13,7 +13,7 @@ const LinkageWallet = ({
   walletBalance,
 }: {
   walletAddress: string;
-  walletBalance: number;
+  walletBalance: any;
 }) => {
   const [selected, setSelected] = useState("deposit");
 

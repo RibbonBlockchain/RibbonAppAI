@@ -26,13 +26,12 @@ const LoanWallet = () => {
   return (
     <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
       <div className="min-h-screen bg-[inherit] flex flex-col">
-        <div className="mt-4">
+        <div className="mt-4 h-[40px] w-full">
           <ArrowLeft
             stroke="#939393"
             onClick={() => router.back()}
-            className="flex w-[40px] cursor-pointer"
+            className="flex cursor-pointer"
           />
-
           <div className="flex text-white -mt-6 flex-row items-center justify-center text-base font-semibold">
             Wallet
           </div>

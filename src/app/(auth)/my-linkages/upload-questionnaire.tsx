@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { UploadCloudIcon } from "lucide-react";
 import { ArrowLeft, Edit } from "iconsax-react";
 import QuestionnaireTemplate from "@/containers/loan/loan-questionnaire-templates";
+import Questionnaire from "@/containers/questionnaire/quetionnaire-templates";
 
 const tabs = [
   { name: "All questionnaires", value: "questionnaires" },
@@ -100,7 +101,7 @@ const UploadQuestionnaire = ({ linkageId }: { linkageId: number }) => {
                 </p>
               </div>
 
-              <QuestionnaireTemplate linkageId={linkageId} />
+              <Questionnaire linkageId={linkageId} />
             </div>
           )}
 

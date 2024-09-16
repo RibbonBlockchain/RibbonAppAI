@@ -23,10 +23,10 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
-import UploadQuestionnaire from "./loan-survey";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import LoanSurvey from "./loan-survey";
 import { useCoinDetails } from "@/lib/values/priceAPI";
+import UploadQuestionnaire from "./upload-questionnaire";
 
 interface AIdata {
   id: number;

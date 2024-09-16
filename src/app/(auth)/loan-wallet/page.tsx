@@ -64,10 +64,10 @@ const LoanWallet = () => {
             ).toFixed(5)}
           />
 
-          <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-between text-xs font-bold">
+          <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-center text-xs font-bold">
             <div
               onClick={() => router.push("/loan-wallet/receive")}
-              className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+              className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
               <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center border border-[#D6CBFF] rounded-[12px] ">
                 <ArrowDown stroke="#fff" />
@@ -77,7 +77,7 @@ const LoanWallet = () => {
 
             <div
               onClick={() => console.log("")}
-              className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+              className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
               <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center border border-[#D6CBFF] rounded-[12px] ">
                 <ArrowUp stroke="#fff" />

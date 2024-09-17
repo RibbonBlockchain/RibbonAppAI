@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { ArrowLeft2 } from "iconsax-react";
-import React, { useState, useEffect } from "react";
+import { ArrowLeft2, Trash } from "iconsax-react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface Image {
@@ -23,17 +23,21 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
   onClose,
 }) => {
   const [index, setIndex] = useState(currentIndex);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const deleteButtonRef = useRef<HTMLDivElement>(null);
+  const [interval, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIndex(currentIndex);
   }, [currentIndex]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const id = setInterval(() => {
       handleNext();
     }, 7000);
+    setIntervalId(id);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   }, [index]);
 
   const handlePrev = () => {
@@ -62,21 +66,33 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeydown);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       window.removeEventListener("keydown", handleKeydown);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [showDeleteButton]);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      deleteButtonRef.current &&
+      !deleteButtonRef.current.contains(event.target as Node)
+    ) {
+      setShowDeleteButton(false);
+    }
+  };
 
   const resetTimer = () => {
-    clearInterval(interval);
-    interval = setInterval(() => {
-      handleNext();
-    }, 7000);
+    if (interval) {
+      clearInterval(interval);
+      const id = setInterval(() => {
+        handleNext();
+      }, 7000);
+      setIntervalId(id);
+    }
   };
 
   const { url, caption, linkageLogo, linkageName, updatedTime } = images[index];
-
-  let interval: NodeJS.Timeout;
 
   return (
     <div className="fixed inset-0 bg-[#0B0228] text-white flex flex-col justify-between py-6 z-50">
@@ -88,17 +104,38 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
           onClick={onClose}
         />
 
-        <div className="flex flex-row items-center gap-2">
-          <Image
-            src={linkageLogo || "/assets/sample-logo.png"}
-            alt="Linkage Logo"
-            width={56}
-            height={56}
-            className="max-w-[56px] max-h-[56px] rounded-full"
-          />
-          <div className="flex flex-col text-white">
-            <p className="text-sm font-bold">{linkageName}</p>
-            <p className="text-xs font-normal">{updatedTime}</p>
+        <div className="w-full mr-4 flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center gap-2">
+            <Image
+              src={linkageLogo || "/assets/sample-logo.png"}
+              alt="Linkage Logo"
+              width={56}
+              height={56}
+              className="max-w-[56px] max-h-[56px] rounded-full"
+            />
+            <div className="flex flex-col text-white">
+              <p className="text-sm font-bold">{linkageName}</p>
+              <p className="text-xs font-normal">{updatedTime}</p>
+            </div>
+          </div>
+
+          <div ref={deleteButtonRef} className="self-center pr-2">
+            <Image
+              alt="icon"
+              width={24}
+              height={24}
+              src="/assets/option-icon.png"
+              className="relative cursor-pointer"
+              onClick={() => setShowDeleteButton((prev) => !prev)}
+            />
+
+            {showDeleteButton && (
+              <div className="absolute right-6">
+                <button className="w-fit flex flex-row gap-1 items-center justify-center p-2 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold">
+                  <Trash size={20} /> Delete
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

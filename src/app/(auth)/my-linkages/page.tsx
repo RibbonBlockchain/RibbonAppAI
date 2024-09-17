@@ -27,6 +27,7 @@ import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import LoanSurvey from "./loan-survey";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import UploadQuestionnaire from "./upload-questionnaire";
+import ManageLinkage from "./manage-linkages";
 
 interface AIdata {
   id: number;
@@ -48,6 +49,7 @@ const tabs = [
   { name: "Wallet", value: "wallet" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Loan Survey", value: "loan" },
+  { name: "Manage Linkage", value: "manage-linkage" },
   { name: "Activity", value: "activity" },
   { name: "Settings", value: "settings" },
 ];
@@ -85,6 +87,7 @@ const MyLinkageDetails: React.FC = () => {
 
   useEffect(() => {
     if (selectedAI) {
+      localStorage.setItem("selectedLinkage", JSON.stringify(selectedAI));
     }
   }, [selectedAI]);
 
@@ -254,6 +257,10 @@ const MyLinkageDetails: React.FC = () => {
           )}
 
           {selectedTab === "loan" && <LoanSurvey linkageId={selectedAI?.id} />}
+
+          {selectedTab === "manage-linkage" && (
+            <ManageLinkage linkageId={selectedAI?.id} />
+          )}
 
           {selectedTab === "activity" && <Activity />}
 

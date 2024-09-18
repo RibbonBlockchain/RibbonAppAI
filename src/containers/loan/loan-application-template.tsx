@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Plus, X } from "lucide-react";
 import {
   useCreateWallet,
   useGetUserWallet,
   useDisburseLoan,
 } from "@/api/linkage";
+import clsx from "clsx";
 import Image from "next/image";
 import { User } from "iconsax-react";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { shortenTransaction } from "@/lib/utils/shorten";
-import clsx from "clsx";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
 
 interface Message {
   sender: "user" | "ai";
@@ -25,28 +24,6 @@ interface LoanApplicationProps {
   linkageId: number;
   questions: any[];
 }
-
-// const questions = [
-//   {
-//     id: 1,
-//     text: "Welcome! Kindly connect your loan wallet to continue. Don't worry, if you don't have a loan wallet, one will be created for you.",
-//     options: [
-//       { id: 1, value: "Connect Wallet" },
-//       { id: 2, value: "Come back later" },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     text: "Your loan wallet has been connected. Your wallet loan balance is $balance usdc.",
-//     options: [],
-//   },
-//   {
-//     id: 3,
-//     text: "Please enter the loan amount (usdc) you wish to disburse.",
-//     options: [],
-//   },
-//   { id: 4, text: "Your loan has been successfully disbursed.", options: [] },
-// ];
 
 const LoanApplication: React.FC<LoanApplicationProps> = ({
   linkageId,
@@ -60,23 +37,28 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
   const { mutate: createUserWallet } = useCreateWallet({
     onSuccess: () => setStep(2),
   });
-  const { data: walletData } = useGetUserWallet();
+
+  const { data: loanWallet } = useGetUserWallet();
+  const loanWalletDetails = loanWallet?.data?.find(
+    (item: any) => item.provider === "COINBASE"
+  );
+
   const { mutate: disburseLoan, isPending } = useDisburseLoan();
 
-  const shortWalletAddress = shortenTransaction(walletData?.data[1]?.address);
+  const shortWalletAddress = shortenTransaction(loanWalletDetails?.address);
   const disableInput = false;
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const setStep = (step: number) => {
-    if (step === 2 && walletData) {
+    if (step === 2 && loanWalletDetails) {
       setMessages([
         ...messages,
         {
           sender: "ai",
           text: questions[1].text.replace(
             "$balance",
-            walletData.data[1]?.balance || "0"
+            loanWalletDetails?.balance || "0"
           ),
         },
       ]);

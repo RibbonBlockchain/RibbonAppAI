@@ -155,13 +155,18 @@ const Questionnaire = ({ linkageId }: { linkageId: number }) => {
   return (
     <div className="w-full flex flex-col gap-6 mb-20">
       <Toaster />
-      <input
-        type="text"
-        value={questionnaireName}
-        onChange={(e) => setQuestionnaireName(e.target.value)}
-        placeholder="Enter questionnaire name"
-        className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-      />
+
+      <div className="flex flex-col gap-2 mt-2">
+        <p className="text-sm font-semibold">Questionnaire Name</p>
+        <input
+          type="text"
+          value={questionnaireName}
+          onChange={(e) => setQuestionnaireName(e.target.value)}
+          placeholder="Enter questionnaire name"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+        />
+      </div>
+
       {questions.map((question, index) => (
         <Question
           key={index}

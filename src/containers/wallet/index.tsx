@@ -415,10 +415,10 @@ const WalletComponent = () => {
       if (userOpReceipt.success == "true") {
         setShowPending(false), toast.success("Transaction successful");
       } else {
-        setShowPending(false), toast.error("An error occured");
+        setShowPending(false), toast.error("Transaction failed");
       }
     } catch (err) {
-      setShowPending(false), toast.error("An error occured");
+      setShowPending(false), toast.error("Transaction failed");
       return;
     }
   };
@@ -468,10 +468,10 @@ const WalletComponent = () => {
       if (userOpReceipt.success == "true") {
         setShowPending(false), toast.success("Transaction successful");
       } else {
-        setShowPending(false), toast.error("An error occured");
+        setShowPending(false), toast.error("Transaction failed");
       }
     } catch (err) {
-      setShowPending(false), toast.error("An error occured");
+      setShowPending(false), toast.error("Transaction failed");
       return;
     }
   };

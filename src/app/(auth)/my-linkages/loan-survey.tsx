@@ -1,5 +1,6 @@
 import React from "react";
 import LoanSurveyTemplate from "@/containers/loan/loan-questionnaire-templates";
+import UploadLoanQuestionniareTemplate from "@/containers/loan/loan-questionnaire-templates";
 
 const LoanSurvey = ({ linkageId }: { linkageId: number }) => {
   return (
@@ -14,7 +15,7 @@ const LoanSurvey = ({ linkageId }: { linkageId: number }) => {
       </div>
 
       <div className="w-full flex flex-col gap-6">
-        <LoanSurveyTemplate linkageId={linkageId} />
+        <UploadLoanQuestionniareTemplate linkageId={linkageId} />
       </div>
     </section>
   );

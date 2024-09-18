@@ -42,6 +42,8 @@ const Linkages = () => {
       linkageName: string;
       linkageLogo?: string;
       updatedTime: string;
+      linkageId: number;
+      statusId: number;
     }[]
   >([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -80,6 +82,8 @@ const Linkages = () => {
       linkageName: string;
       linkageLogo?: string;
       updatedTime: string;
+      linkageId: number;
+      statusId: number;
     }[],
     index: number
   ) => {
@@ -128,6 +132,8 @@ const Linkages = () => {
                       linkageName: img.linkage.name,
                       linkageLogo: img.linkageLogo || "/assets/sample-icon.png",
                       updatedTime: ``,
+                      statusId: img.id,
+                      linkageId: img.linkageId,
                     })),
                     index
                   )

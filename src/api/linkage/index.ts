@@ -20,6 +20,10 @@ import {
   createWallet,
   getUserWallet,
   disburseLoan,
+  deleteLinkage,
+  deleteLinkageStatus,
+  deleteFeaturedLinkage,
+  editLinkage,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -38,6 +42,26 @@ export const useCreateLinkage = () => {
   return useMutation({
     onError,
     mutationFn: (body: TCreateLinkageBody) => createLinkage(body),
+  });
+};
+
+export const useEditLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TCreateLinkageBody;
+      linkageId: number;
+    }) => editLinkage(body, linkageId),
+  });
+};
+
+export const useDeleteLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: (id: number) => deleteLinkage(id),
   });
 };
 
@@ -143,6 +167,7 @@ export const useInitiateWalletTransfer = () => {
   });
 };
 
+//LINKAGE QUESTIONNAIRES
 export const useUploadLinkageQuestionnaire = () => {
   return useMutation({
     onError,
@@ -198,6 +223,7 @@ export const useSubmitLinkageQuestionnaireAnswer = () => {
   });
 };
 
+// STATUS
 export const useUploadLinkageStatus = () => {
   return useMutation({
     onError,
@@ -211,6 +237,20 @@ export const useUploadLinkageStatus = () => {
   });
 };
 
+export const useDeleteLinkageStatus = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      linkageId,
+      statusId,
+    }: {
+      linkageId: number;
+      statusId: number;
+    }) => deleteLinkageStatus({ linkageId, statusId }),
+  });
+};
+
+// FEATURED LINKAGE
 export const useFeatureLinkage = () => {
   return useMutation({
     onError,
@@ -219,8 +259,20 @@ export const useFeatureLinkage = () => {
   });
 };
 
-/// LOAN
+export const useDeleteFeaturedLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      linkageId,
+      featuredId,
+    }: {
+      linkageId: number;
+      featuredId: number;
+    }) => deleteFeaturedLinkage({ linkageId, featuredId }),
+  });
+};
 
+/// LOAN
 export const useDisburseLoan = () => {
   return useMutation({
     onError,

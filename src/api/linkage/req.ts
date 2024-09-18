@@ -16,6 +16,14 @@ export const createLinkage = async (body: TCreateLinkageBody) => {
   return res.data;
 };
 
+export const editLinkage = async (
+  body: TCreateLinkageBody,
+  linkageId: number
+) => {
+  const res = await client.patch(`/linkage/${linkageId}`, body);
+  return res.data;
+};
+
 export const uploadLinkageFile = async (file: any, id: number) => {
   const res = await client.post(`/linkage/${id}/file`, file);
   return res.data;
@@ -33,6 +41,11 @@ export const chatLinkage = async (slug: string, body: TChatLinkageBody) => {
 
 export const getLinkages = async () => {
   const res = await client.get("/linkage");
+  return res.data;
+};
+
+export const deleteLinkage = async (id: number) => {
+  const res = await client.delete(`/linkage/${id}`);
   return res.data;
 };
 
@@ -93,6 +106,7 @@ export const initiateWalletTransfer = async (address: string) => {
   return res.data;
 };
 
+//LINKAGE QUESTIONNAIRES
 export const uploadLinkageQuestionnaire = async ({
   linkageId,
   body,
@@ -135,6 +149,7 @@ export const submitLinkageQuestionnaireAnswer = async ({
   return res.data;
 };
 
+// STATUS
 export const uploadLinkageStatus = async ({
   linkageId,
   body,
@@ -146,8 +161,31 @@ export const uploadLinkageStatus = async ({
   return res.data;
 };
 
+export const deleteLinkageStatus = async ({
+  linkageId,
+  statusId,
+}: {
+  linkageId: number;
+  statusId: number;
+}) => {
+  const res = await client.delete(`linkage/${linkageId}/status/${statusId}`);
+  return res.data;
+};
+
+// FEATURED LINKAGE
 export const featureLinkage = async (linkageId: number) => {
   const res = await client.post(`/linkage/${linkageId}/feature`);
+  return res.data;
+};
+
+export const deleteFeaturedLinkage = async ({
+  linkageId,
+  featuredId,
+}: {
+  linkageId: number;
+  featuredId: number;
+}) => {
+  const res = await client.delete(`linkage/${linkageId}/feature/${featuredId}`);
   return res.data;
 };
 

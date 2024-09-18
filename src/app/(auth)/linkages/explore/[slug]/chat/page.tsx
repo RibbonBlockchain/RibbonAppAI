@@ -161,7 +161,7 @@ const LinkageAIChatInterface: React.FC = () => {
               selected === "questionnaire" && " bg-[#0B0228]"
             )}
           >
-            Questionnaires
+            Catalogues
           </p>
           <p
             onClick={() => setSelected("ai-bot")}
@@ -185,6 +185,7 @@ const LinkageAIChatInterface: React.FC = () => {
                 >
                   <div className="">
                     <p className="font-semibold mb-1">{i.name}</p>
+
                     <div className="-ml-2 flex flex-row items-center font-medium mb-2">
                       <Image
                         src="/assets/coin.png"
@@ -192,7 +193,12 @@ const LinkageAIChatInterface: React.FC = () => {
                         height={32}
                         width={32}
                       />
-                      <p>{i.reward} usdc / question</p>
+
+                      {i.type === "LOAN" ? (
+                        "Loan application"
+                      ) : (
+                        <p>{i.reward} usdc / question</p>
+                      )}
                     </div>
                   </div>
                   <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full mb-2">

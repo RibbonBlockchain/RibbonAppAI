@@ -49,8 +49,6 @@ const LinkageQuestionnairePage = () => {
     questionnaireId,
   });
 
-  // console.log(linkageQ?.data?.questions, "here");
-
   return (
     <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
       <div className="p-4 sm:p-6 py-6 flex flex-row items-center justify-between border-b border-[#C3B1FF4D]">

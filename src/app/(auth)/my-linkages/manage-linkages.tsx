@@ -1,12 +1,21 @@
 import toast from "react-hot-toast";
 import React, { useState } from "react";
-import { useDeleteLinkage } from "@/api/linkage";
+import { useDeleteFeaturedLinkage, useDeleteLinkage } from "@/api/linkage";
 import { Edit2, Trash, Warning2 } from "iconsax-react";
 import DeleteLinkageModal from "@/containers/linkages/delete-linkage-modal";
+import UnfeatureLinkageModal from "@/containers/linkages/unfeature-linkage-modal";
 
-const ManageLinkage = ({ linkageId }: { linkageId: number }) => {
+const ManageLinkage = ({
+  linkageId,
+  featured,
+  featuredId,
+}: {
+  linkageId: number;
+  featuredId: number;
+  featured: boolean;
+}) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { mutate } = useDeleteLinkage();
+  const { mutate, isPending: deleteIsPending } = useDeleteLinkage();
 
   const handleDeleteLinkage = () => {
     mutate(linkageId, {
@@ -14,6 +23,21 @@ const ManageLinkage = ({ linkageId }: { linkageId: number }) => {
         setShowDeleteModal(false), toast.success("Linkage deleted");
       },
     });
+  };
+
+  const [showUnfeatureModal, setShowUnfeatureModal] = useState(false);
+  const { mutate: unfeatureLinkage, isPending: unfeatureIsPending } =
+    useDeleteFeaturedLinkage();
+
+  const handleUnfeatureLinkage = () => {
+    unfeatureLinkage(
+      { linkageId, featuredId },
+      {
+        onSuccess: () => {
+          setShowUnfeatureModal(false), toast.success("Linkage unfeatured");
+        },
+      }
+    );
   };
 
   return (
@@ -55,6 +79,23 @@ const ManageLinkage = ({ linkageId }: { linkageId: number }) => {
           </div>
         </div>
 
+        {featured && (
+          <div
+            onClick={() => setShowUnfeatureModal(true)}
+            className="flex flex-row gap-2 py-3 items-start border-b border-[#C3B1FF4D]"
+          >
+            <div className="mt-1">
+              <Warning2 size={20} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <p className="text-base font-semibold">Unfeature Linkage</p>
+              <p className="text-xs font-normal">
+                Enable or disable the bot&apos;`s functionality
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-row gap-2 py-3 items-start border-b border-[#C3B1FF4D]">
           <div className="mt-1">
             <Warning2 size={20} />
@@ -73,6 +114,16 @@ const ManageLinkage = ({ linkageId }: { linkageId: number }) => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onDeleteLinkage={handleDeleteLinkage}
+          deleteIsPending={deleteIsPending}
+        />
+      )}
+
+      {showUnfeatureModal && (
+        <UnfeatureLinkageModal
+          isOpen={showUnfeatureModal}
+          onClose={() => setShowUnfeatureModal(false)}
+          onUnfeatureLinkage={handleUnfeatureLinkage}
+          unfeatureIsPending={unfeatureIsPending}
         />
       )}
     </section>

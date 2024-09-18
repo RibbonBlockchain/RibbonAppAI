@@ -259,7 +259,11 @@ const MyLinkageDetails: React.FC = () => {
           {selectedTab === "loan" && <LoanSurvey linkageId={selectedAI?.id} />}
 
           {selectedTab === "manage-linkage" && (
-            <ManageLinkage linkageId={selectedAI?.id} />
+            <ManageLinkage
+              linkageId={selectedAI?.id}
+              featured={data?.data?.features?.length > 0}
+              featuredId={data?.data?.features[0]?.id}
+            />
           )}
 
           {selectedTab === "activity" && <Activity />}

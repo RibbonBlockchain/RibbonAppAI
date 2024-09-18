@@ -1,9 +1,10 @@
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { ArrowLeft2, Trash } from "iconsax-react";
-import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useDeleteLinkageStatus } from "@/api/linkage";
-import toast from "react-hot-toast";
+import { SpinnerIcon } from "@/components/icons/spinner";
+import React, { useState, useEffect, useRef } from "react";
 
 interface Image {
   url: string;
@@ -94,13 +95,14 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
     statusId,
   } = images[index];
 
-  const { mutate } = useDeleteLinkageStatus();
+  const { mutate, isPending: isDeletePending } = useDeleteLinkageStatus();
 
   const handleDelete = () => {
     mutate(
       { linkageId, statusId },
       {
         onSuccess: () => {
+          setShowDeleteButton(false);
           toast.success("Status deleted");
         },
       }
@@ -145,10 +147,16 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
             {showDeleteButton && (
               <div className="absolute right-6">
                 <button
-                  className="w-fit flex flex-row gap-1 items-center justify-center p-2 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold"
+                  className="w-fit min-w-[85px] flex items-center justify-center p-2 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold"
                   onClick={handleDelete}
                 >
-                  <Trash size={20} /> Delete
+                  {isDeletePending ? (
+                    <SpinnerIcon />
+                  ) : (
+                    <div className="flex flex-row gap-1">
+                      <Trash size={20} /> Delete
+                    </div>
+                  )}
                 </button>
               </div>
             )}

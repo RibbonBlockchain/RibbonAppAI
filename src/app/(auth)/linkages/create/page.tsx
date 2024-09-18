@@ -10,7 +10,6 @@ import {
   CloseCircle,
 } from "iconsax-react";
 import clsx from "clsx";
-
 import Image from "next/image";
 import { useAtom } from "jotai";
 import toast from "react-hot-toast";
@@ -20,6 +19,7 @@ import { useCreateLinkage } from "@/api/linkage";
 import React, { ChangeEvent, useState } from "react";
 import { categoryOptions } from "@/lib/values/prompts";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
+
 type Starter = {
   text: string;
 };

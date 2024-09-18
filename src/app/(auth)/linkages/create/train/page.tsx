@@ -27,6 +27,8 @@ const TrainLinkage = () => {
   const router = useRouter();
 
   const [linkagesProps] = useAtom(createLinkageAtom);
+  const [trained, setTrained] = useState(false);
+
   const [published, setPublished] = useState(false);
 
   const [selected, setSelected] = useState("train");
@@ -40,9 +42,6 @@ const TrainLinkage = () => {
   const { mutate, isPending: isPublishing } = usePublishLinkage();
 
   const isSubmitDisabled = isPublishing;
-
-  // train ai linkage
-  const { mutate: trainAILinkage, isPending } = useUploadLinkageFile();
 
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | ArrayBuffer | null>(
@@ -62,6 +61,10 @@ const TrainLinkage = () => {
     setFilePreview(null);
   };
 
+  // train ai linkage
+  const { mutate: trainAILinkage, isPending } = useUploadLinkageFile();
+  const disableUpload = !file || isPending;
+
   const handleUpload = () => {
     if (!file) return;
 
@@ -71,7 +74,10 @@ const TrainLinkage = () => {
     trainAILinkage(
       { id: Number(linkagesProps?.id), file: formData as any },
       {
-        onSuccess: () => toast.success("File uploaded successfully"),
+        onSuccess: () => {
+          setTrained(true),
+            toast.success("File uploaded, Linkage trained successfully");
+        },
         onError: (error) => console.error("Upload failed", error),
       }
     );
@@ -234,10 +240,10 @@ const TrainLinkage = () => {
                   <button
                     onClick={handleUpload}
                     className={clsx(
-                      "px-4 py-2 bg-[#3f3856] text-white rounded-[8px] text-xs flex items-center justify-center text-center",
-                      isPending
-                        ? "border-stone-300 bg-stone-400/50"
-                        : "bg-white"
+                      "px-4 py-2 bg-[#3f3856] rounded-[8px] text-xs flex items-center justify-center text-center",
+                      disableUpload
+                        ? "border-stone-300 bg-stone-400/50 cursor-not-allowed"
+                        : "bg-[#F6F1FE] text-[#290064]"
                     )}
                   >
                     {isPending ? (
@@ -292,22 +298,25 @@ const TrainLinkage = () => {
               </div>
             </div>
 
-            <button
-              disabled={isSubmitDisabled}
-              onClick={() =>
-                mutate(Number(linkagesProps?.id), {
-                  onSuccess: () => setPublished(true),
-                })
-              }
-              className={clsx(
-                "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
-                isSubmitDisabled
-                  ? "border-stone-300 bg-stone-400/50 text-white cursor-not-allowed"
-                  : "bg-white text-[#290064]"
-              )}
-            >
-              {isPublishing ? <SpinnerIcon /> : "Publish AI Linkage"}
-            </button>
+            {trained && (
+              <button
+                disabled={isSubmitDisabled}
+                onClick={() =>
+                  mutate(Number(linkagesProps?.id), {
+                    onSuccess: () => setPublished(true),
+                  })
+                }
+                className={clsx(
+                  "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
+                  isSubmitDisabled
+                    ? "border-stone-300 bg-stone-400/50 text-white cursor-not-allowed"
+                    : "bg-white text-[#290064]"
+                )}
+              >
+                {isPublishing ? <SpinnerIcon /> : "Publish AI Linkage"}
+              </button>
+            )}
+
             {published && (
               <button
                 onClick={() => router.push("/linkages/explore")}

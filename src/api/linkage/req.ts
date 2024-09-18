@@ -45,7 +45,7 @@ export const getLinkages = async () => {
 };
 
 export const deleteLinkage = async (id: number) => {
-  const res = await client.get(`/linkage/${id}`);
+  const res = await client.delete(`/linkage/${id}`);
   return res.data;
 };
 
@@ -168,7 +168,7 @@ export const deleteLinkageStatus = async ({
   linkageId: number;
   statusId: number;
 }) => {
-  const res = await client.post(`linkage/${linkageId}/status/${statusId}`);
+  const res = await client.delete(`linkage/${linkageId}/status/${statusId}`);
   return res.data;
 };
 
@@ -185,7 +185,7 @@ export const deleteFeaturedLinkage = async ({
   linkageId: number;
   featuredId: number;
 }) => {
-  const res = await client.post(`linkage/${linkageId}/feature/${featuredId}`);
+  const res = await client.delete(`linkage/${linkageId}/feature/${featuredId}`);
   return res.data;
 };
 

@@ -11,7 +11,7 @@ const ManageLinkage = ({ linkageId }: { linkageId: number }) => {
   const handleDeleteLinkage = () => {
     mutate(linkageId, {
       onSuccess: () => {
-        setShowDeleteModal(false), toast.success("deleted successfully");
+        setShowDeleteModal(false), toast.success("Linkage deleted");
       },
     });
   };

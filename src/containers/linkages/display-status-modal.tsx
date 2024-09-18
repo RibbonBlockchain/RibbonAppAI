@@ -2,6 +2,8 @@ import Image from "next/image";
 import { ArrowLeft2, Trash } from "iconsax-react";
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useDeleteLinkageStatus } from "@/api/linkage";
+import toast from "react-hot-toast";
 
 interface Image {
   url: string;
@@ -9,6 +11,8 @@ interface Image {
   linkageLogo?: string;
   linkageName: string;
   updatedTime: string;
+  linkageId: number;
+  statusId: number;
 }
 
 interface ImageModalProps {
@@ -44,14 +48,12 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
     setIndex((prevIndex) =>
       prevIndex > 0 ? prevIndex - 1 : images.length - 1
     );
-    resetTimer();
   };
 
   const handleNext = () => {
     setIndex((prevIndex) =>
       prevIndex < images.length - 1 ? prevIndex + 1 : 0
     );
-    resetTimer();
   };
 
   const handleKeydown = (event: KeyboardEvent) => {
@@ -82,17 +84,28 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
     }
   };
 
-  const resetTimer = () => {
-    if (interval) {
-      clearInterval(interval);
-      const id = setInterval(() => {
-        handleNext();
-      }, 7000);
-      setIntervalId(id);
-    }
-  };
+  const {
+    url,
+    caption,
+    linkageLogo,
+    linkageName,
+    updatedTime,
+    linkageId,
+    statusId,
+  } = images[index];
 
-  const { url, caption, linkageLogo, linkageName, updatedTime } = images[index];
+  const { mutate } = useDeleteLinkageStatus();
+
+  const handleDelete = () => {
+    mutate(
+      { linkageId, statusId },
+      {
+        onSuccess: () => {
+          toast.success("Status deleted");
+        },
+      }
+    );
+  };
 
   return (
     <div className="fixed inset-0 bg-[#0B0228] text-white flex flex-col justify-between py-6 z-50">
@@ -131,7 +144,10 @@ const DisplayStatusModal: React.FC<ImageModalProps> = ({
 
             {showDeleteButton && (
               <div className="absolute right-6">
-                <button className="w-fit flex flex-row gap-1 items-center justify-center p-2 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold">
+                <button
+                  className="w-fit flex flex-row gap-1 items-center justify-center p-2 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold"
+                  onClick={handleDelete}
+                >
                   <Trash size={20} /> Delete
                 </button>
               </div>

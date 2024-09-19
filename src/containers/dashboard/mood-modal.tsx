@@ -1,7 +1,10 @@
+import clsx from "clsx";
 import Image from "next/image";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
+import LinkagesCard from "../linkages/linkages-card";
+import { useGetDiscoveryLinkages } from "@/api/linkage";
 
 interface ModalProps {
   isOpen: boolean;
@@ -50,14 +53,6 @@ const reasons: string[] = [
   "Marital issues",
 ];
 
-const services = [
-  "Counseling",
-  "Therapy",
-  "Support Groups",
-  "Online Resources",
-  "Workshops",
-];
-
 const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
   const [view, setView] = useState<
@@ -65,6 +60,11 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   >("selectMood");
   const [selectedReason, setSelectedReason] = useState<string>("");
 
+  const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
+    params: { page: 1, pageSize: 10, query: "" },
+  });
+
+  // Return early if modal is not open
   if (!isOpen) return null;
 
   const handleSetMoodClick = () => {
@@ -79,13 +79,16 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const disableSetMoodButton = !selectedMood;
+  const disableSelectReason = !selectedReason;
+
   return (
-    <main className="fixed inset-0 bg-opacity-70 bg-black flex items-center justify-center z-50">
-      <div className="flex flex-col w-full max-w-[375px] min-h-[550px] bg-[#3f3952] bg-opacity-75 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-lg">
-        <X onClick={onClose} className="self-start cursor-pointer mb-4" />
+    <main className="fixed inset-0 bg-opacity-70 bg-black flex items-center justify-center z-50 p-2">
+      <div className="flex flex-col w-full max-w-[420px] min-h-[550px] max-h-[560px] bg-[#3f3952] bg-opacity-75 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-lg">
+        <X onClick={onClose} className="self-end cursor-pointer mb-4" />
 
         {view === "selectMood" && (
-          <section className="flex flex-col items-center justify-between gap-4 flex-grow">
+          <section className="flex flex-col items-center justify-between gap-4 flex-grow mb-4">
             <div className="text-2xl font-bold text-center mb-4">
               Hi there!, how do you feel today
             </div>
@@ -95,8 +98,9 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               height={215}
               alt="mood"
               src={selectedMood?.largeImage || "/assets/default-mood.png"}
-              className="rounded-full w-[200px] bg-[#3f3856] mb-4"
+              className="rounded-full w-[200px] bg-[#3f3856] text-[#3f3856] mb-4"
             />
+
             <div className="grid grid-cols-5 gap-4 items-center justify-center mb-4">
               {moods.map((mood) => (
                 <div
@@ -117,9 +121,14 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             <button
-              className="py-2.5 text-sm font-medium rounded-[8px] text-[#290064] bg-white w-full"
+              disabled={disableSetMoodButton}
               onClick={handleSetMoodClick}
-              disabled={!selectedMood}
+              className={clsx(
+                "py-2.5 text-sm font-medium rounded-[8px] w-full",
+                disableSetMoodButton
+                  ? "border-stone-300 bg-stone-400/50 cursor-not-allowed"
+                  : "bg-[#F6F1FE] text-[#290064]"
+              )}
             >
               Set Mood
             </button>
@@ -127,7 +136,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         )}
 
         {view === "selectReason" && (
-          <section className="flex flex-col items-center justify-between gap-4 flex-grow">
+          <section className="flex flex-col items-center justify-between gap-4 flex-grow mb-4">
             <div className="flex flex-col gap-8">
               <div className="flex flex-col items-start justify-center mb-4">
                 <p className="text-2xl font-bold">We&apos;re here to help</p>
@@ -165,9 +174,14 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             <button
-              className="py-2.5 text-sm font-medium rounded-[8px] text-[#290064] bg-white w-full"
+              disabled={disableSelectReason}
               onClick={handleGetRecommendationsClick}
-              disabled={!selectedReason}
+              className={clsx(
+                "py-2.5 text-sm font-medium rounded-[8px] w-full",
+                disableSelectReason
+                  ? "border-stone-300 bg-stone-400/50 cursor-not-allowed"
+                  : "bg-[#F6F1FE] text-[#290064]"
+              )}
             >
               Get Linkage Recommendations
             </button>
@@ -175,7 +189,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         )}
 
         {view === "selectService" && (
-          <section className="flex flex-col gap-4 flex-grow">
+          <section className="flex flex-col gap-4 flex-grow mb-4">
             <div className="flex flex-col gap-1 mb-4">
               <p className="text-2xl font-bold">Linkage Recommendation</p>
               <p className="text-sm font-medium">
@@ -183,15 +197,20 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               </p>
             </div>
 
-            <div className="flex flex-col">
-              <ul className="list-disc list-inside mt-4">
-                {services.map((service) => (
-                  <li key={service} className="text-base font-medium mb-2">
-                    {service}
-                  </li>
+            {discoveryLinkages?.data?.data && (
+              <div className="flex flex-col gap-3 h-[400px] overflow-auto mb-2">
+                {discoveryLinkages?.data?.data.map((i: any) => (
+                  <LinkagesCard
+                    key={i.name}
+                    name={i.name}
+                    image={i.image}
+                    description={i.description}
+                    author={i.userId}
+                    slug={i.slug}
+                  />
                 ))}
-              </ul>
-            </div>
+              </div>
+            )}
           </section>
         )}
       </div>

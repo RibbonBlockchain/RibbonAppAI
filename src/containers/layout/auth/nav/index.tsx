@@ -12,6 +12,9 @@ import {
 import clsx from "clsx";
 import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import FloatingIcon from "@/app/(auth)/dashboard/floating-icon";
+import { MicrophoneIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 
 const items = [
   {
@@ -55,6 +58,8 @@ const FooterNav = () => {
           showNav ? "nav-enter nav-enter-active" : "nav-exit nav-exit-active"
         )}
       >
+        <FloatingIcon />
+
         <div className="flex items-center justify-around py-2">
           {items.map(({ route, name, icon }) => (
             <a

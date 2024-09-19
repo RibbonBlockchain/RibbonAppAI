@@ -23,6 +23,7 @@ import { ArrowLeft2, InfoCircle } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
+
 const TrainLinkage = () => {
   const router = useRouter();
 

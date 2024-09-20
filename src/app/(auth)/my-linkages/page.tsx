@@ -67,7 +67,8 @@ const MyLinkageDetails: React.FC = () => {
   const { data } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
 
-  const walletBalance = data?.data?.wallet?.balance * currentPrice;
+  const walletBalance = data?.data?.wallet?.balance;
+  const walletConvertedBalance = data?.data?.wallet?.balance * currentPrice;
 
   const lastTrainedDate: Date = new Date(
     linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
@@ -247,8 +248,9 @@ const MyLinkageDetails: React.FC = () => {
 
           {selectedTab === "wallet" && (
             <LinkageWallet
+              walletBalance={walletBalance}
               walletAddress={data?.data?.walletAddress}
-              walletBalance={walletBalance?.toFixed(4)}
+              walletConvertedBalance={walletConvertedBalance?.toFixed(4)}
             />
           )}
 

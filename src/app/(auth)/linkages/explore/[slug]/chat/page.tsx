@@ -8,6 +8,7 @@ import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import {
   useChatLinkage,
+  useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
 } from "@/api/linkage";
@@ -22,12 +23,36 @@ interface Message {
   text: string;
 }
 
+const history = [
+  {
+    id: 5,
+    userId: 34,
+    human: "What do you do?",
+    assistant:
+      "Based on the context provided, the author Lamba Paul is a medical personnel who studied Diploma in Community Health.",
+    linkageId: 25,
+    createdAt: "2024-09-20T06:33:12.261Z",
+    updatedAt: "2024-09-20T06:33:12.261Z",
+  },
+  {
+    id: 6,
+    userId: 34,
+    human: "Give me more context",
+    assistant:
+      "Based on the provided context, Lamba Paul is a medical personnel from Batu Kamino, Kurmi LGA in Taraba State, Nigeria. He was born in 1993 to Mr. Lamba Luka and Mrs. Grace Lamba. Lamba Paul studied Diploma in Community Health at the College of Health Takum LGA in Taraba State, Nigeria. He currently resides in Jalingo, Taraba State, Nigeria. Despite being a health worker, Lamba Paul developed a love for music through Bro. Godspower, who is also an instrumentalist. This background showcases Lamba Paul's dual interests in both healthcare and music.",
+    linkageId: 25,
+    createdAt: "2024-09-20T06:34:04.878Z",
+    updatedAt: "2024-09-20T06:34:04.878Z",
+  },
+];
+
 const LinkageAIChatInterface: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
 
   const [selected, setSelected] = useState("questionnaire");
+  const [hideAddWallet, setHideAddWallet] = useState(true);
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -37,7 +62,6 @@ const LinkageAIChatInterface: React.FC = () => {
     linkageId: id,
   });
 
-  const [hideAddWallet, setHideAddWallet] = useState(true);
   const { mutate: addWallet } = useAddWallet();
   const userWalletAddress: string = localStorage.getItem("address") as string;
 
@@ -105,6 +129,8 @@ const LinkageAIChatInterface: React.FC = () => {
       handleSend();
     }
   };
+
+  const { data: chatHistory } = useGetChatHistory(slug);
 
   useEffect(() => {
     if (prompts.length > 0) {
@@ -214,6 +240,8 @@ const LinkageAIChatInterface: React.FC = () => {
           <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
             {/* AI interaction */}
             <div className="flex-1 h-full overflow-y-auto mb-16">
+              {/* display history before continuing conversation, and it there is history, do not initiate with a conversation starter from the AI */}
+
               {messages.map((msg, index) => (
                 <div
                   key={index}

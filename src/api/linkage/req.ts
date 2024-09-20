@@ -34,11 +34,6 @@ export const pubishLinkage = async (id: number) => {
   return res.data;
 };
 
-export const chatLinkage = async (slug: string, body: TChatLinkageBody) => {
-  const res = await client.post(`linkage/slug/${slug}/chat`, body);
-  return res.data;
-};
-
 export const getLinkages = async () => {
   const res = await client.get("/linkage");
   return res.data;
@@ -103,6 +98,17 @@ export const getLinkagesFiles = async (id: number) => {
 
 export const initiateWalletTransfer = async (address: string) => {
   const res = await client.post("/linkage/transfer", address);
+  return res.data;
+};
+
+// CHATS
+export const chatLinkage = async (slug: string, body: TChatLinkageBody) => {
+  const res = await client.post(`linkage/slug/${slug}/chat`, body);
+  return res.data;
+};
+
+export const getChatHistory = async (slug: string) => {
+  const res = await client.get(`/linkage/slug/${slug}/chat/history`);
   return res.data;
 };
 

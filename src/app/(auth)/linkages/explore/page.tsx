@@ -21,6 +21,7 @@ import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
+import { Add } from "iconsax-react";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -71,7 +72,7 @@ const Linkages = () => {
 
   const { data: linkages } = useGetLinkages();
 
-  const { data } = useGetDiscoveryLinkageStatus({
+  const { data: statuses } = useGetDiscoveryLinkageStatus({
     params: { page: 1, pageSize: 20 },
   });
 
@@ -120,13 +121,35 @@ const Linkages = () => {
           </div>
 
           <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
-            {data?.data?.data.map((i: any, index: number) => (
+            {statuses?.data?.data?.length === 0 && (
+              <div className="flex flex-row items-center gap-2">
+                <button className="relative min-w-[65px] flex flex-row">
+                  <Image
+                    alt="alt"
+                    width={65}
+                    height={65}
+                    src={"/assets/status-circle.png"}
+                    className="rounded-full w-[65px] h-[65px]"
+                  />
+                  <Add
+                    size="24"
+                    color="#ffffff"
+                    className="absolute bottom-0 right-0 bg-[#A166F5] border-[3px] border-[#0B0228] rounded-full"
+                  />
+                </button>
+                <p className="mt-1 text-sm max-w-[170px] text-center">
+                  Status update from all linkages will appear here
+                </p>
+              </div>
+            )}
+
+            {statuses?.data?.data.map((i: any, index: number) => (
               <div
                 key={i.id}
                 className="flex-shrink-0 w-20 h-20 relative"
                 onClick={() =>
                   openModal(
-                    data?.data?.data.map((img: any) => ({
+                    statuses?.data?.data.map((img: any) => ({
                       url: img.media || "/assets/sample-icon.png",
                       caption: img.caption,
                       linkageName: img.linkage.name,

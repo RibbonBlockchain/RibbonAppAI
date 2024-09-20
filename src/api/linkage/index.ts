@@ -24,6 +24,7 @@ import {
   deleteLinkageStatus,
   deleteFeaturedLinkage,
   editLinkage,
+  getChatHistory,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -77,14 +78,6 @@ export const usePublishLinkage = () => {
   return useMutation({
     onError,
     mutationFn: (id: number) => pubishLinkage(id),
-  });
-};
-
-export const useChatLinkage = () => {
-  return useMutation({
-    onError,
-    mutationFn: ({ slug, body }: { slug: string; body: TChatLinkageBody }) =>
-      chatLinkage(slug, body),
   });
 };
 
@@ -164,6 +157,23 @@ export const useInitiateWalletTransfer = () => {
     onError,
     mutationFn: ({ address }: { address: string }) =>
       initiateWalletTransfer(address),
+  });
+};
+
+// LINKAGE CHAT
+export const useChatLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ slug, body }: { slug: string; body: TChatLinkageBody }) =>
+      chatLinkage(slug, body),
+  });
+};
+
+export const useGetChatHistory = (slug: string) => {
+  return useQuery({
+    enabled: !!slug,
+    queryKey: ["chat-history", slug],
+    queryFn: () => getChatHistory(slug),
   });
 };
 

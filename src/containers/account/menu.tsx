@@ -9,6 +9,7 @@ import {
   Lock1,
   Profile,
   Shield,
+  ShoppingCart,
   Star,
   WalletMoney,
 } from "iconsax-react";
@@ -23,6 +24,11 @@ export const ProfileDetails = [
     href: "/my-linkages",
     description: "Manage Linkages",
     logo: <Star fill="yellow" />,
+  },
+  {
+    href: "/orders",
+    description: "Orders",
+    logo: <ShoppingCart />,
   },
   {
     href: "/wallet",

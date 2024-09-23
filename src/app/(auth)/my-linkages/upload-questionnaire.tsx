@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { UploadCloudIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Edit, Edit2, Trash } from "iconsax-react";
 import { useGetLinkageQuestionnaire } from "@/api/linkage";
+import { formatActiveDate } from "@/lib/utils/format-date";
+import { ArrowLeft, Edit, Edit2, Trash } from "iconsax-react";
 import Questionnaire from "@/containers/questionnaire/quetionnaire-templates";
 
 const tabs = [
@@ -129,8 +130,11 @@ const UploadQuestionnaire = ({ linkageId }: { linkageId: number }) => {
                       >
                         <div>
                           <p className="text-sm font-semibold">{item.name}</p>
-                          <p className="text-xs font-normal text-[#98A2B3] mt-1">
+                          <p className="text-xs font-normal text-[#98A2B3] mt-0.5">
                             {item.questions?.length} questions uploaded
+                          </p>
+                          <p className="text-xs font-normal text-[#98A2B3] mt-0.5">
+                            {formatActiveDate(item?.updatedAt)}
                           </p>
                         </div>
 

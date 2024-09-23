@@ -49,3 +49,8 @@ export type TClaimSwapPointsBody = {
 export type TWithdrawPointsBody = {
   amount: number;
 };
+
+export type TSendUsdcToken = {
+  amount: string;
+  address: string;
+};

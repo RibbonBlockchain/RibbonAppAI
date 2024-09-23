@@ -7,6 +7,7 @@ import {
   TWithdrawPointsBody,
   TSubmitSurveyBody,
   TRateSurveyBody,
+  TSendUsdcToken,
 } from "./types";
 import {
   getTasks,
@@ -35,6 +36,7 @@ import {
   rateSurvey,
   getCompletedSurveys,
   addWallet,
+  sendUsdcToken,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -302,5 +304,12 @@ export const useAddWallet = () => {
   return useMutation({
     onError,
     mutationFn: ({ address }: { address: string }) => addWallet(address),
+  });
+};
+
+export const useSendUsdcToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TSendUsdcToken) => sendUsdcToken(body),
   });
 };

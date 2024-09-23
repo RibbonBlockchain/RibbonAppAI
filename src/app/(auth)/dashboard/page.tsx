@@ -77,7 +77,7 @@ const Dashboard = () => {
 
   return (
     <AuthNavLayout>
-      <div className="w-full text-white bg-[#0B0228] p-4 sm:p-6">
+      <div className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
 

@@ -16,6 +16,7 @@ import { shortenTransaction } from "@/lib/utils/shorten";
 import AddressDisplay from "@/components/wallet/address-display";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { useSendUsdcToken } from "@/api/user";
+import { useCoinDetails } from "@/lib/values/priceAPI";
 
 const LinkageWallet = ({
   walletAddress,
@@ -32,7 +33,7 @@ const LinkageWallet = ({
   const [destinationWallet, setDestinationWallet] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { mutate } = useSendUsdcToken();
+  const { mutate, isPending } = useSendUsdcToken();
   const sendUsdcToken = () => {
     mutate(
       { address: destinationWallet, amount: amount },
@@ -43,6 +44,9 @@ const LinkageWallet = ({
       }
     );
   };
+
+  const { data } = useCoinDetails();
+  const currentPrice = data?.market_data.current_price.usd as number;
 
   const handleClick = () => {
     navigator.clipboard
@@ -187,9 +191,9 @@ const LinkageWallet = ({
           handleDestinationInput={(e) => setDestinationWallet(e.target.value)}
           amount={amount}
           handleAmountInput={(e) => setAmount(e.target.value)}
-          isPending={false}
+          isPending={isPending}
           usdcTokenBalance={walletBalance}
-          USDvalue={""}
+          USDvalue={Number(amount) * currentPrice}
         />
       )}
     </div>

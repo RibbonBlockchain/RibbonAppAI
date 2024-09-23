@@ -17,7 +17,7 @@ export const UserSocialsInputBox = ({
   onChange: (e: any) => void;
 }) => {
   return (
-    <div key={label} className="mb-4 flex flex-row space-x-2 text-[#080808]">
+    <div key={label} className="mb-4 flex flex-row space-x-2">
       <label
         htmlFor="input"
         className={`${
@@ -35,7 +35,7 @@ export const UserSocialsInputBox = ({
         onChange={onChange}
         placeholder="Ribbon Protocol"
         className={clsx(
-          "text-xs w-full py-3 leading-tight appearance-none border-b focus:outline-none focus:border-[#7C56FE] focus:shadow-outline"
+          "text-xs w-full bg-inherit py-3 leading-tight appearance-none border-b border-[#E5E7EB] focus:outline-none focus:shadow-outline"
         )}
       />
     </div>
@@ -60,7 +60,7 @@ const UserDetailsInputBox = ({
   onChange: (e: any) => void;
 }) => {
   return (
-    <div key={label} className="mb-4 text-[#080808]">
+    <div key={label} className="mb-4">
       <label
         htmlFor="input"
         className={`${
@@ -78,8 +78,8 @@ const UserDetailsInputBox = ({
         onChange={onChange}
         placeholder="Ribbon Protocol"
         className={clsx(
-          "text-xs w-full py-3 leading-tight appearance-none border rounded-md pl-2 focus:outline-none focus:border-[#7C56FE] focus:shadow-outline",
-          type === "date" && ""
+          "bg-inherit border border-[#E5E7EB] text-xs w-full py-3 leading-tight appearance-none rounded-md pl-2 focus:outline-none focus:shadow-outline",
+          type === "date" && "appearance-auto"
         )}
       />
     </div>

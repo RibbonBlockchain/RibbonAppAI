@@ -24,8 +24,8 @@ const Button: React.FC<Props> = ({
       disabled={disabled}
       onClick={handleClick}
       className={cn(
-        "flex gap-3 items-center justify-center w-full text-sm font-semibold text-center p-4 rounded-xl shadow-sm transition-colors duration-100 focus-visible:duration-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border-solid disabled:cursor-not-allowed text-white disabled:border-stone-300 disabled:bg-stone-400/50",
-        !disabled && "bg-gradient-to-r from-[#714EE7] to-[#A81DA6]",
+        "flex gap-3 items-center justify-center w-full text-sm font-semibold text-center p-4 rounded-xl shadow-sm transition-colors duration-100 focus-visible:duration-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border-solid disabled:cursor-not-allowed text-[#290064] disabled:border-stone-300 disabled:bg-stone-400/50",
+        !disabled && "bg-[#F6F1FE]",
         className
       )}
       {...props}

@@ -22,7 +22,7 @@ const LoanWallet = () => {
   const [destinationWallet, setDestinationWallet] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { mutate } = useSendUsdcToken();
+  const { mutate, isPending } = useSendUsdcToken();
   const sendUsdcToken = () => {
     mutate(
       { address: destinationWallet, amount: amount },
@@ -115,7 +115,7 @@ const LoanWallet = () => {
             </div>
           </div>
 
-          <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
+          <div className="w-full bg-[#F5F5F5] p-1 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
             <p
               onClick={() => {}}
               className={clsx(
@@ -147,7 +147,7 @@ const LoanWallet = () => {
           handleDestinationInput={(e) => setDestinationWallet(e.target.value)}
           amount={amount}
           handleAmountInput={(e) => setAmount(e.target.value)}
-          isPending={false}
+          isPending={isPending}
           usdcTokenBalance={loanWalletDetails?.balance}
           USDvalue={Number(amount) * currentPrice}
         />

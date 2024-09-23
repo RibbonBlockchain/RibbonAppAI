@@ -15,6 +15,7 @@ import { copyToClipboard } from "@/lib/utils";
 import { shortenTransaction } from "@/lib/utils/shorten";
 import AddressDisplay from "@/components/wallet/address-display";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import { useSendUsdcToken } from "@/api/user";
 
 const LinkageWallet = ({
   walletAddress,
@@ -26,8 +27,22 @@ const LinkageWallet = ({
   walletConvertedBalance: any;
 }) => {
   const [selected, setSelected] = useState("deposit");
-
   const [openTx, setOpenTx] = useState(false);
+
+  const [destinationWallet, setDestinationWallet] = useState("");
+  const [amount, setAmount] = useState("");
+
+  const { mutate } = useSendUsdcToken();
+  const sendUsdcToken = () => {
+    mutate(
+      { address: destinationWallet, amount: amount },
+      {
+        onSuccess: () => {
+          toast.success("Transaction successfull"), setOpenTx(false);
+        },
+      }
+    );
+  };
 
   const handleClick = () => {
     navigator.clipboard
@@ -167,11 +182,11 @@ const LinkageWallet = ({
         <WithdrawUSDCToken
           isOpen={openTx}
           closeModal={() => setOpenTx(false)}
-          handleClick={() => console.log("clicked")}
-          destination={"destination"}
-          handleDestinationInput={() => {}}
-          amount={""}
-          handleAmountInput={() => {}}
+          handleClick={sendUsdcToken}
+          destination={destinationWallet}
+          handleDestinationInput={(e) => setDestinationWallet(e.target.value)}
+          amount={amount}
+          handleAmountInput={(e) => setAmount(e.target.value)}
           isPending={false}
           usdcTokenBalance={walletBalance}
           USDvalue={""}

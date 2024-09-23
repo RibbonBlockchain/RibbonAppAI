@@ -7,6 +7,7 @@ import {
   TRateQuestionnaireBody,
   TSubmitSurveyBody,
   TRateSurveyBody,
+  TSendUsdcToken,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -159,5 +160,10 @@ export const withdrawPoints = async (body: TWithdrawPointsBody) => {
 
 export const addWallet = async (address: string) => {
   const res = await client.post("/user/wallet", { address });
+  return res.data;
+};
+
+export const sendUsdcToken = async (body: TSendUsdcToken) => {
+  const res = await client.post("/user/wallet/transfer", body);
   return res.data;
 };

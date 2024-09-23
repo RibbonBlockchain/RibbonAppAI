@@ -20,8 +20,6 @@ type Props = {
 };
 
 const WithdrawUSDCToken: React.FC<Props> = (props) => {
-  const router = useRouter();
-
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={props.closeModal}>
@@ -88,7 +86,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                       value={props.destination}
                       onChange={props.handleDestinationInput}
                       className="border py-4 px-2 rounded-md text-sm font-medium text-[#434343] break-words"
-                      placeholder="Njksdhfiuolnasfvyiuop;ofjsks..."
+                      placeholder=""
                     />
                   </div>
 

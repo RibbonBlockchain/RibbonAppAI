@@ -37,6 +37,7 @@ import {
   getCompletedSurveys,
   addWallet,
   sendUsdcToken,
+  getWalletTransactions,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -311,5 +312,12 @@ export const useSendUsdcToken = () => {
   return useMutation({
     onError,
     mutationFn: (body: TSendUsdcToken) => sendUsdcToken(body),
+  });
+};
+
+export const useGetWalletTransactions = () => {
+  return useQuery({
+    queryKey: ["wallet-transaction"],
+    queryFn: () => getWalletTransactions(),
   });
 };

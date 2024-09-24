@@ -7,11 +7,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
-import { useSendUsdcToken } from "@/api/user";
 import { useGetUserWallet } from "@/api/linkage";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import { useGetWalletTransactions, useSendUsdcToken } from "@/api/user";
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowUp } from "lucide-react";
 
 const LoanWallet = () => {
@@ -28,7 +28,10 @@ const LoanWallet = () => {
       { address: destinationWallet, amount: amount },
       {
         onSuccess: () => {
-          toast.success("Transaction successfull"), setOpenTx(false), refetch();
+          toast.success("Transaction successfull"),
+            setOpenTx(false),
+            refetch(),
+            refetchTransactionHistory();
         },
       }
     );
@@ -41,6 +44,9 @@ const LoanWallet = () => {
   const loanWalletDetails = loanWallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );
+
+  const { data: transactionHistory, refetch: refetchTransactionHistory } =
+    useGetWalletTransactions();
 
   return (
     <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
@@ -115,8 +121,8 @@ const LoanWallet = () => {
             </div>
           </div>
 
-          <div className="w-full bg-[#F5F5F5] p-1 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
-            <p
+          <div className="w-full bg-[#F5F5F5] px-2 flex flex-row items-center justify-between gap-2 rounded-[10px]">
+            {/* <p
               onClick={() => {}}
               className={clsx(
                 "w-full text-center py-3 text-black",
@@ -124,16 +130,53 @@ const LoanWallet = () => {
               )}
             >
               Wallets
-            </p>
+            </p> */}
             <p
               onClick={() => {}}
               className={clsx(
-                "w-full text-center py-3 text-black bg-[#7C56FE] rounded-[16px]",
+                "w-full text-start py-2 px-2 text-black bg-[#7C56FE]",
                 "text-black bg-[inherit]"
               )}
             >
-              History
+              Transaction History
             </p>
+          </div>
+
+          <div className="mt-4">
+            {transactionHistory?.data?.data.lenght === 0 ? (
+              <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
+                Your transaction history will be displayed here
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {transactionHistory?.data?.data
+                  ?.filter((tx: any) => tx.status === "complete")
+                  .map((tx: any) => (
+                    <div
+                      key={tx.tx_link}
+                      className="flex flex-row items-center justify-between"
+                    >
+                      <div className="flex flex-row gap-2 items-center">
+                        <div className="flex items-center px-3 py-3 bg-[#3f3856] rounded-full">
+                          <ArrowUp size={20} />
+                        </div>
+
+                        <div className="text-sm">
+                          <p className="text-red-500 font-bold">Sent</p>
+                          <p className="text-[#98A2B3] font-medium">
+                            {shorten(tx.to)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-end justify-end text-sm font-medium">
+                        <p>-{tx.amount} USDC</p>
+                        {/* <p className="text-[#98A2B3]">time</p> */}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

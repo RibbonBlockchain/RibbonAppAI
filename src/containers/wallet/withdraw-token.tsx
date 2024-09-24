@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { Fragment } from "react";
 import Button from "@/components/button";
-import { useRouter } from "next/navigation";
 import { Transition, Dialog } from "@headlessui/react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { ArrowDownUp, ArrowLeft, InfoIcon } from "lucide-react";

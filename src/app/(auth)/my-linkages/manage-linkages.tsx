@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import React, { useState } from "react";
+import { Edit2, InfoCircle, Trash, Warning2 } from "iconsax-react";
 import { useDeleteFeaturedLinkage, useDeleteLinkage } from "@/api/linkage";
-import { Edit2, Trash, Warning2 } from "iconsax-react";
 import DeleteLinkageModal from "@/containers/linkages/delete-linkage-modal";
 import UnfeatureLinkageModal from "@/containers/linkages/unfeature-linkage-modal";
 
@@ -9,20 +9,29 @@ const ManageLinkage = ({
   linkageId,
   featured,
   featuredId,
+  linkageBalance,
 }: {
   linkageId: number;
   featuredId: number;
   featured: boolean;
+  linkageBalance: number;
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { mutate, isPending: deleteIsPending } = useDeleteLinkage();
 
   const handleDeleteLinkage = () => {
-    mutate(linkageId, {
-      onSuccess: () => {
-        setShowDeleteModal(false), toast.success("Linkage deleted");
-      },
-    });
+    if (linkageBalance === 0) {
+      mutate(linkageId, {
+        onSuccess: () => {
+          setShowDeleteModal(false);
+          toast.success("Linkage deleted");
+        },
+      });
+    } else {
+      toast.error(
+        "Cannot delete linkage. Please withdraw the balance in your wallet and try again."
+      );
+    }
   };
 
   const [showUnfeatureModal, setShowUnfeatureModal] = useState(false);
@@ -34,7 +43,11 @@ const ManageLinkage = ({
       { linkageId, featuredId },
       {
         onSuccess: () => {
-          setShowUnfeatureModal(false), toast.success("Linkage unfeatured");
+          setShowUnfeatureModal(false);
+          toast.success("Linkage unfeatured");
+        },
+        onError: () => {
+          toast.error("Failed to unfeature linkage");
         },
       }
     );
@@ -76,6 +89,11 @@ const ManageLinkage = ({
               Permanently remove the bot and all associated data. This action is
               irreversible.
             </p>
+            <div className="flex flex-row gap-2 text-xs font-normal">
+              <InfoCircle size={20} /> If you have funds in your linkage wallet,
+              you wont be able to delete the linkage until you have withdrawn
+              the balance.
+            </div>
           </div>
         </div>
 

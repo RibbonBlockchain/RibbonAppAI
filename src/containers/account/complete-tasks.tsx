@@ -19,6 +19,7 @@ const CompleteActivities = () => {
           height={54}
           alt="avatar"
           src="/assets/gift-box.png"
+          className="bg-stone-300"
         />
         <div className="flex flex-col">
           <p className="text-base font-semibold">Complete activities</p>

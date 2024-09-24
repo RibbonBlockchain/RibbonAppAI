@@ -1,5 +1,5 @@
 import { StarIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/button";
 import { useGetUserNotifications, useReadNotification } from "@/api/user";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
@@ -12,8 +12,8 @@ const NotificationModal = ({
   onClose: () => void;
 }) => {
   return (
-    <div className="fixed w-[inherit] inset-0 z-50 flex justify-center items-center bg-black bg-opacity-80 p-4 sm:p-6">
-      <div className="bg-white min-w-[300px] max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
+    <div className="fixed w-[inherit] inset-0 z-50 flex justify-center items-center bg-[#0B022820] p-4 sm:p-6">
+      <div className="bg-inherit border border-[#FFFFFF36] min-w-[300px] max-w-[380px] flex flex-col items-center gap-5 rounded-lg px-4 py-6 sm:px-6">
         {/* <NotificationsIcon /> */}
 
         <div>
@@ -23,7 +23,7 @@ const NotificationModal = ({
           <p className="text-sm  ">{notification.message}</p>
         </div>
 
-        <Button onClick={onClose} className="rounded-md h-[48px]">
+        <Button onClick={onClose} className="rounded-md h-[40px] bg-white">
           Close
         </Button>
       </div>
@@ -40,6 +40,15 @@ const DisplayNotification = () => {
     (a: any, b: any) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
+
+  useEffect(() => {
+    if (filteredData) {
+      localStorage.setItem(
+        "unreadNotificationCount",
+        filteredData.length.toString()
+      );
+    }
+  }, [filteredData]);
 
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,13 +80,8 @@ const DisplayNotification = () => {
           className="relative flex flex-col gap-3"
           onClick={() => handleNotificationClick(notification)}
         >
-          <div className="flex flex-row gap-4 items-center pb-3 border-b-[2px] border-gray-200">
+          <div className="flex flex-row gap-4 items-center pb-3 border-b border-[#FFFFFF36]">
             <div className="w-[30px] flex items-center justify-center self-center">
-              {/* {i.type === "questionnaire" ? (
-                <StarIcon fill="#7C56FE" stroke="#7C56FE" />
-              ) : (
-                <SadEmoji />
-              )} */}
               <StarIcon fill="#7C56FE" stroke="#7C56FE" />
             </div>
 

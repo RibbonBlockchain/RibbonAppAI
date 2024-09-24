@@ -15,19 +15,20 @@ import {
 } from "@/api/linkage";
 import Image from "next/image";
 import Retrain from "./retrain";
+import MyStore from "./my-store";
 import Activity from "./activity";
 import Settings from "./settings";
 import toast from "react-hot-toast";
 import LinkageWallet from "./wallet";
+import LoanSurvey from "./loan-survey";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
+import ManageLinkage from "./manage-linkages";
 import React, { useEffect, useState } from "react";
-import { formatLastTrainedDate } from "@/lib/utils/format-date";
-import LoanSurvey from "./loan-survey";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import UploadQuestionnaire from "./upload-questionnaire";
-import ManageLinkage from "./manage-linkages";
+import { formatLastTrainedDate } from "@/lib/utils/format-date";
 
 interface AIdata {
   id: number;
@@ -49,6 +50,7 @@ const tabs = [
   { name: "Wallet", value: "wallet" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Loan Survey", value: "loan" },
+  { name: "My Store", value: "my-store" },
   { name: "Manage Linkage", value: "manage-linkage" },
   { name: "Activity", value: "activity" },
   { name: "Settings", value: "settings" },
@@ -168,7 +170,7 @@ const MyLinkageDetails: React.FC = () => {
       </div>
 
       {selectedAI && (
-        <div className="mt-10">
+        <div className="mt-6">
           {selectedTab === "ai-bot" && (
             <div className="flex flex-col gap-8">
               <div className="flex flex-row gap-4 items-center">
@@ -259,6 +261,8 @@ const MyLinkageDetails: React.FC = () => {
           )}
 
           {selectedTab === "loan" && <LoanSurvey linkageId={selectedAI?.id} />}
+
+          {selectedTab === "my-store" && <MyStore />}
 
           {selectedTab === "manage-linkage" && (
             <ManageLinkage

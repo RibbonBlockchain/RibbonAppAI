@@ -149,15 +149,15 @@ const UploadQuestionnaire = ({ linkageId }: { linkageId: number }) => {
                           />
 
                           {visibleMenu[item.id] && (
-                            <div className="absolute right-0 z-30 flex flex-col py-1 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold">
+                            <div className="absolute right-0 z-30 min-w-[110px] flex flex-col py-1 bg-[#3f3952] rounded-[12px] border border-white text-white text-sm font-semibold">
                               <button
-                                className="flex flex-row items-center gap-1.5 px-[14px] py-2"
+                                className="flex flex-row items-center gap-1.5 pl-2 py-2"
                                 onClick={() => handleDelete(item.id)}
                               >
                                 <Trash size={20} /> Delete
                               </button>
                               <button
-                                className="flex flex-row items-center gap-1.5 px-[14px] py-2"
+                                className="flex flex-row items-center gap-1.5 pl-2 py-2"
                                 onClick={() => handleEdit(item.id)}
                               >
                                 <Edit2 size={20} /> Edit

@@ -6,20 +6,22 @@ const InputBox = ({
   value,
   required,
   onChange,
+  placeholder,
 }: {
   name: any;
   value: any;
   label: string;
   required: boolean;
+  placeholder?: string;
   onChange: (e: any) => void;
 }) => {
   return (
-    <div key={label} className="mb-4 text-[#080808]">
+    <div key={label} className="mb-4 text-white">
       <label
         htmlFor="input"
         className={`${
           required ? "after:content-['*']" : ""
-        }  block after:ml-1 text-xs mb-2`}
+        }  block after:ml-1 text-sm font-bold mb-2`}
       >
         {label}
       </label>
@@ -29,8 +31,8 @@ const InputBox = ({
         name={name}
         value={value}
         onChange={onChange}
-        placeholder="Ribbon Protocol"
-        className="text-xs w-full py-3.5 px-2 leading-tight shadow appearance-none border rounded  focus:outline-none focus:shadow-outline"
+        placeholder={placeholder || "Ribbon Protocol"}
+        className="text-xs w-full bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline"
       />
     </div>
   );

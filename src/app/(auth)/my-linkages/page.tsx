@@ -19,7 +19,7 @@ import MyStore from "./my-store";
 import Activity from "./activity";
 import Settings from "./settings";
 import toast from "react-hot-toast";
-import LinkageWallet from "./wallet";
+import LinkageWallet from "./linkage-wallet";
 import LoanSurvey from "./loan-survey";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
@@ -66,7 +66,7 @@ const MyLinkageDetails: React.FC = () => {
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
 
   const { data: linkagesList } = useGetLinkages();
-  const { data } = useGetLinkageById(selectedAI?.id as number);
+  const { data, refetch } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
 
   const walletBalance = data?.data?.wallet?.balance;
@@ -253,6 +253,7 @@ const MyLinkageDetails: React.FC = () => {
               walletBalance={walletBalance}
               walletAddress={data?.data?.walletAddress}
               walletConvertedBalance={walletConvertedBalance?.toFixed(4)}
+              refetch={refetch}
             />
           )}
 
@@ -269,6 +270,7 @@ const MyLinkageDetails: React.FC = () => {
               linkageId={selectedAI?.id}
               featured={data?.data?.features?.length > 0}
               featuredId={data?.data?.features[0]?.id}
+              linkageBalance={data?.data.wallet?.balance}
             />
           )}
 

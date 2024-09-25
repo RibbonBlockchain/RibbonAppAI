@@ -83,7 +83,7 @@ const LinkageViewDetails = () => {
             width={320}
             height={200}
             alt="display"
-            className="w-full h-auto"
+            className="w-full h-auto z-50"
             onClick={() => router.back()}
             src={data?.data.banner || "/assets/linkage-details.png"}
           />

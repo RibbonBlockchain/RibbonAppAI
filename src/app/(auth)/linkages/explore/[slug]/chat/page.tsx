@@ -1,50 +1,27 @@
 "use client";
 
-import Image from "next/image";
-import { Send, User } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft2, VolumeHigh } from "iconsax-react";
-import { alternatePrompts } from "@/lib/values/prompts";
-import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import {
   useChatLinkage,
   useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
 } from "@/api/linkage";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { useAddWallet } from "@/api/user";
-import toast, { Toaster } from "react-hot-toast";
 import clsx from "clsx";
 import Link from "next/link";
+import Image from "next/image";
+import { useAddWallet } from "@/api/user";
+import { Send, User } from "iconsax-react";
+import toast, { Toaster } from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft2, VolumeHigh } from "iconsax-react";
+import { alternatePrompts } from "@/lib/values/prompts";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 interface Message {
   sender: "user" | "ai";
   text: string;
 }
-
-const history = [
-  {
-    id: 5,
-    userId: 34,
-    human: "What do you do?",
-    assistant:
-      "Based on the context provided, the author Lamba Paul is a medical personnel who studied Diploma in Community Health.",
-    linkageId: 25,
-    createdAt: "2024-09-20T06:33:12.261Z",
-    updatedAt: "2024-09-20T06:33:12.261Z",
-  },
-  {
-    id: 6,
-    userId: 34,
-    human: "Give me more context",
-    assistant:
-      "Based on the provided context, Lamba Paul is a medical personnel from Batu Kamino, Kurmi LGA in Taraba State, Nigeria. He was born in 1993 to Mr. Lamba Luka and Mrs. Grace Lamba. Lamba Paul studied Diploma in Community Health at the College of Health Takum LGA in Taraba State, Nigeria. He currently resides in Jalingo, Taraba State, Nigeria. Despite being a health worker, Lamba Paul developed a love for music through Bro. Godspower, who is also an instrumentalist. This background showcases Lamba Paul's dual interests in both healthcare and music.",
-    linkageId: 25,
-    createdAt: "2024-09-20T06:34:04.878Z",
-    updatedAt: "2024-09-20T06:34:04.878Z",
-  },
-];
 
 const LinkageAIChatInterface: React.FC = () => {
   const router = useRouter();
@@ -66,15 +43,15 @@ const LinkageAIChatInterface: React.FC = () => {
   const userWalletAddress: string = localStorage.getItem("address") as string;
 
   const handleAddWallet = () => {
-    if (userWalletAddress === null) {
+    if (!userWalletAddress) {
       toast.error("Wallet address not found");
     } else {
       addWallet(
         { address: userWalletAddress },
         {
           onSuccess: () => {
-            toast.success("Wallet linked successfully"),
-              setHideAddWallet(false);
+            toast.success("Wallet linked successfully");
+            setHideAddWallet(false);
           },
         }
       );
@@ -84,6 +61,7 @@ const LinkageAIChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [oldMessages, setOldMessages] = useState<Message[]>([]);
 
   const prompts: string[] =
     (data?.data?.prompts || []).filter((prompt: any) => prompt.trim() !== "") ||
@@ -91,19 +69,14 @@ const LinkageAIChatInterface: React.FC = () => {
 
   const sendMessage = async (message: string) => {
     try {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "user", text: message },
-      ]);
+      const newUserMessage: Message = { sender: "user", text: message };
+      setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
       const response = await mutateAsync({ slug, body: { message } });
-
       const aiMessage =
         response?.data?.message || "Sorry, I didn't get a response.";
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "ai", text: aiMessage },
-      ]);
+      const newAiMessage: Message = { sender: "ai", text: aiMessage };
+      setMessages((prevMessages) => [...prevMessages, newAiMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages((prevMessages) => [
@@ -133,15 +106,30 @@ const LinkageAIChatInterface: React.FC = () => {
   const { data: chatHistory } = useGetChatHistory(slug);
 
   useEffect(() => {
-    if (prompts.length > 0) {
-      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-      setMessages([{ sender: "ai", text: randomPrompt }]);
-    } else {
-      setMessages([
-        { sender: "ai", text: "Hello! How can I assist you today?" },
-      ]);
+    if (oldMessages.length === 0) {
+      // Check if there are no old messages
+      if (prompts.length > 0) {
+        const randomPrompt =
+          prompts[Math.floor(Math.random() * prompts.length)];
+        setMessages([{ sender: "ai", text: randomPrompt }]);
+      } else {
+        setMessages([
+          { sender: "ai", text: "Hello! How can I assist you today?" },
+        ]);
+      }
     }
-  }, []);
+  }, [oldMessages, prompts]);
+
+  useEffect(() => {
+    const formattedMessages: Message[] =
+      chatHistory?.data?.data?.flatMap((item: any) => [
+        { sender: "user", text: item.human },
+        { sender: "ai", text: item.assistant },
+      ]) || [];
+
+    setOldMessages(formattedMessages);
+    setMessages((prevMessages) => [...formattedMessages, ...prevMessages]);
+  }, [chatHistory]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -202,16 +190,14 @@ const LinkageAIChatInterface: React.FC = () => {
 
         {selected === "questionnaire" && (
           <div className="p-4 sm:p-6 py-6 flex flex-col overflow-auto scroll-hidden mb-20">
-            {/* available questionnaires */}
             {linkageQuestionnaire?.data.map((i: any) => (
               <div key={i.id} className="flex flex-col gap-2 py-2">
                 <Link
                   href={`/linkages/explore/${slug}/chat/${i.id}`}
                   className="flex flex-row items-center justify-between text-sm text-white border-b border-[#C3B1FF4D] mb-2"
                 >
-                  <div className="">
+                  <div>
                     <p className="font-semibold mb-1">{i.name}</p>
-
                     <div className="-ml-2 flex flex-row items-center font-medium mb-2">
                       <Image
                         src="/assets/coin.png"
@@ -219,7 +205,6 @@ const LinkageAIChatInterface: React.FC = () => {
                         height={32}
                         width={32}
                       />
-
                       {i.type === "LOAN" ? (
                         "Loan application"
                       ) : (
@@ -238,10 +223,47 @@ const LinkageAIChatInterface: React.FC = () => {
 
         {selected === "ai-bot" && (
           <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
-            {/* AI interaction */}
             <div className="flex-1 h-full overflow-y-auto mb-16">
-              {/* display history before continuing conversation, and it there is history, do not initiate with a conversation starter from the AI */}
+              {/* Display old messages first */}
+              {oldMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`mb-6 flex flex-row gap-2 items-start ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {msg.sender === "ai" && (
+                    <div className="w-8 h-8 self-end flex-shrink-0">
+                      <Image
+                        alt="AI"
+                        width={32}
+                        height={32}
+                        src="/assets/AI.png"
+                      />
+                    </div>
+                  )}
+                  <div
+                    className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
+                      msg.sender === "user"
+                        ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
+                        : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  {msg.sender === "user" && (
+                    <div className="w-8 h-8 self-end flex-shrink-0">
+                      <User
+                        size="32"
+                        fill="gray"
+                        className="flex bg-white rounded-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
 
+              {/* Display new messages */}
               {messages.map((msg, index) => (
                 <div
                   key={index}

@@ -12,20 +12,22 @@ import QRCode from "qrcode.react";
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 import { copyToClipboard } from "@/lib/utils";
-import { shortenTransaction } from "@/lib/utils/shorten";
-import AddressDisplay from "@/components/wallet/address-display";
-import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
-import { useSendUsdcToken } from "@/api/user";
 import { useCoinDetails } from "@/lib/values/priceAPI";
+import AddressDisplay from "@/components/wallet/address-display";
+import { shorten, shortenTransaction } from "@/lib/utils/shorten";
+import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import { useGetWalletTransactions, useSendUsdcToken } from "@/api/user";
 
 const LinkageWallet = ({
   walletAddress,
   walletBalance,
   walletConvertedBalance,
+  refetch,
 }: {
   walletAddress: string;
   walletBalance: string;
   walletConvertedBalance: any;
+  refetch: () => void;
 }) => {
   const [selected, setSelected] = useState("deposit");
   const [openTx, setOpenTx] = useState(false);
@@ -35,15 +37,19 @@ const LinkageWallet = ({
 
   const { mutate, isPending } = useSendUsdcToken();
   const sendUsdcToken = () => {
-    mutate(
-      { address: destinationWallet, amount: amount },
-      {
-        onSuccess: () => {
-          toast.success("Transaction successfull"), setOpenTx(false);
-        },
-      }
-    );
+    // mutate(
+    //   { address: destinationWallet, amount: amount },
+    //   {
+    //     onSuccess: () => {
+    //       toast.success("Transaction successfull"), setOpenTx(false), refetch();
+    //     },
+    //   }
+    // );
+    toast.success("implement function here");
   };
+
+  // const { data: transactionHistory } = useGetWalletTransactions();
+  const transactionHistory: any[] = [];
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
@@ -176,8 +182,41 @@ const LinkageWallet = ({
         )}
 
         {selected === "history" && (
-          <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
-            Your transaction history will be displayed here
+          <div>
+            {transactionHistory?.length === 0 ? (
+              <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
+                Your transaction history will be displayed here
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 mb-6">
+                {transactionHistory
+                  ?.filter((tx: any) => tx.status === "complete")
+                  .map((tx: any) => (
+                    <div
+                      key={tx.tx_link}
+                      className="flex flex-row items-center justify-between"
+                    >
+                      <div className="flex flex-row gap-2 items-center">
+                        <div className="flex items-center px-3 py-3 bg-[#3f3856] rounded-full">
+                          <ArrowUp size={20} />
+                        </div>
+
+                        <div className="text-sm">
+                          <p className="text-red-500 font-bold">Sent</p>
+                          <p className="text-[#98A2B3] font-medium">
+                            {shorten(tx.to)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-end justify-end text-sm font-medium">
+                        <p>-{tx.amount} USDC</p>
+                        {/* <p className="text-[#98A2B3]">time</p> */}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
         )}
       </div>

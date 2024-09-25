@@ -167,3 +167,8 @@ export const sendUsdcToken = async (body: TSendUsdcToken) => {
   const res = await client.post("/user/wallet/transfer", body);
   return res.data;
 };
+
+export const getWalletTransactions = async () => {
+  const res = await client.get<any>("/user/wallet/history");
+  return res.data;
+};

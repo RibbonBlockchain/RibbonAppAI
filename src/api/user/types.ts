@@ -54,3 +54,12 @@ export type TSendUsdcToken = {
   amount: string;
   address: string;
 };
+
+export type TTransfer = {
+  amount: string;
+  address: string;
+};
+
+export type TMassWalletTransfer = {
+  data: TTransfer[];
+};

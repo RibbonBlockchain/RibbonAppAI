@@ -12,11 +12,12 @@ import QRCode from "qrcode.react";
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 import { copyToClipboard } from "@/lib/utils";
+import { shorten } from "@/lib/utils/shorten";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import AddressDisplay from "@/components/wallet/address-display";
-import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { useGetWalletTransactions, useSendUsdcToken } from "@/api/user";
+import Link from "next/link";
 
 const LinkageWallet = ({
   walletAddress,
@@ -68,16 +69,25 @@ const LinkageWallet = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-center justify-center">
-        <div
-          onClick={() =>
-            copyToClipboard(walletAddress, () =>
-              toast.success("Wallet address copied")
-            )
-          }
-          className="flex flex-row items-center gap-1 font-normal text-sm"
-        >
-          {shortenTransaction(walletAddress)}
-          <Copy size="16" color="#ffffff" variant="Bold" />
+        <div className="flex flex-row gap-4">
+          <div
+            onClick={() =>
+              copyToClipboard(walletAddress, () =>
+                toast.success("Wallet address copied")
+              )
+            }
+            className="flex flex-row items-center gap-1 font-normal text-sm"
+          >
+            {shorten(walletAddress)}
+            <Copy size="16" color="#ffffff" variant="Bold" />
+          </div>
+
+          <Link
+            href={"/my-linkages/personalise"}
+            className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
+          >
+            Personalise
+          </Link>
         </div>
 
         <p className="text-[28px] font-bold">$ {walletConvertedBalance}</p>

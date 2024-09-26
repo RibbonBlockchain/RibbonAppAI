@@ -14,21 +14,22 @@ import {
   useGetLinkagesFile,
 } from "@/api/linkage";
 import Image from "next/image";
-import Retrain from "./retrain";
-import MyStore from "./my-store";
-import Activity from "./activity";
-import Settings from "./settings";
 import toast from "react-hot-toast";
-import LinkageWallet from "./linkage-wallet";
-import LoanSurvey from "./loan-survey";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
-import ManageLinkage from "./manage-linkages";
 import React, { useEffect, useState } from "react";
 import { useCoinDetails } from "@/lib/values/priceAPI";
-import UploadQuestionnaire from "./upload-questionnaire";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
+import Retrain from "../../../containers/manage-linkage/retrain";
+import MyStore from "../../../containers/manage-linkage/my-store";
+import Activity from "../../../containers/manage-linkage/activity";
+import Settings from "../../../containers/manage-linkage/settings";
+import LoanSurvey from "../../../containers/manage-linkage/loan-survey";
+import MassPayment from "../../../containers/manage-linkage/mass-payment";
+import LinkageWallet from "../../../containers/manage-linkage/linkage-wallet";
+import ManageLinkage from "../../../containers/manage-linkage/manage-linkages";
+import UploadQuestionnaire from "../../../containers/manage-linkage/upload-questionnaire";
 
 interface AIdata {
   id: number;
@@ -48,6 +49,7 @@ const tabs = [
   { name: "AI Bot", value: "ai-bot" },
   { name: "Retrain", value: "retrain" },
   { name: "Wallet", value: "wallet" },
+  { name: "Mass payment", value: "mass-payment" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Loan Survey", value: "loan" },
   { name: "My Store", value: "my-store" },
@@ -255,6 +257,10 @@ const MyLinkageDetails: React.FC = () => {
               walletConvertedBalance={walletConvertedBalance?.toFixed(4)}
               refetch={refetch}
             />
+          )}
+
+          {selectedTab === "mass-payment" && (
+            <MassPayment walletBalance={walletBalance} />
           )}
 
           {selectedTab === "questionnaires" && (

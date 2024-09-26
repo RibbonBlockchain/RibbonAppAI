@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 const InputBox = ({
@@ -7,12 +8,14 @@ const InputBox = ({
   required,
   onChange,
   placeholder,
+  className,
 }: {
   name: any;
   value: any;
   label: string;
   required: boolean;
   placeholder?: string;
+  className?: string;
   onChange: (e: any) => void;
 }) => {
   return (
@@ -32,7 +35,10 @@ const InputBox = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder || "Ribbon Protocol"}
-        className="text-xs w-full bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline"
+        className={clsx(
+          "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline",
+          className ? className : "min-w-full"
+        )}
       />
     </div>
   );

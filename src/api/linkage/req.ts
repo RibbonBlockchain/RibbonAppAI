@@ -10,6 +10,7 @@ import {
   getPageandSizeParams,
 } from "./types";
 import { TResponse, client } from "../api-client";
+import { TMassWalletTransfer, TSendUsdcToken } from "../user/types";
 
 export const createLinkage = async (body: TCreateLinkageBody) => {
   const res = await client.post("/linkage", body);
@@ -216,5 +217,27 @@ export const createWallet = async () => {
 
 export const getUserWallet = async () => {
   const res = await client.get(`user/wallet`);
+  return res.data;
+};
+
+// TRANSACTIONS
+export const linkageSendUsdcToken = async (
+  body: TSendUsdcToken,
+  id: number
+) => {
+  const res = await client.post(`/linkage/${id}/wallet/transfer`, body);
+  return res.data;
+};
+
+export const linkageMassWalletTransfer = async (
+  body: TMassWalletTransfer,
+  id: number
+) => {
+  const res = await client.post(`/linkage/${id}/wallet/transfer/mass`, body);
+  return res.data;
+};
+
+export const getLinkageWalletTransactions = async (id: number) => {
+  const res = await client.post<any>(`/linkage/${id}/wallet/history`);
   return res.data;
 };

@@ -6,7 +6,12 @@ import {
   InfoCircle,
   ClipboardText,
 } from "iconsax-react";
+import {
+  useLinkageSendUsdcToken,
+  useGetLinkageWalletTransactions,
+} from "@/api/linkage";
 import clsx from "clsx";
+import Link from "next/link";
 import Image from "next/image";
 import QRCode from "qrcode.react";
 import toast from "react-hot-toast";
@@ -16,15 +21,18 @@ import { shorten } from "@/lib/utils/shorten";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import AddressDisplay from "@/components/wallet/address-display";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
-import { useGetWalletTransactions, useSendUsdcToken } from "@/api/user";
-import Link from "next/link";
+import { useGetWalletTransactions } from "@/api/user";
+import SuccessAnimation from "@/components/success-animation";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
 const LinkageWallet = ({
+  linkageId,
   walletAddress,
   walletBalance,
   walletConvertedBalance,
   refetch,
 }: {
+  linkageId: number;
   walletAddress: string;
   walletBalance: string;
   walletConvertedBalance: any;
@@ -36,21 +44,32 @@ const LinkageWallet = ({
   const [destinationWallet, setDestinationWallet] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { mutate, isPending } = useSendUsdcToken();
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+
+  const { mutate, isPending } = useLinkageSendUsdcToken();
   const sendUsdcToken = () => {
-    // mutate(
-    //   { address: destinationWallet, amount: amount },
-    //   {
-    //     onSuccess: () => {
-    //       toast.success("Transaction successfull"), setOpenTx(false), refetch();
-    //     },
-    //   }
-    // );
-    toast.success("implement function here");
+    mutate(
+      { body: { address: destinationWallet, amount: amount }, id: linkageId },
+      {
+        onSuccess: () => {
+          refetch();
+          toast.success("Transaction successful");
+          setShowSuccessAnimation(true);
+          setOpenTx(false);
+        },
+        onError: () => {
+          refetch();
+          setOpenTx(false);
+        },
+      }
+    );
   };
 
-  // const { data: transactionHistory } = useGetWalletTransactions();
-  const transactionHistory: any[] = [];
+  const {
+    mutate: getTxnHistory,
+    data: transactionHistory,
+    isPending: historyPending,
+  } = useGetLinkageWalletTransactions(linkageId);
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
@@ -95,6 +114,18 @@ const LinkageWallet = ({
 
       <div className="flex flex-row items-center justify-around font-bold border-b border-[#FFFFFF36] pb-4">
         <div
+          onClick={() => setSelected("deposit")}
+          className={clsx(
+            "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
+          )}
+        >
+          <div className="bg-[#3f3856] p-3 rounded-full">
+            <ArrowDown size={20} />
+          </div>
+          Deposit
+        </div>
+
+        <div
           onClick={() => {
             setSelected("send"), setOpenTx(true);
           }}
@@ -109,19 +140,9 @@ const LinkageWallet = ({
         </div>
 
         <div
-          onClick={() => setSelected("deposit")}
-          className={clsx(
-            "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
-          )}
-        >
-          <div className="bg-[#3f3856] p-3 rounded-full">
-            <ArrowDown size={20} />
-          </div>
-          Deposit
-        </div>
-
-        <div
-          onClick={() => setSelected("history")}
+          onClick={() => {
+            setSelected("history"), getTxnHistory();
+          }}
           className={clsx(
             "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
           )}
@@ -135,9 +156,7 @@ const LinkageWallet = ({
 
       <div className="mt-2">
         {selected === "send" && (
-          <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
-            You can send txs here
-          </div>
+          <div className="w-full min-h-[300px] flex items-center justify-center text-sm"></div>
         )}
 
         {selected === "deposit" && (
@@ -193,14 +212,19 @@ const LinkageWallet = ({
 
         {selected === "history" && (
           <div>
-            {transactionHistory?.length === 0 ? (
+            {transactionHistory?.data?.data.length === 0 ? (
               <div className="w-full min-h-[300px] flex items-center justify-center text-sm">
                 Your transaction history will be displayed here
               </div>
             ) : (
               <div className="flex flex-col gap-4 mb-6">
-                {transactionHistory
-                  ?.filter((tx: any) => tx.status === "complete")
+                {historyPending && (
+                  <div className="flex items-center justify-center mx-auto h-[120px]">
+                    <SpinnerIcon />
+                  </div>
+                )}
+                {transactionHistory?.data?.data
+                  ?.filter((tx: any) => tx.status === "complete" || "pending")
                   .map((tx: any) => (
                     <div
                       key={tx.tx_link}
@@ -245,6 +269,8 @@ const LinkageWallet = ({
           USDvalue={Number(amount) * currentPrice}
         />
       )}
+
+      {showSuccessAnimation && <SuccessAnimation />}
     </div>
   );
 };

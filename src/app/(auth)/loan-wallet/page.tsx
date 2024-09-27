@@ -13,6 +13,7 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { useGetWalletTransactions, useSendUsdcToken } from "@/api/user";
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowUp } from "lucide-react";
+import SuccessAnimation from "@/components/success-animation";
 
 const LoanWallet = () => {
   const router = useRouter();
@@ -22,6 +23,8 @@ const LoanWallet = () => {
   const [destinationWallet, setDestinationWallet] = useState("");
   const [amount, setAmount] = useState("");
 
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+
   const { mutate, isPending } = useSendUsdcToken();
   const sendUsdcToken = () => {
     mutate(
@@ -29,6 +32,7 @@ const LoanWallet = () => {
       {
         onSuccess: () => {
           toast.success("Transaction successfull"),
+            setShowSuccessAnimation(true),
             setOpenTx(false),
             refetch(),
             refetchTransactionHistory();
@@ -150,7 +154,7 @@ const LoanWallet = () => {
             ) : (
               <div className="flex flex-col gap-4">
                 {transactionHistory?.data?.data
-                  ?.filter((tx: any) => tx.status === "complete")
+                  ?.filter((tx: any) => tx.status === "complete" || "pending")
                   .map((tx: any) => (
                     <div
                       key={tx.tx_link}
@@ -195,6 +199,8 @@ const LoanWallet = () => {
           USDvalue={Number(amount) * currentPrice}
         />
       )}
+
+      {showSuccessAnimation && <SuccessAnimation />}
     </div>
   );
 };

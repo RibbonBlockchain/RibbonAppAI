@@ -252,6 +252,7 @@ const MyLinkageDetails: React.FC = () => {
 
           {selectedTab === "wallet" && (
             <LinkageWallet
+              linkageId={selectedAI?.id as number}
               walletBalance={walletBalance}
               walletAddress={data?.data?.walletAddress}
               walletConvertedBalance={walletConvertedBalance?.toFixed(4)}
@@ -260,7 +261,10 @@ const MyLinkageDetails: React.FC = () => {
           )}
 
           {selectedTab === "mass-payment" && (
-            <MassPayment walletBalance={walletBalance} />
+            <MassPayment
+              walletBalance={walletBalance}
+              linkageId={selectedAI?.id as number}
+            />
           )}
 
           {selectedTab === "questionnaires" && (

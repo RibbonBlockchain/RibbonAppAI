@@ -25,6 +25,9 @@ import {
   deleteFeaturedLinkage,
   editLinkage,
   getChatHistory,
+  linkageSendUsdcToken,
+  linkageMassWalletTransfer,
+  getLinkageWalletTransactions,
 } from "./req";
 import {
   TChatLinkageBody,
@@ -38,6 +41,7 @@ import {
 } from "./types";
 import { onError } from "../api-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { TMassWalletTransfer, TSendUsdcToken } from "../user/types";
 
 export const useCreateLinkage = () => {
   return useMutation({
@@ -308,5 +312,29 @@ export const useGetUserWallet = () => {
   return useQuery({
     queryKey: ["user-wallet"],
     queryFn: () => getUserWallet(),
+  });
+};
+
+// TRANSACTIONS
+export const useLinkageSendUsdcToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body, id }: { body: TSendUsdcToken; id: number }) =>
+      linkageSendUsdcToken(body, id),
+  });
+};
+
+export const useLinkageMassWalletTransfer = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body, id }: { body: TMassWalletTransfer; id: number }) =>
+      linkageMassWalletTransfer(body, id),
+  });
+};
+
+export const useGetLinkageWalletTransactions = (id: number) => {
+  return useMutation({
+    onError,
+    mutationFn: () => getLinkageWalletTransactions(id),
   });
 };

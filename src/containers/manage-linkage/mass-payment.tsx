@@ -6,8 +6,15 @@ import { Add, GalleryAdd, Minus } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import InputBox from "@/components/questionnarie/input-box";
 import SuccessAnimation from "@/components/success-animation";
+import { useLinkageMassWalletTransfer } from "@/api/linkage";
 
-const MassPayment = ({ walletBalance }: { walletBalance: string }) => {
+const MassPayment = ({
+  walletBalance,
+  linkageId,
+}: {
+  walletBalance: string;
+  linkageId: number;
+}) => {
   const [image, setImage] = useState<File | null>(null);
   const [recipients, setRecipients] = useState<
     { address: string; amount: string }[]
@@ -40,11 +47,11 @@ const MassPayment = ({ walletBalance }: { walletBalance: string }) => {
     setRecipients(recipients.filter((_, i) => i !== index));
   };
 
-  const { mutate, isPending } = useMassWalletTransfer();
+  const { mutate, isPending } = useLinkageMassWalletTransfer();
 
   const handleMassWalletTransfer = () => {
     mutate(
-      { data: recipients },
+      { body: { data: recipients }, id: linkageId },
       {
         onSuccess: () => {
           toast.success("Transaction completed");
@@ -125,9 +132,9 @@ const MassPayment = ({ walletBalance }: { walletBalance: string }) => {
         </div>
       </div>
       <Button
+        className="mb-6"
         disabled={isSubmitDisabled}
         onClick={handleMassWalletTransfer}
-        className="mb-6"
       >
         {isPending ? <SpinnerIcon /> : "Pay"}
       </Button>

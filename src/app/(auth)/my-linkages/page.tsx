@@ -30,20 +30,7 @@ import MassPayment from "../../../containers/manage-linkage/mass-payment";
 import LinkageWallet from "../../../containers/manage-linkage/linkage-wallet";
 import ManageLinkage from "../../../containers/manage-linkage/manage-linkages";
 import UploadQuestionnaire from "../../../containers/manage-linkage/upload-questionnaire";
-
-interface AIdata {
-  id: number;
-  name: string;
-  slug: string;
-  image: string | null;
-  prompts: string;
-  assistantId: string;
-  description: string;
-  instruction: string;
-  linkageId: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { AIdata } from "@/api/linkage/types";
 
 const tabs = [
   { name: "AI Bot", value: "ai-bot" },

@@ -8,32 +8,31 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import React, { useState } from "react";
 import { Add, Edit2, Trash } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import React, { useEffect, useRef, useState } from "react";
 
 const ActiveItems = () => {
   const [visibleMenu, setVisibleMenu] = useState<{ [key: number]: boolean }>(
     {}
   );
-  // const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   const clickedOutside = Object.values(menuRefs.current).every((ref) => {
-  //     return ref && !ref.contains(event.target as Node);
-  //   });
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
-  //   if (clickedOutside) {
-  //     setVisibleMenu({});
-  //   }
-  // };
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setVisibleMenu({});
+    }
+  };
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (visibleMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const linkageId = localStorage.getItem("selectedLinkageId");
 
@@ -58,6 +57,7 @@ const ActiveItems = () => {
       {
         onSuccess: () => {
           toast.success("Store item archived successfully"), refetch();
+          setVisibleMenu({});
         },
       }
     );
@@ -68,7 +68,7 @@ const ActiveItems = () => {
       { itemId: id, linkageId: Number(linkageId) },
       {
         onSuccess: () => {
-          toast.success("Store item deleted"), refetch();
+          toast.success("Store item deleted"), refetch(), setVisibleMenu({});
         },
       }
     );
@@ -76,6 +76,7 @@ const ActiveItems = () => {
 
   const handleEdit = (id: number) => {
     console.log(`Edit item with ID: ${id}`);
+    setVisibleMenu({});
   };
 
   return (
@@ -127,7 +128,10 @@ const ActiveItems = () => {
                   </div>
                 </div>
 
-                <div className="relative self-center min-w-fit px-3">
+                <div
+                  ref={modalRef}
+                  className="relative self-center min-w-fit px-3"
+                >
                   <Image
                     alt="icon"
                     width={24}
@@ -145,12 +149,14 @@ const ActiveItems = () => {
                       >
                         <Trash size={20} /> Archive
                       </button>
-                      <button
+                      <Link
+                        // href={`/my-linkages/store/${item.slug}`}
+                        href={`/my-linkages/store/harmony-2`}
                         className="flex flex-row items-center gap-1.5 pl-2 py-2"
                         onClick={() => handleEdit(item.id)}
                       >
                         <Edit2 size={20} /> Edit
-                      </button>
+                      </Link>
                       <button
                         className="flex flex-row items-center gap-1.5 pl-2 py-2"
                         onClick={() => handleDelete(item.id)}

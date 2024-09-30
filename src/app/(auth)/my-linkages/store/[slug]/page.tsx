@@ -4,16 +4,32 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { ArrowLeft2, GalleryAdd } from "iconsax-react";
-import { useAddLinkageStoreItem } from "@/api/linkage";
+import {
+  useAddLinkageStoreItem,
+  useGetLinkages,
+  useGetLinkageStoreItemBuSlug,
+} from "@/api/linkage";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import InputBox from "@/components/questionnarie/input-box";
+import { AIdata } from "@/api/linkage/types";
 
 const MAX_IMAGES = 4;
 
-const AddStoreItem = () => {
+const StoreItemDetails = () => {
   const router = useRouter();
+  const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
+  const { data: linkagesList } = useGetLinkages();
+
+  useEffect(() => {
+    if (linkagesList?.data && linkagesList.data.length > 0) {
+      setSelectedAI(linkagesList.data[0]);
+    }
+  }, [linkagesList]);
+
+  // const { data } = useGetLinkageStoreItemBuSlug(selectedAI?.slug as string);
+  const { data } = useGetLinkageStoreItemBuSlug("harmony-2");
 
   const [images, setImages] = useState<
     { file: File | null; preview: string }[]
@@ -37,7 +53,7 @@ const AddStoreItem = () => {
 
   const { mutate, isPending } = useAddLinkageStoreItem();
 
-  const handleAddNewItem = () => {
+  const handleEditItem = () => {
     const formData = new FormData();
 
     formData.append("name", name);
@@ -68,14 +84,7 @@ const AddStoreItem = () => {
     );
   };
 
-  const isSubmitDisabled =
-    isPending ||
-    !name ||
-    !currency ||
-    !price ||
-    !stock ||
-    !description ||
-    !images.some((image) => image.file);
+  const isSubmitDisabled = isPending || !name || !currency || !price || !stock;
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-3 sm:p-6 pb-8">
@@ -86,7 +95,7 @@ const AddStoreItem = () => {
           className="my-2 cursor-pointer"
           onClick={() => router.back()}
         />
-        <p className="text-lg font-semibold">Add new item</p>
+        <p className="text-lg font-semibold">Edit item</p>
       </div>
 
       <section className="flex flex-col gap-6 mt-6 w-full">
@@ -178,12 +187,12 @@ const AddStoreItem = () => {
           />
         </div>
 
-        <Button onClick={handleAddNewItem} disabled={isSubmitDisabled}>
-          {isPending ? <SpinnerIcon /> : "Add Item"}
+        <Button onClick={handleEditItem} disabled={isSubmitDisabled}>
+          {isPending ? <SpinnerIcon /> : "Update Item"}
         </Button>
       </section>
     </main>
   );
 };
 
-export default AddStoreItem;
+export default StoreItemDetails;

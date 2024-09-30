@@ -116,3 +116,17 @@ export type TAddLinkageStoreItemBody = {
   description: string;
   image: string;
 };
+
+export interface AIdata {
+  id: number;
+  name: string;
+  slug: string;
+  image: string | null;
+  prompts: string;
+  assistantId: string;
+  description: string;
+  instruction: string;
+  linkageId: number;
+  createdAt: string;
+  updatedAt: string;
+}

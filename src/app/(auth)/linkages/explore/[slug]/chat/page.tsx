@@ -107,7 +107,6 @@ const LinkageAIChatInterface: React.FC = () => {
 
   useEffect(() => {
     if (oldMessages.length === 0) {
-      // Check if there are no old messages
       if (prompts.length > 0) {
         const randomPrompt =
           prompts[Math.floor(Math.random() * prompts.length)];
@@ -118,7 +117,7 @@ const LinkageAIChatInterface: React.FC = () => {
         ]);
       }
     }
-  }, [oldMessages, prompts]);
+  }, []);
 
   useEffect(() => {
     const formattedMessages: Message[] =

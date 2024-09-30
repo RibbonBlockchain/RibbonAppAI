@@ -12,6 +12,7 @@ import FeaturedLinkages from "@/containers/linkages/linkages-card";
 import { useGetLinkageBySlug, useGetDiscoveryLinkages } from "@/api/linkage";
 import {
   Add,
+  ArrowLeft,
   Call,
   Coin1,
   Copy,
@@ -27,11 +28,11 @@ const LinkageRatingsCard = () => {
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row gap-2 items-center">
           <Image
-            alt=""
-            src={""}
             width={36}
             height={36}
-            className="w-[36px] h-[36px] bg-white rounded-full"
+            alt="rating"
+            src={"/assets/sample-icon.png"}
+            className="w-[36px] h-[36px] bg-white text-white rounded-full"
           />
           <p className="text-sm font-semibold">Brian Okafor</p>
         </div>
@@ -79,12 +80,20 @@ const LinkageViewDetails = () => {
 
       {data && (
         <main className="relative min-h-screen w-full text-white bg-[#0B0228]">
+          <div className="p-1 rounded-full absolute top-3 left-3 w-fit border-2 border-gray-300 z-50 shadow-md">
+            <ArrowLeft
+              size={20}
+              className="text-black"
+              onClick={() => router.back()}
+            />
+          </div>
+
           <Image
             width={320}
             height={200}
             alt="display"
-            className="w-full h-auto z-50"
-            onClick={() => router.back()}
+            priority={true}
+            className="w-full h-auto z-10 bg-red-500 border-red-500"
             src={data?.data.banner || "/assets/linkage-details.png"}
           />
 
@@ -221,10 +230,10 @@ const LinkageViewDetails = () => {
                 <FeaturedLinkages
                   key={i.name}
                   name={i.name}
-                  image={i.image}
-                  description={i.description}
-                  author={i.userId}
                   slug={i.slug}
+                  image={i.logo}
+                  author={i.userId}
+                  description={i.description}
                 />
               ))}
             </div>
@@ -242,7 +251,8 @@ const LinkageViewDetails = () => {
                     width={20}
                     height={20}
                     src={"/assets/sparkle.png"}
-                  />{" "}
+                    className="w-[20px] h-[20px]"
+                  />
                   AI support
                 </button>
                 <button

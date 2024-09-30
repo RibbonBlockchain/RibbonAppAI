@@ -39,6 +39,7 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
   });
 
   const { data: loanWallet } = useGetUserWallet();
+
   const loanWalletDetails = loanWallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );

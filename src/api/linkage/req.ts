@@ -1,4 +1,5 @@
 import {
+  TAddLinkageStoreItemBody,
   TChatLinkageBody,
   TCreateLinkageBody,
   TDisburseLoanBody,
@@ -7,6 +8,7 @@ import {
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
+  getLinkageStoreItemsParams,
   getPageandSizeParams,
 } from "./types";
 import { TResponse, client } from "../api-client";
@@ -239,5 +241,62 @@ export const linkageMassWalletTransfer = async (
 
 export const getLinkageWalletTransactions = async (id: number) => {
   const res = await client.post<any>(`/linkage/${id}/wallet/history`);
+  return res.data;
+};
+
+// STORE
+export const addLinkageStoreItem = async (
+  linkageId: number,
+  body: TAddLinkageStoreItemBody
+) => {
+  const res = await client.post<any>(`/linkage/${linkageId}/store/item`, body);
+  return res.data;
+};
+
+export const archiveLinkageStoreItem = async ({
+  linkageId,
+  itemId,
+}: {
+  linkageId: number;
+  itemId: number;
+}) => {
+  const res = await client.post<any>(
+    `linkage/${linkageId}/store/item/${itemId}/archive`
+  );
+  return res.data;
+};
+
+export const deleteLinkageStoreItem = async ({
+  linkageId,
+  itemId,
+}: {
+  linkageId: number;
+  itemId: number;
+}) => {
+  const res = await client.delete<any>(
+    `linkage/${linkageId}/store/item/${itemId}`
+  );
+  return res.data;
+};
+
+export const getLinkageStoreItems = async ({
+  params,
+  linkageId,
+}: {
+  params: getLinkageStoreItemsParams;
+  linkageId: number;
+}) => {
+  const { query, page, perPage } = params;
+
+  const res = await client.get(
+    `linkage/${linkageId}/store/item?q=${query}&page=${page}&perpage=${perPage}`
+  );
+  return res.data;
+};
+
+export const getLinkageStoreItemBySlug = async (slug: string) => {
+  const res = await client.get(
+    `/linkage/slug/${slug}/store/item?q=das&page=1&perpage=10`
+  );
   return res.data;
 };

@@ -66,7 +66,6 @@ const MyLinkageDetails: React.FC = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAI, setSelectedAI] = useState<AIdata | null>(null);
-
   const { data: linkagesList } = useGetLinkages();
   const { data, refetch } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
@@ -78,11 +77,19 @@ const MyLinkageDetails: React.FC = () => {
     linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
   );
 
-  const [selectedTab, setSelectedTab] = useState("ai-bot");
+  const [selectedTab, setSelectedTab] = useState(() => {
+    return localStorage.getItem("activeManageLinkageTab");
+  });
 
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
+
+  useEffect(() => {
+    if (selectedTab) {
+      localStorage.setItem("activeManageLinkageTab", selectedTab);
+    }
+  }, [selectedTab]);
 
   useEffect(() => {
     if (linkagesList?.data && linkagesList.data.length > 0) {
@@ -92,7 +99,7 @@ const MyLinkageDetails: React.FC = () => {
 
   useEffect(() => {
     if (selectedAI) {
-      localStorage.setItem("selectedLinkage", JSON.stringify(selectedAI));
+      localStorage.setItem("selectedLinkageId", JSON.stringify(selectedAI?.id));
     }
   }, [selectedAI]);
 

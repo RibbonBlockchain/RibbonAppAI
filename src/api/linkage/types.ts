@@ -35,6 +35,12 @@ export interface getPageandSizeParams {
   pageSize: number;
 }
 
+export interface getLinkageStoreItemsParams {
+  query: string;
+  page: number;
+  perPage: number;
+}
+
 interface Pagination {
   pageSize: number;
   endIndex: number;
@@ -101,3 +107,12 @@ export type TSubmitLinkageQuestionnaireAnswer = {
 export type TUploadLinkageStatusBody = { file: any; caption: string };
 
 export type TDisburseLoanBody = { amount: number };
+
+export type TAddLinkageStoreItemBody = {
+  name: string;
+  price: string;
+  currecnty: string;
+  stock: number;
+  description: string;
+  image: string;
+};

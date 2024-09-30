@@ -1,35 +1,64 @@
-import Image from "next/image";
-import { Undo2 } from "lucide-react";
-import { Edit2, Trash } from "iconsax-react";
-import React, { useEffect, useRef, useState } from "react";
+"use client";
 
-const items: any[] = [];
+import {
+  useGetLinkageStoreItems,
+  useDeleteLinkageStoreItem,
+} from "@/api/linkage";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { Undo2 } from "lucide-react";
+import React, { useState } from "react";
+import { Edit2, Trash } from "iconsax-react";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
 const ArchivedItems = () => {
   const [visibleMenu, setVisibleMenu] = useState<{ [key: number]: boolean }>(
     {}
   );
-  const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  // const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
-  const handleClickOutside = (event: MouseEvent) => {
-    const clickedOutside = Object.values(menuRefs.current).every((ref) => {
-      return ref && !ref.contains(event.target as Node);
-    });
+  // const handleClickOutside = (event: MouseEvent) => {
+  //   const clickedOutside = Object.values(menuRefs.current).every((ref) => {
+  //     return ref && !ref.contains(event.target as Node);
+  //   });
 
-    if (clickedOutside) {
-      setVisibleMenu({});
-    }
-  };
+  //   if (clickedOutside) {
+  //     setVisibleMenu({});
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   const handleToggleMenu = (id: number) => {
     setVisibleMenu((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const linkageId = localStorage.getItem("selectedLinkageId");
+
+  const { data, isLoading, refetch } = useGetLinkageStoreItems({
+    linkageId: Number(linkageId),
+    params: { page: 1, perPage: 10, query: "" },
+  });
+
+  const archivedItems =
+    data?.data?.data.filter((item: any) => item.status === "ARCHIVED") || [];
+
+  const { mutate: deleteItem } = useDeleteLinkageStoreItem();
+
+  const handleDelete = (id: number) => {
+    deleteItem(
+      { itemId: id, linkageId: Number(linkageId) },
+      {
+        onSuccess: () => {
+          toast.success("Store item deleted"), refetch();
+        },
+      }
+    );
   };
 
   const handleEdit = (id: number) => {
@@ -40,20 +69,21 @@ const ArchivedItems = () => {
     console.log(`Unarchive item with ID: ${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    console.log(`Delete item with ID: ${id}`);
-  };
-
   return (
     <div className="flex flex-col gap-6 mb-6">
       <div>
-        {items.length === 0 ? (
+        {archivedItems.length === 0 ? (
           <div className="min-h-[150px] flex items-center justify-center mx-auto text-sm">
             You do not have any items in your archive
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {items.map((item: any) => (
+            {isLoading && (
+              <div className="min-h-[150px] flex items-center justify-center mx-auto text-sm">
+                <SpinnerIcon />
+              </div>
+            )}
+            {archivedItems.map((item: any) => (
               <div
                 key={item.id}
                 className="relative flex flex-row items-center justify-between"
@@ -63,19 +93,17 @@ const ArchivedItems = () => {
                     width={68}
                     alt="image"
                     height={68}
-                    src={item.image || ""}
+                    src={item.images[0]}
                     className="bg-white rounded-md w-[68px] h-[68px]"
                     onClick={() => handleToggleMenu(item.id)}
                   />
                   <div className="flex flex-col items-start justify-between py-1">
-                    <p className="text-sm font-semibold">
-                      {item.name} Leather bag
-                    </p>
+                    <p className="text-sm font-semibold">{item.name}</p>
                     <p className="text-xs font-medium text-[#98A2B3] mt-0.5 line-clamp-2">
-                      {item.description || "No description available"}
+                      {item.description}
                     </p>
                     <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
-                      {item.currency} {item.price} # 5000
+                      {item.currency} {item.price.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -86,7 +114,7 @@ const ArchivedItems = () => {
                     width={24}
                     height={24}
                     src="/assets/option-icon.png"
-                    className="cursor-pointer"
+                    className="cursor-pointer w-[24px] h-[24px]"
                     onClick={() => handleToggleMenu(item.id)}
                   />
 

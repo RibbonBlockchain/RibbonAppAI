@@ -16,6 +16,7 @@ const FloatingIcon = () => {
         height={36}
         src="/assets/AI.png"
         onClick={() => router.push("/bot")}
+        className="w-[36px] h-[36px]"
       />
     </div>
   );

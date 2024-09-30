@@ -45,6 +45,7 @@ const LoanWallet = () => {
   const currentPrice = data?.market_data.current_price.usd as number;
 
   const { data: loanWallet, refetch } = useGetUserWallet();
+
   const loanWalletDetails = loanWallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );

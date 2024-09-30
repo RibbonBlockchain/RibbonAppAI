@@ -210,13 +210,13 @@ const Linkages = () => {
                     </div>
                     {featuredLinkages?.data?.data?.map((i: any) => (
                       <LinkagesCard
+                        featured={true}
                         key={i.linkage.id}
                         name={i.linkage.name}
-                        image={i.linkage.image}
-                        description={i.linkage.description}
-                        author={i.linkage.userId}
                         slug={i.linkage.slug}
-                        featured={true}
+                        image={i.linkage.logo}
+                        author={i.linkage.userId}
+                        description={i.linkage.description}
                       />
                     ))}
                   </div>
@@ -235,10 +235,10 @@ const Linkages = () => {
                       <LinkagesCard
                         key={i.name}
                         name={i.name}
-                        image={i.image}
-                        description={i.description}
-                        author={i.userId}
                         slug={i.slug}
+                        image={i.logo}
+                        author={i.userId}
+                        description={i.description}
                       />
                     ))}
                   </div>
@@ -261,7 +261,7 @@ const Linkages = () => {
                         key={i.name}
                         name={i.name}
                         slug={i.slug}
-                        image={i.image}
+                        image={i.logo}
                         author={i.userId}
                         description={i.description}
                       />

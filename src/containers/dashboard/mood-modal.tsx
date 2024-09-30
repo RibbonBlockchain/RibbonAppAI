@@ -203,7 +203,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   <LinkagesCard
                     key={i.name}
                     name={i.name}
-                    image={i.image}
+                    image={i.logo}
                     description={i.description}
                     author={i.userId}
                     slug={i.slug}

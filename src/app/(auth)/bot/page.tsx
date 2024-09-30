@@ -140,6 +140,7 @@ const RibbonBot: React.FC = () => {
                       width={32}
                       height={32}
                       src="/assets/AI.png"
+                      className="w-[32px] h-[32px]"
                     />
                   </div>
                 )}

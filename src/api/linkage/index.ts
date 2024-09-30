@@ -28,8 +28,14 @@ import {
   linkageSendUsdcToken,
   linkageMassWalletTransfer,
   getLinkageWalletTransactions,
+  addLinkageStoreItem,
+  archiveLinkageStoreItem,
+  deleteLinkageStoreItem,
+  getLinkageStoreItems,
+  getLinkageStoreItemBySlug,
 } from "./req";
 import {
+  TAddLinkageStoreItemBody,
   TChatLinkageBody,
   TCreateLinkageBody,
   TDisburseLoanBody,
@@ -37,6 +43,7 @@ import {
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
+  getLinkageStoreItemsParams,
   getPageandSizeParams,
 } from "./types";
 import { onError } from "../api-client";
@@ -336,5 +343,65 @@ export const useGetLinkageWalletTransactions = (id: number) => {
   return useMutation({
     onError,
     mutationFn: () => getLinkageWalletTransactions(id),
+  });
+};
+
+// STORE
+export const useAddLinkageStoreItem = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TAddLinkageStoreItemBody;
+      linkageId: number;
+    }) => addLinkageStoreItem(linkageId, body),
+  });
+};
+
+export const useArchiveLinkageStoreItem = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      itemId,
+      linkageId,
+    }: {
+      itemId: number;
+      linkageId: number;
+    }) => archiveLinkageStoreItem({ itemId, linkageId }),
+  });
+};
+
+export const useDeleteLinkageStoreItem = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      itemId,
+      linkageId,
+    }: {
+      itemId: number;
+      linkageId: number;
+    }) => deleteLinkageStoreItem({ itemId, linkageId }),
+  });
+};
+
+export const useGetLinkageStoreItems = ({
+  params,
+  linkageId,
+}: {
+  params: getLinkageStoreItemsParams;
+  linkageId: number;
+}) => {
+  return useQuery({
+    queryKey: ["linkagestore-items"],
+    queryFn: () => getLinkageStoreItems({ params, linkageId }),
+  });
+};
+
+export const useGetLinkageStoreItemBuSlug = (slug: string) => {
+  return useQuery({
+    queryKey: ["linkagestore-item"],
+    queryFn: () => getLinkageStoreItemBySlug(slug),
   });
 };

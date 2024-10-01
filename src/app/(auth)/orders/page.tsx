@@ -1,23 +1,27 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft } from "iconsax-react";
+import { ArrowLeft2 } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Orders = () => {
   const router = useRouter();
-
   return (
-    <AuthNavLayout>
-      <div className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-24">
-        <ArrowLeft onClick={() => router.back()} />
-
-        <div className="flex-grow flex items-center justify-center mt-20">
-          <p className="text-lg">Coming soon</p>
-        </div>
+    <main className="w-full flex flex-col h-screen text-white bg-[#0B0228] p-3 sm:p-6">
+      <div className="flex flex-row items-center justify-start gap-4 mt-2">
+        <ArrowLeft2
+          size="24"
+          color="#ffffff"
+          className="my-2 cursor-pointer"
+          onClick={() => router.back()}
+        />
+        <p className="text-lg font-semibold">Orders</p>
       </div>
-    </AuthNavLayout>
+
+      <section className="flex-1 flex flex-col gap-4 mt-6 w-full overflow-auto">
+        Coming soon
+      </section>
+    </main>
   );
 };
 

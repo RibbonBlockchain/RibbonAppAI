@@ -10,18 +10,25 @@ import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
 import { useAddWallet } from "@/api/user";
-import { Send, User } from "iconsax-react";
+import { Add, Minus, Send, User } from "iconsax-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import LinkageStore from "@/containers/linkages/linkage-store";
 
 interface Message {
   sender: "user" | "ai";
   text: string;
 }
+
+const tabs = [
+  { id: "questionnaire", label: "Catalogues" },
+  { id: "ai-bot", label: "AI Chat" },
+  { id: "store", label: "Store" },
+];
 
 const LinkageAIChatInterface: React.FC = () => {
   const router = useRouter();
@@ -167,24 +174,18 @@ const LinkageAIChatInterface: React.FC = () => {
         </div>
 
         <div className="flex flex-row items-center justify-center self-center bg-[#3f3856] p-1 rounded-full mt-2 w-[90%]">
-          <p
-            onClick={() => setSelected("questionnaire")}
-            className={clsx(
-              "w-full text-center py-2 rounded-full",
-              selected === "questionnaire" && " bg-[#0B0228]"
-            )}
-          >
-            Catalogues
-          </p>
-          <p
-            onClick={() => setSelected("ai-bot")}
-            className={clsx(
-              "w-full text-center py-2 rounded-full",
-              selected === "ai-bot" && " bg-[#0B0228]"
-            )}
-          >
-            AI Chat
-          </p>
+          {tabs.map((tab) => (
+            <p
+              key={tab.id}
+              onClick={() => setSelected(tab.id)}
+              className={clsx(
+                "w-full min-w-fit px-2 text-center py-2 rounded-full",
+                selected === tab.id && "bg-[#0B0228]"
+              )}
+            >
+              {tab.label}
+            </p>
+          ))}
         </div>
 
         {selected === "questionnaire" && (
@@ -320,6 +321,8 @@ const LinkageAIChatInterface: React.FC = () => {
             </div>
           </div>
         )}
+
+        {selected === "store" && <LinkageStore slug={slug} />}
       </div>
     </AuthNavLayout>
   );

@@ -7,32 +7,31 @@ import {
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { Undo2 } from "lucide-react";
-import React, { useState } from "react";
 import { Edit2, Trash } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import React, { useEffect, useRef, useState } from "react";
 
 const ArchivedItems = () => {
   const [visibleMenu, setVisibleMenu] = useState<{ [key: number]: boolean }>(
     {}
   );
-  // const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   const clickedOutside = Object.values(menuRefs.current).every((ref) => {
-  //     return ref && !ref.contains(event.target as Node);
-  //   });
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
-  //   if (clickedOutside) {
-  //     setVisibleMenu({});
-  //   }
-  // };
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setVisibleMenu({});
+    }
+  };
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (visibleMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [visibleMenu]);
 
   const handleToggleMenu = (id: number) => {
     setVisibleMenu((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -55,7 +54,7 @@ const ArchivedItems = () => {
       { itemId: id, linkageId: Number(linkageId) },
       {
         onSuccess: () => {
-          toast.success("Store item deleted"), refetch();
+          toast.success("Store item deleted"), refetch(), setVisibleMenu({});
         },
       }
     );
@@ -63,10 +62,12 @@ const ArchivedItems = () => {
 
   const handleEdit = (id: number) => {
     console.log(`Edit item with ID: ${id}`);
+    // setVisibleMenu({});
   };
 
   const handleUnArchive = (id: number) => {
     console.log(`Unarchive item with ID: ${id}`);
+    // setVisibleMenu({});
   };
 
   return (
@@ -108,7 +109,10 @@ const ArchivedItems = () => {
                   </div>
                 </div>
 
-                <div className="relative self-center min-w-fit px-2">
+                <div
+                  ref={modalRef}
+                  className="relative self-center min-w-fit px-2"
+                >
                   <Image
                     alt="icon"
                     width={24}

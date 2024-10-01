@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { Add, Minus, ShoppingCart } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useCart } from "@/provider/cart-context-provider";
+import { useGetLinkageStoreItems } from "@/api/linkage";
+import toast from "react-hot-toast";
 
 interface Item {
   id: number;
@@ -15,47 +17,9 @@ interface Item {
   price: number;
   stock: number;
   currency: string;
+  images: any;
   imageUrl: string;
 }
-
-const items: Item[] = [
-  {
-    id: 1,
-    name: "Cool Sneakers",
-    description: "Stylish and comfortable sneakers for everyday wear.",
-    price: 79.99,
-    currency: "$",
-    imageUrl: "",
-    stock: 8,
-  },
-  {
-    id: 2,
-    name: "Classic Backpack",
-    description: "A durable backpack for school or travel.",
-    price: 49.99,
-    currency: "$",
-    imageUrl: "",
-    stock: 8,
-  },
-  {
-    id: 3,
-    name: "Leather Wallet",
-    description: "Premium leather wallet with multiple compartments.",
-    price: 39.99,
-    currency: "$",
-    imageUrl: "",
-    stock: 8,
-  },
-  {
-    id: 4,
-    name: "Smart Watch",
-    description: "Stay connected with this feature-packed smart watch.",
-    price: 199.99,
-    currency: "$",
-    imageUrl: "",
-    stock: 8,
-  },
-];
 
 const LinkageStore = ({ slug }: { slug: string }) => {
   const router = useRouter();
@@ -65,11 +29,14 @@ const LinkageStore = ({ slug }: { slug: string }) => {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleAddItem = (item: Item) => {
-    updateCart(
-      item,
-      (cartItems.find((cartItem) => cartItem.item.id === item.id)?.quantity ||
-        0) + 1
-    );
+    const currentQuantity =
+      cartItems.find((cartItem) => cartItem.item.id === item.id)?.quantity || 0;
+
+    if (currentQuantity < item.stock) {
+      updateCart(item, currentQuantity + 1);
+    } else {
+      toast.error(`Cannot add more than ${item.stock} items to the cart.`);
+    }
   };
 
   const handleRemoveItem = (item: Item) => {
@@ -81,14 +48,23 @@ const LinkageStore = ({ slug }: { slug: string }) => {
   };
 
   const handleViewCart = () => {
-    console.log(cartItems);
     router.push(`/linkages/explore/${slug}/chat/store/checkout`);
   };
+
+  const linkageId = localStorage.getItem("selectedLinkageId");
+
+  const { data, isLoading, refetch } = useGetLinkageStoreItems({
+    linkageId: Number(linkageId),
+    params: { page: 1, perPage: 10, query: "" },
+  });
+
+  const activeItems =
+    data?.data?.data.filter((item: any) => item.status === "ACTIVE") || [];
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 p-4 sm:p-6 py-6 overflow-auto">
-        {items.map((item) => (
+        {activeItems.map((item: any) => (
           <div
             key={item.id}
             className="relative flex flex-row items-center justify-between gap-2 mb-4"
@@ -98,7 +74,7 @@ const LinkageStore = ({ slug }: { slug: string }) => {
                 width={68}
                 height={68}
                 alt={item.name}
-                src={item.imageUrl}
+                src={item.images[0]}
                 className="bg-white rounded-md w-[68px] h-[68px]"
               />
               <div className="flex flex-col items-start justify-between py-1">

@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Item {
+  images: any;
   id: number;
   name: string;
   description: string;

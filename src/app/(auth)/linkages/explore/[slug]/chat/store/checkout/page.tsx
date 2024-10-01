@@ -61,7 +61,7 @@ const Checkout = () => {
         </div>
 
         <div className="w-full">
-          <p>{cartItems.length} items</p>
+          <p>{cartItems.length} item(s)</p>
 
           <div className="w-full flex flex-col mb-10">
             {cartItems.map((cartItem) => (
@@ -75,17 +75,24 @@ const Checkout = () => {
                       width={68}
                       alt="image"
                       height={68}
-                      src={cartItem.item.imageUrl || ""}
+                      src={cartItem.item.images[0]}
                       className="bg-white rounded-md w-[68px] h-[68px]"
                     />
                     <p className="text-sm font-semibold line-clamp-2">
                       {cartItem.item.name}
                     </p>
                   </div>
+
                   <div className="flex flex-col items-start justify-between py-1">
-                    <p className="text-base font-bold">
-                      {cartItem.item.currency} {cartItem.item.price.toFixed(2)}
-                    </p>
+                    <div className="flex flex-row gap-1">
+                      <p className="text-base font-bold min-w-fit">
+                        {cartItem.item.currency}
+                      </p>
+                      <p className="text-base font-bold min-w-fit">
+                        {cartItem.item.price.toFixed(2)}
+                      </p>
+                    </div>
+
                     <p className="text-sm font-semibold">
                       Qty - {cartItem.quantity}
                     </p>

@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
-import { Add, ArrowLeft2, Icon, InfoCircle, Minus } from "iconsax-react";
+import { Add, ArrowLeft2, Icon, InfoCircle, Minus, Copy } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useCart } from "@/provider/cart-context-provider";
-import { Plus } from "lucide-react";
+import { Plus, Upload, X } from "lucide-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
+import { copyToClipboard } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 interface Address {
   id: number;
@@ -29,6 +31,7 @@ const ConfirmOrder: React.FC = () => {
 
   const { cartItems } = useCart();
 
+  const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [addresses, setAddresses] = useState<Address[]>([
     {
@@ -159,27 +162,45 @@ const ConfirmOrder: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="flex flex-col gap-4 mt-4">
           <p className="text-base font-semibold">Delivery method</p>
-          <div className="flex flex-col items-start gap-2 justify-between text-[15px] font-medium">
-            <button
-              className="flex flex-row gap-1 items-center"
+          <div className="flex flex-col items-start gap-4 justify-between text-[15px] font-medium">
+            <div
               onClick={() => handleDeliveryMethodChange("pickup")}
+              className="w-full flex flex-row items-center justify-between"
             >
-              Pick up station
-              <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
-                $2.00
-              </p>
-            </button>
-            <button
-              className="flex flex-row gap-1 items-center"
+              <button className="flex flex-row gap-1 items-center">
+                Pick up station
+                <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
+                  $2.00
+                </p>
+              </button>
+              <div
+                className={`w-5 h-5 rounded-full border-2 ml-2 ${
+                  deliveryMethod === "pickup"
+                    ? "bg-white border-white"
+                    : "border-white"
+                }`}
+              />
+            </div>
+            <div
               onClick={() => handleDeliveryMethodChange("homeDelivery")}
+              className="w-full flex flex-row items-center justify-between"
             >
-              Home delivery{" "}
-              <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
-                $5.00
-              </p>
-            </button>
+              <button className="flex flex-row gap-1 items-center">
+                Home delivery{" "}
+                <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
+                  $5.00
+                </p>
+              </button>
+              <div
+                className={`w-5 h-5 rounded-full border-2 ml-2 ${
+                  deliveryMethod === "homeDelivery"
+                    ? "bg-white border-white"
+                    : "border-white"
+                }`}
+              />
+            </div>
           </div>
         </div>
 
@@ -195,14 +216,18 @@ const ConfirmOrder: React.FC = () => {
               <div
                 key={station.id}
                 className={`flex flex-row items-start justify-between gap-1.5 border border-[#FFFFFF36] rounded-[12px] mt-4 p-4 ${
-                  selectedPickupStationId === station.id ? "bg-[#2F2F2F]" : ""
+                  selectedPickupStationId === station.id ? "" : ""
                 }`}
                 onClick={() => setSelectedPickupStationId(station.id)}
               >
-                <div>
-                  <div>
-                    <Icon />
-                  </div>
+                <div className="flex flex-row gap-2">
+                  <div
+                    className={`min-w-[20px] w-5 h-5 rounded-full border-2 ml-2 mt-1 ${
+                      selectedPickupStationId === station.id
+                        ? "bg-white border-white"
+                        : "border-white"
+                    }`}
+                  />
                   <div className="flex flex-col gap-1">
                     <p className="text-[15px] font-medium">{station.name}</p>
                     <p className="text-[13px] font-normal text-[#E5E7EB]">
@@ -234,14 +259,18 @@ const ConfirmOrder: React.FC = () => {
               <div
                 key={address.id}
                 className={`flex flex-row items-start justify-between gap-1.5 border border-[#FFFFFF36] rounded-[12px] p-4 ${
-                  selectedAddressId === address.id ? "bg-[#2F2F2F]" : ""
+                  selectedAddressId === address.id ? "" : ""
                 }`}
                 onClick={() => setSelectedAddressId(address.id)}
               >
-                <div>
-                  <div>
-                    <Icon />
-                  </div>
+                <div className="flex flex-row gap-2">
+                  <div
+                    className={`min-w-[20px] w-5 h-5 rounded-full border-2 ml-2 mt-1 ${
+                      selectedAddressId === address.id
+                        ? "bg-white border-white"
+                        : "border-white"
+                    }`}
+                  />
                   <div className="flex flex-col gap-1">
                     <p className="text-[15px] font-medium">{address.name}</p>
                     <p className="text-[13px] font-normal text-[#E5E7EB]">
@@ -267,6 +296,16 @@ const ConfirmOrder: React.FC = () => {
             ))}
           </div>
         )}
+
+        <div
+          onClick={() => setOpenQRCodeModal(true)}
+          className="text-base font-bold mt-4"
+        >
+          Generate payment QR code
+          <p className="text-xs font-normal text-[#E5E7EB]">
+            You can share this QR code with someone to pay for you
+          </p>
+        </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
@@ -310,13 +349,13 @@ const ConfirmOrder: React.FC = () => {
       </section>
 
       <div className="flex flex-col gap-3 p-4">
+        <Button onClick={handlePayment} disabled={isPending}>
+          {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
+        </Button>
         <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
           <InfoCircle size={16} />
           <p>{totalFee.toFixed(2)} will be charged from your USDC wallet</p>
         </div>
-        <Button onClick={handlePayment} disabled={isPending}>
-          {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
-        </Button>
       </div>
 
       {openSuccessModal && (
@@ -324,6 +363,49 @@ const ConfirmOrder: React.FC = () => {
           isOpen={openSuccessModal}
           onClose={() => setOpenSuccessModal(false)}
         />
+      )}
+
+      {openQRCodeModal && (
+        <div className="fixed inset-x-0 bottom-0 bg-[#3f3952] backdrop h-3/5 rounded-t-lg shadow-lg p-4 mx-1 transition-transform transform translate-y-0">
+          <div className="flex flex-col h-full py-4">
+            <div className="flex flex-row items-center justify-between">
+              <div />
+              <h2 className="text-lg font-semibold">Payment Request</h2>
+              <X onClick={() => setOpenQRCodeModal(false)} />
+            </div>
+
+            <div className="mt-4 w-full rounded-md flex flex-col gap-2 items-center justify-center text-center">
+              <div>
+                <p className="text-[13px] font-medium mb-1"> Amount</p>
+                <p className="text-sm font-bold">$130.00</p>
+              </div>
+              <div className="w-[225px] h-[225px] bg-white rounded-2xl my-1"></div>
+              <div>
+                <div className="flex flex-row items-center gap-2 text-sm font-normal mb-1">
+                  0x2f09vkljjioppp33nmhnjuffbd8a
+                  <Copy
+                    size="18"
+                    color="#F6F1FE"
+                    variant="Bold"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      copyToClipboard("0x2f09vkljjioppp33nmhnjuffbd8a", () =>
+                        toast.success(`Wallet address copied`)
+                      );
+                    }}
+                  />
+                </div>
+                <p className="text-sm font-bold">Scan to Pay</p>
+              </div>
+            </div>
+
+            {/* <div className="flex-grow" /> */}
+
+            <button className="my-8 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]">
+              Share QR Code <Upload size={20} />
+            </button>
+          </div>
+        </div>
       )}
     </main>
   );

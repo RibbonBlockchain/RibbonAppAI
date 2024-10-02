@@ -79,7 +79,7 @@ const LinkageStore = ({ slug }: { slug: string }) => {
             </div>
           ) : (
             <div className="flex-1 p-4 sm:p-6 py-6 overflow-auto">
-              <div
+              {/* <div
                 onClick={() =>
                   copyToClipboard(
                     "https://ribbon-app-ai.vercel.app/linkage/store/:slug/:id",
@@ -89,7 +89,7 @@ const LinkageStore = ({ slug }: { slug: string }) => {
                 className="pb-4 flex flex-row gap-1 text-base font-bold"
               >
                 <Upload size={20} /> Share store
-              </div>
+              </div> */}
 
               {activeItems.map((item: any) => (
                 <div

@@ -9,6 +9,8 @@ export type TCreateLinkageBody = {
   instruction: string;
   prompts: string;
   prompts1?: string;
+  logo?: string;
+  banner?: string;
 };
 
 export type TTrainLinkage = {

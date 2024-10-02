@@ -102,7 +102,7 @@ const MyLinkageDetails: React.FC = () => {
           size="24"
           color="#ffffff"
           className="my-2 cursor-pointer"
-          onClick={() => router.back()}
+          onClick={() => router.push("/profile")}
         />
 
         <div className="relative text-sm font-bold min-w-fit px-2">

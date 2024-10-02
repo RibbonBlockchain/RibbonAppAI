@@ -16,6 +16,12 @@ interface Address {
   address: string;
 }
 
+interface PickupStation {
+  id: number;
+  name: string;
+  address: string;
+}
+
 const ConfirmOrder: React.FC = () => {
   const router = useRouter();
   const params = useParams();
@@ -31,7 +37,23 @@ const ConfirmOrder: React.FC = () => {
       address: "No 25, Ribbon Street, three way junction, Ikeja, Lagos",
     },
   ]);
+  const [pickupStations] = useState<PickupStation[]>([
+    {
+      id: 1,
+      name: "Station A",
+      address: "Location A",
+    },
+    {
+      id: 2,
+      name: "Station B",
+      address: "Location B",
+    },
+  ]);
   const [selectedAddressId, setSelectedAddressId] = useState<number>(1);
+  const [selectedPickupStationId, setSelectedPickupStationId] = useState<
+    number | null
+  >(null);
+  const [deliveryMethod, setDeliveryMethod] = useState<string>("homeDelivery");
   const [newAddress, setNewAddress] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
   const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
@@ -94,6 +116,13 @@ const ConfirmOrder: React.FC = () => {
     setAddresses(addresses.filter((addr) => addr.id !== id));
   };
 
+  const handleDeliveryMethodChange = (method: string) => {
+    setDeliveryMethod(method);
+    if (method === "pickup") {
+      setSelectedPickupStationId(null); // Reset selection if switching methods
+    }
+  };
+
   return (
     <main className="w-full flex flex-col h-screen text-white bg-[#0B0228] p-3 sm:p-6">
       <div className="flex flex-row items-center justify-start gap-4 mt-2">
@@ -131,55 +160,113 @@ const ConfirmOrder: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-2 mt-4">
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-base font-semibold">Delivery address</p>
+          <p className="text-base font-semibold">Delivery method</p>
+          <div className="flex flex-col items-start gap-2 justify-between text-[15px] font-medium">
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex flex-row flex-end items-center justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
+              className="flex flex-row gap-1 items-center"
+              onClick={() => handleDeliveryMethodChange("pickup")}
             >
-              <div className="p-[3px] rounded-full border border-[#FFFFFF36]">
-                <Plus size={14} />
-              </div>
-              Add
+              Pick up station
+              <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
+                $2.00
+              </p>
+            </button>
+            <button
+              className="flex flex-row gap-1 items-center"
+              onClick={() => handleDeliveryMethodChange("homeDelivery")}
+            >
+              Home delivery{" "}
+              <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
+                $5.00
+              </p>
             </button>
           </div>
-
-          {addresses.map((address) => (
-            <div
-              key={address.id}
-              className={`flex flex-row items-start justify-between gap-1.5 border border-[#FFFFFF36] rounded-[12px] p-4 ${
-                selectedAddressId === address.id ? "bg-[#2F2F2F]" : ""
-              }`}
-              onClick={() => setSelectedAddressId(address.id)}
-            >
-              <div>
-                <div>
-                  <Icon />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <p className="text-[15px] font-medium">{address.name}</p>
-                  <p className="text-[13px] font-normal text-[#E5E7EB]">
-                    {address.address}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 items-end self-end ml-4 text-sm font-medium">
-                <button onClick={() => handleEditAddress(address.id)}>
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveAddress(address.id);
-                  }}
-                  className="ml-2 text-red-500"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
+
+        {deliveryMethod === "pickup" && (
+          <div className="flex flex-col gap-2 mt-8">
+            <p className="text-base font-semibold">
+              Pick up station (Select a pick up station)
+            </p>
+            <p className="text-sm font-medium">
+              Pick up station near your location
+            </p>
+            {pickupStations.map((station) => (
+              <div
+                key={station.id}
+                className={`flex flex-row items-start justify-between gap-1.5 border border-[#FFFFFF36] rounded-[12px] mt-4 p-4 ${
+                  selectedPickupStationId === station.id ? "bg-[#2F2F2F]" : ""
+                }`}
+                onClick={() => setSelectedPickupStationId(station.id)}
+              >
+                <div>
+                  <div>
+                    <Icon />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[15px] font-medium">{station.name}</p>
+                    <p className="text-[13px] font-normal text-[#E5E7EB]">
+                      {station.address}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {deliveryMethod === "homeDelivery" && (
+          <div className="flex flex-col gap-2 mt-8">
+            <div className="flex flex-row items-center justify-between">
+              <p className="text-base font-semibold">Home delivery</p>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex flex-row items-center justify-end gap-2 py-2 mt-2 text-sm text-start text-[#DFCBFB] font-medium"
+              >
+                <div className="p-[3px] rounded-full border border-[#FFFFFF36]">
+                  <Plus size={14} />
+                </div>
+                Add
+              </button>
+            </div>
+
+            {addresses.map((address) => (
+              <div
+                key={address.id}
+                className={`flex flex-row items-start justify-between gap-1.5 border border-[#FFFFFF36] rounded-[12px] p-4 ${
+                  selectedAddressId === address.id ? "bg-[#2F2F2F]" : ""
+                }`}
+                onClick={() => setSelectedAddressId(address.id)}
+              >
+                <div>
+                  <div>
+                    <Icon />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[15px] font-medium">{address.name}</p>
+                    <p className="text-[13px] font-normal text-[#E5E7EB]">
+                      {address.address}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 items-end self-end ml-4 text-sm font-medium">
+                  <button onClick={() => handleEditAddress(address.id)}>
+                    Edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveAddress(address.id);
+                    }}
+                    className="ml-2 text-red-500"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">

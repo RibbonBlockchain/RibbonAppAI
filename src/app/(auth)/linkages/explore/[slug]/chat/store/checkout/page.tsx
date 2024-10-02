@@ -55,7 +55,7 @@ const Checkout = () => {
       </div>
 
       <section className="flex-1 flex flex-col gap-6 mt-6 w-full overflow-auto">
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between font-bold">
           <p>Subtotal</p>
           <p>{subtotal.toFixed(2)} USDC</p>
         </div>
@@ -70,7 +70,7 @@ const Checkout = () => {
                 className="w-full relative flex flex-col gap-4 items-start py-6 border-b border-[#D6CBFF33]"
               >
                 <div className="w-full flex flex-row items-center justify-between gap-1">
-                  <div className="flex flex-row gap-1 items-center">
+                  <div className="flex flex-row gap-1 items-center w-full max-w-[75%]">
                     <Image
                       width={68}
                       alt="image"

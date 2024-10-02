@@ -4,6 +4,7 @@ import {
   useGetLinkageStoreItems,
   useDeleteLinkageStoreItem,
   useArchiveLinkageStoreItem,
+  useUpdateLinkageStoreItem,
 } from "@/api/linkage";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,28 +12,17 @@ import toast from "react-hot-toast";
 import { Add, Edit2, Trash } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import React, { useEffect, useRef, useState } from "react";
+import EditItemModal from "./edit-item-modal";
+import { TUpdateLinkageStoreItem } from "@/api/linkage/types";
 
 const ActiveItems = () => {
   const [visibleMenu, setVisibleMenu] = useState<{ [key: number]: boolean }>(
     {}
   );
-
-  const modalRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setVisibleMenu({});
-    }
-  };
-
-  useEffect(() => {
-    if (visibleMenu) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState<TUpdateLinkageStoreItem | null>(
+    null
+  );
 
   const linkageId = localStorage.getItem("selectedLinkageId");
 
@@ -46,6 +36,11 @@ const ActiveItems = () => {
 
   const { mutate: archiveItem } = useArchiveLinkageStoreItem();
   const { mutate: deleteItem } = useDeleteLinkageStoreItem();
+  const { mutate: updateItem } = useUpdateLinkageStoreItem();
+
+  useEffect(() => {
+    refetch();
+  }, [linkageId, refetch]);
 
   const handleToggleMenu = (id: number) => {
     setVisibleMenu((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -56,7 +51,8 @@ const ActiveItems = () => {
       { itemId: id, linkageId: Number(linkageId) },
       {
         onSuccess: () => {
-          toast.success("Store item archived successfully"), refetch();
+          toast.success("Store item archived successfully");
+          refetch();
           setVisibleMenu({});
         },
       }
@@ -68,15 +64,35 @@ const ActiveItems = () => {
       { itemId: id, linkageId: Number(linkageId) },
       {
         onSuccess: () => {
-          toast.success("Store item deleted"), refetch(), setVisibleMenu({});
+          toast.success("Store item deleted");
+          refetch();
+          setVisibleMenu({});
         },
       }
     );
   };
 
-  const handleEdit = (id: number) => {
-    console.log(`Edit item with ID: ${id}`);
+  const handleEdit = (item: TUpdateLinkageStoreItem) => {
+    setFormData(item);
+    setIsModalOpen(true);
     setVisibleMenu({});
+  };
+
+  const handleSave = (updatedItem: TUpdateLinkageStoreItem) => {
+    updateItem(
+      {
+        body: updatedItem,
+        itemId: updatedItem.id,
+        linkageId: Number(linkageId),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Item updated successfully"),
+            setIsModalOpen(false),
+            refetch();
+        },
+      }
+    );
   };
 
   return (
@@ -90,6 +106,8 @@ const ActiveItems = () => {
         </div>
         Add new item
       </Link>
+
+      {isLoading && <SpinnerIcon />}
 
       <div>
         {activeItems.length === 0 ? (
@@ -128,10 +146,7 @@ const ActiveItems = () => {
                   </div>
                 </div>
 
-                <div
-                  ref={modalRef}
-                  className="relative self-center min-w-fit px-3"
-                >
+                <div className="relative self-center min-w-fit px-3">
                   <Image
                     alt="icon"
                     width={24}
@@ -149,14 +164,12 @@ const ActiveItems = () => {
                       >
                         <Trash size={20} /> Archive
                       </button>
-                      <Link
-                        // href={`/my-linkages/store/${item.slug}`}
-                        href={`/my-linkages/store/harmony-2`}
+                      <button
                         className="flex flex-row items-center gap-1.5 pl-2 py-2"
-                        onClick={() => handleEdit(item.id)}
+                        onClick={() => handleEdit(item)}
                       >
                         <Edit2 size={20} /> Edit
-                      </Link>
+                      </button>
                       <button
                         className="flex flex-row items-center gap-1.5 pl-2 py-2"
                         onClick={() => handleDelete(item.id)}
@@ -171,6 +184,14 @@ const ActiveItems = () => {
           </div>
         )}
       </div>
+
+      <EditItemModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        formData={formData}
+        setFormData={setFormData}
+        onSave={handleSave}
+      />
     </div>
   );
 };

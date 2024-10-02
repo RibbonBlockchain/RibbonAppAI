@@ -5,6 +5,7 @@ import {
   TDisburseLoanBody,
   TDiscoveryLinkageResponse,
   TSubmitLinkageQuestionnaireAnswer,
+  TUpdateLinkageStoreItem,
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
@@ -266,6 +267,22 @@ export const archiveLinkageStoreItem = async ({
   return res.data;
 };
 
+export const updateLinkageStoreItem = async ({
+  linkageId,
+  itemId,
+  body,
+}: {
+  linkageId: number;
+  itemId: number;
+  body: TUpdateLinkageStoreItem;
+}) => {
+  const res = await client.put<any>(
+    `linkage/${linkageId}/store/item/${itemId}`,
+    body
+  );
+  return res.data;
+};
+
 export const deleteLinkageStoreItem = async ({
   linkageId,
   itemId,
@@ -286,17 +303,17 @@ export const getLinkageStoreItems = async ({
   params: getLinkageStoreItemsParams;
   linkageId: number;
 }) => {
-  const { query, page, perPage } = params;
+  const { page, perPage } = params;
 
   const res = await client.get(
-    `linkage/${linkageId}/store/item?q=${query}&page=${page}&perpage=${perPage}`
+    `linkage/${linkageId}/store/item?page=${page}&perpage=${perPage}`
   );
   return res.data;
 };
 
 export const getLinkageStoreItemBySlug = async (slug: string) => {
   const res = await client.get(
-    `/linkage/slug/${slug}/store/item?q=das&page=1&perpage=10`
+    `/linkage/slug/${slug}/store/item?page=1&perpage=10`
   );
   return res.data;
 };

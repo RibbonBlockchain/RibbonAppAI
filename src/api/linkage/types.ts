@@ -130,3 +130,12 @@ export interface AIdata {
   createdAt: string;
   updatedAt: string;
 }
+
+export type TUpdateLinkageStoreItem = {
+  id: number;
+  name: string;
+  currency: string;
+  price: number;
+  description: string;
+  stock: number;
+};

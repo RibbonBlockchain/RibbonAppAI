@@ -33,6 +33,7 @@ import {
   deleteLinkageStoreItem,
   getLinkageStoreItems,
   getLinkageStoreItemBySlug,
+  updateLinkageStoreItem,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -40,6 +41,7 @@ import {
   TCreateLinkageBody,
   TDisburseLoanBody,
   TSubmitLinkageQuestionnaireAnswer,
+  TUpdateLinkageStoreItem,
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
@@ -370,6 +372,21 @@ export const useArchiveLinkageStoreItem = () => {
       itemId: number;
       linkageId: number;
     }) => archiveLinkageStoreItem({ itemId, linkageId }),
+  });
+};
+
+export const useUpdateLinkageStoreItem = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      itemId,
+      linkageId,
+      body,
+    }: {
+      itemId: number;
+      linkageId: number;
+      body: TUpdateLinkageStoreItem;
+    }) => updateLinkageStoreItem({ itemId, linkageId, body }),
   });
 };
 

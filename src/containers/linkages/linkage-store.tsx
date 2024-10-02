@@ -5,10 +5,12 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { Add, Minus, ShoppingCart } from "iconsax-react";
+import { Add, Minus, Share, ShoppingCart } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useCart } from "@/provider/cart-context-provider";
 import { useGetLinkageStoreItemBuSlug } from "@/api/linkage";
+import { Upload } from "lucide-react";
+import { copyToClipboard } from "@/lib/utils";
 
 interface Item {
   id: number;
@@ -77,6 +79,18 @@ const LinkageStore = ({ slug }: { slug: string }) => {
             </div>
           ) : (
             <div className="flex-1 p-4 sm:p-6 py-6 overflow-auto">
+              <div
+                onClick={() =>
+                  copyToClipboard(
+                    "https://ribbon-app-ai.vercel.app/linkage/store/:slug/:id",
+                    () => toast.success("Copied!")
+                  )
+                }
+                className="pb-4 flex flex-row gap-1 text-base font-bold"
+              >
+                <Upload size={20} /> Share store
+              </div>
+
               {activeItems.map((item: any) => (
                 <div
                   key={item.id}
@@ -95,12 +109,14 @@ const LinkageStore = ({ slug }: { slug: string }) => {
                       <p className="text-xs font-medium text-[#98A2B3] mt-0.5 line-clamp-2">
                         {item.description}
                       </p>
-                      <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
-                        {item.currency} {item.price}
-                      </p>
-                      <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
-                        Available stock - {item.stock}
-                      </p>
+                      <div className="w-full flex flex-row items-center justify-between">
+                        <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
+                          {item.currency} {item.price}
+                        </p>
+                        {/* <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
+                          Stock - {item.stock}
+                        </p> */}
+                      </div>
                     </div>
                   </div>
 

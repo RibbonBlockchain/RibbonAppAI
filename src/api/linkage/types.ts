@@ -9,6 +9,8 @@ export type TCreateLinkageBody = {
   instruction: string;
   prompts: string;
   prompts1?: string;
+  logo?: string;
+  banner?: string;
 };
 
 export type TTrainLinkage = {
@@ -122,6 +124,8 @@ export interface AIdata {
   name: string;
   slug: string;
   image: string | null;
+  logo: string | null;
+  banner: string | null;
   prompts: string;
   assistantId: string;
   description: string;

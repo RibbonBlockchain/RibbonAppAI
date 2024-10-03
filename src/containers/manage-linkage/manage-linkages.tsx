@@ -1,5 +1,8 @@
+"use client";
+
 import toast from "react-hot-toast";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Edit2, InfoCircle, Trash, Warning2 } from "iconsax-react";
 import { useDeleteFeaturedLinkage, useDeleteLinkage } from "@/api/linkage";
 import DeleteLinkageModal from "@/containers/linkages/delete-linkage-modal";
@@ -16,12 +19,19 @@ const ManageLinkage = ({
   featured: boolean;
   linkageBalance: number;
 }) => {
+  const router = useRouter();
+
+  const handleEditLinkage = () => {
+    router.push(`/my-linkages/edit-linkage/${linkageId}`);
+  };
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { mutate, isPending: deleteIsPending } = useDeleteLinkage();
+  const { mutate: deleteLinkage, isPending: deleteIsPending } =
+    useDeleteLinkage();
 
   const handleDeleteLinkage = () => {
     if (linkageBalance === 0) {
-      mutate(linkageId, {
+      deleteLinkage(linkageId, {
         onSuccess: () => {
           setShowDeleteModal(false);
           toast.success("Linkage deleted");
@@ -65,10 +75,12 @@ const ManageLinkage = ({
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-2 py-3 items-start border-b border-[#C3B1FF4D]">
           <div className="mt-1">
-            <Edit2 size={20} />
+            <Edit2 size={20} onClick={handleEditLinkage} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <p className="text-base font-semibold">Edit Linkage</p>
+            <p className="text-base font-semibold" onClick={handleEditLinkage}>
+              Edit Linkage
+            </p>
             <p className="text-xs font-normal">
               Adjust the Linkage’s settings to improve interactions or adapt to
               new needs
@@ -91,8 +103,8 @@ const ManageLinkage = ({
             </p>
             <div className="flex flex-row gap-2 text-xs font-normal">
               <InfoCircle size={20} /> If you have funds in your linkage wallet,
-              you wont be able to delete the linkage until you have withdrawn
-              the balance.
+              you won&apos;t be able to delete the linkage until you have
+              withdrawn the balance.
             </div>
           </div>
         </div>
@@ -108,7 +120,7 @@ const ManageLinkage = ({
             <div className="flex flex-col gap-1.5">
               <p className="text-base font-semibold">Unfeature Linkage</p>
               <p className="text-xs font-normal">
-                Enable or disable the bot&apos;`s functionality
+                Enable or disable the bot&apos;s functionality
               </p>
             </div>
           </div>
@@ -121,7 +133,7 @@ const ManageLinkage = ({
           <div className="flex flex-col gap-1.5">
             <p className="text-base font-semibold">Deactivate Linkage</p>
             <p className="text-xs font-normal">
-              Enable or disable the bot&apos;`s functionality
+              Enable or disable the bot&apos;s functionality
             </p>
           </div>
         </div>

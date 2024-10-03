@@ -109,7 +109,10 @@ const EditLinkagePage = () => {
               width={280}
               height={110}
               alt="linkage"
-              src={imagePreview || ""}
+              src={
+                imagePreview ||
+                "http://res.cloudinary.com/arpeiks/image/upload/v1725460153/absa_banner-382065518715.jpg"
+              }
               className="rounded-md w-full bg-[#3f3856]"
             />
             <div className="absolute flex flex-row gap-1 mt-1">
@@ -137,7 +140,10 @@ const EditLinkagePage = () => {
               width={82}
               height={82}
               alt="linkage"
-              src={logoPreview || "/assets/sample-icon.png"}
+              src={
+                logoPreview ||
+                "http://res.cloudinary.com/arpeiks/image/upload/v1725460152/ABSA_bank_icon-872468613638.png"
+              }
               className="rounded-full border border-[#0B0228]"
             />
             <div className="flex flex-row gap-1 mt-1">

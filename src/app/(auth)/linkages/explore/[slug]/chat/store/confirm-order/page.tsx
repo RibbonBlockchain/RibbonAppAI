@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import React, { useState } from "react";
 import Button from "@/components/button";
-import { Add, ArrowLeft2, Icon, InfoCircle, Minus, Copy } from "iconsax-react";
+import { copyToClipboard } from "@/lib/utils";
+import { Plus, Upload, X } from "lucide-react";
+import { useGetLinkageById } from "@/api/linkage";
 import { useParams, useRouter } from "next/navigation";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useCart } from "@/provider/cart-context-provider";
-import { Plus, Upload, X } from "lucide-react";
+import InputBox from "@/components/questionnarie/input-box";
+import { ArrowLeft2, InfoCircle, Copy } from "iconsax-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
-import { copyToClipboard } from "@/lib/utils";
-import toast from "react-hot-toast";
 
 interface Address {
   id: number;
@@ -28,8 +30,11 @@ const ConfirmOrder: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
+  const linkageId = localStorage.getItem("selectedLinkageId");
 
   const { cartItems } = useCart();
+  const { data, refetch } = useGetLinkageById(Number(linkageId));
+  const walletBalance = data?.data?.wallet?.balance;
 
   const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
@@ -57,8 +62,13 @@ const ConfirmOrder: React.FC = () => {
     number | null
   >(null);
   const [deliveryMethod, setDeliveryMethod] = useState<string>("homeDelivery");
+
   const [newAddress, setNewAddress] = useState<string>("");
+  const [newPhone, setNewPhone] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
+  const [newState, setNewState] = useState<string>("");
+  const [newCity, setNewCity] = useState<string>("");
+
   const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -122,7 +132,7 @@ const ConfirmOrder: React.FC = () => {
   const handleDeliveryMethodChange = (method: string) => {
     setDeliveryMethod(method);
     if (method === "pickup") {
-      setSelectedPickupStationId(null); // Reset selection if switching methods
+      setSelectedPickupStationId(null);
     }
   };
 
@@ -136,6 +146,11 @@ const ConfirmOrder: React.FC = () => {
           onClick={() => router.back()}
         />
         <p className="text-lg font-semibold">Confirm Order</p>
+      </div>
+
+      <div className="flex flex-col items-end self-end gap-[2px] pb-2">
+        <p className="text-sm font-normal text-[#98A2B3]">Wallet balance</p>
+        <p className="text-sm font-semibold">{walletBalance} usdc</p>
       </div>
 
       <section className="flex-1 flex flex-col gap-4 mt-6 w-full overflow-auto">
@@ -175,13 +190,15 @@ const ConfirmOrder: React.FC = () => {
                   $2.00
                 </p>
               </button>
-              <div
-                className={`w-5 h-5 rounded-full border-2 ml-2 ${
-                  deliveryMethod === "pickup"
-                    ? "bg-white border-white"
-                    : "border-white"
-                }`}
-              />
+              <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
+                <div
+                  className={`w-3 h-3 rounded-full  ${
+                    deliveryMethod === "pickup"
+                      ? "bg-white border-white border-2"
+                      : ""
+                  }`}
+                ></div>
+              </div>
             </div>
             <div
               onClick={() => handleDeliveryMethodChange("homeDelivery")}
@@ -193,13 +210,15 @@ const ConfirmOrder: React.FC = () => {
                   $5.00
                 </p>
               </button>
-              <div
-                className={`w-5 h-5 rounded-full border-2 ml-2 ${
-                  deliveryMethod === "homeDelivery"
-                    ? "bg-white border-white"
-                    : "border-white"
-                }`}
-              />
+              <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
+                <div
+                  className={`w-3 h-3 rounded-full  ${
+                    deliveryMethod === "homeDelivery"
+                      ? "bg-white border-white border-2"
+                      : ""
+                  }`}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -221,13 +240,16 @@ const ConfirmOrder: React.FC = () => {
                 onClick={() => setSelectedPickupStationId(station.id)}
               >
                 <div className="flex flex-row gap-2">
-                  <div
-                    className={`min-w-[20px] w-5 h-5 rounded-full border-2 ml-2 mt-1 ${
-                      selectedPickupStationId === station.id
-                        ? "bg-white border-white"
-                        : "border-white"
-                    }`}
-                  />
+                  <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center mt-1">
+                    <div
+                      className={`w-3 h-3 rounded-full  ${
+                        selectedPickupStationId === station.id
+                          ? "bg-white border-white border-2"
+                          : ""
+                      }`}
+                    ></div>
+                  </div>
+
                   <div className="flex flex-col gap-1">
                     <p className="text-[15px] font-medium">{station.name}</p>
                     <p className="text-[13px] font-normal text-[#E5E7EB]">
@@ -264,13 +286,16 @@ const ConfirmOrder: React.FC = () => {
                 onClick={() => setSelectedAddressId(address.id)}
               >
                 <div className="flex flex-row gap-2">
-                  <div
-                    className={`min-w-[20px] w-5 h-5 rounded-full border-2 ml-2 mt-1 ${
-                      selectedAddressId === address.id
-                        ? "bg-white border-white"
-                        : "border-white"
-                    }`}
-                  />
+                  <div className="min-w-5 h-5 border-2 border-white rounded-full flex items-center justify-center mt-1">
+                    <div
+                      className={`w-3 h-3 rounded-full  ${
+                        selectedAddressId === address.id
+                          ? "bg-white border-white border-2"
+                          : ""
+                      }`}
+                    ></div>
+                  </div>
+
                   <div className="flex flex-col gap-1">
                     <p className="text-[15px] font-medium">{address.name}</p>
                     <p className="text-[13px] font-normal text-[#E5E7EB]">
@@ -308,40 +333,75 @@ const ConfirmOrder: React.FC = () => {
         </div>
 
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
-            <div className="flex flex-col gap-2 min-w-[300px] bg-[#3f3952] bg-opacity-75 backdrop-blur-sm p-6 rounded-lg">
-              <h2 className="text-lg font-semibold">Add New Address</h2>
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Enter name"
-                className="p-2 border border-gray-300 rounded-md mb-2 w-full bg-inherit"
-              />
-              <input
-                type="text"
-                value={newAddress}
-                onChange={(e) => setNewAddress(e.target.value)}
-                placeholder="Enter address"
-                className="p-2 border border-gray-300 rounded-md mb-4 w-full bg-inherit"
-              />
-              <div className="flex justify-between">
-                <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setNewAddress("");
-                    setNewName("");
-                  }}
-                  className="text-gray-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSaveAddress}
-                  className="bg-blue-500 text-white p-2 rounded"
-                >
-                  Save
-                </button>
+          <div className="fixed inset-0 flex items-end justify-center z-50">
+            <div className="bg-[#3f3952] backdrop h-auto rounded-t-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
+              <div className="py-4 flex flex-col gap-4 bg-[#3f3952] bg-opacity-75 backdrop-blur-sm rounded-md w-full">
+                <div className="flex flex-row items-center justify-between">
+                  <h2 className="text-lg font-semibold">Add new adddress</h2>
+                  <X
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setNewAddress("");
+                      setNewName("");
+                    }}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <InputBox
+                    name={"name"}
+                    label={"Full Name"}
+                    placeholder="full name"
+                    required={false}
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                  />
+
+                  <InputBox
+                    name={"phone"}
+                    label={"Phone Number"}
+                    placeholder="phone number"
+                    required={false}
+                    value={newPhone}
+                    onChange={(e) => setNewPhone(e.target.value)}
+                  />
+
+                  <InputBox
+                    name={"address"}
+                    label={"Address"}
+                    placeholder="address"
+                    required={false}
+                    value={newAddress}
+                    onChange={(e) => setNewAddress(e.target.value)}
+                  />
+
+                  <InputBox
+                    name={"state"}
+                    label={"State"}
+                    required={false}
+                    placeholder="state"
+                    value={newState}
+                    onChange={(e) => setNewState(e.target.value)}
+                  />
+
+                  <InputBox
+                    name={"city"}
+                    label={"City"}
+                    placeholder="city"
+                    required={false}
+                    value={newCity}
+                    onChange={(e) => setNewCity(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex justify-between">
+                  <button
+                    onClick={handleSaveAddress}
+                    className="my-8 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -366,44 +426,44 @@ const ConfirmOrder: React.FC = () => {
       )}
 
       {openQRCodeModal && (
-        <div className="fixed inset-x-0 bottom-0 bg-[#3f3952] backdrop h-3/5 rounded-t-lg shadow-lg p-4 mx-1 transition-transform transform translate-y-0">
-          <div className="flex flex-col h-full py-4">
-            <div className="flex flex-row items-center justify-between">
-              <div />
-              <h2 className="text-lg font-semibold">Payment Request</h2>
-              <X onClick={() => setOpenQRCodeModal(false)} />
-            </div>
-
-            <div className="mt-4 w-full rounded-md flex flex-col gap-2 items-center justify-center text-center">
-              <div>
-                <p className="text-[13px] font-medium mb-1"> Amount</p>
-                <p className="text-sm font-bold">$130.00</p>
+        <div className="fixed inset-0 flex items-end justify-center z-50">
+          <div className="bg-[#3f3952] backdrop h-auto rounded-t-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
+            <div className="py-4 flex flex-col gap-4 bg-[#3f3952] bg-opacity-75 backdrop-blur-sm rounded-md w-full">
+              <div className="flex flex-row items-center justify-between">
+                <div />
+                <h2 className="text-lg font-semibold">Payment Request</h2>
+                <X onClick={() => setOpenQRCodeModal(false)} />
               </div>
-              <div className="w-[225px] h-[225px] bg-white rounded-2xl my-1"></div>
-              <div>
-                <div className="flex flex-row items-center gap-2 text-sm font-normal mb-1">
-                  0x2f09vkljjioppp33nmhnjuffbd8a
-                  <Copy
-                    size="18"
-                    color="#F6F1FE"
-                    variant="Bold"
-                    className="cursor-pointer"
-                    onClick={() => {
-                      copyToClipboard("0x2f09vkljjioppp33nmhnjuffbd8a", () =>
-                        toast.success(`Wallet address copied`)
-                      );
-                    }}
-                  />
+
+              <div className="mt-4 w-full rounded-md flex flex-col gap-2 items-center justify-center text-center">
+                <div>
+                  <p className="text-[13px] font-medium mb-1"> Amount</p>
+                  <p className="text-sm font-bold">$130.00</p>
                 </div>
-                <p className="text-sm font-bold">Scan to Pay</p>
+                <div className="w-[225px] h-[225px] bg-white rounded-2xl my-1"></div>
+                <div>
+                  <div className="flex flex-row items-center gap-2 text-sm font-normal mb-1">
+                    0x2f09vkljjioppp33nmhnjuffbd8a
+                    <Copy
+                      size="18"
+                      color="#F6F1FE"
+                      variant="Bold"
+                      className="cursor-pointer"
+                      onClick={() => {
+                        copyToClipboard("0x2f09vkljjioppp33nmhnjuffbd8a", () =>
+                          toast.success(`Wallet address copied`)
+                        );
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm font-bold">Scan to Pay</p>
+                </div>
               </div>
+
+              <button className="my-8 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]">
+                Share QR Code <Upload size={20} />
+              </button>
             </div>
-
-            {/* <div className="flex-grow" /> */}
-
-            <button className="my-8 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm bg-white text-[#290064]">
-              Share QR Code <Upload size={20} />
-            </button>
           </div>
         </div>
       )}

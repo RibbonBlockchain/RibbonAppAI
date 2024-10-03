@@ -117,7 +117,7 @@ const MyLinkageDetails: React.FC = () => {
                   height={20}
                   alt={selectedAI.name}
                   className="w-[20px] h-[20px] rounded-full"
-                  src={selectedAI.image || "/assets/sample-icon.png"}
+                  src={selectedAI.logo || "/assets/sample-icon.png"}
                 />
                 <span>{selectedAI.name}</span>
               </div>
@@ -175,7 +175,7 @@ const MyLinkageDetails: React.FC = () => {
                   height={42}
                   alt="display"
                   className="w-[50px] h-auto"
-                  src={selectedAI?.image || "/assets/sample-icon.png"}
+                  src={selectedAI?.logo || "/assets/sample-icon.png"}
                 />
                 <p className="flex flex-grow text-lg font-bold py-3 border-b border-[#C3B1FF4D]">
                   {selectedAI?.name}

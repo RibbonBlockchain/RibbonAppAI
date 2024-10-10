@@ -9,6 +9,7 @@ import {
   TRateSurveyBody,
   TSendUsdcToken,
   TMassWalletTransfer,
+  TUserTransactionsBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -176,5 +177,10 @@ export const getWalletTransactions = async () => {
 
 export const massWalletTransfer = async (body: TMassWalletTransfer) => {
   const res = await client.post("/user/wallet/transfer/mass", body);
+  return res.data;
+};
+
+export const userTransactions = async (body: TUserTransactionsBody) => {
+  const res = await client.post("/user/transactions", body);
   return res.data;
 };

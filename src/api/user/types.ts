@@ -63,3 +63,7 @@ export type TTransfer = {
 export type TMassWalletTransfer = {
   data: TTransfer[];
 };
+
+export type TUserTransactionsBody = {
+  address: string;
+};

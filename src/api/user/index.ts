@@ -9,6 +9,7 @@ import {
   TRateSurveyBody,
   TSendUsdcToken,
   TMassWalletTransfer,
+  TUserTransactionsBody,
 } from "./types";
 import {
   getTasks,
@@ -40,6 +41,7 @@ import {
   sendUsdcToken,
   getWalletTransactions,
   massWalletTransfer,
+  userTransactions,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -328,5 +330,12 @@ export const useMassWalletTransfer = () => {
   return useMutation({
     onError,
     mutationFn: (body: TMassWalletTransfer) => massWalletTransfer(body),
+  });
+};
+
+export const useUserTransactions = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TUserTransactionsBody) => userTransactions(body),
   });
 };

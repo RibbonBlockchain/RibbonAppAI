@@ -185,10 +185,7 @@ const ConfirmOrder: React.FC = () => {
               className="w-full flex flex-row items-center justify-between"
             >
               <button className="flex flex-row gap-1 items-center">
-                Pick up station
-                <p className="py-[1px] px-1.5 bg-[#C3B1FF4D] rounded-full">
-                  $2.00
-                </p>
+                Pick up Store
               </button>
               <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
                 <div
@@ -226,10 +223,10 @@ const ConfirmOrder: React.FC = () => {
         {deliveryMethod === "pickup" && (
           <div className="flex flex-col gap-2 mt-8">
             <p className="text-base font-semibold">
-              Pick up station (Select a pick up station)
+              Pick up store (Select a pick up store)
             </p>
             <p className="text-sm font-medium">
-              Pick up station near your location
+              Pick up store near your location
             </p>
             {pickupStations.map((station) => (
               <div
@@ -322,16 +319,6 @@ const ConfirmOrder: React.FC = () => {
           </div>
         )}
 
-        <div
-          onClick={() => setOpenQRCodeModal(true)}
-          className="text-base font-bold mt-4"
-        >
-          Generate payment QR code
-          <p className="text-xs font-normal text-[#E5E7EB]">
-            You can share this QR code with someone to pay for you
-          </p>
-        </div>
-
         {isModalOpen && (
           <div className="fixed inset-0 flex items-end justify-center z-50">
             <div className="bg-[#3f3952] backdrop h-auto rounded-t-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
@@ -409,6 +396,15 @@ const ConfirmOrder: React.FC = () => {
       </section>
 
       <div className="flex flex-col gap-3 p-4">
+        <div
+          onClick={() => setOpenQRCodeModal(true)}
+          className="text-base font-bold mt-4"
+        >
+          Generate payment QR code
+          <p className="text-xs font-normal text-[#E5E7EB]">
+            You can share this QR code with someone to pay for you
+          </p>
+        </div>
         <Button onClick={handlePayment} disabled={isPending}>
           {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
         </Button>

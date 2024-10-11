@@ -180,7 +180,12 @@ export const massWalletTransfer = async (body: TMassWalletTransfer) => {
   return res.data;
 };
 
-export const userTransactions = async (body: TUserTransactionsBody) => {
-  const res = await client.post("/user/transactions", body);
+export const userBaseTransactions = async (body: TUserTransactionsBody) => {
+  const res = await client.post("/user/transactions/base", body);
+  return res.data;
+};
+
+export const userOptimismTransactions = async (body: TUserTransactionsBody) => {
+  const res = await client.post("/user/transactions/optimism", body);
   return res.data;
 };

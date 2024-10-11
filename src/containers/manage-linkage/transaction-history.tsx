@@ -3,11 +3,16 @@ import toast from "react-hot-toast";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { ArrowDownLeft, ArrowUpRight, Copy } from "lucide-react";
+import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 
 export interface RawContract {
   value: string;
   address: string;
   decimal: string;
+}
+
+export interface MetaData {
+  blockTimestamp: string;
 }
 
 export interface Transfer {
@@ -20,6 +25,7 @@ export interface Transfer {
   asset: string;
   category: string;
   rawContract: RawContract;
+  metadata: MetaData;
 }
 
 export interface TransactionHistory {
@@ -76,10 +82,10 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
                 >
                   {isIncoming ? "Received" : "Sent"}
                 </p>
-                <p className="text-[#98A2B3] font-medium">
+                <p className="text-[#98A2B3] text-[13px] font-medium">
                   {isIncoming ? shorten(transfer.from) : shorten(transfer.to)}
                 </p>
-                <div className="flex flex-row items-center gap-1 text-[#98A2B3] font-medium">
+                <div className="flex flex-row items-center gap-1 text-[13px] text-[#98A2B3] font-medium">
                   Hash:
                   <div
                     className="flex flex-row items-center gap-1"
@@ -97,11 +103,16 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
             </div>
 
             <div className="flex flex-col items-end justify-end text-sm font-medium">
-              <p>
+              <p className="font-bold">
                 {isIncoming ? `+ ${transfer.value}` : `- ${transfer.value}`}{" "}
                 {transfer.asset}
               </p>
-              <p className="text-[#98A2B3]">00:00</p>
+              <p className="text-[#98A2B3] text-xs">
+                {formatDateTime(transfer.metadata.blockTimestamp)?.date}
+              </p>
+              <p className="text-[#98A2B3] text-xs">
+                {formatDateTime(transfer.metadata.blockTimestamp)?.time}
+              </p>
             </div>
 
             {/* <p>

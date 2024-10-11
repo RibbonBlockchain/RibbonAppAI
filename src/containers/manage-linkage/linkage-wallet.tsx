@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import React, { useEffect, useState } from "react";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
-import { useUserTransactions } from "@/api/user";
+import { useUserBaseTransactions } from "@/api/user";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import TransactionHistory from "./transaction-history";
 import { useLinkageSendUsdcToken } from "@/api/linkage";
@@ -67,7 +67,7 @@ const LinkageWallet = ({
     mutate: getTxnHistory,
     data: transactionHistory,
     isPending: getTxPending,
-  } = useUserTransactions();
+  } = useUserBaseTransactions();
 
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;

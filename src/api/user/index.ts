@@ -41,7 +41,8 @@ import {
   sendUsdcToken,
   getWalletTransactions,
   massWalletTransfer,
-  userTransactions,
+  userBaseTransactions,
+  userOptimismTransactions,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -333,9 +334,16 @@ export const useMassWalletTransfer = () => {
   });
 };
 
-export const useUserTransactions = () => {
+export const useUserBaseTransactions = () => {
   return useMutation({
     onError,
-    mutationFn: (body: TUserTransactionsBody) => userTransactions(body),
+    mutationFn: (body: TUserTransactionsBody) => userBaseTransactions(body),
+  });
+};
+
+export const useUserOptimismTransactions = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TUserTransactionsBody) => userOptimismTransactions(body),
   });
 };

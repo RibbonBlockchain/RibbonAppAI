@@ -14,7 +14,7 @@ import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import {
   useGetWalletTransactions,
   useSendUsdcToken,
-  useUserTransactions,
+  useUserBaseTransactions,
 } from "@/api/user";
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowUp } from "lucide-react";
 import SuccessAnimation from "@/components/success-animation";
@@ -60,7 +60,7 @@ const LoanWallet = () => {
     mutate: getWalletTx,
     data: txHistory,
     isPending: getTxPending,
-  } = useUserTransactions();
+  } = useUserBaseTransactions();
 
   const handleGetWalletTransaction = () => {
     getWalletTx({ address: loanWallet?.data[1]?.address });

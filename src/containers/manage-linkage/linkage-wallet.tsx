@@ -92,6 +92,11 @@ const LinkageWallet = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-row gap-2 items-center justify-center text-white mb-4 text-base font-semibold">
+          <Image alt="coin" width={24} height={24} src="/assets/BASE.svg" />{" "}
+          Base Wallet
+        </div>
+
         <div className="flex flex-row gap-4">
           <div
             onClick={() =>

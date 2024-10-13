@@ -20,6 +20,7 @@ import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowUp } from "lucide-react";
 import SuccessAnimation from "@/components/success-animation";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import Image from "next/image";
 
 const LoanWallet = () => {
   const router = useRouter();
@@ -75,8 +76,9 @@ const LoanWallet = () => {
             onClick={() => router.back()}
             className="flex cursor-pointer"
           />
-          <div className="flex text-white -mt-6 flex-row items-center justify-center text-base font-semibold">
-            Wallet
+          <div className="flex flex-row gap-2 items-center justify-center text-white -mt-6 text-base font-semibold">
+            <Image alt="coin" width={24} height={24} src="/assets/BASE.svg" />{" "}
+            Base Wallet
           </div>
         </div>
 

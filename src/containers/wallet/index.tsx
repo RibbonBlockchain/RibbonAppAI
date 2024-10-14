@@ -40,7 +40,7 @@ import {
   convertPoints,
   convertPoints18decimal,
 } from "@/lib/utils/convertPoint";
-import { SpinnerIcon } from "@/components/icons/spinner";
+import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import WithdrawalProcessing from "./withdrawal-processing";
 import TokenTxUI from "@/components/wallet/wld-token-tx-ui";
 import { ArrowDown, ArrowLeft, ArrowUp } from "lucide-react";
@@ -49,8 +49,14 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import PointsTokenTxUI from "@/components/wallet/point-token-tx-ui";
 import { BigNumber } from "bignumber.js"; // Import BigNumber library
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { useClaimPoints, useSwapPoints, useWithdrawPoints } from "@/api/user";
+import {
+  useClaimPoints,
+  useSwapPoints,
+  useUserOptimismTransactions,
+  useWithdrawPoints,
+} from "@/api/user";
 import SwapPointToUsdcToken from "./swap-points";
+import TransactionHistory from "../manage-linkage/transaction-history";
 
 const pointsABI = require("./contract/pointsABI.json");
 
@@ -84,6 +90,7 @@ const chainConfig = {
 
 const WalletComponent = () => {
   const router = useRouter();
+  const [selectedTab, setSelectedTab] = useState("tokens");
 
   const [web3auth, setWeb3Auth] = useState<Web3AuthNoModal | null>(null);
 
@@ -587,9 +594,19 @@ const WalletComponent = () => {
   const virtualBalance = user?.wallet.balance;
   const virtualPointBalance = virtualBalance * 5000;
 
+  const {
+    mutate: mutateUserTx,
+    data: userTxHistory,
+    isPending: getTxPending,
+  } = useUserOptimismTransactions();
+
+  const getUserTransactionHistory = () => {
+    mutateUserTx({ address: SAAddress });
+  };
+
   return (
     <>
-      {loggedIn ? (
+      {loggedIn && (
         <div className="p-4 sm:p-6">
           <div className="min-h-screen bg-[inherit] flex flex-col">
             <div className="mb-6">
@@ -813,29 +830,33 @@ const WalletComponent = () => {
                 </div>
               </div>
 
-              <div className="w-full bg-[#F5F5F5] px-2 py-2 flex flex-row items-center justify-between gap-2 rounded-[18px] ">
+              <div className="w-full bg-[#F5F5F5] px-1 py-1 flex flex-row items-center justify-between gap-2 rounded-[18px]">
                 <p
-                  onClick={() => setShowWallet(true)}
+                  onClick={() => setSelectedTab("tokens")}
                   className={clsx(
                     "w-full text-center py-3 text-black",
-                    showWallet && "text-white bg-[#7C56FE] rounded-[16px]"
+                    selectedTab === "tokens" &&
+                      "text-white bg-[#7C56FE] rounded-[16px]"
                   )}
                 >
                   Tokens
                 </p>
                 <p
-                  onClick={() => setShowWallet(false)}
+                  onClick={() => {
+                    setSelectedTab("activities"), getUserTransactionHistory();
+                  }}
                   className={clsx(
-                    "w-full text-center py-3 text-black bg-[#7C56FE] rounded-[16px]",
-                    showWallet && "text-black bg-[inherit]"
+                    "w-full text-center py-3 text-black",
+                    selectedTab === "activities" &&
+                      "text-white bg-[#7C56FE] rounded-[16px]"
                   )}
                 >
                   Activity
                 </p>
               </div>
 
-              <div className="w-[inherit]">
-                {showWallet ? (
+              <div className="w-full">
+                {selectedTab === "tokens" && (
                   <>
                     <div className="flex flex-col gap-4 mt-6">
                       {/* // points token */}
@@ -907,16 +928,27 @@ const WalletComponent = () => {
                       </button>
                     </div>
                   </>
-                ) : (
-                  <div className="text-center flex items-center justify-center mt-6 h-[200px]">
-                    Your list of transactions will be displayed here
+                )}
+
+                {selectedTab === "activities" && (
+                  <div>
+                    {getTxPending && (
+                      <div className="flex items-center justify-center mx-auto h-[120px]">
+                        <SpinnerIcon />
+                      </div>
+                    )}
+                    {userTxHistory && (
+                      <TransactionHistory data={userTxHistory?.data} />
+                    )}
                   </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {!loggedIn && (
         <div className="bg-walletBg bg-cover p-4 sm:p-6 flex flex-col h-screen">
           <div className="mb-6">
             <BackArrowButton stroke="#FFF" />

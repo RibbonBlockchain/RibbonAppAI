@@ -108,10 +108,10 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
                 {transfer.asset}
               </p>
               <p className="text-[#98A2B3] text-xs">
-                {formatDateTime(transfer.metadata.blockTimestamp)?.date}
+                {formatDateTime(transfer?.metadata?.blockTimestamp)?.date}
               </p>
               <p className="text-[#98A2B3] text-xs">
-                {formatDateTime(transfer.metadata.blockTimestamp)?.time}
+                {formatDateTime(transfer?.metadata?.blockTimestamp)?.time}
               </p>
             </div>
 

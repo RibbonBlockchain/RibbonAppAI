@@ -31,13 +31,13 @@ export const ProfileDetails = [
     logo: <ShoppingCart />,
   },
   {
-    href: "/wallet",
-    description: "Wallets",
+    href: "/optimism-wallet",
+    description: `Optimism Wallet`,
     logo: <EmptyWallet />,
   },
   {
-    href: "/loan-wallet",
-    description: "Loan wallet",
+    href: "/base-wallet",
+    description: "Base wallet",
     logo: <WalletMoney />,
   },
   {

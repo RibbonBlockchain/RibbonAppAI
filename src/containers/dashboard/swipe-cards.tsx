@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { useGetUserWallet } from "@/api/linkage";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import { PointBalanceCard, WalletBalanceCard } from "./cards";
 
@@ -17,8 +18,12 @@ const SwipeCards = () => {
   const { data } = useCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
 
-  const wldBalance = localStorage.getItem("wldTokenBalance");
-  const balanceUSD = (Number(wldBalance) * currentPrice).toFixed(5);
+  const { data: wallet } = useGetUserWallet();
+
+  const loanWallet = wallet?.data?.find(
+    (item: any) => item.provider === "COINBASE"
+  );
+  const priceUsd = loanWallet?.balance * currentPrice;
 
   // Swipe detection logic
   let touchStartX = 0;
@@ -54,9 +59,11 @@ const SwipeCards = () => {
             convertedPoints={convertedPoints.toFixed(2)}
           />
         )}
+
         {activeCard === "wallet" && (
           <WalletBalanceCard
-            balance={Number(balanceUSD)}
+            balance={priceUsd.toFixed(2)}
+            walletAddress={loanWallet?.address}
             handleWalletTx={() => router.push("/wallet")}
             handleReceiveToken={() => router.push("/wallet/receive")}
           />

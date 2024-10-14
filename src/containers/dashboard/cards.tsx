@@ -1,10 +1,16 @@
+import {
+  Copy,
+  Wallet2,
+  ClipboardText,
+  ArrowSwapHorizontal,
+} from "iconsax-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { shorten } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { ArrowUp, ArrowDown, ArrowDownUp } from "lucide-react";
-import { ArrowSwapHorizontal, Copy, Wallet2 } from "iconsax-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
+import Link from "next/link";
 
 export const PointBalanceCard = ({
   points,
@@ -53,11 +59,11 @@ export const PointBalanceCard = ({
           baseBgColor="#D6CBFF33"
         />
 
-        <div className="flex justify-center">
+        <Link href={"/wallet"} className="flex justify-center">
           <p className="absolute top-2 px-6 text-[#F6F1FE] font-semibold">
             Claim ribbon
           </p>
-        </div>
+        </Link>
       </div>
     </div>
   </div>
@@ -65,10 +71,12 @@ export const PointBalanceCard = ({
 
 export const WalletBalanceCard = ({
   balance,
+  walletAddress,
   handleWalletTx,
   handleReceiveToken,
 }: {
-  balance: number;
+  balance: any;
+  walletAddress: string;
   handleWalletTx: any;
   handleReceiveToken: any;
 }) => (
@@ -81,15 +89,12 @@ export const WalletBalanceCard = ({
         </div>
 
         <div className="flex flex-row items-center gap-2">
-          <p className="text-xs">
-            {shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec")}
-          </p>
+          <p className="text-xs">{shorten(walletAddress)}</p>
           <div
             className="cursor-pointer"
             onClick={() => {
-              copyToClipboard(
-                shorten("0xcFD1fhskdjfhsdkfhsdfhjkshdfjkhsdfhsdkjc79Ec"),
-                () => toast.success("Wallet address copied")
+              copyToClipboard(walletAddress, () =>
+                toast.success("Wallet address copied")
               );
             }}
           >
@@ -125,9 +130,9 @@ export const WalletBalanceCard = ({
         className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
       >
         <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
-          <ArrowDownUp stroke="#7C56FE" />
+          <ClipboardText size={24} color="#7C56FE" />
         </div>
-        Swap
+        History
       </div>
     </div>
   </div>

@@ -35,7 +35,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center text-center">
+          <div className="absolute bottom-1 w-full flex items-end justify-center text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -45,10 +45,10 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-[95%] max-w-[480px] h-full px-4 py-10  transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-[98%] max-w-[480px] mb-0 px-4 py-10 transform overflow-hidden rounded-t-2xl bg-white text-left align-middle shadow-xl transition-all">
                 <div className="mb-12">
                   <ArrowLeft stroke="#939393" onClick={props.closeModal} />
-                  <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
+                  <div className="flex -mt-6 text-black flex-row items-center justify-center text-base font-semibold">
                     Send
                   </div>
                 </div>
@@ -126,7 +126,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                   <Button
                     disabled={props.isPending}
                     onClick={props.handleClick}
-                    className="rounded-md mt-16 mb-4"
+                    className="rounded-md mt-4 mb-4"
                   >
                     {props.isPending ? <SpinnerIcon /> : "Confirm"}
                   </Button>

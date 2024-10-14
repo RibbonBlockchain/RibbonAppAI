@@ -67,3 +67,8 @@ export type TMassWalletTransfer = {
 export type TUserTransactionsBody = {
   address: string;
 };
+
+export type TBaseClaimBody = {
+  amount: number;
+  address: string;
+};

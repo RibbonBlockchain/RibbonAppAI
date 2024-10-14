@@ -10,6 +10,7 @@ import {
   TSendUsdcToken,
   TMassWalletTransfer,
   TUserTransactionsBody,
+  TBaseClaimBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -187,5 +188,10 @@ export const userBaseTransactions = async (body: TUserTransactionsBody) => {
 
 export const userOptimismTransactions = async (body: TUserTransactionsBody) => {
   const res = await client.post("/user/transactions/optimism", body);
+  return res.data;
+};
+
+export const baseClaim = async (body: TBaseClaimBody) => {
+  const res = await client.post("/user/base-claim", body);
   return res.data;
 };

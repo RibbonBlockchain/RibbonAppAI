@@ -10,6 +10,7 @@ import {
   TSendUsdcToken,
   TMassWalletTransfer,
   TUserTransactionsBody,
+  TBaseClaimBody,
 } from "./types";
 import {
   getTasks,
@@ -43,6 +44,7 @@ import {
   massWalletTransfer,
   userBaseTransactions,
   userOptimismTransactions,
+  baseClaim,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -345,5 +347,12 @@ export const useUserOptimismTransactions = () => {
   return useMutation({
     onError,
     mutationFn: (body: TUserTransactionsBody) => userOptimismTransactions(body),
+  });
+};
+
+export const useBaseClaim = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TBaseClaimBody) => baseClaim(body),
   });
 };

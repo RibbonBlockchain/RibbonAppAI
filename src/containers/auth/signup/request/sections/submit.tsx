@@ -22,7 +22,7 @@ const Submit = () => {
   const isSubmitDisabled = isLoading || isFormInvalid;
 
   const onSuccess = (data: TCheckPhoneResponse) => {
-    const url = data?.exists ? "/auth/pin" : "/auth/signup/verify";
+    const url = data?.exists ? "/auth/pin" : "/auth/signup/phone/verify";
     router.push(url);
   };
 

@@ -84,12 +84,14 @@ const Dashboard = () => {
           <SwipeCards />
 
           <RewardButton />
+
           <div
             onClick={() => setMoodModal(true)}
             className="mb-6 w-full  max-w-[350px] flex items-center text-center justify-center self-center text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full h-[40px]"
           >
             Mood check
           </div>
+
           <div className="w-full flex flex-row items-center justify-between text-sm">
             <div className="flex flex-row gap-2">
               <div

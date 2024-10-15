@@ -64,6 +64,7 @@ const SwipeCards = () => {
           <WalletBalanceCard
             balance={priceUsd.toFixed(2)}
             walletAddress={loanWallet?.address}
+            onclick={() => router.push("/wallet")}
             handleWalletTx={() => router.push("/wallet")}
             handleReceiveToken={() => router.push("/wallet/receive")}
           />

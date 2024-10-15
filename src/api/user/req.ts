@@ -11,6 +11,7 @@ import {
   TMassWalletTransfer,
   TUserTransactionsBody,
   TBaseClaimBody,
+  TBaseNameody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -193,5 +194,10 @@ export const userOptimismTransactions = async (body: TUserTransactionsBody) => {
 
 export const baseClaim = async (body: TBaseClaimBody) => {
   const res = await client.post("/user/base-claim", body);
+  return res.data;
+};
+
+export const baseName = async (body: TBaseNameody) => {
+  const res = await client.post("/user/base-name", body);
   return res.data;
 };

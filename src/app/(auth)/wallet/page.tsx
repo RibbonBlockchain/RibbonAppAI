@@ -11,7 +11,7 @@ import { useGetUserWallet } from "@/api/linkage";
 import { ClipboardText, Copy } from "iconsax-react";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { ArrowDown, ArrowLeft, ArrowUp, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import SuccessAnimation from "@/components/success-animation";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
@@ -39,6 +39,7 @@ const MainWallet = () => {
 
   const [openTx, setOpenTx] = useState(false);
   const [claimUsdcModal, setClaimUsdcModal] = useState(false);
+  const [selectedTxTab, setSelectedTxTab] = useState("tokens");
 
   const [destinationWallet, setDestinationWallet] = useState("");
   const [amount, setAmount] = useState("");
@@ -197,23 +198,23 @@ const MainWallet = () => {
             ).toFixed(2)}
           />
 
-          {/* <div>
+          <div>
             <button
               onClick={() => setClaimUsdcModal(true)}
               className={clsx(
-                "mt-5 w-full text-center py-3 font-semibold border border-[#D6CBFF] rounded-[16px]"
+                "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
               )}
             >
               Claim USDC
             </button>
-          </div> */}
+          </div>
 
-          <div className="w-full pt-5 pb-10 flex gap-4 items-center justify-center text-xs font-bold">
+          <div className="w-full pt-5 pb-10 flex gap-2 items-center justify-center text-xs font-bold">
             <div
               onClick={() => router.push("/wallet/receive")}
               className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
-              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center border border-[#D6CBFF] rounded-[12px] ">
+              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center rounded-[12px] ">
                 <ArrowDown stroke="#fff" />
                 Recieve
               </div>
@@ -223,31 +224,101 @@ const MainWallet = () => {
               onClick={() => setOpenTx(true)}
               className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
-              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center border border-[#D6CBFF] rounded-[12px] ">
+              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center rounded-[12px] ">
                 <ArrowUp stroke="#fff" />
                 Send
               </div>
             </div>
 
             <div
-              onClick={() => handleGetWalletTransaction()}
-              className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+              onClick={() => {}}
+              className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
-              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center border border-[#D6CBFF] rounded-[12px] ">
-                <ClipboardText size={24} />
-                History
+              <div className="w-full h-[70px] flex flex-col gap-1 items-center p-3 bg-[#3f3856] justify-center rounded-[12px] ">
+                <ArrowLeftRight stroke="#fff" />
+                Swap
               </div>
             </div>
           </div>
 
-          <div>
-            {getTxPending && (
-              <div className="flex items-center justify-center mx-auto h-[120px]">
-                <SpinnerIcon />
+          <div className="w-full px-2 flex flex-row items-center justify-between gap-2 text-center text-sm font-bold rounded-[10px]">
+            <p
+              onClick={() => {
+                setSelectedTxTab("tokens");
+              }}
+              className="w-full py-2 px-2 text-center cursor-pointer"
+            >
+              <span
+                className={clsx(
+                  "inline-block",
+                  selectedTxTab === "tokens"
+                    ? "text-white border-b-4 pb-2 border-white"
+                    : "border-b-4 pb-2 text-stone-500 border-[#0B0228]"
+                )}
+              >
+                Tokens
+              </span>
+            </p>
+
+            <p
+              onClick={() => {
+                setSelectedTxTab("history");
+                handleGetWalletTransaction();
+              }}
+              className="w-full py-2 px-2 text-center cursor-pointer"
+            >
+              <span
+                className={clsx(
+                  "inline-block",
+                  selectedTxTab === "history"
+                    ? "text-white border-b-4 pb-2 border-white"
+                    : "border-b-4 pb-2 text-stone-500 border-[#0B0228]"
+                )}
+              >
+                History
+              </span>
+            </p>
+          </div>
+
+          <div className="mt-2">
+            {selectedTxTab === "tokens" && (
+              <div className="flex flex-col gap-2">
+                {/* <TokenItem
+                    onClick={() => setOpenEthTx(true)}
+                    symbol="ETH"
+                    name="Ethereum"
+                    balance={ethBalance}
+                    assetLogo={"/images/ETH.png"}
+                  />
+                  <TokenItem
+                    onClick={() => setOpenWldTx(true)}
+                    symbol="WLD"
+                    name="World coin"
+                    balance={wldBalance}
+                    assetLogo={"/images/world-coin.png"}
+                  />
+                  <TokenItem
+                    onClick={() => setOpenLinkTx(true)}
+                    symbol="LINK"
+                    name="Link"
+                    balance={linkBalance}
+                    assetLogo={"/images/LINK.png"}
+                  /> */}
+                List of tokens
               </div>
             )}
 
-            {txHistory && <TransactionHistory data={txHistory?.data} />}
+            {selectedTxTab === "history" && (
+              <div>
+                {getTxPending && (
+                  <div className="flex items-center justify-center mx-auto h-[120px]">
+                    <SpinnerIcon />
+                  </div>
+                )}
+
+                {txHistory && <TransactionHistory data={txHistory?.data} />}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -268,8 +339,8 @@ const MainWallet = () => {
       )}
 
       {claimUsdcModal && (
-        <div className="fixed inset-0 flex items-end justify-center z-50 bg-[#0808086B] bg-opacity-50">
-          <div className="bg-white backdrop h-auto rounded-t-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#0808086B] bg-opacity-50">
+          <div className="bg-white backdrop h-auto rounded-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
             <div className="py-4 flex flex-col gap-4 bg-white bg-opacity-75 backdrop-blur-sm rounded-md w-full text-black">
               <div className="mb-6 flex flex-row items-center justify-between">
                 <div />
@@ -286,14 +357,25 @@ const MainWallet = () => {
               </div>
 
               <div className="flex flex-col gap-4 text-black">
-                <InputBox
-                  placeholder="Enter amount"
-                  value={claimAmount as number}
-                  onChange={(e) => setAmount(e.target.value)}
-                  name={"amount"}
-                  label={"Claim amount (10,000 points minimum)"}
-                  required={false}
-                />
+                <div className="mb-4">
+                  <label
+                    htmlFor="input"
+                    className={`block after:ml-1 text-sm font-bold mb-2`}
+                  >
+                    Claim amount (10,000 points minimum){" "}
+                  </label>
+                  <input
+                    id="input"
+                    type="text"
+                    name={"amount"}
+                    value={claimAmount as number}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter amount"
+                    className={clsx(
+                      "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline min-w-full"
+                    )}
+                  />
+                </div>
               </div>
               <Button
                 onClick={handleBaseClaim}

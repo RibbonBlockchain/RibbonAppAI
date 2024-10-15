@@ -1,16 +1,11 @@
-import {
-  Copy,
-  Wallet2,
-  ClipboardText,
-  ArrowSwapHorizontal,
-} from "iconsax-react";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { shorten } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { ArrowUp, ArrowDown } from "lucide-react";
-import Link from "next/link";
+import { Copy, Wallet2, ArrowSwapHorizontal } from "iconsax-react";
+import { ArrowUp, ArrowDown, ArrowUpDown, Redo2 } from "lucide-react";
 
 export const PointBalanceCard = ({
   points,
@@ -39,9 +34,9 @@ export const PointBalanceCard = ({
           </div>
         </div>
       </div>
-      <div className="p-3" onClick={onclick}>
+      {/* <div className="p-3" onClick={onclick}>
         <Wallet2 size="28" color="#ffffff" variant="Bold" />
-      </div>
+      </div> */}
     </div>
 
     <div className="flex flex-col gap-3 mt-4">
@@ -74,20 +69,27 @@ export const WalletBalanceCard = ({
   walletAddress,
   handleWalletTx,
   handleReceiveToken,
+  onclick,
 }: {
   balance: any;
   walletAddress: string;
   handleWalletTx: any;
   handleReceiveToken: any;
+  onclick: () => void;
 }) => (
   <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
     <div>
-      <p className="text-sm font-medium mb-2">Your wallet</p>
-      <div>
-        <div className="text-[24px] font-bold">
-          <p>$ {balance}</p>
+      <div className="flex flex-row w-full items-center justify-between">
+        <p className="text-sm font-bold mb-2">Wallet Balance</p>
+        <div
+          className="flex flex-row items-center justify-center gap-1"
+          onClick={onclick}
+        >
+          <Wallet2 size="24" color="#ffffff" variant="Bold" />
+          <p className="text-xs">View all assets</p>
         </div>
-
+      </div>
+      <div>
         <div className="flex flex-row items-center gap-2">
           <p className="text-xs">{shorten(walletAddress)}</p>
           <div
@@ -100,6 +102,10 @@ export const WalletBalanceCard = ({
           >
             <Copy size="18" color="#F6F1FE" variant="Bold" />
           </div>
+        </div>
+
+        <div className="text-[28px] font-bold">
+          <p>$ {balance}</p>
         </div>
       </div>
     </div>
@@ -130,9 +136,19 @@ export const WalletBalanceCard = ({
         className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
       >
         <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
-          <ClipboardText size={24} color="#7C56FE" />
+          <ArrowUpDown color="#7C56FE" />
         </div>
-        History
+        Swap
+      </div>
+
+      <div
+        onClick={handleWalletTx}
+        className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+      >
+        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
+          <Redo2 size={24} color="#7C56FE" />
+        </div>
+        Claim
       </div>
     </div>
   </div>

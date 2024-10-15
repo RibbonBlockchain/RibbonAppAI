@@ -72,3 +72,7 @@ export type TBaseClaimBody = {
   amount: number;
   address: string;
 };
+
+export type TBaseNameody = {
+  name: string;
+};

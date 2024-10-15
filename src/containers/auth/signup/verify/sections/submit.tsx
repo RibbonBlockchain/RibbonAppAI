@@ -16,8 +16,7 @@ const Submit = () => {
   const isSubmitDisabled = isFormInvalid || isLoading;
 
   const onSuccess = () => {
-    // router.push("/auth/signup/pin");
-    router.push("/auth/signup/pin");
+    router.push("/auth/signup/phone/pin");
   };
 
   const handleSubmit = () => {

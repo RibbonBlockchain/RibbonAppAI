@@ -19,7 +19,7 @@ const InputBox = ({
   onChange: (e: any) => void;
 }) => {
   return (
-    <div key={label} className="mb-4 text-white">
+    <div key={label} className="mb-4 min-w-full text-white">
       <label
         htmlFor="input"
         className={`${

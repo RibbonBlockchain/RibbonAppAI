@@ -7,19 +7,15 @@ import BackArrowButton from "@/components/button/back-arrow";
 
 export const SubHeading = () => {
   const { phoneNumber } = useAtomValue(authAtom);
-  return (
-    <p className="text-sm text-slate-600">
-      A code has been sent to {phoneNumber}
-    </p>
-  );
+  return <p className="text-sm">A code has been sent to {phoneNumber}</p>;
 };
 
-export const BackArrow = () => {
+export const BackArrow = ({ stroke }: { stroke?: string }) => {
   const [_, setState] = useAtom(authAtom);
 
   const handleClick = () => {
     setState((prev) => ({ ...prev, code: "" }));
   };
 
-  return <BackArrowButton onClick={handleClick} />;
+  return <BackArrowButton stroke={stroke} onClick={handleClick} />;
 };

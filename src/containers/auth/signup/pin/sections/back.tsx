@@ -11,7 +11,7 @@ const BackArrow = () => {
     setState((prev) => ({ ...prev, pin: "" }));
   };
 
-  return <BackArrowButton onClick={handleClick} />;
+  return <BackArrowButton stroke="#FFF" onClick={handleClick} />;
 };
 
 export default BackArrow;

@@ -34,8 +34,8 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
           <div className="fixed inset-0 bg-black/25" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center text-center">
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div className="overflow-y-auto">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -45,10 +45,10 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-[95%] max-w-[480px] h-full px-4 py-10  transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-[480px] mb-0 px-4 py-10 transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
                 <div className="mb-12">
                   <ArrowLeft stroke="#939393" onClick={props.closeModal} />
-                  <div className="flex -mt-10 text-black  flex-row items-center justify-center text-base font-semibold">
+                  <div className="flex -mt-6 text-black flex-row items-center justify-center text-base font-semibold">
                     Send
                   </div>
                 </div>
@@ -95,7 +95,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                       <InfoIcon stroke="#000" width={14} height={14} />
                     </div>
                     <input
-                      value={"Base Etherium L2"}
+                      value={"Base Ethereum L2"}
                       className="w-full text-sm text-gray-500 py-3.5 px-2 border-[1px] border-[#F2EEFF] rounded-md"
                     />
                   </div>
@@ -126,7 +126,7 @@ const WithdrawUSDCToken: React.FC<Props> = (props) => {
                   <Button
                     disabled={props.isPending}
                     onClick={props.handleClick}
-                    className="rounded-md mt-16 mb-4"
+                    className="rounded-md mt-4 mb-4"
                   >
                     {props.isPending ? <SpinnerIcon /> : "Confirm"}
                   </Button>

@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 
 export const metadata: Metadata = {
   title: "Ribbon Protocol",
-  description: "Earn tokenized Universal Basic Income",
+  description: "Earn Personalized Universal Basic Income",
 };
 
 const inter = localFont({

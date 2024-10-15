@@ -57,9 +57,9 @@ const CountrySelect = ({ value, setValue }: Props) => {
       components={{ MenuList: CustomMenuList }}
       onChange={(option) => setValue(option?.value!)}
       classNames={{
-        option: () => ``,
+        option: () => `text-red-500`,
         input: () => `pl-14`,
-        control: () => `w-full`,
+        control: () => `w-full text-white`,
         placeholder: () => `px-3`,
         singleValue: () => `!pl-0`,
         indicatorsContainer: () => `pr-3`,

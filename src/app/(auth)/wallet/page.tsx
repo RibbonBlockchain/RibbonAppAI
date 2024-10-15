@@ -3,12 +3,12 @@
 import clsx from "clsx";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { useGetUserWallet } from "@/api/linkage";
-import { ClipboardText, Copy } from "iconsax-react";
+import { Copy } from "iconsax-react";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
@@ -17,21 +17,12 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import {
   useBaseClaim,
+  useClaimUsdc,
   useSendUsdcToken,
   useUserBaseTransactions,
 } from "@/api/user";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
-import InputBox from "@/components/questionnarie/input-box";
 import Button from "@/components/button";
-import { convertPoints18decimal } from "@/lib/utils/convertPoint";
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
-import { useCapabilities, useWriteContracts } from "wagmi/experimental";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -56,7 +47,7 @@ const MainWallet = () => {
             setShowSuccessAnimation(true),
             setOpenTx(false),
             refetch();
-          // refetchTransactionHistory();
+          handleGetWalletTransaction();
         },
       }
     );
@@ -81,79 +72,11 @@ const MainWallet = () => {
     getWalletTx({ address: loanWallet?.data[1]?.address });
   };
 
-  const account = useAccount();
-  const { connectors, connect } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { data: writeData, writeContract } = useWriteContract();
-  const { data: receipt } = useWaitForTransactionReceipt({ hash: writeData });
-
-  const [id, setId] = useState<string | undefined>(undefined);
-  const { writeContracts } = useWriteContracts({
-    mutation: { onSuccess: (id) => setId(id) },
-  });
-
-  console.log(account?.address, "address from contract");
-
-  const { data: availableCapabilities } = useCapabilities({
-    account: account.address,
-  });
-
-  const capabilities = useMemo(() => {
-    if (!availableCapabilities || !account.chainId) return {};
-    const capabilitiesForChain = availableCapabilities[account.chainId];
-    if (
-      capabilitiesForChain["paymasterService"] &&
-      capabilitiesForChain["paymasterService"].supported
-    ) {
-      return {
-        paymasterService: {
-          url: "https://api.developer.coinbase.com/rpc/v1/base-sepolia/NjBxwkYP6cs5Y0Tomg9xnR5JnBoZHiEo",
-        },
-      };
-    }
-    return {};
-  }, [availableCapabilities, account.chainId]);
-
-  const { mutate: claimBase } = useBaseClaim();
+  const { mutate: claimUsdc } = useClaimUsdc();
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
 
-  const handleBaseClaim = () => {
-    claimBase(
-      {
-        address: loanWallet?.address as string,
-        amount: claimAmount as number,
-      },
-      {
-        onSuccess: (data) => {
-          writeContracts(
-            {
-              contracts: [
-                {
-                  address: "0x95Cff63E43A13c9DC97aC85D2f02327aD01dB560",
-                  abi: baseAbi,
-                  functionName: "permitSwapToPaymentCoin",
-                  args: [
-                    loanWallet?.address,
-                    Number(convertPoints18decimal(claimAmount as number)),
-                    data?.data?.deadline,
-                    data?.data?.v,
-                    data?.data?.r,
-                    data?.data?.s,
-                  ],
-                },
-              ],
-              capabilities,
-            },
-            {
-              onSuccess: () => {
-                setClaimUsdcModal(false);
-                // refetchUsdcBalance();
-              },
-            }
-          );
-        },
-      }
-    );
+  const handleClaimUsdc = () => {
+    claimUsdc({ amount: claimAmount as number }, { onSuccess: () => {} });
   };
 
   return (
@@ -362,14 +285,14 @@ const MainWallet = () => {
                     htmlFor="input"
                     className={`block after:ml-1 text-sm font-bold mb-2`}
                   >
-                    Claim amount (10,000 points minimum){" "}
+                    Claim amount (10,000 points minimum)
                   </label>
                   <input
                     id="input"
                     type="text"
                     name={"amount"}
                     value={claimAmount as number}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={(e: any) => setClaimAmount(e.target.value)}
                     placeholder="Enter amount"
                     className={clsx(
                       "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline min-w-full"
@@ -378,9 +301,9 @@ const MainWallet = () => {
                 </div>
               </div>
               <Button
-                onClick={handleBaseClaim}
+                onClick={handleClaimUsdc}
                 className="my-6 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm"
-                disabled={(claimAmount as number) < 10000}
+                // disabled={(claimAmount as number) < 10000}
               >
                 {`Claim USDC`}
               </Button>

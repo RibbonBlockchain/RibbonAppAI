@@ -4,6 +4,7 @@ import { useGetAuth } from "@/api/auth";
 
 const User = () => {
   const { data: user } = useGetAuth({ enabled: true });
+
   const SES_Score = user?.wallet.point;
 
   // const capitalizeFirstLetter = (str: string) => {

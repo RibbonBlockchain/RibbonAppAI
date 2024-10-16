@@ -34,6 +34,7 @@ import {
   getLinkageStoreItems,
   getLinkageStoreItemBySlug,
   updateLinkageStoreItem,
+  getLinkageStoreOrders,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -420,5 +421,13 @@ export const useGetLinkageStoreItemBuSlug = (slug: string) => {
   return useQuery({
     queryKey: ["linkagestore-item"],
     queryFn: () => getLinkageStoreItemBySlug(slug),
+  });
+};
+
+// ORDERS
+export const useGetLinkageStoreOrders = (linkageId: number) => {
+  return useQuery({
+    queryKey: ["linkage-store-order"],
+    queryFn: () => getLinkageStoreOrders(linkageId),
   });
 };

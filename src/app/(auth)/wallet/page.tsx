@@ -1,28 +1,28 @@
 "use client";
 
-import clsx from "clsx";
-import Image from "next/image";
-import toast from "react-hot-toast";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { copyToClipboard } from "@/lib/utils";
-import { shorten } from "@/lib/utils/shorten";
-import { useGetUserWallet } from "@/api/linkage";
-import { Copy } from "iconsax-react";
-import { useCoinDetails } from "@/lib/values/priceAPI";
-import { SpinnerIcon } from "@/components/icons/spinner";
-import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
-import SuccessAnimation from "@/components/success-animation";
-import CustomTokenUI from "@/components/wallet/native-token-ui";
-import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import {
   useBaseClaim,
   useClaimUsdc,
   useSendUsdcToken,
   useUserBaseTransactions,
 } from "@/api/user";
-import TransactionHistory from "@/containers/manage-linkage/transaction-history";
+import clsx from "clsx";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { Copy } from "iconsax-react";
+import React, { useState } from "react";
 import Button from "@/components/button";
+import { useRouter } from "next/navigation";
+import { copyToClipboard } from "@/lib/utils";
+import { shorten } from "@/lib/utils/shorten";
+import { useGetUserWallet } from "@/api/linkage";
+import { useCoinDetails } from "@/lib/values/priceAPI";
+import { SpinnerIcon } from "@/components/icons/spinner";
+import SuccessAnimation from "@/components/success-animation";
+import CustomTokenUI from "@/components/wallet/native-token-ui";
+import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
+import TransactionHistory from "@/containers/manage-linkage/transaction-history";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -69,7 +69,7 @@ const MainWallet = () => {
   } = useUserBaseTransactions();
 
   const handleGetWalletTransaction = () => {
-    getWalletTx({ address: loanWallet?.data[1]?.address });
+    getWalletTx({ address: loanWalletDetails?.address });
   };
 
   const { mutate: claimUsdc } = useClaimUsdc();

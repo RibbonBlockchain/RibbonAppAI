@@ -14,15 +14,15 @@ import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questio
 const questions = [
   {
     id: 1,
-    text: "Welcome! Kindly connect your loan wallet to continue. Don't worry, if you don't have a loan wallet, one will be created for you.",
+    text: "Welcome! You are about to take a loan!. This loan applies a rate of 10% for a period of one month. The loan amount will be automatically deducted from your wallet when due. Do you want to proceed with the loan application?",
     options: [
-      { id: 1, value: "Connect Wallet" },
+      { id: 1, value: "Proceed" },
       { id: 2, value: "Come back later" },
     ],
   },
   {
     id: 2,
-    text: "Your loan wallet has been connected. Your wallet loan balance is $balance usdc.",
+    text: "Your wallet currently has a balance of $balance usdc. You can proceed to input the loan amount you need",
     options: [],
   },
   {
@@ -30,7 +30,11 @@ const questions = [
     text: "Please enter the loan amount (usdc) you wish to disburse.",
     options: [],
   },
-  { id: 4, text: "Your loan has been successfully disbursed.", options: [] },
+  {
+    id: 4,
+    text: "Your loan has been successfully disbursed.",
+    options: [{ id: 1, value: "Exit" }],
+  },
 ];
 
 const LinkageQuestionnairePage = () => {

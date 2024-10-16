@@ -317,3 +317,9 @@ export const getLinkageStoreItemBySlug = async (slug: string) => {
   );
   return res.data;
 };
+
+// ORDERS
+export const getLinkageStoreOrders = async (linkageId: number) => {
+  const res = await client.get<any>(`/linkage/${linkageId}/store/orders`);
+  return res.data;
+};

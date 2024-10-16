@@ -29,13 +29,13 @@ const Home = () => {
           <p className="text-base font-normal text-center">Join Linkages as;</p>
 
           <LinkButton
-            href="/auth/signup"
+            href="/auth/signup/phone"
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Personal account
           </LinkButton>
           <LinkButton
-            href="/auth/signup"
+            href="/auth/signup/email"
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Business account

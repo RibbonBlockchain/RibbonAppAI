@@ -72,7 +72,7 @@ const MainWallet = () => {
     getWalletTx({ address: loanWalletDetails?.address });
   };
 
-  const { mutate: claimUsdc } = useClaimUsdc();
+  const { mutate: claimUsdc, isPending: claimPending } = useClaimUsdc();
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
 
   const handleClaimUsdc = () => {
@@ -303,9 +303,9 @@ const MainWallet = () => {
               <Button
                 onClick={handleClaimUsdc}
                 className="my-6 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm"
-                // disabled={(claimAmount as number) < 10000}
+                disabled={(claimAmount as number) < 10000}
               >
-                {`Claim USDC`}
+                {claimPending ? <SpinnerIcon /> : `Claim USDC`}
               </Button>
             </div>
           </div>

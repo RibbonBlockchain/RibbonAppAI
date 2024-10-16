@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  useCreateWallet,
-  useGetUserWallet,
-  useDisburseLoan,
-} from "@/api/linkage";
 import clsx from "clsx";
 import Image from "next/image";
 import { User } from "iconsax-react";
@@ -13,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { shortenTransaction } from "@/lib/utils/shorten";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import React, { useState, useEffect, useRef } from "react";
+import { useGetUserWallet, useDisburseLoan } from "@/api/linkage";
 
 interface Message {
   sender: "user" | "ai";
@@ -34,9 +30,6 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [loanAmount, setLoanAmount] = useState("0");
-  const { mutate: createUserWallet } = useCreateWallet({
-    onSuccess: () => setStep(2),
-  });
 
   const { data: loanWallet } = useGetUserWallet();
 
@@ -105,8 +98,8 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
   }, [currentStep]);
 
   const handleOptionClick = (option: { id: number; value: string }) => {
-    if (option.value === "Connect Wallet") {
-      createUserWallet();
+    if (option.value === "Proceed") {
+      setStep(2);
     } else {
       router.back();
     }
@@ -228,6 +221,20 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
             )}
           >
             {isPending ? <SpinnerIcon /> : "Disburse Loan"}
+          </button>
+        </div>
+      )}
+
+      {currentStep === 4 && (
+        <div className="flex flex-col gap-4 fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
+          <button
+            onClick={() => router.back()}
+            className={clsx(
+              "flex justify-center py-2.5 mt-8 text-[15px] text-start font-bold w-full rounded-[8px] text-[#290064]",
+              isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
+            )}
+          >
+            Exit
           </button>
         </div>
       )}

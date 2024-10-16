@@ -13,6 +13,7 @@ import { useCart } from "@/provider/cart-context-provider";
 import InputBox from "@/components/questionnarie/input-box";
 import { ArrowLeft2, InfoCircle, Copy } from "iconsax-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
+import { useUserOrderItems } from "@/api/user";
 
 interface Address {
   id: number;
@@ -33,6 +34,28 @@ const ConfirmOrder: React.FC = () => {
   const linkageId = localStorage.getItem("selectedLinkageId");
 
   const { cartItems } = useCart();
+
+  const transformedData = {
+    items: cartItems.map((cartItem) => ({
+      id: cartItem.item.id,
+      quantity: cartItem.quantity,
+    })),
+  };
+
+  const { mutate, isPending } = useUserOrderItems();
+  const isPaymentButtonDisabled = isPending;
+
+  const handlePayment = () => {
+    mutate(
+      { body: transformedData, linkageId: Number(linkageId) },
+      {
+        onSuccess: () => {
+          toast.success("order successful"), setOpenSuccessModal(true);
+        },
+      }
+    );
+  };
+
   const { data, refetch } = useGetLinkageById(Number(linkageId));
   const walletBalance = data?.data?.wallet?.balance;
 
@@ -71,12 +94,6 @@ const ConfirmOrder: React.FC = () => {
 
   const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const handlePayment = () => {
-    setOpenSuccessModal(true);
-  };
-
-  const isPending = false;
 
   const subtotal = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.item.price * cartItem.quantity;
@@ -405,9 +422,11 @@ const ConfirmOrder: React.FC = () => {
             You can share this QR code with someone to pay for you
           </p>
         </div>
-        <Button onClick={handlePayment} disabled={isPending}>
+
+        <Button onClick={handlePayment} disabled={isPaymentButtonDisabled}>
           {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
         </Button>
+
         <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
           <InfoCircle size={16} />
           <p>{totalFee.toFixed(2)} will be charged from your USDC wallet</p>

@@ -73,6 +73,20 @@ export type TBaseClaimBody = {
   address: string;
 };
 
+export type TClaimUsdcBody = {
+  amount: number;
+};
+
 export type TBaseNameody = {
   name: string;
+};
+
+// USER ORDERS
+interface Item {
+  id: number;
+  quantity: number;
+}
+
+export type TUserOrderItemBody = {
+  items: Item[];
 };

@@ -12,6 +12,8 @@ import {
   TUserTransactionsBody,
   TBaseClaimBody,
   TBaseNameody,
+  TClaimUsdcBody,
+  TUserOrderItemBody,
 } from "./types";
 import {
   getTasks,
@@ -47,6 +49,9 @@ import {
   userOptimismTransactions,
   baseClaim,
   baseName,
+  claimUsdc,
+  userOrderItems,
+  getUserOrders,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -359,9 +364,37 @@ export const useBaseClaim = () => {
   });
 };
 
+export const useClaimUsdc = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TClaimUsdcBody) => claimUsdc(body),
+  });
+};
+
 export const useBaseName = () => {
   return useMutation({
     onError,
     mutationFn: (body: TBaseNameody) => baseName(body),
+  });
+};
+
+// USER ORDERS
+export const useUserOrderItems = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TUserOrderItemBody;
+      linkageId: number;
+    }) => userOrderItems(body, linkageId),
+  });
+};
+
+export const useGetUserOrders = () => {
+  return useQuery({
+    queryKey: ["user-orders"],
+    queryFn: () => getUserOrders(),
   });
 };

@@ -12,6 +12,8 @@ import {
   TUserTransactionsBody,
   TBaseClaimBody,
   TBaseNameody,
+  TClaimUsdcBody,
+  TUserOrderItemBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -197,7 +199,26 @@ export const baseClaim = async (body: TBaseClaimBody) => {
   return res.data;
 };
 
+export const claimUsdc = async (body: TClaimUsdcBody) => {
+  const res = await client.post("/user/claim/usdc", body);
+  return res.data;
+};
+
 export const baseName = async (body: TBaseNameody) => {
   const res = await client.post("/user/base-name", body);
+  return res.data;
+};
+
+// USER ORDERS
+export const userOrderItems = async (
+  body: TUserOrderItemBody,
+  linkageId: number
+) => {
+  const res = await client.post(`user/store/${linkageId}/order`, body);
+  return res.data;
+};
+
+export const getUserOrders = async () => {
+  const res = await client.get<any>("/user/store/orders");
   return res.data;
 };

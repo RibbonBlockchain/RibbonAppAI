@@ -45,6 +45,8 @@ const SwipeCards = () => {
     }
   };
 
+  const [rotateBalance, setRotateBalance] = useState(false);
+
   return (
     <div
       className="flex flex-col items-center justify-center"
@@ -55,8 +57,9 @@ const SwipeCards = () => {
         {activeCard === "point" && (
           <PointBalanceCard
             points={points.toFixed(2)}
-            onclick={() => router.push("/wallet")}
             convertedPoints={convertedPoints.toFixed(2)}
+            rotateBalance={rotateBalance}
+            setRotateBalance={setRotateBalance}
           />
         )}
 

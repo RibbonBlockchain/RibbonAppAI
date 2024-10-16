@@ -152,10 +152,7 @@ const LinkageViewDetails = () => {
                   <Location size="18" color="#ffffff" variant="Bold" />{" "}
                   {data?.data.location}
                 </div>
-                {/* <div className="flex flex-row items-center gap-3 text-xs font-normal">
-                  <Coin1 size="18" color="#ffffff" variant="Bold" /> Linkage
-                  Value: $ {data?.data.walletAddress.balance} xxx
-                </div> */}
+
                 <div className="flex flex-row items-center gap-3 text-xs font-normal">
                   <WalletMoney size="18" color="#ffffff" variant="Bold" />{" "}
                   <div
@@ -173,31 +170,33 @@ const LinkageViewDetails = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <p className="text-sm font-bold">My Linkages AI</p>
+            <div className="fixed right-2 top-1/2 transform -translate-y-1/2 flex items-center justify-end z-10">
+              <div className="flex flex-col gap-2">
+                {/* <p className="text-sm font-bold">My Linkages AI</p> */}
 
-              <div
-                className="text-[13px] font-normal cursor-pointer flex flex-row gap-4 items-center"
-                onClick={() => router.push(`/linkages/explore/${slug}/chat`)}
-              >
-                <div className="relative max-w-fit flex flex-row">
-                  <Image
-                    width={10}
-                    height={10}
-                    alt="display"
-                    src={"/assets/small-star.png"}
-                    className="w-[10px] h-[10px] absolute right-0"
-                  />
-                  <Image
-                    width={42}
-                    height={42}
-                    alt="display"
-                    className="w-[50px] h-auto"
-                    src={data?.data.logo || "/assets/sample-icon.png"}
-                  />
-                </div>
-                <div>
-                  <p className="text-base font-bold">{data?.data?.name}</p>
+                <div
+                  className="text-[13px] font-normal cursor-pointer flex flex-row gap-4 items-center"
+                  onClick={() => router.push(`/linkages/explore/${slug}/chat`)}
+                >
+                  <div className="relative max-w-fit flex flex-row">
+                    <Image
+                      width={10}
+                      height={10}
+                      alt="display"
+                      src={"/assets/small-star.png"}
+                      className="w-[10px] h-[10px] absolute right-0"
+                    />
+                    <Image
+                      width={42}
+                      height={42}
+                      alt="display"
+                      className="w-[50px] h-auto"
+                      src={data?.data.logo || "/assets/sample-icon.png"}
+                    />
+                  </div>
+                  {/* <div>
+                    <p className="text-base font-bold">{data?.data?.name}</p>
+                  </div> */}
                 </div>
               </div>
             </div>

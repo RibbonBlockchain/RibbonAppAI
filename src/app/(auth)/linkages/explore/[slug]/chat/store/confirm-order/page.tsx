@@ -31,7 +31,6 @@ const ConfirmOrder: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
-  const linkageId = localStorage.getItem("selectedLinkageId");
 
   const { cartItems } = useCart();
 
@@ -41,6 +40,8 @@ const ConfirmOrder: React.FC = () => {
       quantity: cartItem.quantity,
     })),
   };
+
+  const linkageId = cartItems[0]?.item?.linkageId;
 
   const { mutate, isPending } = useUserOrderItems();
   const isPaymentButtonDisabled = isPending;

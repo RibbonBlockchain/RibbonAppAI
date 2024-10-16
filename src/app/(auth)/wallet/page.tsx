@@ -76,7 +76,14 @@ const MainWallet = () => {
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
 
   const handleClaimUsdc = () => {
-    claimUsdc({ amount: claimAmount as number }, { onSuccess: () => {} });
+    claimUsdc(
+      { amount: claimAmount as number },
+      {
+        onSuccess: () => {
+          toast.success("points claim successful"), setClaimUsdcModal(false);
+        },
+      }
+    );
   };
 
   return (
@@ -303,7 +310,7 @@ const MainWallet = () => {
               <Button
                 onClick={handleClaimUsdc}
                 className="my-6 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm"
-                disabled={(claimAmount as number) < 10000}
+                disabled={(claimAmount as number) < 10000 || claimPending}
               >
                 {claimPending ? <SpinnerIcon /> : `Claim USDC`}
               </Button>

@@ -6,14 +6,14 @@ import React, { useState } from "react";
 import Button from "@/components/button";
 import { copyToClipboard } from "@/lib/utils";
 import { Plus, Upload, X } from "lucide-react";
-import { useGetLinkageById } from "@/api/linkage";
+import { useUserOrderItems } from "@/api/user";
+import { useGetUserWallet } from "@/api/linkage";
 import { useParams, useRouter } from "next/navigation";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useCart } from "@/provider/cart-context-provider";
 import InputBox from "@/components/questionnarie/input-box";
 import { ArrowLeft2, InfoCircle, Copy } from "iconsax-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
-import { useUserOrderItems } from "@/api/user";
 
 interface Address {
   id: number;
@@ -31,7 +31,6 @@ const ConfirmOrder: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
-  const linkageId = localStorage.getItem("selectedLinkageId");
 
   const { cartItems } = useCart();
 
@@ -42,12 +41,14 @@ const ConfirmOrder: React.FC = () => {
     })),
   };
 
+  const storeLinkageId = cartItems[0]?.item?.linkageId;
+
   const { mutate, isPending } = useUserOrderItems();
   const isPaymentButtonDisabled = isPending;
 
   const handlePayment = () => {
     mutate(
-      { body: transformedData, linkageId: Number(linkageId) },
+      { body: transformedData, linkageId: Number(storeLinkageId) },
       {
         onSuccess: () => {
           toast.success("order successful"), setOpenSuccessModal(true);
@@ -56,8 +57,8 @@ const ConfirmOrder: React.FC = () => {
     );
   };
 
-  const { data, refetch } = useGetLinkageById(Number(linkageId));
-  const walletBalance = data?.data?.wallet?.balance;
+  const { data: wallet } = useGetUserWallet();
+  const walletBalance = wallet?.data?.[0].balance;
 
   const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);

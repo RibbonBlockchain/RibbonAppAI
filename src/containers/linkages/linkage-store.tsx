@@ -13,6 +13,7 @@ import { Upload } from "lucide-react";
 import { copyToClipboard } from "@/lib/utils";
 
 interface Item {
+  linkageId: number;
   id: number;
   name: string;
   description: string;

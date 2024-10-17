@@ -9,32 +9,56 @@ import { ArrowUp, ArrowDown, ArrowUpDown, Redo2 } from "lucide-react";
 
 export const PointBalanceCard = ({
   points,
-  onclick,
   convertedPoints,
+  rotateBalance,
+  setRotateBalance,
 }: {
   points: number;
   convertedPoints: string;
-  onclick: () => void;
+  rotateBalance: boolean;
+  setRotateBalance: (value: boolean) => void;
 }) => (
   <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
     <div className="flex flex-row items-start justify-between">
       <div>
         <p className="text-sm font-medium mb-2">Ribbon balance</p>
-        <div>
-          <div className="-ml-2 flex flex-row items-center gap-1 text-[18px] xxs:text-[24px] font-bold">
-            <Image src={"/assets/coin.png"} alt="coin" height={32} width={32} />
-            <p>
-              {convertedPoints} <span className="text-sm">ribbon</span>
-            </p>
-          </div>
 
-          <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
-            <ArrowSwapHorizontal size="16" color="#ffffff" />
-            <p>{points} usdc</p>
+        {rotateBalance ? (
+          <div>
+            <div className="-ml-2 flex flex-row items-center gap-1 text-[18px] xxs:text-[24px] font-bold">
+              <Image src="/assets/coin.png" alt="coin" height={32} width={32} />
+              <p>{points} USDC</p>
+            </div>
+            <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
+              <ArrowSwapHorizontal
+                onClick={() => setRotateBalance(!rotateBalance)}
+                size="16"
+                color="#ffffff"
+              />
+              {convertedPoints} <span className="text-sm">ribbon</span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <div className="-ml-2 flex flex-row items-center gap-1 text-[18px] xxs:text-[24px] font-bold">
+              <Image src="/assets/coin.png" alt="coin" height={32} width={32} />
+              <p>
+                {convertedPoints} <span className="text-sm">ribbon</span>
+              </p>
+            </div>
+            <div className="flex flex-row items-center gap-1 text-[12px] font-bold">
+              <ArrowSwapHorizontal
+                onClick={() => setRotateBalance(!rotateBalance)}
+                size="16"
+                color="#ffffff"
+              />
+              <p>{points} USDC</p>
+            </div>
+          </div>
+        )}
       </div>
-      {/* <div className="p-3" onClick={onclick}>
+      {/* Uncomment if needed */}
+      {/* <div className="p-3" onClick={onClick}>
         <Wallet2 size="28" color="#ffffff" variant="Bold" />
       </div> */}
     </div>
@@ -54,7 +78,7 @@ export const PointBalanceCard = ({
           baseBgColor="#D6CBFF33"
         />
 
-        <Link href={"/wallet"} className="flex justify-center">
+        <Link href="/wallet" className="flex justify-center">
           <p className="absolute top-2 px-6 text-[#F6F1FE] font-semibold">
             Claim ribbon
           </p>

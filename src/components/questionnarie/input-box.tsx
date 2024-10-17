@@ -9,6 +9,7 @@ const InputBox = ({
   onChange,
   placeholder,
   className,
+  onBlur,
 }: {
   name: any;
   value: any;
@@ -17,6 +18,7 @@ const InputBox = ({
   placeholder?: string;
   className?: string;
   onChange: (e: any) => void;
+  onBlur?: () => void;
 }) => {
   return (
     <div key={label} className="mb-4 min-w-full text-white">
@@ -39,6 +41,7 @@ const InputBox = ({
           "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline",
           className ? className : "min-w-full"
         )}
+        onBlur={onBlur}
       />
     </div>
   );

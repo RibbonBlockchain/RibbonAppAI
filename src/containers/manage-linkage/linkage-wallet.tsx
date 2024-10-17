@@ -111,10 +111,10 @@ const LinkageWallet = ({
           </div>
 
           <Link
-            href={"/my-linkages/personalise"}
+            href={"/personalize"}
             className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
           >
-            Personalise
+            Personalize
           </Link>
         </div>
 

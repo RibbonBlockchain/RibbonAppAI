@@ -105,6 +105,7 @@ export const WalletBalanceCard = ({
     <div>
       <div className="flex flex-row w-full items-center justify-between">
         <p className="text-sm font-bold mb-2">Wallet Balance</p>
+
         <div
           className="flex flex-row items-center justify-center gap-1"
           onClick={onclick}

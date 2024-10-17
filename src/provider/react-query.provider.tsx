@@ -31,7 +31,7 @@ const ReactQueryProvider = ({ children }: React.PropsWithChildren) => {
     <BaseProvider>
       <QueryClientProvider client={client}>
         <SessionProvider>{children}</SessionProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </BaseProvider>
   ) : (

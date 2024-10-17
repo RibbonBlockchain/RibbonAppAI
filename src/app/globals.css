@@ -51,6 +51,10 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .animate-spin-slow {
+    animation: spin 60s linear infinite;
+  }
 }
 
 input[type="number"]::-webkit-outer-spin-button,

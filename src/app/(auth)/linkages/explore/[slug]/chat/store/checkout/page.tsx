@@ -140,7 +140,7 @@ const Checkout = () => {
           onClick={() =>
             router.push(`/linkages/explore/${slug}/chat/store/confirm-order`)
           }
-          disabled={isPending}
+          disabled={isPending || cartItems.length === 0}
         >
           {isPending ? (
             <SpinnerIcon />

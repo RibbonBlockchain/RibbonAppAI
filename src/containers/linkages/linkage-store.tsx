@@ -149,7 +149,7 @@ const LinkageStore = ({ slug }: { slug: string }) => {
       )}
 
       <div className="p-4">
-        <Button onClick={handleViewCart} disabled={false}>
+        <Button onClick={handleViewCart} disabled={cartItems.length === 0}>
           {isPending ? (
             <SpinnerIcon />
           ) : (

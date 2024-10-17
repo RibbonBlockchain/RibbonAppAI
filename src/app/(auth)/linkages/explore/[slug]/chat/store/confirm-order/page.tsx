@@ -14,6 +14,7 @@ import { useCart } from "@/provider/cart-context-provider";
 import InputBox from "@/components/questionnarie/input-box";
 import { ArrowLeft2, InfoCircle, Copy } from "iconsax-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
+import PlacesMap from "@/components/places-map";
 
 interface Address {
   id: number;
@@ -154,6 +155,8 @@ const ConfirmOrder: React.FC = () => {
     }
   };
 
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+
   return (
     <main className="w-full flex flex-col h-screen text-white bg-[#0B0228] p-3 sm:p-6">
       <div className="flex flex-row items-center justify-start gap-4 mt-2">
@@ -197,6 +200,20 @@ const ConfirmOrder: React.FC = () => {
 
         <div className="flex flex-col gap-4 mt-4">
           <p className="text-base font-semibold">Delivery method</p>
+
+          <div className="relative flex flex-col">
+            <PlacesMap
+              name="address"
+              value={deliveryAddress}
+              label={
+                "Enter a delivery Address or select from the options below"
+              }
+              required={true}
+              placeholder={"Delivery address"}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
+            />
+          </div>
+
           <div className="flex flex-col items-start gap-4 justify-between text-[15px] font-medium">
             <div
               onClick={() => handleDeliveryMethodChange("pickup")}
@@ -337,6 +354,27 @@ const ConfirmOrder: React.FC = () => {
           </div>
         )}
 
+        <div
+          onClick={() => setOpenQRCodeModal(true)}
+          className="text-base font-bold mt-4"
+        >
+          Generate payment QR code
+          <p className="text-xs font-normal text-[#E5E7EB]">
+            You can share this QR code with someone to pay for you
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 p-4">
+          <Button onClick={handlePayment} disabled={isPaymentButtonDisabled}>
+            {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
+          </Button>
+
+          <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
+            <InfoCircle size={16} />
+            <p>{totalFee.toFixed(2)} will be charged from your USDC wallet</p>
+          </div>
+        </div>
+
         {isModalOpen && (
           <div className="fixed inset-0 flex items-end justify-center z-50">
             <div className="bg-[#3f3952] backdrop h-auto rounded-t-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
@@ -412,27 +450,6 @@ const ConfirmOrder: React.FC = () => {
           </div>
         )}
       </section>
-
-      <div className="flex flex-col gap-3 p-4">
-        <div
-          onClick={() => setOpenQRCodeModal(true)}
-          className="text-base font-bold mt-4"
-        >
-          Generate payment QR code
-          <p className="text-xs font-normal text-[#E5E7EB]">
-            You can share this QR code with someone to pay for you
-          </p>
-        </div>
-
-        <Button onClick={handlePayment} disabled={isPaymentButtonDisabled}>
-          {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
-        </Button>
-
-        <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
-          <InfoCircle size={16} />
-          <p>{totalFee.toFixed(2)} will be charged from your USDC wallet</p>
-        </div>
-      </div>
 
       {openSuccessModal && (
         <PaymentOrderSuccessful

@@ -23,6 +23,7 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
+import Link from "next/link";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -102,8 +103,8 @@ const MainWallet = () => {
         </div>
 
         <div className="flex flex-col gap-2 mb-10 overflow-hidden">
-          <div className="mt-4">
-            <div className="flex flex-row gap-5 items-center justify-center ">
+          <div className="flex flex-row items-center justify-center gap-4 mt-4">
+            <div className="flex flex-row gap-2 items-center justify-center ">
               <p className="text-[16px]">
                 {shorten(loanWalletDetails?.address)}
               </p>
@@ -119,6 +120,13 @@ const MainWallet = () => {
                 }}
               />
             </div>
+
+            <Link
+              href={"/personalize"}
+              className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
+            >
+              Personalize
+            </Link>
           </div>
 
           <CustomTokenUI

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import PhoneInput from "@/components/input/phone-input";
 import CountrySelect from "@/components/select/country-select";
@@ -31,6 +31,8 @@ const FormInput = () => {
       const data = await response.json();
       const countryCode = data.countryCode;
       const countryName = data.countryName;
+
+      console.log(countryCode, countryName, "details here");
 
       if (countryCode) {
         setCountry(JSON.stringify({ code: countryCode, name: countryName }));

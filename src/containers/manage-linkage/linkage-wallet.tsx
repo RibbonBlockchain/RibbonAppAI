@@ -5,6 +5,7 @@ import {
   ArrowDown,
   InfoCircle,
   ClipboardText,
+  Add,
 } from "iconsax-react";
 import clsx from "clsx";
 import Link from "next/link";
@@ -146,6 +147,18 @@ const LinkageWallet = ({
             <ArrowUp size={20} />
           </div>
           Send
+        </div>
+
+        <div
+          onClick={() => {}}
+          className={clsx(
+            "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
+          )}
+        >
+          <div className="bg-[#3f3856] p-3 rounded-full">
+            <Add size={20} />
+          </div>
+          Buy USDC
         </div>
 
         <div

@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  useBaseClaim,
   useClaimUsdc,
   useSendUsdcToken,
   useUserBaseTransactions,
 } from "@/api/user";
 import clsx from "clsx";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { Copy } from "iconsax-react";
@@ -23,11 +23,9 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
-import Link from "next/link";
 
 const MainWallet = () => {
   const router = useRouter();
-  const baseAbi = require("./base-abi.json");
 
   const [openTx, setOpenTx] = useState(false);
   const [claimUsdcModal, setClaimUsdcModal] = useState(false);
@@ -44,11 +42,11 @@ const MainWallet = () => {
       { address: destinationWallet, amount: amount },
       {
         onSuccess: () => {
-          toast.success("Transaction successfull"),
-            setShowSuccessAnimation(true),
+          refetch();
+          setShowSuccessAnimation(true),
             setOpenTx(false),
-            refetch();
-          handleGetWalletTransaction();
+            handleGetWalletTransaction(),
+            toast.success("Transaction successfull");
         },
       }
     );
@@ -81,7 +79,9 @@ const MainWallet = () => {
       { amount: claimAmount as number },
       {
         onSuccess: () => {
-          toast.success("points claim successful"), setClaimUsdcModal(false);
+          refetch(),
+            toast.success("points claim successful"),
+            setClaimUsdcModal(false);
         },
       }
     );
@@ -136,7 +136,7 @@ const MainWallet = () => {
             ).toFixed(2)}
           />
 
-          <div>
+          <div className="flex flex-row gap-4 items-center justify-center">
             <button
               onClick={() => setClaimUsdcModal(true)}
               className={clsx(
@@ -144,6 +144,14 @@ const MainWallet = () => {
               )}
             >
               Claim USDC
+            </button>
+            <button
+              onClick={() => {}}
+              className={clsx(
+                "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
+              )}
+            >
+              Buy USDC (Fiat)
             </button>
           </div>
 

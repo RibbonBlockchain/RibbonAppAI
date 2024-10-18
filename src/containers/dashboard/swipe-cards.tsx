@@ -24,6 +24,7 @@ const SwipeCards = () => {
     (item: any) => item.provider === "COINBASE"
   );
   const priceUsd = loanWallet?.balance * currentPrice;
+  const formattedPriceUsdc = priceUsd ? priceUsd.toFixed(2) : "0.00";
 
   // Swipe detection logic
   let touchStartX = 0;
@@ -65,7 +66,7 @@ const SwipeCards = () => {
 
         {activeCard === "wallet" && (
           <WalletBalanceCard
-            balance={priceUsd.toFixed(2)}
+            balance={formattedPriceUsdc}
             walletAddress={loanWallet?.address}
             onclick={() => router.push("/wallet")}
             handleWalletTx={() => router.push("/wallet")}

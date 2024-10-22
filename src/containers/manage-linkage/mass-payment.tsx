@@ -1,12 +1,11 @@
+import clsx from "clsx";
 import toast from "react-hot-toast";
 import Button from "@/components/button";
-import { useMassWalletTransfer } from "@/api/user";
 import React, { ChangeEvent, useState } from "react";
 import { Add, GalleryAdd, Minus } from "iconsax-react";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import InputBox from "@/components/questionnarie/input-box";
-import SuccessAnimation from "@/components/success-animation";
 import { useLinkageMassWalletTransfer } from "@/api/linkage";
+import SuccessAnimation from "@/components/success-animation";
 
 const MassPayment = ({
   walletBalance,
@@ -91,30 +90,58 @@ const MassPayment = ({
         <p className="text-base font-semibold">Enter Recipients & Amounts</p>
 
         {recipients.map((recipient, index) => (
-          <div key={index} className="flex flex-row items-center">
+          <div
+            key={index}
+            className="flex flex-row gap-2 items-center justify-center"
+          >
             <div className="flex flex-row gap-2">
-              <InputBox
-                name={`address-${index}`}
-                value={recipient.address}
-                label={"Wallet Address"}
-                required={false}
-                onChange={(e) => handleChange(index, "address", e.target.value)}
-                placeholder="Enter wallet address"
-                className="w-full"
-              />
-              <InputBox
-                name={`amount-${index}`}
-                value={recipient.amount}
-                label={"USDC"}
-                required={false}
-                onChange={(e) => handleChange(index, "amount", e.target.value)}
-                placeholder="Enter amount"
-                className="max-w-[100px]"
-              />
+              <div className={clsx("mb-4 text-white")}>
+                <label
+                  htmlFor="input"
+                  className={`block after:ml-1 text-sm font-bold mb-2`}
+                >
+                  {"Wallet Address"}
+                </label>
+                <input
+                  id="input"
+                  type="text"
+                  name={`address-${index}`}
+                  value={recipient.address}
+                  onChange={(e) =>
+                    handleChange(index, "address", e.target.value)
+                  }
+                  placeholder="Enter wallet address"
+                  className={clsx(
+                    "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline min-w-full"
+                  )}
+                />
+              </div>
+
+              <div className={clsx("mb-4 text-white")}>
+                <label
+                  htmlFor="input"
+                  className={`block after:ml-1 text-sm font-bold mb-2`}
+                >
+                  {"Wallet Address"}
+                </label>
+                <input
+                  id="input"
+                  type="number"
+                  name={`amount-${index}`}
+                  value={recipient.amount}
+                  onChange={(e) =>
+                    handleChange(index, "amount", e.target.value)
+                  }
+                  placeholder="Enter amount"
+                  className={clsx(
+                    "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline max-w-[100px]"
+                  )}
+                />
+              </div>
             </div>
 
             <div
-              className="flex mx-auto items-center justify-center h-[25px] w-[25px] border border-white rounded-full"
+              className="flex mx-auto items-center justify-center h-[22px] w-[22px] border border-white rounded-full"
               onClick={() => removeRecipient(index)}
             >
               <Minus size={20} />

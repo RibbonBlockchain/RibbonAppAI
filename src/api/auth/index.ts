@@ -12,6 +12,11 @@ import {
   verifyPhoneSignUp,
   verifyPhoneUpdate,
   phoneSignUpRequest,
+  checkMail,
+  verifyEmailSignUp,
+  passwordSignUp,
+  emailLogin,
+  loginPassword,
 } from "./req";
 
 import {
@@ -24,6 +29,10 @@ import {
   TPhoneSignPinUpBody,
   TVerifyPhoneSignUpBody,
   TPhoneSignUpRequestBody,
+  TCheckEmailody,
+  TVerifyEmailSignUpBody,
+  TCreateNewPasswordBody,
+  TEmailLoginBody,
 } from "./types";
 
 import {
@@ -163,5 +172,59 @@ export const useCreateNewPin = () => {
   return useMutation({
     onError,
     mutationFn: (body: TCreateNewPinBody) => createNewPin(body),
+  });
+};
+
+// Business email
+export const useCheckMail = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCheckEmailody) => checkMail(body),
+  });
+};
+
+export const useVerifyEmailSignUp = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TVerifyEmailSignUpBody) => verifyEmailSignUp(body),
+  });
+};
+
+export const usePasswordSignUp = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCreateNewPasswordBody) => passwordSignUp(body),
+    onSuccess: (data) => {
+      const msg = data?.data.message || SUCCESS;
+      const token = data?.data?.data?.accessToken;
+
+      toast.success(msg);
+      prepareRequestHeader(token);
+      //setAuth((prev) => ({ ...prev, token }));
+      sessionStorage.setItem(TOKEN_KEY, token);
+    },
+  });
+};
+
+export const useLoginPassword = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TEmailLoginBody) => loginPassword(body),
+  });
+};
+
+export const useEmailLogin = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TEmailLoginBody) => emailLogin(body),
+    onSuccess: (data) => {
+      const msg = data?.message || SUCCESS;
+      const token = data?.data?.accessToken;
+
+      toast.success(msg);
+      prepareRequestHeader(token);
+      //setAuth((prev) => ({ ...prev, token }));
+      sessionStorage.setItem(TOKEN_KEY, token);
+    },
   });
 };

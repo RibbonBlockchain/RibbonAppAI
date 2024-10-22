@@ -170,11 +170,11 @@ const LinkageViewDetails = () => {
               </div>
             </div>
 
-            <div
-              className="relative max-w-fit -mt-16 mb-8 self-end rounded-full"
-              onClick={() => router.push(`/linkages/explore/${slug}/chat`)}
-            >
-              <div className="relative max-w-fit flex flex-row z-10">
+            <div className="relative max-w-fit -mt-16 mb-8 self-end rounded-full custom-shadow shadow-white">
+              <div
+                className="relative max-w-fit flex flex-row z-10"
+                onClick={() => router.push(`/linkages/explore/${slug}/chat`)}
+              >
                 <Image
                   width={10}
                   height={10}
@@ -186,9 +186,12 @@ const LinkageViewDetails = () => {
                   width={42}
                   height={42}
                   alt="display"
-                  className="w-[50px] h-auto animate-spin-slow"
+                  className="w-[50px] h-auto"
                   src={data?.data.logo || "/assets/sample-icon.png"}
                 />
+              </div>
+              <div className="absolute inset-0 flex justify-center items-center">
+                <div className="w-[58px] h-[58px] border-4 border-transparent border-t-purple-700 rounded-full animate-spin-slow"></div>
               </div>
             </div>
 

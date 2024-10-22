@@ -5,8 +5,10 @@ import { useAtomValue } from "jotai";
 import { signIn } from "next-auth/react";
 import Button from "@/components/button";
 import { authAtom } from "@/lib/atoms/auth.atom";
+import { useRouter } from "next/navigation";
 
 const Submit = () => {
+  const router = useRouter();
   const form = useAtomValue(authAtom);
   const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
 
@@ -16,7 +18,10 @@ const Submit = () => {
       phone: form.phoneNumber,
     });
 
-    if (res?.error) toast.error("Invalid Credentials");
+    if (res?.error) {
+      router.push("/");
+      toast.error("Invalid Credentials");
+    }
   };
 
   return (

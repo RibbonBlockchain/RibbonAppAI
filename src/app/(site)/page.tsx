@@ -1,8 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-import { Phone } from "lucide-react";
 import LinkButton from "@/components/button/link";
-import { WorldIdButton } from "@/containers/auth/landing/button";
 
 const Home = () => {
   return (

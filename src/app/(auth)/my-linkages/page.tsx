@@ -255,10 +255,12 @@ const MyLinkageDetails: React.FC = () => {
           )}
 
           {selectedTab === "mass-payment" && (
-            <MassPayment
-              walletBalance={walletBalance}
-              linkageId={selectedAI?.id as number}
-            />
+            <div className="max-w-[inherit]">
+              <MassPayment
+                walletBalance={walletBalance}
+                linkageId={selectedAI?.id as number}
+              />
+            </div>
           )}
 
           {selectedTab === "questionnaires" && (

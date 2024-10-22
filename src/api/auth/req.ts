@@ -12,6 +12,12 @@ import {
   TVerifyPhoneUpdateBody,
   TPhoneSignUpRequestBody,
   TPhoneSignUpRequestResponse,
+  TCheckEmailody,
+  TCheckEmailResponse,
+  TVerifyEmailSignUpBody,
+  TCreateNewPasswordBody,
+  TEmailLoginBody,
+  TEmailLoginResponse,
 } from "./types";
 import { signIn } from "next-auth/react";
 import { TResponse, client } from "../api-client";
@@ -43,6 +49,10 @@ export const phoneLogin = async (body: TPhoneLoginBody) => {
 };
 
 export const login = async (body: TPhoneLoginBody) => {
+  await signIn("credentials", body);
+};
+
+export const loginPassword = async (body: TEmailLoginBody) => {
   await signIn("credentials", body);
 };
 
@@ -107,4 +117,34 @@ export const verifyForgotPin = async (body: TVerifyPhoneSignUpBody) => {
 export const createNewPin = async (body: TCreateNewPinBody) => {
   const res = await client.post("/auth/pin/reset", body);
   return res;
+};
+
+// Business email
+export const checkMail = async (body: TCheckEmailody) => {
+  const res = await client.post<TResponse<TCheckEmailResponse>>(
+    "/auth/business/ver-mail",
+    body
+  );
+  return res.data.data;
+};
+
+export const verifyEmailSignUp = async (body: TVerifyEmailSignUpBody) => {
+  const res = await client.post("/auth/business/verify", body);
+  return res.data;
+};
+
+export const passwordSignUp = async (body: TCreateNewPasswordBody) => {
+  const res = await client.post<TResponse<TEmailLoginResponse>>(
+    "/auth/business/create-pass",
+    body
+  );
+  return res;
+};
+
+export const emailLogin = async (body: TEmailLoginBody) => {
+  const res = await client.post<TResponse<TEmailLoginResponse>>(
+    "/auth/business/login",
+    body
+  );
+  return res.data;
 };

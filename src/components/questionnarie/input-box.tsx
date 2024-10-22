@@ -9,6 +9,7 @@ const InputBox = ({
   onChange,
   placeholder,
   className,
+  containerClassName,
   onBlur,
 }: {
   name: any;
@@ -17,11 +18,18 @@ const InputBox = ({
   required: boolean;
   placeholder?: string;
   className?: string;
+  containerClassName?: string;
   onChange: (e: any) => void;
   onBlur?: () => void;
 }) => {
   return (
-    <div key={label} className="mb-4 min-w-full text-white">
+    <div
+      key={label}
+      className={clsx(
+        "mb-4 text-white",
+        containerClassName ? containerClassName : "min-w-full"
+      )}
+    >
       <label
         htmlFor="input"
         className={`${

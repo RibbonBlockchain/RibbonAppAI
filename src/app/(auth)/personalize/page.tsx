@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import React, { useState } from "react";
 import { useBaseName } from "@/api/user";
 import Button from "@/components/button";
@@ -23,8 +24,10 @@ const Personalise: React.FC = () => {
   };
 
   const handleBaseName = () => {
-    mutate({ name: searchTerm });
-    console.log(searchTerm, "name");
+    mutate(
+      { name: searchTerm },
+      { onSuccess: () => toast.success("Basename registered successfully") }
+    );
   };
 
   return (

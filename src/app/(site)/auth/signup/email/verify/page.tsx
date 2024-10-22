@@ -8,40 +8,40 @@ import { authAtom } from "@/lib/atoms/auth.atom";
 import OtpInput from "@/components/input/otp-input";
 import BackArrow from "@/components/button/back-arrow";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { usePhoneLogin, useVerifyPhoneForgotPassword } from "@/api/auth";
+import {
+  usePhoneLogin,
+  useVerifyEmailSignUp,
+  useVerifyPhoneForgotPassword,
+} from "@/api/auth";
 
 const Verify = () => {
   const { email } = useAtomValue(authAtom);
 
   const [state, setState] = useAtom(authAtom);
-  const { mutate: request, isPending: isRequesting } = usePhoneLogin();
+  // const { mutate: request, isPending: isRequesting } = usePhoneLogin();
 
   const setOtp = (code: string) => setState((prev) => ({ ...prev, code }));
 
-  const handleRequest = () => {
-    if (isRequesting) return;
-    request({ phone: state.phoneNumber } as any);
-  };
+  // const handleRequest = () => {
+  //   if (isRequesting) return;
+  //   request({ phone: state.phoneNumber } as any);
+  // };
 
   const router = useRouter();
   const form = useAtomValue(authAtom);
-  const {
-    isPending,
-    isSuccess,
-    mutate: verify,
-  } = useVerifyPhoneForgotPassword();
+  const { isPending, isSuccess, mutate: verify } = useVerifyEmailSignUp();
 
   const isLoading = isPending || isSuccess;
   const isFormInvalid = form.code.length < 6 || !form.email;
   const isSubmitDisabled = isFormInvalid || isLoading;
 
   const onSuccess = () => {
-    router.push("/auth/signup/email/pin");
+    router.push("/auth/signup/email/password");
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
-    verify({ code: form.code, phone: form.email } as any, { onSuccess });
+    verify({ code: form.code, email: form.email } as any, { onSuccess });
   };
 
   return (
@@ -67,14 +67,16 @@ const Verify = () => {
           <p className="flex items-center gap-2 text-sm mt-4">
             <span>I didn&apos;t get a code!</span>{" "}
             <span
-              onClick={handleRequest}
+              // onClick={handleRequest}
+              onClick={() => {}}
               className="cursor-pointer text-sm inline-flex font-normal text-[#4285F4]"
             >
-              {isRequesting ? (
+              {/* {isRequesting ? (
                 <SpinnerIcon className="text-blue-500" />
               ) : (
                 "Resend Code"
-              )}
+              )} */}
+              Resend Code
             </span>
           </p>
         </>
@@ -83,8 +85,7 @@ const Verify = () => {
       <div className="flex items-center justify-center w-full pb-6">
         <Button
           loading={isLoading}
-          // onClick={handleSubmit}
-          onClick={() => router.push("/auth/signup/email/pin")}
+          onClick={handleSubmit}
           disabled={isSubmitDisabled}
         >
           Continue

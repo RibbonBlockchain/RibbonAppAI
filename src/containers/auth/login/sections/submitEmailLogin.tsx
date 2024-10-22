@@ -2,7 +2,7 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
-import { useCheckPhone, useEmailLogin } from "@/api/auth";
+import { useCheckPhone, useEmailLogin, useLoginPassword } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import phoneValidator from "validator/lib/isMobilePhone";
@@ -13,6 +13,7 @@ const SubmitEmailLogin = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
   const { mutate: emailLogin, isPending, isSuccess } = useEmailLogin();
+  const { mutate: loginPassword } = useLoginPassword();
 
   const isLoading = isPending || isSuccess;
 
@@ -22,10 +23,13 @@ const SubmitEmailLogin = () => {
   //   const isFormInvalid = !isValidPhoneNumber;
   const isSubmitDisabled = isLoading;
 
-  const onSuccess = () => router.push("/dashboard");
+  const onSuccess = () => {
+    router.push("/dashboard");
+  };
 
   const handleSubmit = async () => {
     if (isSubmitDisabled) return;
+    loginPassword({ email: form.email, password: form.password });
     emailLogin({ email: form.email, password: form.password }, { onSuccess });
   };
 

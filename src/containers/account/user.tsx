@@ -38,8 +38,7 @@ const User = () => {
             {user?.lastName}
           </p>
           <div className="lex flex-row gap-2 items-center justify-center text-base font-bold">
-            {/* SES Score: {SES_Score} */}
-            SES Score: 680
+            SES Score: {SES_Score}
           </div>
         </div>
       </div>

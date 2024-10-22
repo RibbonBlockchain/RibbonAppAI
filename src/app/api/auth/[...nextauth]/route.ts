@@ -1,5 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import { phoneLogin, worldIDLogin } from "@/api/auth/req";
+import { emailLogin, phoneLogin, worldIDLogin } from "@/api/auth/req";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // For more information on each option (and a full list of options) go to
@@ -11,14 +11,23 @@ const authOptions: NextAuthOptions = {
       credentials: {},
       type: "credentials",
       async authorize(credentials: any) {
-        const res = await phoneLogin({
-          pin: credentials.pin,
-          phone: credentials.phone,
-        });
+        if (credentials.pin && credentials.phone) {
+          const res = await phoneLogin({
+            pin: credentials.pin,
+            phone: credentials.phone,
+          });
 
-        const user = { id: res.data.id, accessToken: res.data.accessToken };
+          const user = { id: res.data.id, accessToken: res.data.accessToken };
+          if (user) return user;
+        } else if (credentials.email && credentials.password) {
+          const res = await emailLogin({
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-        if (user) return user;
+          const user = { id: res.data.id, accessToken: res.data.accessToken };
+          if (user) return user;
+        }
 
         return null;
       },
@@ -50,6 +59,7 @@ const authOptions: NextAuthOptions = {
       switch (account?.provider) {
         case "credentials": {
           if (!user.accessToken) throw new Error("Invalid Credentials");
+
           return true;
         }
 

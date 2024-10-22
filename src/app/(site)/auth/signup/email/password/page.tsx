@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { login } from "@/api/auth/req";
+import { login, loginPassword } from "@/api/auth/req";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
@@ -27,7 +27,7 @@ const Login = () => {
   const isSubmitDisabled = isLoading || isFormInvalid;
 
   const onSuccess = async () => {
-    await login({ pin: form.password, phone: form.email });
+    await loginPassword({ password: form.password, email: form.email });
     router.push("/dashboard");
   };
 

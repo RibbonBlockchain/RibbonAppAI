@@ -11,7 +11,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Logout from "./sections/logout";
 import { useGetAuth } from "@/api/auth";
-import { signIn } from "next-auth/react";
 import User from "@/containers/account/user";
 import { ChevronRight, Scan } from "lucide-react";
 import InviteFriends from "@/containers/account/invite-friends";

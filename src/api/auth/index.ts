@@ -16,6 +16,7 @@ import {
   verifyEmailSignUp,
   passwordSignUp,
   emailLogin,
+  loginPassword,
 } from "./req";
 
 import {
@@ -202,6 +203,13 @@ export const usePasswordSignUp = () => {
       //setAuth((prev) => ({ ...prev, token }));
       sessionStorage.setItem(TOKEN_KEY, token);
     },
+  });
+};
+
+export const useLoginPassword = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TEmailLoginBody) => loginPassword(body),
   });
 };
 

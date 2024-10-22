@@ -103,31 +103,50 @@ const MainWallet = () => {
         </div>
 
         <div className="flex flex-col gap-2 mb-10 overflow-hidden">
-          <div className="flex flex-row items-center justify-center gap-4 mt-4">
-            <div className="flex flex-row gap-2 items-center justify-center ">
-              <p className="text-[16px]">
-                {shorten(loanWalletDetails?.address)}
-              </p>
-              <Copy
-                size="18"
-                color="#F6F1FE"
-                variant="Bold"
-                className="cursor-pointer"
-                onClick={() => {
-                  copyToClipboard(loanWalletDetails?.address, () =>
-                    toast.success(`Wallet address copied`)
-                  );
-                }}
-              />
+          {loanWalletDetails?.baseName ? (
+            <div className="flex flex-row items-center justify-center gap-4 mt-4">
+              <div className="flex flex-row gap-2 items-center justify-center ">
+                <p className="text-[16px]">{loanWalletDetails?.baseName}</p>
+                <Copy
+                  size="18"
+                  color="#F6F1FE"
+                  variant="Bold"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    copyToClipboard(loanWalletDetails?.baseName, () =>
+                      toast.success(`Wallet address copied`)
+                    );
+                  }}
+                />
+              </div>
             </div>
+          ) : (
+            <div className="flex flex-row items-center justify-center gap-4 mt-4">
+              <div className="flex flex-row gap-2 items-center justify-center ">
+                <p className="text-[16px]">
+                  {shorten(loanWalletDetails?.address)}
+                </p>
+                <Copy
+                  size="18"
+                  color="#F6F1FE"
+                  variant="Bold"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    copyToClipboard(loanWalletDetails?.address, () =>
+                      toast.success(`Wallet address copied`)
+                    );
+                  }}
+                />
+              </div>
 
-            <Link
-              href={"/personalize"}
-              className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
-            >
-              Personalize
-            </Link>
-          </div>
+              <Link
+                href={"/personalize"}
+                className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
+              >
+                Personalize
+              </Link>
+            </div>
+          )}
 
           <CustomTokenUI
             wldTokenBalance={loanWalletDetails?.balance.toFixed(2)}

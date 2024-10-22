@@ -34,6 +34,9 @@ const ConfirmOrder: React.FC = () => {
   const slug = params.slug as string;
 
   const { cartItems } = useCart();
+  const totalPayable = cartItems.reduce((acc, cartItem) => {
+    return acc + cartItem.item.price * cartItem.quantity;
+  }, 0);
 
   const transformedData = {
     items: cartItems.map((cartItem) => ({
@@ -42,12 +45,21 @@ const ConfirmOrder: React.FC = () => {
     })),
   };
 
-  const storeLinkageId = cartItems[0]?.item?.linkageId;
+  const { data: wallet } = useGetUserWallet();
+  const walletBalance = wallet?.data?.[1].balance;
+
+  const canPay = totalPayable < walletBalance;
 
   const { mutate, isPending } = useUserOrderItems();
-  const isPaymentButtonDisabled = isPending;
+  const storeLinkageId = cartItems[0]?.item?.linkageId;
+  const isPaymentButtonDisabled = isPending || !canPay;
 
-  const handlePayment = () => {
+  const handleOrderAndPayment = () => {
+    if (!canPay) {
+      toast.error("insufficient balance in wallet");
+      return;
+    }
+
     mutate(
       { body: transformedData, linkageId: Number(storeLinkageId) },
       {
@@ -57,9 +69,6 @@ const ConfirmOrder: React.FC = () => {
       }
     );
   };
-
-  const { data: wallet } = useGetUserWallet();
-  const walletBalance = wallet?.data?.[0].balance;
 
   const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
@@ -86,6 +95,7 @@ const ConfirmOrder: React.FC = () => {
   const [selectedPickupStationId, setSelectedPickupStationId] = useState<
     number | null
   >(null);
+
   const [deliveryMethod, setDeliveryMethod] = useState<string>("homeDelivery");
 
   const [newAddress, setNewAddress] = useState<string>("");
@@ -101,7 +111,8 @@ const ConfirmOrder: React.FC = () => {
     return acc + cartItem.item.price * cartItem.quantity;
   }, 0);
 
-  const deliveryFee = 5;
+  const [deliveryFee, setDeliveryFee] = useState(5);
+
   const totalFee = subtotal + deliveryFee;
 
   const handleAddAddress = () => {
@@ -150,6 +161,7 @@ const ConfirmOrder: React.FC = () => {
 
   const handleDeliveryMethodChange = (method: string) => {
     setDeliveryMethod(method);
+
     if (method === "pickup") {
       setSelectedPickupStationId(null);
     }
@@ -216,7 +228,10 @@ const ConfirmOrder: React.FC = () => {
 
           <div className="flex flex-col items-start gap-4 justify-between text-[15px] font-medium">
             <div
-              onClick={() => handleDeliveryMethodChange("pickup")}
+              onClick={() => {
+                handleDeliveryMethodChange("pickup");
+                setDeliveryFee(0);
+              }}
               className="w-full flex flex-row items-center justify-between"
             >
               <button className="flex flex-row gap-1 items-center">
@@ -233,7 +248,10 @@ const ConfirmOrder: React.FC = () => {
               </div>
             </div>
             <div
-              onClick={() => handleDeliveryMethodChange("homeDelivery")}
+              onClick={() => {
+                handleDeliveryMethodChange("homeDelivery");
+                setDeliveryFee(5);
+              }}
               className="w-full flex flex-row items-center justify-between"
             >
               <button className="flex flex-row gap-1 items-center">
@@ -365,7 +383,16 @@ const ConfirmOrder: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-3 p-4">
-          <Button onClick={handlePayment} disabled={isPaymentButtonDisabled}>
+          {!canPay && (
+            <p className="text-red-500 text-xs font-bold text-center">
+              insufficient wallet balance
+            </p>
+          )}
+
+          <Button
+            onClick={handleOrderAndPayment}
+            disabled={isPaymentButtonDisabled}
+          >
             {isPending ? <SpinnerIcon /> : "Confirm and Pay"}
           </Button>
 

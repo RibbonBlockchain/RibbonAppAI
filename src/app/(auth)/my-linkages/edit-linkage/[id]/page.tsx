@@ -10,6 +10,7 @@ import InputBox from "@/components/questionnarie/input-box";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ArrowLeft2, Call, Sms, Location } from "iconsax-react";
 import { useEditLinkage, useGetLinkageById } from "@/api/linkage";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const EditLinkagePage = () => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const EditLinkagePage = () => {
   const { data } = useGetLinkageById(Number(linkageId));
   const initialData = data?.data;
 
-  const { mutate: editLinkage } = useEditLinkage();
+  const { mutate: editLinkage, isPending } = useEditLinkage();
 
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState(initialData?.banner || "");
@@ -264,7 +265,7 @@ const EditLinkagePage = () => {
               : "bg-white text-[#290064]"
           )}
         >
-          Save
+          {isPending ? <SpinnerIconPurple /> : "Save"}
         </button>
       </form>
     </main>

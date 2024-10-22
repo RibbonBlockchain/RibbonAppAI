@@ -23,6 +23,7 @@ const SwipeCards = () => {
   const loanWallet = wallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );
+
   const priceUsd = loanWallet?.balance * currentPrice;
   const formattedPriceUsdc = priceUsd ? priceUsd.toFixed(2) : "0.00";
 
@@ -66,6 +67,7 @@ const SwipeCards = () => {
 
         {activeCard === "wallet" && (
           <WalletBalanceCard
+            baseName={loanWallet?.baseName}
             balance={formattedPriceUsdc}
             walletAddress={loanWallet?.address}
             onclick={() => router.push("/wallet")}

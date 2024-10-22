@@ -90,12 +90,14 @@ export const PointBalanceCard = ({
 
 export const WalletBalanceCard = ({
   balance,
+  baseName,
   walletAddress,
   handleWalletTx,
   handleReceiveToken,
   onclick,
 }: {
   balance: any;
+  baseName: string;
   walletAddress: string;
   handleWalletTx: any;
   handleReceiveToken: any;
@@ -115,19 +117,35 @@ export const WalletBalanceCard = ({
         </div>
       </div>
       <div>
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-xs">{shorten(walletAddress)}</p>
-          <div
-            className="cursor-pointer"
-            onClick={() => {
-              copyToClipboard(walletAddress, () =>
-                toast.success("Wallet address copied")
-              );
-            }}
-          >
-            <Copy size="18" color="#F6F1FE" variant="Bold" />
+        {baseName ? (
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-xs">{baseName}</p>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                copyToClipboard(baseName, () =>
+                  toast.success("Wallet address copied")
+                );
+              }}
+            >
+              <Copy size="18" color="#F6F1FE" variant="Bold" />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-xs">{shorten(walletAddress)}</p>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                copyToClipboard(walletAddress, () =>
+                  toast.success("Wallet address copied")
+                );
+              }}
+            >
+              <Copy size="18" color="#F6F1FE" variant="Bold" />
+            </div>
+          </div>
+        )}
 
         <div className="text-[28px] font-bold">
           <p>$ {balance}</p>

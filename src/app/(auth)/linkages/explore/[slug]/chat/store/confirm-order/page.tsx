@@ -7,6 +7,7 @@ import Button from "@/components/button";
 import { copyToClipboard } from "@/lib/utils";
 import { Plus, Upload, X } from "lucide-react";
 import { useUserOrderItems } from "@/api/user";
+import PlacesMap from "@/components/places-map";
 import { useGetUserWallet } from "@/api/linkage";
 import { useParams, useRouter } from "next/navigation";
 import { SpinnerIcon } from "@/components/icons/spinner";
@@ -14,7 +15,6 @@ import { useCart } from "@/provider/cart-context-provider";
 import InputBox from "@/components/questionnarie/input-box";
 import { ArrowLeft2, InfoCircle, Copy } from "iconsax-react";
 import PaymentOrderSuccessful from "@/containers/linkages/payment-successful-modal";
-import PlacesMap from "@/components/places-map";
 
 interface Address {
   id: number;
@@ -46,7 +46,11 @@ const ConfirmOrder: React.FC = () => {
   };
 
   const { data: wallet } = useGetUserWallet();
-  const walletBalance = wallet?.data?.[1].balance;
+  const walletDetails = wallet?.data?.find(
+    (item: any) => item.provider === "COINBASE"
+  );
+
+  const walletBalance = walletDetails?.balance;
 
   const canPay = totalPayable < walletBalance;
 

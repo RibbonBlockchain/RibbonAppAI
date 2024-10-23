@@ -23,6 +23,7 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
+import Basenames from "../personalize/basenames";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -106,14 +107,14 @@ const MainWallet = () => {
           {loanWalletDetails?.baseName ? (
             <div className="flex flex-row items-center justify-center gap-4 mt-4">
               <div className="flex flex-row gap-2 items-center justify-center ">
-                <p className="text-[16px]">{loanWalletDetails?.baseName}</p>
+                <Basenames address={loanWalletDetails?.address} />
                 <Copy
                   size="18"
                   color="#F6F1FE"
                   variant="Bold"
                   className="cursor-pointer"
                   onClick={() => {
-                    copyToClipboard(loanWalletDetails?.baseName, () =>
+                    copyToClipboard(loanWalletDetails?.address, () =>
                       toast.success(`Wallet address copied`)
                     );
                   }}

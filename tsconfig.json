@@ -28,7 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(auth)/contract/page.tsx"
+    "src/app/(auth)/contract/page.tsx",
+    "src/app/(auth)/personalize/basenames.jsx"
   ],
   "exclude": ["node_modules"]
 }

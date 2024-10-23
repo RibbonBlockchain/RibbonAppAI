@@ -97,7 +97,7 @@ export const WalletBalanceCard = ({
   onclick,
 }: {
   balance: any;
-  baseName: string;
+  baseName: any;
   walletAddress: string;
   handleWalletTx: any;
   handleReceiveToken: any;
@@ -123,7 +123,7 @@ export const WalletBalanceCard = ({
             <div
               className="cursor-pointer"
               onClick={() => {
-                copyToClipboard(baseName, () =>
+                copyToClipboard(walletAddress, () =>
                   toast.success("Wallet address copied")
                 );
               }}
@@ -153,7 +153,7 @@ export const WalletBalanceCard = ({
       </div>
     </div>
 
-    <div className="w-full pt-5 flex gap-4 items-center justify-between text-xs font-bold">
+    <div className="w-full pt-4 flex gap-4 items-center justify-between text-xs font-bold">
       <div
         onClick={handleWalletTx}
         className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"

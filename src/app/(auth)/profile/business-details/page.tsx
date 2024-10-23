@@ -14,7 +14,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import BackArrowButton from "@/components/button/back-arrow";
 import { Discord, LinkedIn, Instagram, Twitter } from "@/public/assets";
 
-const PersonalDetails = () => {
+const BusinessDetails = () => {
   const { data: user, refetch } = useGetAuth({ enabled: true });
   const [allowEdit, setAllowEdit] = useState<boolean>(false);
 
@@ -28,12 +28,10 @@ const PersonalDetails = () => {
     : null;
 
   const [userState, setUserState] = React.useState({
-    firstName: "",
-    lastName: "",
-    otherNames: "",
+    businessName: "",
+    location: "",
     email: "",
-    dob: "",
-    gender: "",
+    phone: "",
     socials: {
       discord: "",
       instagram: "",
@@ -65,27 +63,6 @@ const PersonalDetails = () => {
     }));
   };
 
-  const [gender, setGender] = React.useState(userState.gender);
-
-  const handleGenderChange = (
-    event: React.SyntheticEvent<HTMLSelectElement>
-  ) => {
-    const value = event.currentTarget.value;
-    if (value === "MALE") {
-      allowEdit &&
-        setUserState((prevState) => ({
-          ...prevState,
-          gender: value,
-        }));
-    } else if (value === "FEMALE") {
-      allowEdit &&
-        setUserState((prevState) => ({
-          ...prevState,
-          gender: value,
-        }));
-    }
-  };
-
   const handleSubmitChanges = () => {
     update(userState);
     refetch();
@@ -99,7 +76,7 @@ const PersonalDetails = () => {
         <div className="flex flex-row justify-between items-center">
           <BackArrowButton stroke="#fff" />
 
-          <p>Personal Details</p>
+          <p>Business Details</p>
 
           <div
             className="w-fit min-w-[40px] p-2 text-end cursor-pointer"
@@ -159,61 +136,19 @@ const PersonalDetails = () => {
         <h1 className="text-xs font-medium">Basic Info</h1>
         <div className="mt-4">
           <UserDetailsInputBox
-            name="firstName"
+            name="business name"
             required={false}
-            label={"First name"}
+            label={"Business name"}
             onChange={handleChange}
-            value={userState?.firstName}
+            value={userState?.businessName}
           />
-          <UserDetailsInputBox
-            name="lastName"
-            required={false}
-            label={"Last name"}
-            onChange={handleChange}
-            value={userState?.lastName}
-          />
-          <UserDetailsInputBox
-            required={false}
-            name="otherNames"
-            label={"Other names"}
-            onChange={handleChange}
-            value={userState?.otherNames}
-          />
-          <div>
-            <label
-              htmlFor="input"
-              className={`flex flex-row items-center after:ml-1 text-xs font-medium mb-2`}
-            >
-              Gender
-            </label>
 
-            <div className="relative inline-block w-full bg-[#0B0228] text-white">
-              <select
-                disabled={allowEdit === false}
-                onChange={handleGenderChange}
-                className="w-full h-full bg-[#0B0228] border pl-2 border-[#EDEEEF] text-start -ml-[3px] py-2.5 mb-6 text-sm focus:outline-none focus:border-[#7C56FE] placeholder:text-[#ADADAD]"
-              >
-                <option className="text-[#ADADAD] hidden">
-                  {userState.gender === "MALE"
-                    ? "Male"
-                    : userState.gender === "FEMALE"
-                    ? "Female"
-                    : userState.gender === "OTHER"
-                    ? "Other"
-                    : ""}
-                </option>
-                <option value={"MALE"}>Male</option>
-                <option value={"FEMALE"}>Female</option>
-                <option value={"OTHER"}>Others</option>
-              </select>
-            </div>
-          </div>
           <UserDetailsInputBox
-            name={"dob"}
-            type="date"
+            name={"location"}
+            type="text"
             required={false}
-            value={userState?.dob}
-            label={"Date of Birth"}
+            value={userState?.location}
+            label={"Location"}
             onChange={handleChange}
           />
         </div>
@@ -227,6 +162,14 @@ const PersonalDetails = () => {
             label={"Email"}
             required={false}
             value={userState?.email}
+            onChange={handleChange}
+          />
+
+          <UserDetailsInputBox
+            name="phone"
+            label={"Phone number"}
+            required={false}
+            value={userState?.phone}
             onChange={handleChange}
           />
         </div>
@@ -281,4 +224,4 @@ const PersonalDetails = () => {
   );
 };
 
-export default PersonalDetails;
+export default BusinessDetails;

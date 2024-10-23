@@ -1,23 +1,28 @@
+import {
+  Cup,
+  Key,
+  Bank,
+  Star,
+  Lock1,
+  Shield,
+  CallAdd,
+  Profile,
+  EmptyWallet,
+  WalletMoney,
+  ShoppingCart,
+} from "iconsax-react";
 import Link from "next/link";
 import { BookOpen, ChevronRight, HelpCircle } from "lucide-react";
-import {
-  Bank,
-  CallAdd,
-  Cup,
-  EmptyWallet,
-  Key,
-  Lock1,
-  Profile,
-  Shield,
-  ShoppingCart,
-  Star,
-  WalletMoney,
-} from "iconsax-react";
 
 export const ProfileDetails = [
   {
     href: "/profile/personal-details",
     description: "Personal Details",
+    logo: <Profile />,
+  },
+  {
+    href: "/profile/business-details",
+    description: "Business Details",
     logo: <Profile />,
   },
   {
@@ -33,6 +38,11 @@ export const ProfileDetails = [
   {
     href: "/wallet",
     description: "Wallet",
+    logo: <EmptyWallet />,
+  },
+  {
+    href: "/profile",
+    description: "Loan history",
     logo: <WalletMoney />,
   },
   {

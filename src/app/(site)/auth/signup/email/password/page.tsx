@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { login, loginPassword } from "@/api/auth/req";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
 import { usePasswordSignUp } from "@/api/auth";
+import { loginPassword } from "@/api/auth/req";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import BackArrow from "@/components/button/back-arrow";
 import InputBox from "@/components/questionnarie/input-box";
@@ -42,7 +42,7 @@ const Login = () => {
         <BackArrow stroke="#fff" />
 
         <div className="flex flex-col gap-2">
-          <h1 className="font-extrabold text-3xl">Create your pin</h1>
+          <h1 className="font-extrabold text-3xl">Create your password</h1>
           <p className="text-sm">
             Finish setting up your account by creating a password. You will use
             this password to login to your account{" "}

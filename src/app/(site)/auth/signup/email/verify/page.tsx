@@ -49,14 +49,13 @@ const Verify = () => {
       <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
         <BackArrow stroke="#FFF" />
         <div className="flex flex-col gap-2">
-          <h1 className="font-extrabold text-3xl">Verify your email</h1>
-          <p className="text-sm ">
-            To continue, complete this verification step We’ve sent a One Time
-            Password (OTP) to the email {email}.
-          </p>{" "}
+          <h1 className="font-extrabold text-3xl">
+            Verify your business email
+          </h1>
+          <p className="text-sm ">A code has been sent to {email}.</p>{" "}
         </div>
 
-        <p className="text-sm font-extrabold mt-3 -mb-2">Enter OTP</p>
+        <p className="text-sm font-extrabold mt-3 -mb-2">Enter Code</p>
         <>
           <OtpInput
             inputType="password"

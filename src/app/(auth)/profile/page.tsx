@@ -9,16 +9,33 @@ import Menu, {
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Logout from "./sections/logout";
-import { useGetAuth } from "@/api/auth";
+import { LogoutCurve } from "iconsax-react";
 import User from "@/containers/account/user";
 import { ChevronRight, Scan } from "lucide-react";
+import { useGetAuth, useLogout } from "@/api/auth";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 import InviteFriends from "@/containers/account/invite-friends";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 
 const Account = () => {
   const [theme, setTheme] = React.useState(false);
   const { data: user } = useGetAuth({ enabled: true });
+
+  const { mutate: logout, isPending, isSuccess } = useLogout();
+
+  const isLoading = isPending || isSuccess;
+
+  const handleLogout = () => {
+    if (isLoading) return;
+    logout();
+  };
+
+  if (isLoading)
+    return (
+      <div className="h-screen flex mx-auto items-center justify-center mt-4">
+        <SpinnerIconPurple />
+      </div>
+    );
 
   return (
     <AuthNavLayout>
@@ -96,7 +113,13 @@ const Account = () => {
         </div>
 
         <div className="mb-28">
-          <Logout />
+          <div
+            onClick={handleLogout}
+            className="cursor-pointer flex flex-row items-center justify-center my-10 gap-2 text-base text-[#FF170A]"
+          >
+            <LogoutCurve size="32" color="red" variant="Outline" />
+            <p>Log Out</p>
+          </div>
         </div>
       </div>
     </AuthNavLayout>

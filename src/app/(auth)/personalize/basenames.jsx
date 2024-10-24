@@ -12,7 +12,7 @@ const Basenames = ({ address }) => {
       chain={baseSepolia}
       schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
     >
-      <Avatar className="mr-2" address={address} chain={baseSepolia} />
+      <Avatar className="mr-1" address={address} chain={baseSepolia} />
       <Name address={address} chain={baseSepolia} />
       <Address />
     </Identity>

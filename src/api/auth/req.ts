@@ -119,7 +119,7 @@ export const createNewPin = async (body: TCreateNewPinBody) => {
   return res;
 };
 
-// Business email
+// Organization email
 export const checkMail = async (body: TCheckEmailody) => {
   const res = await client.post<TResponse<TCheckEmailResponse>>(
     "/auth/business/ver-mail",

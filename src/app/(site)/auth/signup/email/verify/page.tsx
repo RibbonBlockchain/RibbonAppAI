@@ -50,7 +50,7 @@ const Verify = () => {
         <BackArrow stroke="#FFF" />
         <div className="flex flex-col gap-2">
           <h1 className="font-extrabold text-3xl">
-            Verify your business email
+            Verify your organization email
           </h1>
           <p className="text-sm ">A code has been sent to {email}.</p>{" "}
         </div>

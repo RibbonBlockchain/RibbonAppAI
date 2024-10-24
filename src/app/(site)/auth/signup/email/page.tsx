@@ -25,7 +25,8 @@ const Signup = () => {
         <div className="flex flex-col gap-2">
           <h1 className="font-extrabold text-3xl">Let&apos;s get started!</h1>
           <p className="text-sm">
-            Enter your business email. We will send you confirmation code here
+            Enter your organization email. We will send you confirmation code
+            here
           </p>
         </div>
       </div>
@@ -34,7 +35,7 @@ const Signup = () => {
         <InputBox
           name="email"
           value={state.email}
-          label="Business Email"
+          label="Organization Email"
           required={false}
           placeholder="Email Address"
           onChange={(e) => setEmail(e.target.value)}

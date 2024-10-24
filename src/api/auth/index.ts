@@ -175,7 +175,7 @@ export const useCreateNewPin = () => {
   });
 };
 
-// Business email
+// Organization email
 export const useCheckMail = () => {
   return useMutation({
     onError,

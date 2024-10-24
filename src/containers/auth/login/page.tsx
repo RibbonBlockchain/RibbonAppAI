@@ -34,9 +34,9 @@ const Login = () => {
 
             <p
               className="text-sm underline mt-5 text-end"
-              onClick={() => setPageUI("business")}
+              onClick={() => setPageUI("organization")}
             >
-              Sign in as business instead?
+              Sign in as organization instead?
             </p>
           </div>
 
@@ -44,14 +44,16 @@ const Login = () => {
         </>
       )}
 
-      {pageUI === "business" && (
+      {pageUI === "organization" && (
         <>
           <div className="h-full w-full flex flex-col gap-4 sm:gap-6">
             <BackArrow />
 
             <div className="flex flex-col gap-2 items-center justify-center">
               <h1 className="font-extrabold text-3xl">Welcome back!</h1>
-              <p className="text-sm">Please Sign In with your business email</p>
+              <p className="text-sm">
+                Please Sign In with your organization email
+              </p>
             </div>
 
             {/* <FormInput /> */}

@@ -35,7 +35,7 @@ const Home = () => {
             href="/auth/signup/email"
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
-            Business account
+            Organization account
           </LinkButton>
         </div>
 

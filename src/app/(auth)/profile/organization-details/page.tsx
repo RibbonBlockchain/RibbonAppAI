@@ -14,7 +14,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import BackArrowButton from "@/components/button/back-arrow";
 import { Discord, LinkedIn, Instagram, Twitter } from "@/public/assets";
 
-const BusinessDetails = () => {
+const OrganizationDetails = () => {
   const { data: user, refetch } = useGetAuth({ enabled: true });
   const [allowEdit, setAllowEdit] = useState<boolean>(false);
 
@@ -28,7 +28,7 @@ const BusinessDetails = () => {
     : null;
 
   const [userState, setUserState] = React.useState({
-    businessName: "",
+    organizationName: "",
     location: "",
     email: "",
     phone: "",
@@ -76,7 +76,7 @@ const BusinessDetails = () => {
         <div className="flex flex-row justify-between items-center">
           <BackArrowButton stroke="#fff" />
 
-          <p>Business Details</p>
+          <p>Organization Details</p>
 
           <div
             className="w-fit min-w-[40px] p-2 text-end cursor-pointer"
@@ -136,11 +136,11 @@ const BusinessDetails = () => {
         <h1 className="text-xs font-medium">Basic Info</h1>
         <div className="mt-4">
           <UserDetailsInputBox
-            name="business name"
+            name="organization name"
             required={false}
-            label={"Business name"}
+            label={"Organization name"}
             onChange={handleChange}
-            value={userState?.businessName}
+            value={userState?.organizationName}
           />
 
           <UserDetailsInputBox
@@ -224,4 +224,4 @@ const BusinessDetails = () => {
   );
 };
 
-export default BusinessDetails;
+export default OrganizationDetails;

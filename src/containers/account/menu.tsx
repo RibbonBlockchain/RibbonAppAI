@@ -21,8 +21,8 @@ export const ProfileDetails = [
     logo: <Profile />,
   },
   {
-    href: "/profile/business-details",
-    description: "Business Details",
+    href: "/profile/organization-details",
+    description: "Organization Details",
     logo: <Profile />,
   },
   {

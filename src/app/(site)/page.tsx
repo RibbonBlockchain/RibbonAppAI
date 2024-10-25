@@ -44,7 +44,7 @@ const Home = () => {
           className="text-sm font-normal text-[#141414] text-center"
         >
           Already have an account?{" "}
-          <span className="text-[#6200EE] font-semibold">Sign In</span>
+          <span className="text-[#290064] font-semibold">Sign In</span>
         </LinkButton>
       </div>
     </div>

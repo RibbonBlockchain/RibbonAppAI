@@ -52,7 +52,7 @@ const Login = () => {
             <div className="flex flex-col gap-2 items-center justify-center">
               <h1 className="font-extrabold text-3xl">Welcome back!</h1>
               <p className="text-sm">
-                Please Sign In with your organization email
+                Please sign in with your organization email
               </p>
             </div>
 

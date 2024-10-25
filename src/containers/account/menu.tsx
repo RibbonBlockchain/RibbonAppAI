@@ -6,7 +6,6 @@ import {
   Lock1,
   Shield,
   CallAdd,
-  Profile,
   EmptyWallet,
   WalletMoney,
   ShoppingCart,
@@ -15,16 +14,16 @@ import Link from "next/link";
 import { BookOpen, ChevronRight, HelpCircle } from "lucide-react";
 
 export const ProfileDetails = [
-  {
-    href: "/profile/personal-details",
-    description: "Personal Details",
-    logo: <Profile />,
-  },
-  {
-    href: "/profile/organization-details",
-    description: "Organization Details",
-    logo: <Profile />,
-  },
+  // {
+  //   href: "/profile/personal-details",
+  //   description: "Personal Details",
+  //   logo: <Profile />,
+  // },
+  // {
+  //   href: "/profile/organization-details",
+  //   description: "Organization Details",
+  //   logo: <Profile />,
+  // },
   {
     href: "/my-linkages",
     description: "Manage Linkages",

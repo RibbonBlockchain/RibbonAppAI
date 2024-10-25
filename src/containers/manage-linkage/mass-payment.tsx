@@ -16,8 +16,8 @@ const MassPayment = ({
 }) => {
   const [image, setImage] = useState<File | null>(null);
   const [recipients, setRecipients] = useState<
-    { address: string; amount: string }[]
-  >([{ address: "", amount: "" }]);
+    { address: string; amount: string; asset?: string }[]
+  >([{ address: "", amount: "", asset: "usdc" }]);
 
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
@@ -39,7 +39,7 @@ const MassPayment = ({
   };
 
   const addRecipient = () => {
-    setRecipients([...recipients, { address: "", amount: "" }]);
+    setRecipients([...recipients, { address: "", amount: "", asset: "usdc" }]);
   };
 
   const removeRecipient = (index: number) => {
@@ -55,7 +55,7 @@ const MassPayment = ({
         onSuccess: () => {
           toast.success("Transaction completed");
           setShowSuccessAnimation(true);
-          setRecipients([{ address: "", amount: "" }]);
+          setRecipients([{ address: "", amount: "", asset: "usdc" }]);
         },
       }
     );

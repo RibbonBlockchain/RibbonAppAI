@@ -58,6 +58,7 @@ export type TSendUsdcToken = {
 export type TTransfer = {
   amount: string;
   address: string;
+  asset?: string;
 };
 
 export type TMassWalletTransfer = {

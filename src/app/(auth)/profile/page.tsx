@@ -9,7 +9,7 @@ import Menu, {
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogoutCurve } from "iconsax-react";
+import { LogoutCurve, Profile } from "iconsax-react";
 import User from "@/containers/account/user";
 import { ChevronRight, Scan } from "lucide-react";
 import { useGetAuth, useLogout } from "@/api/auth";
@@ -77,6 +77,30 @@ const Account = () => {
               <ChevronRight stroke="#fff" />
             </div>
           </Link>
+
+          {user?.role === "PATIENT" ? (
+            <Link href="/profile/personal-details">
+              <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-[#C3B1FF4D]">
+                <div className="flex flex-row items-center justify-center gap-3">
+                  <Profile />
+                  <p className="text-base font-medium">Personal Details</p>
+                </div>
+
+                <ChevronRight stroke="#fff" />
+              </div>
+            </Link>
+          ) : (
+            <Link href="/profile/organization-details">
+              <div className="flex flex-row items-center justify-between py-3 px-[6px] border-b border-[#C3B1FF4D]">
+                <div className="flex flex-row items-center justify-center gap-3">
+                  <Profile />
+                  <p className="text-base font-medium">Organization Details</p>
+                </div>
+
+                <ChevronRight stroke="#fff" />
+              </div>
+            </Link>
+          )}
 
           {ProfileDetails.map(({ href, description, logo }) => (
             <Menu

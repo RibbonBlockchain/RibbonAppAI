@@ -4,6 +4,7 @@ import {
   useClaimUsdc,
   useSendUsdcToken,
   useUserBaseTransactions,
+  useWithdrawPoints,
 } from "@/api/user";
 import clsx from "clsx";
 import Link from "next/link";
@@ -72,14 +73,19 @@ const MainWallet = () => {
     getWalletTx({ address: loanWalletDetails?.address });
   };
 
-  const { mutate: claimUsdc, isPending: claimPending } = useClaimUsdc();
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
+  const { mutate: claimUsdc, isPending: claimPending } = useClaimUsdc();
+  const { mutate: withdrawPoints } = useWithdrawPoints();
+
+  const deductPointBalance = () =>
+    withdrawPoints({ amount: Number(claimAmount) });
 
   const handleClaimUsdc = () => {
     claimUsdc(
       { amount: claimAmount as number },
       {
         onSuccess: () => {
+          deductPointBalance();
           refetch(),
             toast.success("points claim successful"),
             setClaimUsdcModal(false);

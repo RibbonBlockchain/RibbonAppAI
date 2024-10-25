@@ -1,16 +1,15 @@
 "use client";
 
-import BackArrow from "@/components/button/back-arrow";
+import { useAtom } from "jotai";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { authAtom } from "@/lib/atoms/auth.atom";
 import LinkButton from "@/components/button/link";
+import SubmitEmailSignup from "./submitemailsignup";
+import BackArrow from "@/components/button/back-arrow";
+import { AppleIcon, GoogleIcon } from "@/public/assets";
 import InputBox from "@/components/questionnarie/input-box";
 import { WorldIdButton } from "@/containers/auth/landing/button";
-import { authAtom } from "@/lib/atoms/auth.atom";
-import { Google } from "iconsax-react";
-import { useAtom } from "jotai";
-import { Apple, Phone } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import SubmitEmailSignup from "./submitemailsignup";
 
 const Signup = () => {
   const router = useRouter();
@@ -55,14 +54,14 @@ const Signup = () => {
           href="#"
           className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
         >
-          <Apple /> Continue with Apple
+          <AppleIcon /> Continue with Apple
         </LinkButton>
 
         <LinkButton
           href="#"
           className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
         >
-          <Google /> Continue with Google
+          <GoogleIcon /> Continue with Google
         </LinkButton>
 
         <WorldIdButton>Sign In with World ID</WorldIdButton>

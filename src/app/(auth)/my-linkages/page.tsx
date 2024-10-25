@@ -165,6 +165,12 @@ const MyLinkageDetails: React.FC = () => {
         ))}
       </div>
 
+      {!selectedAI && (
+        <div className="mt-10 flex items-center justify-center mx-auto">
+          No selected AI
+        </div>
+      )}
+
       {selectedAI && (
         <div className="mt-6">
           {selectedTab === "ai-bot" && (

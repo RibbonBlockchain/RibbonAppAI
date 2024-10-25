@@ -4,8 +4,7 @@ import FormInput from "./sections/form";
 import BackArrow from "./sections/back";
 import LinkButton from "@/components/button/link";
 import { WorldIdButton } from "../../landing/button";
-import { Apple } from "lucide-react";
-import { Google } from "iconsax-react";
+import { AppleIcon, GoogleIcon } from "@/public/assets";
 
 const Signup = () => {
   return (
@@ -37,14 +36,14 @@ const Signup = () => {
           href="#"
           className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
         >
-          <Apple /> Continue with Apple
+          <AppleIcon /> Continue with Apple
         </LinkButton>
 
         <LinkButton
           href="#"
           className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
         >
-          <Google /> Continue with Google
+          <GoogleIcon /> Continue with Google
         </LinkButton>
 
         <WorldIdButton>Sign In with World ID</WorldIdButton>

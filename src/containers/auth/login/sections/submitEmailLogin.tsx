@@ -40,7 +40,7 @@ const SubmitEmailLogin = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Continue
+        Sign In
       </Button>
     </div>
   );

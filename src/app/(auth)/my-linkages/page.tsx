@@ -122,7 +122,7 @@ const MyLinkageDetails: React.FC = () => {
                 <span>{selectedAI.name}</span>
               </div>
             ) : (
-              "Select your bot"
+              "Select your linkage"
             )}
           </button>
 
@@ -167,7 +167,7 @@ const MyLinkageDetails: React.FC = () => {
 
       {!selectedAI && (
         <div className="mt-10 flex items-center justify-center mx-auto">
-          No selected AI
+          No selected Linkage AI
         </div>
       )}
 

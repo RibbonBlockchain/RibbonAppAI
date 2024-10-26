@@ -53,6 +53,7 @@ export type TWithdrawPointsBody = {
 export type TSendUsdcToken = {
   amount: string;
   address: string;
+  asset?: string;
 };
 
 export type TTransfer = {
@@ -89,5 +90,6 @@ interface Item {
 }
 
 export type TUserOrderItemBody = {
+  asset?: string;
   items: Item[];
 };

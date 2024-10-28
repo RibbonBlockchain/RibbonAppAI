@@ -1,30 +1,29 @@
 "use client";
 
 import {
+  healthMenu,
+  TasksSample,
+  financeMenu,
+  categoryTabs,
+  ecommerceMenu,
+} from "@/lib/values/constants";
+import {
   useGetUncompletedTasks,
   useGetUncompletedSurveys,
   useGetUncompletedQuestionnaires,
 } from "@/api/user";
-import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
 import PageLoader from "@/components/loader";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
+import MoodModal from "@/containers/dashboard/mood-modal";
 import SwipeCards from "@/containers/dashboard/swipe-cards";
+import ActivityButton from "@/components/button/activity-button";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import MoodModal from "@/containers/dashboard/mood-modal";
-
-const TasksSample = [
-  { id: 1, task: "Follow us on twitter (X)", rewardPoints: 5000 },
-  { id: 2, task: "Subscribe to our telegram channel", rewardPoints: 5000 },
-  { id: 3, task: "Follow us on twitter (X)", rewardPoints: 5000 },
-  { id: 4, task: "Subscribe to our telegram channel", rewardPoints: 5000 },
-  { id: 5, task: "Follow us on twitter (X)", rewardPoints: 5000 },
-];
 
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
@@ -33,8 +32,6 @@ const Dashboard = () => {
 
   const { data: user } = useGetAuth({ enabled: true });
 
-  const [hideBalance, setHideBalance] = useState(false);
-
   const { data: questionnaire, isLoading } = useGetUncompletedQuestionnaires();
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
@@ -42,7 +39,31 @@ const Dashboard = () => {
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
 
-  const [activeMenu, setActiveMenu] = useState("questionnaires");
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState("health");
+  const handleCategoryTabClick = (tab: string) => {
+    setSelectedCategoryTab(tab);
+  };
+
+  const [displayMenu, setDisplayMenu] = useState("questionnaires");
+  const [activeMenu, setActiveMenu] = useState(displayMenu);
+
+  useEffect(() => {
+    if (selectedCategoryTab === "health") {
+      setDisplayMenu("questionnaires");
+    } else if (selectedCategoryTab === "finance") {
+      setDisplayMenu("money-clubs");
+    } else {
+      setDisplayMenu("shop");
+    }
+  }, [selectedCategoryTab]);
+
+  useEffect(() => {
+    setActiveMenu(displayMenu);
+  }, [displayMenu]);
+
+  const handleActiveMenuClick = (menu: string) => {
+    setActiveMenu(menu);
+  };
 
   React.useEffect(() => {
     if (user?.id && !user?.phone) {
@@ -83,174 +104,245 @@ const Dashboard = () => {
 
           <SwipeCards />
 
-          <RewardButton />
-
-          <div
-            onClick={() => setMoodModal(true)}
-            className="mb-6 w-full  max-w-[350px] flex items-center text-center justify-center self-center text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full h-[40px]"
-          >
-            Mood check
+          <div className="mt-4 w-full flex flex-row items-center justify-between gap-2">
+            <RewardButton />
+            <Image
+              width={150}
+              height={88}
+              alt="mood-check"
+              className="w-full"
+              src={"/assets/mood-check.svg"}
+              onClick={() => setMoodModal(true)}
+            />
           </div>
 
-          <div className="w-full flex flex-row items-center justify-between text-sm">
-            <div className="flex flex-row gap-2">
-              <div
-                onClick={() => setActiveMenu("questionnaires")}
-                className={clsx(
-                  "h-[32px] flex text-center items-center px-[9px] rounded-[20px] border border-[#EFE6FD]",
-                  activeMenu === "questionnaires"
-                    ? "bg-white text-[#290064] font-bold"
-                    : "bg-[inherit] text-white font-medium"
-                )}
+          <div className="mt-6 flex flex-row items-start justify-start gap-2 w-full overflow-x-auto scroll-hidden">
+            {categoryTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => handleCategoryTabClick(tab.value)}
+                className={`min-w-fit flex flex-row items-center justify-center gap-1.5 text-[13px] px-3 pt-[7px] pb-[6px] rounded-[32px] ${
+                  selectedCategoryTab === tab.value
+                    ? `${tab.bgColor} text-white border-[2px] border-[#FFFFFF] font-bold`
+                    : `${tab.bgColor} text-[#F2EEFF] border-[2px] border-transparent font-medium`
+                }`}
               >
-                Questionnarie
-              </div>
-
-              <div
-                onClick={() => setActiveMenu("surveys")}
-                className={clsx(
-                  "h-[32px] flex text-center items-center px-[9px] rounded-[20px] border border-[#EFE6FD]",
-                  activeMenu === "surveys"
-                    ? "bg-white text-[#290064] font-bold"
-                    : "bg-[inherit] text-white font-medium"
-                )}
-              >
-                Surveys
-              </div>
-
-              <div
-                onClick={() => setActiveMenu("tasks")}
-                className={clsx(
-                  "h-[32px] flex text-center items-center px-[9px] rounded-[20px] border border-[#EFE6FD]",
-                  activeMenu === "tasks"
-                    ? "bg-white text-[#290064] font-bold"
-                    : "bg-[inherit] text-white font-medium"
-                )}
-              >
-                Tasks
-              </div>
-            </div>
+                {tab.name}
+                <Image src={tab.emoji} alt="emoji" height={20} width={20} />
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="py-10 mb-8 text-sm bg-[#0B0228]">
-          {activeMenu === "questionnaires" && (
-            <div>
-              {questionnaire?.map((i: any) => (
-                <div key={i.id} className="flex flex-col gap-2">
-                  <Link
-                    href={`/questionnaire/${i.id}`}
-                    className="flex flex-row items-center justify-between text-sm text-white"
-                  >
-                    <div>
-                      <p className="font-bold mb-1">{i.name}</p>
-                      <div className="-ml-2 flex flex-row items-center font-medium">
-                        <Image
-                          src="/assets/coin.png"
-                          alt="coin"
-                          height={32}
-                          width={32}
-                        />
-                        <p>{i.reward * 5000} ribbon</p>
-                      </div>
-                    </div>
-                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
-                      Go
-                    </button>
-                  </Link>
-
-                  <div className="flex self-center mb-6">
-                    <Image
-                      alt="hr"
-                      height={1}
-                      width={240}
-                      className="w-auto h-auto"
-                      src="/assets/horizontal-line.png"
-                    />
-                  </div>
-                </div>
+        {selectedCategoryTab === "health" && (
+          <div className="mt-4">
+            <div className="flex flex-row items-start justify-start gap-3 border-b border-[#F2EEFF40] w-full overflow-x-auto scroll-hidden">
+              {healthMenu.map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => handleActiveMenuClick(tab.value)}
+                  className={`min-w-fit px-3 py-3 ${
+                    activeMenu === tab.value
+                      ? "text-white border-b-2 border-b-white font-bold"
+                      : "bg-transparent text-[#F2EEFF] font-medium"
+                  }`}
+                >
+                  {tab.name}
+                </button>
               ))}
             </div>
-          )}
 
-          {activeMenu === "surveys" && (
-            <div>
-              {survey?.map((i: any) => (
-                <div key={i.id} className="flex flex-col gap-2">
-                  <Link
-                    href={`/survey/${i.id}`}
-                    className="flex flex-row items-center justify-between text-sm text-white"
-                  >
-                    <div>
-                      <p className="font-bold mb-1">{i.name}</p>
-                      <div className="-ml-2 flex flex-row items-center font-medium">
-                        <Image
-                          src="/assets/coin.png"
-                          alt="coin"
-                          height={32}
-                          width={32}
+            <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
+              {activeMenu === "questionnaires" && (
+                <div>
+                  {questionnaire?.map((i: any) => (
+                    <div key={i.id} className="flex flex-col gap-2">
+                      <Link
+                        href={`/questionnaire/${i.id}`}
+                        className="flex flex-row items-center justify-between text-sm text-white"
+                      >
+                        <div>
+                          <p className="font-bold mb-1">{i.name}</p>
+                          <div className="-ml-2 flex flex-row items-center font-medium">
+                            <Image
+                              src="/assets/coin.png"
+                              alt="coin"
+                              height={32}
+                              width={32}
+                            />
+                            <p>{i.reward * 5000} ribbon</p>
+                          </div>
+                        </div>
+                        <ActivityButton
+                          className={"text-[#290064] bg-white"}
+                          text={"Go"}
                         />
-                        <p>{i.reward * 5000} ribbon</p>
+                      </Link>
+
+                      <div className="flex self-center mb-6">
+                        <Image
+                          alt="hr"
+                          height={1}
+                          width={240}
+                          className="w-auto h-auto"
+                          src="/assets/horizontal-line.png"
+                        />
                       </div>
                     </div>
-                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
-                      Go
-                    </button>
-                  </Link>
-
-                  <div className="flex self-center mb-6">
-                    <Image
-                      alt="hr"
-                      height={1}
-                      width={240}
-                      className="w-auto h-auto"
-                      src="/assets/horizontal-line.png"
-                    />
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {activeMenu === "tasks" && (
-            <div>
-              {TasksSample?.map((i: any) => (
-                <div key={i.id} className="flex flex-col gap-2">
-                  <Link
-                    href={`/tasks/${i.id}`}
-                    className="flex flex-row items-center justify-between text-sm text-white"
-                  >
-                    <div>
-                      <p className="font-bold mb-1">{i.task}</p>
-                      <div className="-ml-2 flex flex-row items-center font-medium">
-                        <Image
-                          src="/assets/coin.png"
-                          alt="coin"
-                          height={32}
-                          width={32}
+              {activeMenu === "surveys" && (
+                <div>
+                  {survey?.map((i: any) => (
+                    <div key={i.id} className="flex flex-col gap-2">
+                      <Link
+                        href={`/survey/${i.id}`}
+                        className="flex flex-row items-center justify-between text-sm text-white"
+                      >
+                        <div>
+                          <p className="font-bold mb-1">{i.name}</p>
+                          <div className="-ml-2 flex flex-row items-center font-medium">
+                            <Image
+                              src="/assets/coin.png"
+                              alt="coin"
+                              height={32}
+                              width={32}
+                            />
+                            <p>{i.reward * 5000} ribbon</p>
+                          </div>
+                        </div>
+                        <ActivityButton
+                          className={"text-[#290064] bg-white"}
+                          text={"Go"}
                         />
-                        <p>{i.rewardPoints} ribbon</p>
+                      </Link>
+
+                      <div className="flex self-center mb-6">
+                        <Image
+                          alt="hr"
+                          height={1}
+                          width={240}
+                          className="w-auto h-auto"
+                          src="/assets/horizontal-line.png"
+                        />
                       </div>
                     </div>
-                    <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full">
-                      Go
-                    </button>
-                  </Link>
-
-                  <div className="flex self-center mb-6">
-                    <Image
-                      alt="hr"
-                      height={1}
-                      width={240}
-                      className="w-auto h-auto"
-                      src="/assets/horizontal-line.png"
-                    />
-                  </div>
+                  ))}
                 </div>
+              )}
+
+              {activeMenu === "tasks" && (
+                <div>
+                  {TasksSample?.map((i: any) => (
+                    <div key={i.id} className="flex flex-col gap-2">
+                      <Link
+                        href={`/tasks/${i.id}`}
+                        className="flex flex-row items-center justify-between text-sm text-white"
+                      >
+                        <div>
+                          <p className="font-bold mb-1">{i.task}</p>
+                          <div className="-ml-2 flex flex-row items-center font-medium">
+                            <Image
+                              src="/assets/coin.png"
+                              alt="coin"
+                              height={32}
+                              width={32}
+                            />
+                            <p>{i.rewardPoints} ribbon</p>
+                          </div>
+                        </div>
+                        <ActivityButton
+                          className={"text-[#290064] bg-white"}
+                          text={"Go"}
+                        />
+                      </Link>
+
+                      <div className="flex self-center mb-6">
+                        <Image
+                          alt="hr"
+                          height={1}
+                          width={240}
+                          className="w-auto h-auto"
+                          src="/assets/horizontal-line.png"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeMenu === "learn" && (
+                <div>No learn entry at the moment</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {selectedCategoryTab === "finance" && (
+          <div className="mt-4">
+            <div className="flex flex-row items-start justify-start gap-3 border-b border-[#F2EEFF40] w-full overflow-x-auto scroll-hidden">
+              {financeMenu.map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => handleActiveMenuClick(tab.value)}
+                  className={`min-w-fit px-3 py-3 ${
+                    activeMenu === tab.value
+                      ? "text-white border-b-2 border-b-white"
+                      : "bg-transparent text-[#F2EEFF]"
+                  }`}
+                >
+                  {tab.name}
+                </button>
               ))}
             </div>
-          )}
-        </div>
+
+            <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
+              {activeMenu === "money-clubs" && (
+                <div>No money club entry at the moment</div>
+              )}
+
+              {activeMenu === "lend" && <div>No lend entry at the moment</div>}
+
+              {activeMenu === "borrow" && (
+                <div>No borrow entry at the moment</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {selectedCategoryTab === "e-commerce" && (
+          <div className="mt-4">
+            <div className="flex flex-row items-start justify-start gap-3 border-b border-[#F2EEFF40] w-full overflow-x-auto scroll-hidden">
+              {ecommerceMenu.map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => handleActiveMenuClick(tab.value)}
+                  className={`min-w-fit px-3 py-3 ${
+                    activeMenu === tab.value
+                      ? "text-white border-b-2 border-b-white"
+                      : "bg-transparent text-[#F2EEFF]"
+                  }`}
+                >
+                  {tab.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
+              {activeMenu === "shop" && (
+                <div>No shop club entry at the moment</div>
+              )}
+
+              {activeMenu === "drop-ship" && (
+                <div>No drop-ship entry at the moment</div>
+              )}
+
+              {activeMenu === "swap" && <div>No swap entry at the moment</div>}
+            </div>
+          </div>
+        )}
       </div>
 
       {moodModal && (

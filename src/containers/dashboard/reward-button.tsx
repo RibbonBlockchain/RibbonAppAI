@@ -1,7 +1,7 @@
 import Image from "next/image";
-import MoodModal from "./mood-modal";
 import { useClaimDailyRewards } from "@/api/user";
 import React, { useState, useEffect } from "react";
+import SuccessAnimation from "@/components/success-animation";
 
 const formatTime = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
@@ -17,8 +17,11 @@ const formatTime = (seconds: number): string => {
 const RewardButton: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
-  const { mutate } = useClaimDailyRewards();
+  const { mutate } = useClaimDailyRewards({
+    onSuccess: () => setShowSuccess(true),
+  });
 
   useEffect(() => {
     const storedTime = localStorage.getItem("rewardCooldown");
@@ -68,29 +71,22 @@ const RewardButton: React.FC = () => {
   };
 
   return (
-    <div className="mt-6 mb-4 w-full gap-1 xxs:gap-2 max-w-[350px] mx-auto flex flex-row items-center justify-between text-xs font-semibold py-1.5 px-3 text-white bg-[#3f3952] border-[#4B199C] border-[2px] rounded-full h-[40px]">
+    <div className="w-full">
       {isDisabled ? (
         <div className="w-full flex flex-row items-center text-center justify-center">
           {formatTime(countdown)}
         </div>
       ) : (
-        <div
+        <Image
+          src={"/assets/daily-reward.svg"}
+          alt=""
+          width={150}
+          height={88}
+          className="w-full"
           onClick={claimReward}
-          className="flex flex-row items-center justify-center w-full gap-4"
-        >
-          <p>Claim daily reward</p>
-          <div className="flex flex-row items-center">
-            <Image
-              src="/assets/coin.png"
-              alt="coin"
-              height={32}
-              width={32}
-              className="w-[32px] h-[32px]"
-            />
-            <p>5000 ribbon</p>
-          </div>
-        </div>
+        />
       )}
+      {showSuccess && <SuccessAnimation />}
     </div>
   );
 };

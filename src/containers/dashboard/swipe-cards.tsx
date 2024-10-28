@@ -77,7 +77,7 @@ const SwipeCards = () => {
         )}
       </div>
 
-      <div className="flex flex-row gap-4 mt-3">
+      <div className="flex flex-row gap-4 mt-1">
         <button
           className={clsx(
             "p-1 rounded-full transition ring-2 ring-white",

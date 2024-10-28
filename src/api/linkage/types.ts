@@ -108,7 +108,7 @@ export type TSubmitLinkageQuestionnaireAnswer = {
 
 export type TUploadLinkageStatusBody = { file: any; caption: string };
 
-export type TDisburseLoanBody = { amount: number };
+export type TDisburseLoanBody = { amount: number; asset?: string };
 
 export type TAddLinkageStoreItemBody = {
   name: string;

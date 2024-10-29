@@ -3,8 +3,10 @@
 import {
   useClaimUsdc,
   useSendUsdcToken,
-  useUserBaseTransactions,
+  useUserGetOnramp,
+  useUserListTokens,
   useWithdrawPoints,
+  useUserBaseTransactions,
 } from "@/api/user";
 import clsx from "clsx";
 import Link from "next/link";
@@ -17,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { useGetUserWallet } from "@/api/linkage";
+import Basenames from "../personalize/basenames";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import SuccessAnimation from "@/components/success-animation";
@@ -24,7 +27,6 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
-import Basenames from "../personalize/basenames";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -72,6 +74,11 @@ const MainWallet = () => {
   const handleGetWalletTransaction = () => {
     getWalletTx({ address: loanWalletDetails?.address });
   };
+
+  const { data: onramp } = useUserGetOnramp();
+  const onrampUrl = onramp?.url;
+
+  const { data: tokenList } = useUserListTokens();
 
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
   const { mutate: claimUsdc, isPending: claimPending } = useClaimUsdc();
@@ -171,14 +178,27 @@ const MainWallet = () => {
             >
               Claim USDC
             </button>
-            <button
-              onClick={() => {}}
-              className={clsx(
-                "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
-              )}
-            >
-              Buy USDC (Fiat)
-            </button>
+            {onrampUrl ? (
+              <Link
+                href={onrampUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={clsx(
+                  "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
+                )}
+              >
+                Buy USDC (Fiat)
+              </Link>
+            ) : (
+              <Link
+                href={"#"}
+                className={clsx(
+                  "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px] cursor-not-allowed"
+                )}
+              >
+                Buy USDC (Fiat)
+              </Link>
+            )}
           </div>
 
           <div className="w-full pt-5 pb-10 flex gap-2 items-center justify-center text-xs font-bold">
@@ -254,29 +274,36 @@ const MainWallet = () => {
 
           <div className="mt-2">
             {selectedTxTab === "tokens" && (
-              <div className="flex flex-col gap-2">
-                {/* <TokenItem
-                    onClick={() => setOpenEthTx(true)}
-                    symbol="ETH"
-                    name="Ethereum"
-                    balance={ethBalance}
-                    assetLogo={"/images/ETH.png"}
-                  />
-                  <TokenItem
-                    onClick={() => setOpenWldTx(true)}
-                    symbol="WLD"
-                    name="World coin"
-                    balance={wldBalance}
-                    assetLogo={"/images/world-coin.png"}
-                  />
-                  <TokenItem
-                    onClick={() => setOpenLinkTx(true)}
-                    symbol="LINK"
-                    name="Link"
-                    balance={linkBalance}
-                    assetLogo={"/images/LINK.png"}
-                  /> */}
-                List of tokens
+              <div className="flex flex-col gap-2 divide-y divide-[#FFFFFF36]">
+                {tokenList?.tokens?.map((token: any) => (
+                  <div
+                    key={token.token}
+                    className="flex flex-row items-center justify-between p-3 cursor-pointer"
+                  >
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <div className="w-[35px] h-[35px] flex items-center">
+                        <Image
+                          width={35}
+                          height={35}
+                          src={""}
+                          alt="coin logo"
+                          className="rounded-full bg-white max-w-[35px] max-h-[35px]"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base font-bold">
+                          {token.token.toUpperCase()}
+                        </p>
+                        <p className="text-[12px] font-medium">
+                          {token.balance} {token.token.toUpperCase()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-bold">
+                      {(token.balance * currentPrice).toFixed(2)}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
 

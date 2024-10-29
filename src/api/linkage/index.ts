@@ -36,6 +36,7 @@ import {
   updateLinkageStoreItem,
   getLinkageStoreOrders,
   linkageBaseName,
+  linkageGetOnramp,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -359,6 +360,13 @@ export const useGetLinkageWalletTransactions = (id: number) => {
   return useMutation({
     onError,
     mutationFn: () => getLinkageWalletTransactions(id),
+  });
+};
+
+export const useLinkageGetOnramp = (id: number) => {
+  return useQuery({
+    queryKey: ["linkage-onramp"],
+    queryFn: () => linkageGetOnramp(id),
   });
 };
 

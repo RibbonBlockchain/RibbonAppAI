@@ -18,7 +18,7 @@ import { shorten } from "@/lib/utils/shorten";
 import { useUserBaseTransactions } from "@/api/user";
 import { useCoinDetails } from "@/lib/values/priceAPI";
 import TransactionHistory from "./transaction-history";
-import { useLinkageSendUsdcToken } from "@/api/linkage";
+import { useLinkageGetOnramp, useLinkageSendUsdcToken } from "@/api/linkage";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import SuccessAnimation from "@/components/success-animation";
 import AddressDisplay from "@/components/wallet/address-display";
@@ -66,6 +66,9 @@ const LinkageWallet = ({
       }
     );
   };
+
+  const { data: linkageOnramp } = useLinkageGetOnramp(linkageId);
+  const onrampUrl = linkageOnramp?.url;
 
   const {
     mutate: getTxnHistory,
@@ -174,17 +177,33 @@ const LinkageWallet = ({
           Send
         </div>
 
-        <div
-          onClick={() => {}}
-          className={clsx(
-            "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
-          )}
-        >
-          <div className="bg-[#3f3856] p-3 rounded-full">
-            <Add size={20} />
-          </div>
-          Buy USDC
-        </div>
+        {onrampUrl ? (
+          <Link
+            href={onrampUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={clsx(
+              "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
+            )}
+          >
+            <div className="bg-[#3f3856] p-3 rounded-full">
+              <Add size={20} />
+            </div>
+            Buy USDC
+          </Link>
+        ) : (
+          <Link
+            href={"#"}
+            className={clsx(
+              "cursor-not-allowed flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
+            )}
+          >
+            <div className="bg-[#3f3856] p-3 rounded-full">
+              <Add size={20} />
+            </div>
+            Buy USDC
+          </Link>
+        )}
 
         <div
           onClick={() => {

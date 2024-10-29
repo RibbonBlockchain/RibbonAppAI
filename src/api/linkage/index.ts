@@ -35,6 +35,7 @@ import {
   getLinkageStoreItemBySlug,
   updateLinkageStoreItem,
   getLinkageStoreOrders,
+  linkageBaseName,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -51,7 +52,11 @@ import {
 } from "./types";
 import { onError } from "../api-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TMassWalletTransfer, TSendUsdcToken } from "../user/types";
+import {
+  TBaseNameody,
+  TMassWalletTransfer,
+  TSendUsdcToken,
+} from "../user/types";
 
 export const useCreateLinkage = () => {
   return useMutation({
@@ -322,6 +327,14 @@ export const useGetUserWallet = () => {
   return useQuery({
     queryKey: ["user-wallet"],
     queryFn: () => getUserWallet(),
+  });
+};
+
+export const useLinkageBaseName = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body, id }: { body: TBaseNameody; id: number }) =>
+      linkageBaseName(body, id),
   });
 };
 

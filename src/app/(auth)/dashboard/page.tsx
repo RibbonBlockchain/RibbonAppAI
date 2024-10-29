@@ -121,10 +121,12 @@ const Dashboard = () => {
               <button
                 key={tab.value}
                 onClick={() => handleCategoryTabClick(tab.value)}
-                className={`min-w-fit flex flex-row items-center justify-center gap-1.5 text-[13px] px-3 pt-[7px] pb-[6px] rounded-[32px] ${
+                className={`${
+                  tab.bgColor
+                } min-w-fit flex flex-row items-center justify-center gap-1.5 text-[15px] px-3 pt-[7px] pb-[6px] rounded-[32px] ${
                   selectedCategoryTab === tab.value
-                    ? `${tab.bgColor} text-white border-[2px] border-[#FFFFFF] font-bold`
-                    : `${tab.bgColor} text-[#F2EEFF] border-[2px] border-transparent font-medium`
+                    ? `text-white border-[2px] border-[#FFFFFF] font-bold`
+                    : `text-[#F2EEFF] border-[2px] border-transparent font-medium`
                 }`}
               >
                 {tab.name}
@@ -141,7 +143,7 @@ const Dashboard = () => {
                 <button
                   key={tab.value}
                   onClick={() => handleActiveMenuClick(tab.value)}
-                  className={`min-w-fit px-3 py-3 ${
+                  className={`min-w-fit px-3 py-3 text-sm ${
                     activeMenu === tab.value
                       ? "text-white border-b-2 border-b-white font-bold"
                       : "bg-transparent text-[#F2EEFF] font-medium"
@@ -152,23 +154,23 @@ const Dashboard = () => {
               ))}
             </div>
 
-            <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
+            <div className="pt-4 mb-20 text-sm bg-[#0B0228]">
               {activeMenu === "questionnaires" && (
                 <div>
                   {questionnaire?.map((i: any) => (
-                    <div key={i.id} className="flex flex-col gap-2">
+                    <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/questionnaire/${i.id}`}
-                        className="flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.name}</p>
-                          <div className="-ml-2 flex flex-row items-center font-medium">
+                          <div className="flex flex-row items-center gap-1 font-medium">
                             <Image
-                              src="/assets/coin.png"
+                              src="/assets/ribbon-points.svg"
                               alt="coin"
-                              height={32}
-                              width={32}
+                              height={18}
+                              width={18}
                             />
                             <p>{i.reward * 5000} ribbon</p>
                           </div>
@@ -179,7 +181,7 @@ const Dashboard = () => {
                         />
                       </Link>
 
-                      <div className="flex self-center mb-6">
+                      <div className="flex self-center mb-3">
                         <Image
                           alt="hr"
                           height={1}
@@ -196,19 +198,19 @@ const Dashboard = () => {
               {activeMenu === "surveys" && (
                 <div>
                   {survey?.map((i: any) => (
-                    <div key={i.id} className="flex flex-col gap-2">
+                    <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/survey/${i.id}`}
-                        className="flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.name}</p>
-                          <div className="-ml-2 flex flex-row items-center font-medium">
+                          <div className="flex flex-row items-center gap-1 font-medium">
                             <Image
-                              src="/assets/coin.png"
+                              src="/assets/ribbon-points.svg"
                               alt="coin"
-                              height={32}
-                              width={32}
+                              height={18}
+                              width={18}
                             />
                             <p>{i.reward * 5000} ribbon</p>
                           </div>
@@ -219,7 +221,7 @@ const Dashboard = () => {
                         />
                       </Link>
 
-                      <div className="flex self-center mb-6">
+                      <div className="flex self-center mb-3">
                         <Image
                           alt="hr"
                           height={1}
@@ -236,21 +238,21 @@ const Dashboard = () => {
               {activeMenu === "tasks" && (
                 <div>
                   {TasksSample?.map((i: any) => (
-                    <div key={i.id} className="flex flex-col gap-2">
+                    <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/tasks/${i.id}`}
-                        className="flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.task}</p>
-                          <div className="-ml-2 flex flex-row items-center font-medium">
+                          <div className="flex flex-row items-center gap-1 font-medium">
                             <Image
-                              src="/assets/coin.png"
+                              src="/assets/ribbon-points.svg"
                               alt="coin"
-                              height={32}
-                              width={32}
+                              height={18}
+                              width={18}
                             />
-                            <p>{i.rewardPoints} ribbon</p>
+                            <p>{5000} ribbon</p>
                           </div>
                         </div>
                         <ActivityButton
@@ -259,7 +261,7 @@ const Dashboard = () => {
                         />
                       </Link>
 
-                      <div className="flex self-center mb-6">
+                      <div className="flex self-center mb-3">
                         <Image
                           alt="hr"
                           height={1}
@@ -287,9 +289,9 @@ const Dashboard = () => {
                 <button
                   key={tab.value}
                   onClick={() => handleActiveMenuClick(tab.value)}
-                  className={`min-w-fit px-3 py-3 ${
+                  className={`min-w-fit px-3 py-3 text-sm ${
                     activeMenu === tab.value
-                      ? "text-white border-b-2 border-b-white"
+                      ? "text-white border-b-2 border-b-white font-bold"
                       : "bg-transparent text-[#F2EEFF]"
                   }`}
                 >
@@ -319,9 +321,9 @@ const Dashboard = () => {
                 <button
                   key={tab.value}
                   onClick={() => handleActiveMenuClick(tab.value)}
-                  className={`min-w-fit px-3 py-3 ${
+                  className={`min-w-fit px-3 py-3 text-sm ${
                     activeMenu === tab.value
-                      ? "text-white border-b-2 border-b-white"
+                      ? "text-white border-b-2 border-b-white font-bold"
                       : "bg-transparent text-[#F2EEFF]"
                   }`}
                 >

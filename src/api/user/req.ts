@@ -204,7 +204,7 @@ export const claimUsdc = async (body: TClaimUsdcBody) => {
   return res.data;
 };
 
-export const baseName = async (body: TBaseNameody) => {
+export const userBaseName = async (body: TBaseNameody) => {
   const res = await client.post("/user/base-name", body);
   return res.data;
 };

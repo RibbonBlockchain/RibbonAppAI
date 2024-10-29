@@ -13,7 +13,11 @@ import {
   getPageandSizeParams,
 } from "./types";
 import { TResponse, client } from "../api-client";
-import { TMassWalletTransfer, TSendUsdcToken } from "../user/types";
+import {
+  TBaseNameody,
+  TMassWalletTransfer,
+  TSendUsdcToken,
+} from "../user/types";
 
 export const createLinkage = async (body: TCreateLinkageBody) => {
   const res = await client.post("/linkage", body);
@@ -220,6 +224,11 @@ export const createWallet = async () => {
 
 export const getUserWallet = async () => {
   const res = await client.get(`user/wallet`);
+  return res.data;
+};
+
+export const linkageBaseName = async (body: TBaseNameody, id: number) => {
+  const res = await client.post(`/linkage/${id}/base-name`, body);
   return res.data;
 };
 

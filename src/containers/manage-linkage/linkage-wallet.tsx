@@ -23,18 +23,21 @@ import { SpinnerIcon } from "@/components/icons/spinner";
 import SuccessAnimation from "@/components/success-animation";
 import AddressDisplay from "@/components/wallet/address-display";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import Basenames from "@/app/(auth)/personalize/basenames";
 
 const LinkageWallet = ({
   linkageId,
   walletAddress,
   walletBalance,
   walletConvertedBalance,
+  baseName,
   refetch,
 }: {
   linkageId: number;
-  walletAddress: string;
+  walletAddress: any;
   walletBalance: string;
   walletConvertedBalance: any;
+  baseName: string;
   refetch: () => void;
 }) => {
   const [selected, setSelected] = useState("deposit");
@@ -98,26 +101,48 @@ const LinkageWallet = ({
           Base Wallet
         </div>
 
-        <div className="flex flex-row gap-4">
-          <div
-            onClick={() =>
-              copyToClipboard(walletAddress, () =>
-                toast.success("Wallet address copied")
-              )
-            }
-            className="flex flex-row items-center gap-1 font-normal text-sm"
-          >
-            {shorten(walletAddress)}
-            <Copy size="16" color="#ffffff" variant="Bold" />
+        {baseName ? (
+          <div className="flex flex-row items-center justify-center gap-4">
+            <div className="flex flex-row gap-2 items-center justify-center ">
+              <Basenames address={walletAddress} />
+              <Copy
+                size="18"
+                color="#F6F1FE"
+                variant="Bold"
+                className="cursor-pointer"
+                onClick={() => {
+                  copyToClipboard(walletAddress, () =>
+                    toast.success(`Wallet address copied`)
+                  );
+                }}
+              />
+            </div>
           </div>
+        ) : (
+          <div className="flex flex-row items-center justify-center gap-4 ">
+            <div className="flex flex-row gap-2 items-center justify-center ">
+              <p className="text-[16px]">{shorten(walletAddress)}</p>
+              <Copy
+                size="18"
+                color="#F6F1FE"
+                variant="Bold"
+                className="cursor-pointer"
+                onClick={() => {
+                  copyToClipboard(walletAddress, () =>
+                    toast.success(`Wallet address copied`)
+                  );
+                }}
+              />
+            </div>
 
-          <Link
-            href={"/personalize"}
-            className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
-          >
-            Personalize
-          </Link>
-        </div>
+            <Link
+              href={"/linkages/personalize"}
+              className="text-xs font-normal py-1 px-2 border border-[#CBBEF780] rounded-full"
+            >
+              Personalize
+            </Link>
+          </div>
+        )}
 
         <p className="text-[28px] font-bold">$ {walletConvertedBalance}</p>
       </div>

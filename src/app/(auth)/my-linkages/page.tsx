@@ -13,9 +13,11 @@ import {
   useGetLinkages,
   useGetLinkagesFile,
 } from "@/api/linkage";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { AIdata } from "@/api/linkage/types";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
@@ -30,7 +32,6 @@ import MassPayment from "../../../containers/manage-linkage/mass-payment";
 import LinkageWallet from "../../../containers/manage-linkage/linkage-wallet";
 import ManageLinkage from "../../../containers/manage-linkage/manage-linkages";
 import UploadQuestionnaire from "../../../containers/manage-linkage/upload-questionnaire";
-import { AIdata } from "@/api/linkage/types";
 
 const tabs = [
   { name: "AI Bot", value: "ai-bot" },
@@ -166,8 +167,18 @@ const MyLinkageDetails: React.FC = () => {
       </div>
 
       {!selectedAI && (
-        <div className="mt-10 flex items-center justify-center mx-auto">
-          No selected Linkage AI
+        <div className="mt-24 flex flex-col gap-3 items-center justify-center text-center mx-auto">
+          <p className="text-xl font-bold">No linkage created yet</p>
+          <p className="text-sm font-normal">
+            Get started by creating your first Linkage. Engage users and
+            automate responses in real time
+          </p>
+          <Link
+            href={"/linkages/create"}
+            className="bg-white text-center min-w-fit text-sm font-semibold py-3 px-6 rounded-xl shadow-sm transition-colors duration-100 focus-visible:duration-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border-solid disabled:cursor-not-allowed text-[#290064] disabled:border-stone-300 disabled:bg-stone-400/50"
+          >
+            Create Linkage
+          </Link>
         </div>
       )}
 
@@ -257,6 +268,7 @@ const MyLinkageDetails: React.FC = () => {
               walletAddress={data?.data?.walletAddress}
               walletConvertedBalance={walletConvertedBalance?.toFixed(4)}
               refetch={refetch}
+              baseName={data?.data?.baseName}
             />
           )}
 

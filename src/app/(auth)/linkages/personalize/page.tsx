@@ -2,16 +2,18 @@
 
 import toast from "react-hot-toast";
 import React, { useState } from "react";
+import { useUserBaseName } from "@/api/user";
 import Button from "@/components/button";
 import { ArrowLeft2 } from "iconsax-react";
 import { useRouter } from "next/navigation";
 import InputBox from "@/components/questionnarie/input-box";
 import { SpinnerIconPurple } from "@/components/icons/spinner";
-import { useUserBaseName } from "@/api/user";
+import { useLinkageBaseName } from "@/api/linkage";
 
-const Personalise: React.FC = () => {
+const PersonaliseLinkage = () => {
   const router = useRouter();
-  const { mutate, isPending } = useUserBaseName();
+  const linkageId = localStorage.getItem("selectedLinkageId");
+  const { mutate, isPending } = useLinkageBaseName();
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
@@ -25,7 +27,7 @@ const Personalise: React.FC = () => {
 
   const handleBaseName = () => {
     mutate(
-      { name: searchTerm },
+      { body: { name: searchTerm }, id: Number(linkageId) },
       { onSuccess: () => toast.success("Basename registered successfully") }
     );
   };
@@ -37,7 +39,7 @@ const Personalise: React.FC = () => {
           size="24"
           color="#ffffff"
           className="my-2 cursor-pointer"
-          onClick={() => router.back()}
+          onClick={() => router.push("/my-linkages")}
         />
         <p className="text-lg font-semibold">Basename</p>
       </div>
@@ -67,4 +69,4 @@ const Personalise: React.FC = () => {
   );
 };
 
-export default Personalise;
+export default PersonaliseLinkage;

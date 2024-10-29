@@ -48,10 +48,10 @@ import {
   userBaseTransactions,
   userOptimismTransactions,
   baseClaim,
-  baseName,
   claimUsdc,
   userOrderItems,
   getUserOrders,
+  userBaseName,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -367,10 +367,10 @@ export const useClaimUsdc = () => {
   });
 };
 
-export const useBaseName = () => {
+export const useUserBaseName = () => {
   return useMutation({
     onError,
-    mutationFn: (body: TBaseNameody) => baseName(body),
+    mutationFn: (body: TBaseNameody) => userBaseName(body),
   });
 };
 

@@ -39,7 +39,7 @@ const tabs = [
   { name: "Wallet", value: "wallet" },
   { name: "Mass payment", value: "mass-payment" },
   { name: "Questionnaires", value: "questionnaires" },
-  { name: "Loan Survey", value: "loan" },
+  { name: "Create Loan", value: "loan" },
   { name: "My Store", value: "my-store" },
   { name: "Manage Linkage", value: "manage-linkage" },
   { name: "Activity", value: "activity" },

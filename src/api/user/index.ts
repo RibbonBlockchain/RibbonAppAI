@@ -52,6 +52,8 @@ import {
   userOrderItems,
   getUserOrders,
   userBaseName,
+  userListTokens,
+  userGetOnramp,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -371,6 +373,20 @@ export const useUserBaseName = () => {
   return useMutation({
     onError,
     mutationFn: (body: TBaseNameody) => userBaseName(body),
+  });
+};
+
+export const useUserListTokens = () => {
+  return useQuery({
+    queryKey: ["user-wallet-tokens"],
+    queryFn: () => userListTokens(),
+  });
+};
+
+export const useUserGetOnramp = () => {
+  return useQuery({
+    queryKey: ["user-onramp"],
+    queryFn: () => userGetOnramp(),
   });
 };
 

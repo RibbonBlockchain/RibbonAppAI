@@ -209,6 +209,16 @@ export const userBaseName = async (body: TBaseNameody) => {
   return res.data;
 };
 
+export const userListTokens = async () => {
+  const res = await client.get<TResponse<any>>("/user/wallet/tokens");
+  return res.data.data;
+};
+
+export const userGetOnramp = async () => {
+  const res = await client.get<TResponse<any>>("/user/onramp");
+  return res.data.data;
+};
+
 // USER ORDERS
 export const userOrderItems = async (
   body: TUserOrderItemBody,

@@ -50,6 +50,11 @@ const UploadLoanQuestionniareTemplate = ({
   const [loanAmount, setLoanAmount] = useState(defaultLoanAmount);
   const [questions, setQuestions] = useState(defaultQuestions);
 
+  const [interestRate, setInterestRate] = useState(0);
+  const [repaymentPeriod, setRepaymentPeriod] = useState(0);
+  const [installmentPeriod, setInstallmentPeriod] = useState(0);
+  const [installmentAmount, setInstallmentAmount] = useState(0);
+
   const handleAddQuestion = () => {
     setQuestions([
       ...questions,
@@ -166,7 +171,7 @@ const UploadLoanQuestionniareTemplate = ({
           value={questionnaireName}
           onChange={(e) => setQuestionnaireName(e.target.value)}
           placeholder="Enter loan name"
-          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
         />
       </div>
 
@@ -177,8 +182,57 @@ const UploadLoanQuestionniareTemplate = ({
           value={loanAmount}
           onChange={(e) => setLoanAmount(e.target.value)}
           placeholder="Enter loan amount"
-          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
         />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-semibold">Loan Collection</p>
+
+        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
+          <p className="text-sm font-medium">Annual interest rate (%)</p>
+          <p>-</p>
+          <input
+            type="text"
+            value={interestRate}
+            onChange={(e: any) => setInterestRate(e.target.value)}
+            placeholder=""
+            className="p-2 bg-green-500 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          />
+        </div>
+        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
+          <p className="text-sm font-medium">Repayment period</p>
+          <p>-</p>
+          <input
+            type="text"
+            value={repaymentPeriod}
+            onChange={(e: any) => setRepaymentPeriod(e.target.value)}
+            placeholder=""
+            className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          />
+        </div>
+        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
+          <p className="text-sm font-medium">Installment period</p>
+          <p>-</p>
+          <input
+            type="text"
+            value={installmentPeriod}
+            onChange={(e: any) => setInstallmentPeriod(e.target.value)}
+            placeholder=""
+            className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          />
+        </div>
+        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
+          <p className="text-sm font-medium">Installment amount</p>
+          <p>-</p>
+          <input
+            type="text"
+            value={installmentAmount}
+            onChange={(e: any) => setInstallmentAmount(e.target.value)}
+            placeholder=""
+            className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          />
+        </div>
       </div>
 
       {questions.map((question, index) => (

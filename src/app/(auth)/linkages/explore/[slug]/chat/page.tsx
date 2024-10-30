@@ -18,6 +18,7 @@ import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import LinkageStore from "@/containers/linkages/linkage-store";
+import ActivityButton from "@/components/button/activity-button";
 
 interface Message {
   sender: "user" | "ai";
@@ -194,11 +195,11 @@ const LinkageAIChatInterface: React.FC = () => {
               <div key={i.id} className="flex flex-col gap-2 py-2">
                 <Link
                   href={`/linkages/explore/${slug}/chat/${i.id}`}
-                  className="flex flex-row items-center justify-between text-sm text-white border-b border-[#C3B1FF4D] mb-2"
+                  className="bg-[#3B3247] rounded-md p-3 flex flex-row items-center justify-between text-sm text-white"
                 >
                   <div>
-                    <p className="font-semibold mb-1">{i.name}</p>
-                    <div className="-ml-2 flex flex-row items-center font-medium mb-2">
+                    <p className="font-semibold">{i.name}</p>
+                    <div className="-ml-2 flex flex-row items-center font-medium">
                       <Image
                         src="/assets/coin.png"
                         alt="coin"
@@ -212,9 +213,10 @@ const LinkageAIChatInterface: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <button className="py-2 px-6 font-bold bg-[#A166F5] rounded-full mb-2">
-                    Go
-                  </button>
+                  <ActivityButton
+                    className={"text-[#290064] bg-white"}
+                    text={"Go"}
+                  />
                 </Link>
               </div>
             ))}

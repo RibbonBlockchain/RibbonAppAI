@@ -254,6 +254,11 @@ export const getLinkageWalletTransactions = async (id: number) => {
   return res.data;
 };
 
+export const linkageGetOnramp = async (id: number) => {
+  const res = await client.get<TResponse<any>>(`/linkage/${id}/onramp`);
+  return res.data.data;
+};
+
 // STORE
 export const addLinkageStoreItem = async (
   linkageId: number,

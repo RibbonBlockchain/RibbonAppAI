@@ -66,7 +66,7 @@ const Question: React.FC<QuestionProps> = ({
           value={question.text}
           onChange={(e) => onChangeQuestion(e.target.value)}
           placeholder="Write your question here"
-          className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+          className="py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
         />
       </div>
 
@@ -85,7 +85,7 @@ const Question: React.FC<QuestionProps> = ({
             onChangeOptionType(newType);
             onSelectChange(newType);
           }}
-          className="appearance-none w-full py-3 px-2 rounded-lg border border-[#E5E7EB] text-sm font-normal text-white bg-inherit"
+          className="appearance-none w-full py-3 px-2 rounded-lg border border-[#F2EEFF40] text-sm font-normal text-white bg-inherit"
         >
           <option className="bg-[#0B0228] py-1.5" value="BOOLEAN">
             Boolean
@@ -117,13 +117,13 @@ const Question: React.FC<QuestionProps> = ({
                 value={option.value}
                 onChange={(e) => onChangeOption(e.target.value, index)}
                 placeholder={`Option ${index + 1}`}
-                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
               />
             ) : question.type === "BOOLEAN" ? (
               <select
                 value={option.value}
                 onChange={(e) => onChangeOption(e.target.value, index)}
-                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white"
+                className="w-full py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white"
               >
                 <option className="bg-[#0B0228] py-1.5" value="">
                   Select an option

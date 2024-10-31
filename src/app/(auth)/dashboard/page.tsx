@@ -102,7 +102,9 @@ const Dashboard = () => {
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
           <Topbar />
 
-          <SwipeCards />
+          <div className="w-full">
+            <SwipeCards />
+          </div>
 
           <div className="mt-4 w-full flex flex-row items-center justify-between gap-2">
             <RewardButton />
@@ -161,7 +163,7 @@ const Dashboard = () => {
                     <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/questionnaire/${i.id}`}
-                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-3 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.name}</p>
@@ -201,7 +203,7 @@ const Dashboard = () => {
                     <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/survey/${i.id}`}
-                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-3 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.name}</p>
@@ -241,7 +243,7 @@ const Dashboard = () => {
                     <div key={i.id} className="flex flex-col gap-3">
                       <Link
                         href={`/tasks/${i.id}`}
-                        className="bg-[#3B3247] rounded-md px-3 py-1.5 flex flex-row items-center justify-between text-sm text-white"
+                        className="bg-[#3B3247] rounded-md px-3 py-3 flex flex-row items-center justify-between text-sm text-white"
                       >
                         <div>
                           <p className="font-bold mb-1">{i.task}</p>

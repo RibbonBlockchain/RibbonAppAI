@@ -62,6 +62,7 @@ const SwipeCards = () => {
             convertedPoints={convertedPoints.toFixed(2)}
             rotateBalance={rotateBalance}
             setRotateBalance={setRotateBalance}
+            handleWalletTx={() => router.push("/wallet")}
           />
         )}
 

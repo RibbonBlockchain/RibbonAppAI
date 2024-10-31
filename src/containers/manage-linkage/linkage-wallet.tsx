@@ -180,8 +180,6 @@ const LinkageWallet = ({
         {onrampUrl ? (
           <Link
             href={onrampUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className={clsx(
               "flex flex-col items-center justify-center gap-3 text-sm text-center py-1 rounded-full"
             )}

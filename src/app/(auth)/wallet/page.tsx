@@ -108,7 +108,7 @@ const MainWallet = () => {
           <ArrowLeft
             stroke="#939393"
             onClick={() => router.back()}
-            className="flex cursor-pointer"
+            className="flex cursor-pointer w-[28px] h-[28px]"
           />
           <div className="flex flex-row gap-2 items-center justify-center text-white -mt-6 text-base font-semibold">
             <Image alt="coin" width={24} height={24} src="/assets/BASE.svg" />{" "}
@@ -181,8 +181,6 @@ const MainWallet = () => {
             {onrampUrl ? (
               <Link
                 href={onrampUrl}
-                target="_blank"
-                rel="noopener noreferrer"
                 className={clsx(
                   "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
                 )}
@@ -300,7 +298,7 @@ const MainWallet = () => {
                       </div>
                     </div>
                     <p className="text-sm font-bold">
-                      {(token.balance * currentPrice).toFixed(2)}
+                      $ {(token.balance * currentPrice).toFixed(2)}
                     </p>
                   </div>
                 ))}

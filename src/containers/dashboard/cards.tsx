@@ -12,13 +12,15 @@ export const PointBalanceCard = ({
   convertedPoints,
   rotateBalance,
   setRotateBalance,
+  handleWalletTx,
 }: {
   points: number;
   convertedPoints: string;
   rotateBalance: boolean;
+  handleWalletTx: any;
   setRotateBalance: (value: boolean) => void;
 }) => (
-  <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
+  <div className="bg-[#3f3856] flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:min-w-full max-w-[452px] h-[210px] p-4 my-2 mt-2 border border-[#D6CBFF4D]">
     <div className="flex flex-row items-start justify-between">
       <div>
         <p className="text-sm font-medium mb-2">Ribbon balance</p>
@@ -61,9 +63,12 @@ export const PointBalanceCard = ({
       {/* <div className="p-3" onClick={onClick}>
         <Wallet2 size="28" color="#ffffff" variant="Bold" />
       </div> */}
+      <p className="flex self-end text-xs font-medium">
+        {convertedPoints}/50,000 ribbon
+      </p>{" "}
     </div>
 
-    <div className="flex flex-col gap-3 mt-4">
+    {/* <div className="flex flex-col gap-3 mt-4">
       <p className="flex self-end text-xs font-medium">
         {convertedPoints}/50,000 ribbon
       </p>
@@ -84,6 +89,31 @@ export const PointBalanceCard = ({
           </p>
         </Link>
       </div>
+    </div> */}
+    <div className="w-full pt-4 flex gap-4 items-center justify-between text-xs font-bold">
+      <div className="cursor-not-allowed w-full items-center justify-center flex flex-col gap-2">
+        <div className="flex items-center p-3 bg-stone-400 justify-center border border-[#D6CBFF] rounded-full ">
+          <ArrowUp stroke="#7C56FE" />
+        </div>
+        Send
+      </div>
+
+      <div className="cursor-not-allowed w-full items-center justify-center flex flex-col gap-2">
+        <div className="flex items-center p-3 bg-stone-400 justify-center border border-[#D6CBFF] rounded-full ">
+          <ArrowDown stroke="#7C56FE" />
+        </div>
+        Recieve
+      </div>
+
+      <div
+        onClick={handleWalletTx}
+        className="cursor-pointer w-full items-center justify-center flex flex-col gap-2"
+      >
+        <div className="flex items-center p-3 bg-white justify-center border border-[#D6CBFF] rounded-full ">
+          <Redo2 size={24} color="#7C56FE" />
+        </div>
+        Claim
+      </div>
     </div>
   </div>
 );
@@ -103,7 +133,7 @@ export const WalletBalanceCard = ({
   handleReceiveToken: any;
   onclick: () => void;
 }) => (
-  <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:w-[400px] max-w-auto h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
+  <div className="bg-[#3f3856] text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:min-w-full max-w-[452px] h-[210px] p-4 my-2 flex flex-col mt-2 border border-[#D6CBFF4D]">
     <div>
       <div className="flex flex-row w-full items-center justify-between">
         <p className="text-sm font-bold mb-2">Wallet Balance</p>

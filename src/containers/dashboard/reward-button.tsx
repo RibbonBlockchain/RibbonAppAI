@@ -73,17 +73,28 @@ const RewardButton: React.FC = () => {
   return (
     <div className="w-full">
       {isDisabled ? (
-        <div className="w-full flex flex-row items-center text-center justify-center">
-          {formatTime(countdown)}
+        <div className="relative w-full">
+          <Image
+            width={150}
+            height={88}
+            alt="reward"
+            className="w-full opacity-35"
+            src={"/assets/daily-reward.svg"}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-white font-semibold text-base">
+              {formatTime(countdown)}
+            </span>
+          </div>
         </div>
       ) : (
         <Image
-          src={"/assets/daily-reward.svg"}
-          alt=""
           width={150}
           height={88}
+          alt="reward"
           className="w-full"
           onClick={claimReward}
+          src={"/assets/daily-reward.svg"}
         />
       )}
       {showSuccess && <SuccessAnimation />}

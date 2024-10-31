@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Send, User } from "iconsax-react";
+import { useRouter } from "next/navigation";
 import { useRateSurvey, useSubmitSurvey } from "@/api/user";
+import SuccessAnimation from "@/components/success-animation";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 
 interface Option {
@@ -21,6 +23,10 @@ interface Question {
 }
 
 const SurveyChat = ({ questions }: { questions: Question[] }) => {
+  const router = useRouter();
+
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
   const [messages, setMessages] = useState<
     { sender: "user" | "ai"; text: string; options?: Option[] }[]
   >([]);
@@ -230,6 +236,11 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
       },
     ]);
     setClaimReward(false);
+    setShowSuccess(true);
+
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 3000);
   };
 
   useEffect(() => {
@@ -342,6 +353,8 @@ const SurveyChat = ({ questions }: { questions: Question[] }) => {
           </div>
         )}
       </div>
+
+      {showSuccess && <SuccessAnimation />}
     </div>
   );
 };

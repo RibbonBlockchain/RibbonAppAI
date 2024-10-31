@@ -53,17 +53,17 @@ const Linkages = () => {
     setSelectedTab(tab);
   };
 
-  const handleQueryChange = (newQuery: string) => {
-    setQuery(newQuery);
-  };
-
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
     params: { page: 1, pageSize: 10, query },
   });
 
+  const handleQueryChange = (newQuery: string) => {
+    setQuery(newQuery);
+    refetch();
+  };
+
   const handleSearchSubmit = (query: string) => {
     refetch();
-    console.log(query, "here");
   };
 
   const { data: featuredLinkages } = useGetDiscoveryFeaturedLinkages({
@@ -75,6 +75,9 @@ const Linkages = () => {
   const { data: statuses } = useGetDiscoveryLinkageStatus({
     params: { page: 1, pageSize: 20 },
   });
+
+  const searching = query && discoveryLinkages;
+  const noSearchResult = query && discoveryLinkages?.data?.data.length === 0;
 
   const openModal = (
     images: {
@@ -173,113 +176,152 @@ const Linkages = () => {
             ))}
           </div>
 
-          <div className="px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
-            {tabs.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => handleTabClick(tab.value)}
-                className={`min-w-fit px-3 py-3 ${
-                  selectedTab === tab.value
-                    ? "text-white border-b-2 border-b-white"
-                    : "bg-transparent text-[#F2EEFF]"
-                }`}
-              >
-                {tab.name}
-              </button>
-            ))}
-          </div>
+          {searching ? (
+            <>
+              {discoveryLinkages?.data?.data && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <p className="text-lg font-semibold">
+                      Heare are your search results
+                    </p>
+                    <p className="text-sm">Linkages based on your search</p>
+                  </div>
 
-          <div className="w-full flex">
-            {selectedTab === "for-you" && (
-              <div className="w-full flex flex-col gap-10">
-                {featuredLinkages?.data && (
-                  <div className="w-full flex flex-col gap-3">
-                    <div>
-                      <div className="flex flex-row items-center justify-between">
-                        <p className="text-lg font-semibold">
-                          Featured Linkages
-                        </p>
-                        <button
-                          onClick={() => setFeatureModalOpen(true)}
-                          className="py-1.5 px-2 text-[13px] bg-[#3f3953] rounded-[12px] text-white"
-                        >
-                          Feature your linkage
-                        </button>
+                  {discoveryLinkages?.data?.data.map((i: any) => (
+                    <LinkagesCard
+                      key={i.name}
+                      name={i.name}
+                      slug={i.slug}
+                      image={i.logo}
+                      author={i.userId}
+                      description={i.description}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="px-1 flex flex-row gap-2 w-[inherit] border-b border-[#F2EEFF40] overflow-x-auto scroll-hidden">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.value}
+                    onClick={() => handleTabClick(tab.value)}
+                    className={`min-w-fit px-3 py-3 ${
+                      selectedTab === tab.value
+                        ? "text-white border-b-2 border-b-white font-bold"
+                        : "bg-transparent text-[#F2EEFF]"
+                    }`}
+                  >
+                    {tab.name}
+                  </button>
+                ))}
+              </div>
+              <div className="w-full flex">
+                {selectedTab === "for-you" && (
+                  <div className="w-full flex flex-col gap-10">
+                    {featuredLinkages?.data && (
+                      <div className="w-full flex flex-col gap-3">
+                        <div>
+                          <div className="flex flex-row items-center justify-between">
+                            <p className="text-lg font-semibold">
+                              Featured Linkages
+                            </p>
+                            <button
+                              onClick={() => setFeatureModalOpen(true)}
+                              className="py-1.5 px-2 text-[13px] bg-[#3f3953] rounded-[12px] text-white"
+                            >
+                              Feature your linkage
+                            </button>
+                          </div>
+                          <p className="text-sm">This week&apos;s top picks </p>
+                        </div>
+                        {featuredLinkages?.data?.data?.map((i: any) => (
+                          <LinkagesCard
+                            featured={true}
+                            key={i.linkage.id}
+                            name={i.linkage.name}
+                            slug={i.linkage.slug}
+                            image={i.linkage.logo}
+                            author={i.linkage.userId}
+                            description={i.linkage.description}
+                          />
+                        ))}
                       </div>
-                      <p className="text-sm">This week&apos;s top picks </p>
-                    </div>
-                    {featuredLinkages?.data?.data?.map((i: any) => (
-                      <LinkagesCard
-                        featured={true}
-                        key={i.linkage.id}
-                        name={i.linkage.name}
-                        slug={i.linkage.slug}
-                        image={i.linkage.logo}
-                        author={i.linkage.userId}
-                        description={i.linkage.description}
-                      />
-                    ))}
+                    )}
+
+                    {discoveryLinkages?.data?.data && (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          <p className="text-lg font-semibold">
+                            Recommended for you
+                          </p>
+                          <p className="text-sm">
+                            Linkages based on your response
+                          </p>
+                        </div>
+
+                        {discoveryLinkages?.data?.data.map((i: any) => (
+                          <LinkagesCard
+                            key={i.name}
+                            name={i.name}
+                            slug={i.slug}
+                            image={i.logo}
+                            author={i.userId}
+                            description={i.description}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {discoveryLinkages?.data?.data && (
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-lg font-semibold">
-                        Recommended for you
-                      </p>
-                      <p className="text-sm">Linkages based on your response</p>
-                    </div>
-
-                    {discoveryLinkages?.data?.data.map((i: any) => (
-                      <LinkagesCard
-                        key={i.name}
-                        name={i.name}
-                        slug={i.slug}
-                        image={i.logo}
-                        author={i.userId}
-                        description={i.description}
-                      />
-                    ))}
+                {selectedTab === "following" && (
+                  <div>
+                    <p>Linkages you follow will appear here</p>
                   </div>
                 )}
-              </div>
-            )}
 
-            {selectedTab === "following" && (
-              <div>
-                <p>Linkages you follow will appear here</p>
-              </div>
-            )}
-
-            {selectedTab === "my-linkages" && (
-              <div>
-                {linkages?.data && (
-                  <div className="flex flex-col gap-3">
-                    {linkages?.data.map((i: any) => (
-                      <FeaturedLinkages
-                        key={i.name}
-                        name={i.name}
-                        slug={i.slug}
-                        image={i.logo}
-                        author={i.userId}
-                        description={i.description}
-                      />
-                    ))}
+                {selectedTab === "my-linkages" && (
+                  <div>
+                    {linkages?.data && (
+                      <div className="flex flex-col gap-3">
+                        {linkages?.data.map((i: any) => (
+                          <FeaturedLinkages
+                            key={i.name}
+                            name={i.name}
+                            slug={i.slug}
+                            image={i.logo}
+                            author={i.userId}
+                            description={i.description}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>
-            )}
 
-            {selectedTab === "dms" && (
-              <div>
-                <p>
-                  DMs and interactions you have with linkages will appear here
-                </p>
-              </div>
-            )}
-          </div>
+                {selectedTab === "dms" && (
+                  <div>
+                    <p>
+                      DMs and interactions you have with linkages will appear
+                      here
+                    </p>
+                  </div>
+                )}
+              </div>{" "}
+            </>
+          )}
         </div>
+
+        {noSearchResult && (
+          <div className="flex items-center justify-center min-h-[300px]">
+            <div className="flex flex-col items-center text-center gap-2">
+              <p className="text-base">Not found</p>
+              <p className="text-xs">Try a different search term.</p>
+            </div>
+          </div>
+        )}
 
         {statusModalOpen && (
           <DisplayStatusModal

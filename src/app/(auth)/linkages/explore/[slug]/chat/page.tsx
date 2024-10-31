@@ -161,14 +161,7 @@ const LinkageAIChatInterface: React.FC = () => {
                 height={44}
                 src={data?.data.logo || "/assets/sample-icon.png"}
               />
-              <div>
-                <p className="text-lg font-bold">{data?.data?.name}</p>
-                {hideAddWallet ? (
-                  <button onClick={handleAddWallet}>Connect wallet</button>
-                ) : (
-                  <p>Wallet connected</p>
-                )}
-              </div>
+              <p className="text-lg font-bold">{data?.data?.name}</p>
             </div>
           </div>
           <VolumeHigh size="32" color="#ffffff" />

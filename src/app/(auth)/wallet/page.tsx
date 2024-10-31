@@ -46,8 +46,9 @@ const MainWallet = () => {
       { address: destinationWallet, amount: amount },
       {
         onSuccess: () => {
-          refetch();
-          setShowSuccessAnimation(true),
+          refetch(),
+            refetchTokenList,
+            setShowSuccessAnimation(true),
             setOpenTx(false),
             handleGetWalletTransaction(),
             toast.success("Transaction successfull");
@@ -78,7 +79,7 @@ const MainWallet = () => {
   const { data: onramp } = useUserGetOnramp();
   const onrampUrl = onramp?.url;
 
-  const { data: tokenList } = useUserListTokens();
+  const { data: tokenList, refetch: refetchTokenList } = useUserListTokens();
 
   const [claimAmount, setClaimAmount] = useState<number | null>(null);
   const { mutate: claimUsdc, isPending: claimPending } = useClaimUsdc();
@@ -92,8 +93,10 @@ const MainWallet = () => {
       { amount: claimAmount as number },
       {
         onSuccess: () => {
-          deductPointBalance();
-          refetch(),
+          deductPointBalance(),
+            refetch(),
+            refetchTokenList,
+            setShowSuccessAnimation(true),
             toast.success("points claim successful"),
             setClaimUsdcModal(false);
         },

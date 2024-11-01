@@ -20,7 +20,7 @@ const OrganizationDetails = () => {
 
   const { mutate: update } = useUpdateProfile();
 
-  const SES_Score = user?.wallet.point;
+  const SES_Score = user?.wallet.ses;
 
   const phoneNumber = user?.phone ? parsePhoneNumber(user.phone) : null;
   const formattedPhoneNumber = phoneNumber

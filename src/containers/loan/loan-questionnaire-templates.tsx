@@ -1,12 +1,12 @@
 import clsx from "clsx";
 import { Plus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { QuestionType } from "@/api/linkage/types";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import Question from "../questionnaire/question-template";
-import { useUploadLinkageQuestionnaire } from "@/api/linkage";
+import { useUploadLinkageLoanCreation } from "@/api/linkage";
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
@@ -31,11 +31,11 @@ const UploadLoanQuestionniareTemplate = ({
   linkageId: number;
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = useUploadLinkageQuestionnaire();
+  const { mutate, isPending } = useUploadLinkageLoanCreation();
 
   // Define default values
   const defaultQuestionnaireName = "";
-  const defaultLoanAmount = "0";
+  const defaultLoanAmount = 0;
   const defaultQuestions: LinkageQuestion[] = [
     {
       text: "",
@@ -55,6 +55,25 @@ const UploadLoanQuestionniareTemplate = ({
   const [installmentPeriod, setInstallmentPeriod] = useState(0);
   const [installmentAmount, setInstallmentAmount] = useState(0);
 
+  const calculateInstallment = () => {
+    if (loanAmount <= 0 || interestRate < 0 || repaymentPeriod <= 0) {
+      setInstallmentAmount(0);
+      return;
+    }
+
+    const dailyRate = interestRate / 100 / 365; // Daily interest rate
+    const n = repaymentPeriod; // Total number of payments (in days)
+
+    const M = (loanAmount * dailyRate) / (1 - Math.pow(1 + dailyRate, -n));
+    setInstallmentAmount(M); // Set installment amount to state
+  };
+
+  useEffect(() => {
+    calculateInstallment();
+  }, [loanAmount, interestRate, repaymentPeriod, installmentPeriod]);
+
+  console.log(installmentAmount, "amount here");
+
   const handleAddQuestion = () => {
     setQuestions([
       ...questions,
@@ -72,7 +91,18 @@ const UploadLoanQuestionniareTemplate = ({
 
   const handleSubmitLinkageQuestionnaireManually = () => {
     mutate(
-      { body: { type: "LOAN", name: questionnaireName, questions }, linkageId },
+      {
+        body: {
+          type: "LOAN",
+          name: questionnaireName,
+          questions,
+          amount: loanAmount,
+          interest: interestRate,
+          timeline: repaymentPeriod,
+          period: installmentPeriod,
+        },
+        linkageId,
+      },
       {
         onSuccess: () => {
           toast.success("Questionnaire successfully added");
@@ -180,7 +210,7 @@ const UploadLoanQuestionniareTemplate = ({
         <input
           type="text"
           value={loanAmount}
-          onChange={(e) => setLoanAmount(e.target.value)}
+          onChange={(e: any) => setLoanAmount(e.target.value)}
           placeholder="Enter loan amount"
           className="py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
         />

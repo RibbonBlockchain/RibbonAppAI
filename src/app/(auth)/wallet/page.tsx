@@ -27,6 +27,7 @@ import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
+import { useGetAuth } from "@/api/auth";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -65,6 +66,10 @@ const MainWallet = () => {
   const loanWalletDetails = loanWallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );
+
+  const { data: user } = useGetAuth({ enabled: true });
+  const points = user?.wallet?.balance * 5000;
+  const disableClaimButton = points < 10000;
 
   const {
     mutate: getWalletTx,
@@ -174,7 +179,15 @@ const MainWallet = () => {
 
           <div className="flex flex-row gap-4 items-center justify-center">
             <button
-              onClick={() => setClaimUsdcModal(true)}
+              onClick={() => {
+                if (disableClaimButton) {
+                  toast.error(
+                    "You need a minimum of 10,000 ribbon points to claim USDC."
+                  );
+                } else {
+                  setClaimUsdcModal(true);
+                }
+              }}
               className={clsx(
                 "mt-5 w-full bg-[#3f3856] text-center py-3 font-semibold rounded-[12px]"
               )}

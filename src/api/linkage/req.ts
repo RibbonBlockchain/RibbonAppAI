@@ -6,6 +6,7 @@ import {
   TDiscoveryLinkageResponse,
   TSubmitLinkageQuestionnaireAnswer,
   TUpdateLinkageStoreItem,
+  TUploadLinkageLoanCreationBody,
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
@@ -160,6 +161,17 @@ export const submitLinkageQuestionnaireAnswer = async ({
     `linkage/${linkageId}/questionnaire/${questionnaireId}/respond`,
     body
   );
+  return res.data;
+};
+
+export const uploadLinkageLoanCreation = async ({
+  linkageId,
+  body,
+}: {
+  body: TUploadLinkageLoanCreationBody;
+  linkageId: number;
+}) => {
+  const res = await client.post(`linkage/${linkageId}/loan`, body);
   return res.data;
 };
 

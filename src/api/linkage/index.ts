@@ -37,6 +37,7 @@ import {
   getLinkageStoreOrders,
   linkageBaseName,
   linkageGetOnramp,
+  uploadLinkageLoanCreation,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -45,6 +46,7 @@ import {
   TDisburseLoanBody,
   TSubmitLinkageQuestionnaireAnswer,
   TUpdateLinkageStoreItem,
+  TUploadLinkageLoanCreationBody,
   TUploadLinkageQuestionnaireBody,
   TUploadLinkageStatusBody,
   getDiscoveryLinkagesParams,
@@ -250,6 +252,19 @@ export const useSubmitLinkageQuestionnaireAnswer = () => {
       questionnaireId: number;
     }) =>
       submitLinkageQuestionnaireAnswer({ body, linkageId, questionnaireId }),
+  });
+};
+
+export const useUploadLinkageLoanCreation = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      body,
+      linkageId,
+    }: {
+      body: TUploadLinkageLoanCreationBody;
+      linkageId: number;
+    }) => uploadLinkageLoanCreation({ body, linkageId }),
   });
 };
 

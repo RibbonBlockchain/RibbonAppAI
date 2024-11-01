@@ -8,17 +8,15 @@ const UnfulfilledOrders = () => {
 
   const { data } = useGetLinkageStoreOrders(Number(linkageId));
 
-  const orders = data.data;
-
   return (
     <div>
-      {orders.length === 0 ? (
+      {data?.data?.length === 0 ? (
         <div className="min-h-[150px] flex items-center justify-center mx-auto text-sm">
           You do not have any items in your store.
         </div>
       ) : (
         <div className="flex flex-col gap-6 mb-10">
-          {orders.map((order: any) => (
+          {data?.data?.map((order: any) => (
             <div
               key={order.id}
               className="border border-[#D6CBFF33] p-4 py-6 rounded-[24px]"

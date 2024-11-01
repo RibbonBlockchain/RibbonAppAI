@@ -63,9 +63,6 @@ export const PointBalanceCard = ({
       {/* <div className="p-3" onClick={onClick}>
         <Wallet2 size="28" color="#ffffff" variant="Bold" />
       </div> */}
-      <p className="flex self-end text-xs font-medium">
-        {convertedPoints}/50,000 ribbon
-      </p>{" "}
     </div>
 
     {/* <div className="flex flex-col gap-3 mt-4">

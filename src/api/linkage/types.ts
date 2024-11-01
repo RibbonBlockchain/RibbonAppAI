@@ -69,6 +69,17 @@ export type TDiscoveryLinkageResponse = {
   pagination: Pagination;
 };
 
+export type TUploadLinkageLoanCreationBody = {
+  amount: number;
+  asset?: string;
+  name: string;
+  interest: number;
+  timeline: number;
+  period: number;
+  questions: LinkageQuestion[];
+  type?: string;
+};
+
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
   questions: LinkageQuestion[];

@@ -175,6 +175,17 @@ export const uploadLinkageLoanCreation = async ({
   return res.data;
 };
 
+export const linkageGetLoan = async ({
+  slug,
+  body,
+}: {
+  body: { id: number };
+  slug: string;
+}) => {
+  const res = await client.post(`linkage/slug/${slug}/loan`, body);
+  return res.data;
+};
+
 // STATUS
 export const uploadLinkageStatus = async ({
   linkageId,

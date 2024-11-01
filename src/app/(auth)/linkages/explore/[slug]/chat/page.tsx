@@ -5,6 +5,7 @@ import {
   useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
+  useLinkageGetLoan,
 } from "@/api/linkage";
 import clsx from "clsx";
 import Link from "next/link";
@@ -47,24 +48,12 @@ const LinkageAIChatInterface: React.FC = () => {
     linkageId: id,
   });
 
-  const { mutate: addWallet } = useAddWallet();
-  const userWalletAddress: string = localStorage.getItem("address") as string;
+  // const { mutate, data: getLoan } = useLinkageGetLoan();
+  // console.log(getLoan, "here");
 
-  const handleAddWallet = () => {
-    if (!userWalletAddress) {
-      toast.error("Wallet address not found");
-    } else {
-      addWallet(
-        { address: userWalletAddress },
-        {
-          onSuccess: () => {
-            toast.success("Wallet linked successfully");
-            setHideAddWallet(false);
-          },
-        }
-      );
-    }
-  };
+  // const handleGetLinkageLoan = () => {
+  //   mutate({ body: { id: 101 }, slug });
+  // };
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
@@ -166,6 +155,8 @@ const LinkageAIChatInterface: React.FC = () => {
           </div>
           <VolumeHigh size="32" color="#ffffff" />
         </div>
+
+        {/* <div onClick={handleGetLinkageLoan}>get loan</div> */}
 
         <div className="flex flex-row items-center justify-center self-center bg-[#3f3856] p-1 rounded-full mt-2 w-[90%]">
           {tabs.map((tab) => (

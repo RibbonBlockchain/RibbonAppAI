@@ -38,6 +38,7 @@ import {
   linkageBaseName,
   linkageGetOnramp,
   uploadLinkageLoanCreation,
+  linkageGetLoan,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -265,6 +266,14 @@ export const useUploadLinkageLoanCreation = () => {
       body: TUploadLinkageLoanCreationBody;
       linkageId: number;
     }) => uploadLinkageLoanCreation({ body, linkageId }),
+  });
+};
+
+export const useLinkageGetLoan = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body, slug }: { body: { id: number }; slug: string }) =>
+      linkageGetLoan({ body, slug }),
   });
 };
 

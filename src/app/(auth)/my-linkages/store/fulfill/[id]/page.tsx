@@ -1,65 +1,63 @@
 "use client";
 
 import React from "react";
-import Button from "@/components/button";
-import { ArrowLeft2, ShoppingCart } from "iconsax-react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { formatOrderDate } from "@/lib/values/format-dateandtime-ago";
+import Button from "@/components/button";
+import { useRouter } from "next/navigation";
 import { Phone, Pin, User } from "lucide-react";
+import { ArrowLeft2, ShoppingCart } from "iconsax-react";
+import { formatOrderDate } from "@/lib/values/format-dateandtime-ago";
 
 const FulfillOrder = () => {
   const router = useRouter();
 
   const data = {
-    data: [
-      {
-        id: 36,
-        status: "PROCESSING",
-        userId: 34,
-        linkageId: 25,
-        createdAt: "2024-10-22T10:15:38.893Z",
-        updatedAt: "2024-10-22T10:15:38.893Z",
-        items: [
-          {
-            id: 3,
-            price: 100,
-            quantity: 2,
-            status: "PROCESSING",
-            orderId: 36,
-            userId: 34,
-            itemId: 6,
-            linkageId: 25,
-            createdAt: "2024-10-22T10:15:38.893Z",
-            updatedAt: "2024-10-22T10:15:38.893Z",
-          },
-          {
-            id: 4,
-            price: 15,
-            quantity: 1,
-            status: "PROCESSING",
-            orderId: 36,
-            userId: 34,
-            itemId: 9,
-            linkageId: 25,
-            createdAt: "2024-10-22T10:15:38.893Z",
-            updatedAt: "2024-10-22T10:15:38.893Z",
-          },
-          {
-            id: 5,
-            price: 26,
-            quantity: 2,
-            status: "PROCESSING",
-            orderId: 36,
-            userId: 34,
-            itemId: 10,
-            linkageId: 25,
-            createdAt: "2024-10-22T10:15:38.893Z",
-            updatedAt: "2024-10-22T10:15:38.893Z",
-          },
-        ],
-      },
-    ],
+    data: {
+      id: 36,
+      status: "PROCESSING",
+      userId: 34,
+      linkageId: 25,
+      createdAt: "2024-10-22T10:15:38.893Z",
+      updatedAt: "2024-10-22T10:15:38.893Z",
+      items: [
+        {
+          id: 3,
+          price: 100,
+          quantity: 2,
+          status: "PROCESSING",
+          orderId: 36,
+          userId: 34,
+          itemId: 6,
+          linkageId: 25,
+          createdAt: "2024-10-22T10:15:38.893Z",
+          updatedAt: "2024-10-22T10:15:38.893Z",
+        },
+        {
+          id: 4,
+          price: 15,
+          quantity: 1,
+          status: "PROCESSING",
+          orderId: 36,
+          userId: 34,
+          itemId: 9,
+          linkageId: 25,
+          createdAt: "2024-10-22T10:15:38.893Z",
+          updatedAt: "2024-10-22T10:15:38.893Z",
+        },
+        {
+          id: 5,
+          price: 26,
+          quantity: 2,
+          status: "PROCESSING",
+          orderId: 36,
+          userId: 34,
+          itemId: 10,
+          linkageId: 25,
+          createdAt: "2024-10-22T10:15:38.893Z",
+          updatedAt: "2024-10-22T10:15:38.893Z",
+        },
+      ],
+    },
   };
 
   return (
@@ -75,61 +73,59 @@ const FulfillOrder = () => {
       </div>
 
       <section className="p-2 flex flex-col gap-4 mt-2">
-        <p className="text-base font-semibold">Order # - {data?.data[0].id}</p>
+        <p className="text-base font-semibold">Order # - {data.data.id}</p>
 
         <p className="text-base font-semibold">
           Item details{" "}
           <span className="text-xs text-[#98A2B3] font-normal ml-[2px]">
-            (Ordered on {formatOrderDate(data?.data[0].createdAt as string)})
+            (Ordered on {formatOrderDate(data.data.createdAt)})
           </span>
         </p>
 
         <div className="flex flex-col gap-6 mb-6">
-          {data?.data?.map((order: any) => (
-            <div key={order.id}>
-              <div className="flex flex-col gap-3 pb-6 border-b border-[#D6CBFF33]">
-                {order.items.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="relative flex flex-row items-center justify-between"
-                  >
-                    <div className="flex flex-row items-center gap-1">
-                      <Image
-                        width={68}
-                        alt={item.name}
-                        height={68}
-                        src={""}
-                        className="bg-white rounded-md w-[68px] h-[68px]"
-                      />
-                      <div className="flex flex-col items-start justify-between py-1">
-                        <p className="text-xs">Item info</p>
-                        <p className="text-sm font-semibold line-clamp-2">
-                          Item Id: {item.name || item.itemId}
-                        </p>
-                        <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
-                          {/* Size - {item.size}, Color - {item.color} */}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="min-w-fit flex flex-col items-start gap-2 justify-around py-1">
-                      <p className="text-base font-bold">
-                        {item.currency || "$"}
-                        {item.price}
+          <div key={data.data.id}>
+            <div className="flex flex-col gap-3 pb-6 border-b border-[#D6CBFF33]">
+              {data.data.items.map((item: any) => (
+                <div
+                  key={item.id}
+                  className="relative flex flex-row items-center justify-between"
+                >
+                  <div className="flex flex-row items-center gap-1">
+                    <Image
+                      width={68}
+                      alt={item.name}
+                      height={68}
+                      src={""}
+                      className="bg-white rounded-md w-[68px] h-[68px]"
+                    />
+                    <div className="flex flex-col items-start justify-between py-1">
+                      <p className="text-xs">Item info</p>
+                      <p className="text-sm font-semibold line-clamp-2">
+                        Item Id: {item.name || item.itemId}
                       </p>
-                      <p className="text-sm font-semibold">
-                        {item.quantity} unit(s)
+                      <p className="text-xs font-medium text-[#98A2B3] mt-0.5">
+                        {/* Size - {item.size}, Color - {item.color} */}
                       </p>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  <div className="min-w-fit flex flex-col items-start gap-2 justify-around py-1">
+                    <p className="text-base font-bold">
+                      {item.currency || "$"}
+                      {item.price}
+                    </p>
+                    <p className="text-sm font-semibold">
+                      {item.quantity} unit(s)
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
-      <section className=" flex flex-col gap-4 pb-6 border-b border-[#D6CBFF33]">
+      <section className="flex flex-col gap-4 pb-6 border-b border-[#D6CBFF33]">
         <p className="text-base font-semibold">Customer details</p>
 
         <div className="flex flex-col gap-4">

@@ -64,7 +64,7 @@ const DeliveredOrders = () => {
 
               <div className="mt-4 flex flex-row items-center justify-between">
                 <p className="text-xs font-medium text-[#98A2B3]">
-                  Order Id: {order.id} | Status: {order.status}
+                  Order # - {order.id} | Status: {order.status}
                 </p>
               </div>
             </div>

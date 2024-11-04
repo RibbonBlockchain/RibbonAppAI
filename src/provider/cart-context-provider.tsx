@@ -17,6 +17,7 @@ interface Item {
 interface CartItem {
   item: Item;
   quantity: number;
+  linkageId: any;
 }
 
 interface CartContextType {
@@ -49,11 +50,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
           return prev.filter((cartItem) => cartItem.item.id !== item.id);
         } else {
           return prev.map((cartItem) =>
-            cartItem.item.id === item.id ? { ...cartItem, quantity } : cartItem
+            cartItem.item.id === item.id
+              ? { ...cartItem, quantity, linkageId: item.linkageId }
+              : cartItem
           );
         }
       } else {
-        return [...prev, { item, quantity }];
+        return [...prev, { item, quantity, linkageId: item.linkageId }];
       }
     });
   };

@@ -71,7 +71,7 @@ const UnfulfilledOrders = () => {
               <div className="mt-4 flex flex-row items-center justify-between">
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-medium text-[#98A2B3]">
-                    Order Id: {order.id} | Status: {order.status}
+                    Order # - {order.id} | Status: {order.status}
                   </p>
                   <p className="text-xs font-medium text-[#98A2B3]">
                     On {formatOrderDate(order.createdAt as string)}

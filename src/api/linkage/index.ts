@@ -37,8 +37,8 @@ import {
   getLinkageStoreOrders,
   linkageBaseName,
   linkageGetOnramp,
-  uploadLinkageLoanCreation,
   linkageGetLoan,
+  createLoan,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -256,7 +256,7 @@ export const useSubmitLinkageQuestionnaireAnswer = () => {
   });
 };
 
-export const useUploadLinkageLoanCreation = () => {
+export const useCreateLoan = () => {
   return useMutation({
     onError,
     mutationFn: ({
@@ -265,7 +265,7 @@ export const useUploadLinkageLoanCreation = () => {
     }: {
       body: TUploadLinkageLoanCreationBody;
       linkageId: number;
-    }) => uploadLinkageLoanCreation({ body, linkageId }),
+    }) => createLoan({ body, linkageId }),
   });
 };
 

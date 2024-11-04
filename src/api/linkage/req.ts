@@ -164,7 +164,7 @@ export const submitLinkageQuestionnaireAnswer = async ({
   return res.data;
 };
 
-export const uploadLinkageLoanCreation = async ({
+export const createLoan = async ({
   linkageId,
   body,
 }: {

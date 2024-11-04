@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import UnfulfilledOrders from "./unfulfilled-orders";
+import FulfilledOrders from "./fulfilled-orders";
+import DeliveredOrders from "./delivered-orders";
 
 const tabs = [
   { name: "Unfifilled", value: "unfulfilled" },
@@ -30,8 +32,8 @@ const Orders = () => {
         ))}
       </div>
       {selectedTab === "unfulfilled" && <UnfulfilledOrders />}
-      {selectedTab === "fulfilled" && <div>Fulfilled orders</div>}
-      {selectedTab === "delivered" && <div>Delivered orders</div>}
+      {selectedTab === "fulfilled" && <FulfilledOrders />}
+      {selectedTab === "delivered" && <DeliveredOrders />}
     </div>
   );
 };

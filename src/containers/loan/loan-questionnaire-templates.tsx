@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { QuestionType } from "@/api/linkage/types";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import Question from "../questionnaire/question-template";
-import { useUploadLinkageLoanCreation } from "@/api/linkage";
+import { useCreateLoan } from "@/api/linkage";
 
 const repaymentFrequencyOptions = [
   { value: 1, label: "Daily" },
@@ -38,7 +38,7 @@ const UploadLoanQuestionnaireTemplate = ({
   linkageId: number;
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = useUploadLinkageLoanCreation();
+  const { mutate, isPending } = useCreateLoan();
 
   const defaultQuestionnaireName = "";
   const defaultLoanAmount = 0;
@@ -116,7 +116,7 @@ const UploadLoanQuestionnaireTemplate = ({
     mutate(
       {
         body: {
-          type: "LOAN",
+          // type: "LOAN",
           name: questionnaireName,
           amount: loanAmount,
           interest: interestRate,
@@ -131,6 +131,11 @@ const UploadLoanQuestionnaireTemplate = ({
           toast.success("Loan service created successfully");
           setQuestionnaireName(defaultQuestionnaireName);
           setQuestions(defaultQuestions);
+          setLoanAmount(0);
+          setInterestRate(0);
+          setRepaymentFrequency(0);
+          setRepaymentPeriod(0);
+          setInstallmentAmount(0);
           router.push("/my-linkages");
         },
       }
@@ -265,7 +270,7 @@ const UploadLoanQuestionnaireTemplate = ({
             {repaymentFrequencyOptions.map((option) => (
               <option
                 key={option.value}
-                className="bg-inherit text-white"
+                className="bg-[#0B0228] text-white"
                 value={option.value}
               >
                 {option.label}

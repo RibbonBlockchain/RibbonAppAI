@@ -46,3 +46,20 @@ export const formatDateTime = (
     time: timePart,
   };
 };
+
+export const formatOrderDate = (isoDate: string): string => {
+  const date = new Date(isoDate);
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
+  const formattedDate = date.toLocaleDateString("en-US", options);
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "pm" : "am";
+  const formattedTime = `${hours % 12 || 12}:${minutes}${ampm}`;
+
+  return `${formattedDate} at ${formattedTime}`;
+};

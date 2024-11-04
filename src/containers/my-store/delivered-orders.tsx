@@ -1,18 +1,12 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
-import Button from "@/components/button";
 import { useGetLinkageStoreOrders } from "@/api/linkage";
-import { useRouter } from "next/navigation";
-import { formatOrderDate } from "@/lib/values/format-dateandtime-ago";
 
-const UnfulfilledOrders = () => {
-  const router = useRouter();
-
+const DeliveredOrders = () => {
   const linkageId = localStorage.getItem("selectedLinkageId");
 
-  const { data } = useGetLinkageStoreOrders(Number(linkageId));
+  //   const { data } = useGetLinkageStoreOrders(Number(linkageId));
+  const data = { data: [] };
 
   return (
     <div>
@@ -20,7 +14,7 @@ const UnfulfilledOrders = () => {
         <div className="mt-24 flex flex-col gap-3 items-center justify-center text-center mx-auto">
           <p className="text-xl font-bold">Oops!</p>
           <p className="text-sm font-normal">
-            You do not have any unfulfilled order at the moment.
+            You do not have any delivered order at the moment.
           </p>
         </div>
       ) : (
@@ -69,23 +63,9 @@ const UnfulfilledOrders = () => {
               </div>
 
               <div className="mt-4 flex flex-row items-center justify-between">
-                <div className="flex flex-col gap-1">
-                  <p className="text-xs font-medium text-[#98A2B3]">
-                    Order Id: {order.id} | Status: {order.status}
-                  </p>
-                  <p className="text-xs font-medium text-[#98A2B3]">
-                    On {formatOrderDate(order.createdAt as string)}
-                  </p>
-                </div>
-
-                <Button
-                  onClick={() =>
-                    router.push(`/my-linkages/store/fulfill/${order.id}`)
-                  }
-                  className="max-w-fit px-4 rounded-full py-1.5"
-                >
-                  <p className="text-sm font-medium">Fulfill Order</p>
-                </Button>
+                <p className="text-xs font-medium text-[#98A2B3]">
+                  Order Id: {order.id} | Status: {order.status}
+                </p>
               </div>
             </div>
           ))}
@@ -95,4 +75,4 @@ const UnfulfilledOrders = () => {
   );
 };
 
-export default UnfulfilledOrders;
+export default DeliveredOrders;

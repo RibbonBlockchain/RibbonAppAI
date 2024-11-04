@@ -75,7 +75,7 @@ export type TUploadLinkageLoanCreationBody = {
   name: string;
   interest: number;
   timeline: number;
-  period: number;
+  period: number | string;
   questions: LinkageQuestion[];
   type?: string;
 };

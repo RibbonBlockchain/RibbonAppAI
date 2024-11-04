@@ -1,12 +1,19 @@
 import clsx from "clsx";
 import { Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
 import { QuestionType } from "@/api/linkage/types";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import Question from "../questionnaire/question-template";
-import { useUploadLinkageLoanCreation } from "@/api/linkage";
+import { useCreateLoan } from "@/api/linkage";
+
+const repaymentFrequencyOptions = [
+  { value: 1, label: "Daily" },
+  { value: 2, label: "Weekly" },
+  { value: 3, label: "Monthly" },
+  { value: 4, label: "Yearly" },
+];
 
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
@@ -25,15 +32,14 @@ interface Options {
   label?: string;
 }
 
-const UploadLoanQuestionniareTemplate = ({
+const UploadLoanQuestionnaireTemplate = ({
   linkageId,
 }: {
   linkageId: number;
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = useUploadLinkageLoanCreation();
+  const { mutate, isPending } = useCreateLoan();
 
-  // Define default values
   const defaultQuestionnaireName = "";
   const defaultLoanAmount = 0;
   const defaultQuestions: LinkageQuestion[] = [
@@ -49,11 +55,10 @@ const UploadLoanQuestionniareTemplate = ({
   );
   const [loanAmount, setLoanAmount] = useState(defaultLoanAmount);
   const [questions, setQuestions] = useState(defaultQuestions);
-
   const [interestRate, setInterestRate] = useState(0);
   const [repaymentPeriod, setRepaymentPeriod] = useState(0);
-  const [installmentPeriod, setInstallmentPeriod] = useState(0);
   const [installmentAmount, setInstallmentAmount] = useState(0);
+  const [repaymentFrequency, setRepaymentFrequency] = useState(1); // Default to daily
 
   const calculateInstallment = () => {
     if (loanAmount <= 0 || interestRate < 0 || repaymentPeriod <= 0) {
@@ -61,18 +66,36 @@ const UploadLoanQuestionniareTemplate = ({
       return;
     }
 
-    const dailyRate = interestRate / 100 / 365; // Daily interest rate
-    const n = repaymentPeriod; // Total number of payments (in days)
+    let rate, n;
 
-    const M = (loanAmount * dailyRate) / (1 - Math.pow(1 + dailyRate, -n));
-    setInstallmentAmount(M); // Set installment amount to state
+    switch (repaymentFrequency) {
+      case 1: // Daily
+        rate = interestRate / 100 / 365;
+        n = repaymentPeriod; // Number of days
+        break;
+      case 2: // Weekly
+        rate = interestRate / 100 / 52;
+        n = repaymentPeriod; // Number of weeks
+        break;
+      case 3: // Monthly
+        rate = interestRate / 100 / 12;
+        n = repaymentPeriod; // Number of months
+        break;
+      case 4: // Yearly
+        rate = interestRate / 100;
+        n = repaymentPeriod; // Number of years
+        break;
+      default:
+        return;
+    }
+
+    const M = (loanAmount * rate) / (1 - Math.pow(1 + rate, -n));
+    setInstallmentAmount(M);
   };
 
   useEffect(() => {
     calculateInstallment();
-  }, [loanAmount, interestRate, repaymentPeriod, installmentPeriod]);
-
-  console.log(installmentAmount, "amount here");
+  }, [loanAmount, interestRate, repaymentPeriod, repaymentFrequency]);
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -89,25 +112,30 @@ const UploadLoanQuestionniareTemplate = ({
     setQuestions(questions.filter((_, i) => i !== index));
   };
 
-  const handleSubmitLinkageQuestionnaireManually = () => {
+  const handleCreateLoanService = () => {
     mutate(
       {
         body: {
-          type: "LOAN",
+          // type: "LOAN",
           name: questionnaireName,
-          questions,
           amount: loanAmount,
           interest: interestRate,
           timeline: repaymentPeriod,
-          period: installmentPeriod,
+          period: repaymentFrequency,
+          questions,
         },
         linkageId,
       },
       {
         onSuccess: () => {
-          toast.success("Questionnaire successfully added");
+          toast.success("Loan service created successfully");
           setQuestionnaireName(defaultQuestionnaireName);
           setQuestions(defaultQuestions);
+          setLoanAmount(0);
+          setInterestRate(0);
+          setRepaymentFrequency(0);
+          setRepaymentPeriod(0);
+          setInstallmentAmount(0);
           router.push("/my-linkages");
         },
       }
@@ -210,7 +238,7 @@ const UploadLoanQuestionniareTemplate = ({
         <input
           type="text"
           value={loanAmount}
-          onChange={(e: any) => setLoanAmount(e.target.value)}
+          onChange={(e: any) => setLoanAmount(Number(e.target.value))}
           placeholder="Enter loan amount"
           className="py-3 px-2 rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
         />
@@ -225,41 +253,51 @@ const UploadLoanQuestionniareTemplate = ({
           <input
             type="text"
             value={interestRate}
-            onChange={(e: any) => setInterestRate(e.target.value)}
+            onChange={(e: any) => setInterestRate(Number(e.target.value))}
             placeholder=""
-            className="p-2 bg-green-500 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
+            className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
           />
         </div>
+
         <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
-          <p className="text-sm font-medium">Repayment period</p>
+          <p className="text-sm font-semibold">Repayment Frequency</p>
+          <p>-</p>
+          <select
+            value={repaymentFrequency}
+            onChange={(e: any) => setRepaymentFrequency(Number(e.target.value))}
+            className="bg-inherit max-w-[100px] py-3 px-2 rounded-lg border border-[#F2EEFF40] text-sm font-normal text-white"
+          >
+            {repaymentFrequencyOptions.map((option) => (
+              <option
+                key={option.value}
+                className="bg-[#0B0228] text-white"
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
+          <p className="text-sm font-medium">Repayment Period</p>
           <p>-</p>
           <input
             type="text"
             value={repaymentPeriod}
-            onChange={(e: any) => setRepaymentPeriod(e.target.value)}
+            onChange={(e: any) => setRepaymentPeriod(Number(e.target.value))}
             placeholder=""
             className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
           />
         </div>
-        <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
-          <p className="text-sm font-medium">Installment period</p>
-          <p>-</p>
-          <input
-            type="text"
-            value={installmentPeriod}
-            onChange={(e: any) => setInstallmentPeriod(e.target.value)}
-            placeholder=""
-            className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-          />
-        </div>
+
         <div className="grid grid-cols-[2fr_0.5fr_1fr] items-center justify-between">
           <p className="text-sm font-medium">Installment amount</p>
           <p>-</p>
           <input
             type="text"
             value={installmentAmount}
-            onChange={(e: any) => setInstallmentAmount(e.target.value)}
-            placeholder=""
+            readOnly
             className="p-2 max-w-[100px] rounded-lg bg-inherit border border-[#F2EEFF40] text-sm font-normal text-white placeholder:text-[#98A2B3]"
           />
         </div>
@@ -295,7 +333,7 @@ const UploadLoanQuestionniareTemplate = ({
       </button>
 
       <button
-        onClick={handleSubmitLinkageQuestionnaireManually}
+        onClick={handleCreateLoanService}
         className={clsx(
           "flex justify-center py-2.5 mt-8 text-sm text-start font-semibold w-full rounded-[8px] text-[#290064]",
           isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
@@ -307,4 +345,4 @@ const UploadLoanQuestionniareTemplate = ({
   );
 };
 
-export default UploadLoanQuestionniareTemplate;
+export default UploadLoanQuestionnaireTemplate;

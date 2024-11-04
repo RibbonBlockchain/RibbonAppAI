@@ -164,7 +164,7 @@ export const submitLinkageQuestionnaireAnswer = async ({
   return res.data;
 };
 
-export const uploadLinkageLoanCreation = async ({
+export const createLoan = async ({
   linkageId,
   body,
 }: {
@@ -172,6 +172,17 @@ export const uploadLinkageLoanCreation = async ({
   linkageId: number;
 }) => {
   const res = await client.post(`linkage/${linkageId}/loan`, body);
+  return res.data;
+};
+
+export const linkageGetLoan = async ({
+  slug,
+  body,
+}: {
+  body: { id: number };
+  slug: string;
+}) => {
+  const res = await client.post(`linkage/slug/${slug}/loan`, body);
   return res.data;
 };
 

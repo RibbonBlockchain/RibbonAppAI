@@ -175,7 +175,7 @@ export const createLoan = async ({
   return res.data;
 };
 
-export const linkageGetLoan = async ({
+export const requestLoan = async ({
   slug,
   body,
 }: {
@@ -183,6 +183,22 @@ export const linkageGetLoan = async ({
   slug: string;
 }) => {
   const res = await client.post(`linkage/slug/${slug}/loan`, body);
+  return res.data;
+};
+
+export const linkageGetLoan = async ({ slug }: { slug: string }) => {
+  const res = await client.get(`linkage/slug/${slug}/loan`);
+  return res.data;
+};
+
+export const linkageGetLoanById = async ({
+  slug,
+  loanId,
+}: {
+  slug: string;
+  loanId: number;
+}) => {
+  const res = await client.get(`linkage/slug/${slug}/loan/${loanId}`);
   return res.data;
 };
 

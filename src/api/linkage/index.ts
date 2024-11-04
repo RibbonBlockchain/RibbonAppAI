@@ -39,6 +39,8 @@ import {
   linkageGetOnramp,
   linkageGetLoan,
   createLoan,
+  linkageGetLoanById,
+  requestLoan,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -269,11 +271,32 @@ export const useCreateLoan = () => {
   });
 };
 
-export const useLinkageGetLoan = () => {
+export const useRequestLoan = () => {
   return useMutation({
     onError,
     mutationFn: ({ body, slug }: { body: { id: number }; slug: string }) =>
-      linkageGetLoan({ body, slug }),
+      requestLoan({ body, slug }),
+  });
+};
+
+export const useLinkageGetLoan = ({ slug }: { slug: string }) => {
+  return useQuery({
+    enabled: !!slug,
+    queryKey: ["linkage-loanService", slug],
+    queryFn: () => linkageGetLoan({ slug }),
+  });
+};
+
+export const useLinkageGetLoanById = ({
+  slug,
+  loanId,
+}: {
+  slug: string;
+  loanId: number;
+}) => {
+  return useQuery({
+    queryKey: ["linkage-loanService-id"],
+    queryFn: () => linkageGetLoanById({ slug, loanId }),
   });
 };
 

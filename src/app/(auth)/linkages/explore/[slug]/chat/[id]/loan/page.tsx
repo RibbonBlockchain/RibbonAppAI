@@ -3,28 +3,22 @@
 import {
   useGetLinkageBySlug,
   useGetLinkageQuestionnaireById,
+  useLinkageGetLoanById,
 } from "@/api/linkage";
 import React from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
-import LinkageQuestionnaireChat from "@/containers/questionnaire/linkage-questionnaire-chat";
+import LoanApplication from "@/containers/loan/loan-application-template";
 
-const LinkageQuestionnairePage = () => {
+const GetLoanApplication = () => {
   const router = useRouter();
   const params = useParams();
 
   const slug = params.slug as string;
-  const questionnaireId = Number(params.id);
+  const loanId = Number(params.id);
 
-  const { data } = useGetLinkageBySlug(slug);
-
-  const linkageId = data?.data?.id;
-
-  const { data: linkageQ } = useGetLinkageQuestionnaireById({
-    linkageId,
-    questionnaireId,
-  });
+  const { data: loanService } = useLinkageGetLoanById({ slug, loanId });
 
   return (
     <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
@@ -34,7 +28,7 @@ const LinkageQuestionnairePage = () => {
           <div className="flex flex-row items-center gap-4">
             <Image alt="AI" width={44} height={44} src="/assets/AI.png" />
             <div className="flex flex-row gap-1">
-              <p>{linkageQ?.data?.name}</p>
+              <p>{loanService?.data?.name}</p>
             </div>
           </div>
         </div>
@@ -42,12 +36,10 @@ const LinkageQuestionnairePage = () => {
       </div>
 
       <div className="flex-1 overflow-hidden flex">
-        {linkageQ?.data?.type === "QUESTIONNAIRE" && (
-          <LinkageQuestionnaireChat questions={linkageQ?.data?.questions} />
-        )}
+        <LoanApplication />
       </div>
     </div>
   );
 };
 
-export default LinkageQuestionnairePage;
+export default GetLoanApplication;

@@ -1,18 +1,18 @@
 "use client";
 
+import {
+  useRequestLoan,
+  useGetUserWallet,
+  useLinkageGetLoanById,
+} from "@/api/linkage";
 import clsx from "clsx";
 import Image from "next/image";
 import { User } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { shorten, shortenTransaction } from "@/lib/utils/shorten";
+import { useParams, useRouter } from "next/navigation";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  useGetUserWallet,
-  useLinkageGetLoanById,
-  useRequestLoan,
-} from "@/api/linkage";
+import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 
 interface Message {
   sender: "user" | "ai";
@@ -111,7 +111,7 @@ const LoanApplication = () => {
       <div class="loan-details">
       <p>Welcome! You are about to take a loan! Here are the details:</p> 
       <br />
-      <p>- <strong>Loan offer</strong>: ${loanOffer}%</p>
+      <p>- <strong>Loan offer</strong>: ${loanOffer}</p>
       <p>- <strong>Interest Rate</strong>: ${interestRate}%</p>
       <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
       <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
@@ -163,7 +163,7 @@ const LoanApplication = () => {
           <div class="loan-details">
             <p>Welcome! You are about to take a loan! Here are the details:</p> 
             <br />
-            <p>- <strong>Loan offer</strong>: ${loanOffer}%</p>
+            <p>- <strong>Loan offer</strong>: ${loanOffer}</p>
             <p>- <strong>Interest Rate</strong>: ${interestRate}%</p>
             <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
             <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
@@ -211,7 +211,7 @@ const LoanApplication = () => {
           <div class="loan-application">
             <p>Below are the details of your loan application:</p> 
             <br />
-            <p>- <strong>Loan amount</strong>: ${loanOffer}%</p>
+            <p>- <strong>Loan amount</strong>: ${loanOffer}</p>
             <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
             <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
               2

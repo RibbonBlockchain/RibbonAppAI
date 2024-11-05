@@ -8,13 +8,6 @@ import { SpinnerIcon } from "@/components/icons/spinner";
 import Question from "../questionnaire/question-template";
 import { useCreateLoan } from "@/api/linkage";
 
-const repaymentFrequencyOptions = [
-  { value: 1, label: "Daily" },
-  { value: 2, label: "Weekly" },
-  { value: 3, label: "Monthly" },
-  { value: 4, label: "Yearly" },
-];
-
 export type TUploadLinkageQuestionnaireBody = {
   name: string;
   linkageId: number;
@@ -31,6 +24,13 @@ interface Options {
   value: string;
   label?: string;
 }
+
+export const repaymentFrequencyOptions = [
+  { value: 1, label: "Daily" },
+  { value: 2, label: "Weekly" },
+  { value: 3, label: "Monthly" },
+  { value: 4, label: "Yearly" },
+];
 
 const UploadLoanQuestionnaireTemplate = ({
   linkageId,

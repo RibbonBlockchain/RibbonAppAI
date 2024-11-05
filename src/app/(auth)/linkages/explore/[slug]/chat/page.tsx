@@ -48,12 +48,7 @@ const LinkageAIChatInterface: React.FC = () => {
     linkageId: id,
   });
 
-  // const { mutate, data: getLoan } = useLinkageGetLoan();
-  // console.log(getLoan, "here");
-
-  // const handleGetLinkageLoan = () => {
-  //   mutate({ body: { id: 101 }, slug });
-  // };
+  const { data: loanServices } = useLinkageGetLoan({ slug });
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
@@ -179,6 +174,37 @@ const LinkageAIChatInterface: React.FC = () => {
               <div key={i.id} className="flex flex-col gap-2 py-2">
                 <Link
                   href={`/linkages/explore/${slug}/chat/${i.id}`}
+                  className="bg-[#3B3247] rounded-md p-3 flex flex-row items-center justify-between text-sm text-white"
+                >
+                  <div>
+                    <p className="font-semibold">{i.name}</p>
+                    <div className="-ml-2 flex flex-row items-center font-medium">
+                      <Image
+                        src="/assets/coin.png"
+                        alt="coin"
+                        height={32}
+                        width={32}
+                      />
+                      {i.type === "LOAN" ? (
+                        "Loan application"
+                      ) : (
+                        <p>{i.reward} usdc / question</p>
+                      )}
+                    </div>
+                  </div>
+                  <ActivityButton
+                    className={"text-[#290064] bg-white"}
+                    text={"Go"}
+                  />
+                </Link>
+              </div>
+            ))}
+
+            <p>Loan services</p>
+            {loanServices?.data?.data.map((i: any) => (
+              <div key={i.id} className="flex flex-col gap-2 py-2">
+                <Link
+                  href={`/linkages/explore/${slug}/chat/${i.id}/loan`}
                   className="bg-[#3B3247] rounded-md p-3 flex flex-row items-center justify-between text-sm text-white"
                 >
                   <div>

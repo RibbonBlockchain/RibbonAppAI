@@ -3,12 +3,16 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { User } from "iconsax-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { shortenTransaction } from "@/lib/utils/shorten";
+import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import React, { useState, useEffect, useRef } from "react";
-import { useGetUserWallet, useDisburseLoan } from "@/api/linkage";
+import {
+  useGetUserWallet,
+  useLinkageGetLoanById,
+  useRequestLoan,
+} from "@/api/linkage";
 
 interface Message {
   sender: "user" | "ai";
@@ -16,69 +20,218 @@ interface Message {
   options?: { id: number; value: string }[];
 }
 
-interface LoanApplicationProps {
-  linkageId: number;
-  questions: any[];
-}
-
-const LoanApplication: React.FC<LoanApplicationProps> = ({
-  linkageId,
-  questions,
-}) => {
+const LoanApplication = () => {
   const router = useRouter();
+  const params = useParams();
+  const slug = params.slug as string;
+  const loanId = Number(params.id);
+
+  const { data: loanService, refetch } = useLinkageGetLoanById({
+    slug,
+    loanId,
+  });
+  const loanData = loanService?.data;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const [loanAmount, setLoanAmount] = useState("0");
+  const [installmentAmount, setInstallmentAmount] = useState(0);
 
   const { data: loanWallet } = useGetUserWallet();
-
   const loanWalletDetails = loanWallet?.data?.find(
     (item: any) => item.provider === "COINBASE"
   );
 
-  const { mutate: disburseLoan, isPending } = useDisburseLoan();
+  const { mutate: requestLoan, isPending } = useRequestLoan();
+
+  const interestRate =
+    loanData?.interest !== undefined ? loanData.interest : "";
+
+  const loanOffer = loanData?.amount !== undefined ? loanData.amount : "";
+
+  const timeline = loanData?.timeline !== undefined ? loanData.timeline : "";
+
+  const frequencies = ["", "daily", "weekly", "monthly", "yearly"];
+  const frequencyDays = ["", "day(s)", "week(s)", "month(s)", "year(s)"];
+
+  const period =
+    loanData?.period !== undefined ? frequencies[loanData.period] : "";
+
+  const periodDays =
+    loanData?.period !== undefined ? frequencyDays[loanData.period] : "";
+
+  const calculateInstallment = () => {
+    if (
+      loanData?.amount <= 0 ||
+      loanData?.interest < 0 ||
+      loanData?.timeline <= 0
+    ) {
+      setInstallmentAmount(0);
+      return;
+    }
+
+    let rate, n;
+
+    switch (loanData?.period) {
+      case 1: // Daily
+        rate = loanData?.interest / 100 / 365;
+        n = loanData?.timeline; // Number of days
+        break;
+      case 2: // Weekly
+        rate = loanData?.interest / 100 / 52;
+        n = loanData?.timeline; // Number of weeks
+        break;
+      case 3: // Monthly
+        rate = loanData?.interest / 100 / 12;
+        n = loanData?.timeline; // Number of months
+        break;
+      case 4: // Yearly
+        rate = loanData?.interest / 100;
+        n = loanData?.timeline; // Number of years
+        break;
+      default:
+        return;
+    }
+
+    const M = (loanData?.amount * rate) / (1 - Math.pow(1 + rate, -n));
+    setInstallmentAmount(M);
+  };
+
+  useEffect(() => {
+    calculateInstallment();
+  }, [
+    loanData?.amount,
+    loanData?.interest,
+    loanData?.timeline,
+    loanData?.period,
+  ]);
+
+  useEffect(() => {
+    if (currentStep === 1) {
+      const updatedMessage = `
+      <div class="loan-details">
+      <p>Welcome! You are about to take a loan! Here are the details:</p> 
+      <br />
+      <p>- <strong>Loan offer</strong>: ${loanOffer}%</p>
+      <p>- <strong>Interest Rate</strong>: ${interestRate}%</p>
+      <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
+      <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
+        2
+      )}</p>
+     <p>- <strong>Repayment schedule</strong>: ${period}<p/>
+              <br/>
+              <p>
+               ${period} repayment of $${installmentAmount.toFixed(
+        2
+      )} will be automatically deducted from your wallet.</p>
+            <p>
+            <br />
+      Do you agree to proceed with the loan application?</p>
+      <br />
+    </div>`;
+
+      // Check if there are any messages before updating
+      setMessages((prev) => {
+        const newMessages = prev.slice();
+        if (newMessages.length > 0) {
+          newMessages[0].text = updatedMessage; // Update the first message if it exists
+        } else {
+          // If no messages exist, add a new message
+          newMessages.push({
+            sender: "ai",
+            text: updatedMessage,
+            options: [
+              { id: 1, value: "Proceed" },
+              { id: 2, value: "Come back later" },
+            ],
+          });
+        }
+        return newMessages;
+      });
+    }
+  }, [installmentAmount, currentStep]);
 
   const shortWalletAddress = shortenTransaction(loanWalletDetails?.address);
   const disableInput = false;
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const setStep = (step: number) => {
-    if (step === 2 && loanWalletDetails) {
+    if (step === 1) {
       setMessages([
-        ...messages,
         {
           sender: "ai",
-          text: questions[1].text.replace(
-            "$balance",
-            loanWalletDetails?.balance || "0"
-          ),
+          text: `
+          <div class="loan-details">
+            <p>Welcome! You are about to take a loan! Here are the details:</p> 
+            <br />
+            <p>- <strong>Loan offer</strong>: ${loanOffer}%</p>
+            <p>- <strong>Interest Rate</strong>: ${interestRate}%</p>
+            <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
+            <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
+              2
+            )}</p>
+             <p>- <strong>Repayment schedule</strong>:<p/>
+              <br/>
+              <p>
+               ${period} repayment of $${installmentAmount.toFixed(
+            2
+          )} will be automatically deducted from your wallet.</p>
+            <p>
+            <br />
+            Do you agree to proceed with the loan application?</p> 
+            <br/>
+          </div>`,
+          options: [
+            { id: 1, value: "Proceed" },
+            { id: 2, value: "Come back later" },
+          ],
+        },
+      ]);
+    } else if (step === 2 && loanWalletDetails) {
+      setMessages([
+        {
+          sender: "ai",
+          text: `
+          <div class="wallet-balance">
+            <p>Your wallet currently has a balance of $${
+              loanWalletDetails?.balance || "0"
+            } USDC.</p>
+            <br />
+             <p>Your wallet address is ${
+               shorten(loanWalletDetails?.address) || "0"
+             }.</p>
+          </div>
+        `,
         },
       ]);
     } else if (step === 3) {
       setMessages([
-        ...messages,
         {
           sender: "ai",
-          text: questions[2].text,
-          options: [],
+          text: `
+          <div class="loan-application">
+            <p>Below are the details of your loan application:</p> 
+            <br />
+            <p>- <strong>Loan amount</strong>: ${loanOffer}%</p>
+            <p>- <strong>Loan Duration</strong>: ${timeline} ${periodDays}</p>
+            <p>- <strong>Installment amount</strong>: $${installmentAmount.toFixed(
+              2
+            )}</p>
+             <p>- <strong>Repayment amount</strong>:
+             <br/>
+             $${installmentAmount.toFixed(
+               2
+             )} will be automatically deducted from your wallet ${period}.</p>
+            <p>
+            <br />
+            
+          </div>`,
         },
       ]);
     } else if (step === 4) {
       setMessages([
-        ...messages,
         {
           sender: "ai",
-          text: questions[3].text,
-        },
-      ]);
-    } else if (step === 1) {
-      setMessages([
-        {
-          sender: "ai",
-          text: questions[0].text,
-          options: questions[0].options,
+          text: "Your loan has been successfully disbursed.",
         },
       ]);
     }
@@ -87,13 +240,7 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
 
   useEffect(() => {
     if (currentStep === 1) {
-      setMessages([
-        {
-          sender: "ai",
-          text: questions[0].text,
-          options: questions[0].options,
-        },
-      ]);
+      setStep(1);
     }
   }, [currentStep]);
 
@@ -106,23 +253,18 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
   };
 
   const handleAmountSubmit = () => {
-    disburseLoan(
-      { linkageId, body: { amount: Number(loanAmount) } },
+    requestLoan(
+      { slug, body: { id: loanId } },
       {
         onSuccess: () => {
           setMessages([
             ...messages,
             {
               sender: "ai",
-              text: questions[3].text
-                .replace("$amount", loanAmount)
-                .replace("$address", shortWalletAddress),
+              text: `Your loan of ${loanData?.amount} has been successfully disbursed to ${shortWalletAddress}.`,
             },
           ]);
-          setCurrentStep(4); // Optionally handle the next step or end of the process
-        },
-        onError: () => {
-          toast.error("Failed to disburse the loan. Please try again.");
+          setCurrentStep(4);
         },
       }
     );
@@ -158,7 +300,7 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
                   : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
               }`}
             >
-              {msg.text}
+              <div dangerouslySetInnerHTML={{ __html: msg.text }} />
               {msg.options && (
                 <div className="mt-2 flex flex-col gap-2">
                   {msg.options.map((option) => (
@@ -193,26 +335,19 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
             onClick={() => setStep(3)}
             disabled={disableInput}
             className={clsx(
-              "flex justify-center py-2.5 mt-4 text-[15px] text-start font-bold w-full rounded-[8px] ",
+              "flex justify-center py-2.5 mt-4 text-[15px] text-start font-bold w-full rounded-[8px]",
               disableInput
                 ? "border-stone-300 bg-stone-400/50 text-white"
                 : "bg-white text-[#290064]"
             )}
           >
-            Proceed to input Loan Amount
+            Confirm and Proceed
           </button>
         </div>
       )}
 
       {currentStep === 3 && (
         <div className="flex flex-col gap-4 fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
-          <input
-            type="text"
-            value={loanAmount}
-            onChange={(e) => setLoanAmount(e.target.value)}
-            placeholder="Enter loan amount"
-            className="py-3 px-2 rounded-lg bg-inherit border border-[#E5E7EB] text-sm font-normal text-white placeholder:text-[#98A2B3]"
-          />
           <button
             onClick={handleAmountSubmit}
             className={clsx(
@@ -220,7 +355,7 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({
               isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"
             )}
           >
-            {isPending ? <SpinnerIcon /> : "Disburse Loan"}
+            {isPending ? <SpinnerIcon /> : "Request Loan"}
           </button>
         </div>
       )}

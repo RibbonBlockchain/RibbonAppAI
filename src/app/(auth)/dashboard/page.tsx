@@ -278,7 +278,10 @@ const Dashboard = () => {
               )}
 
               {activeMenu === "learn" && (
-                <div>No learn entry at the moment</div>
+                <>
+                  <div>No learn entry at the moment</div>
+                  <Link href={"/influencer"}>INFLUENCER?</Link>
+                </>
               )}
             </div>
           </div>

@@ -13,9 +13,9 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useAtom } from "jotai";
 import toast from "react-hot-toast";
-import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCreateLinkage } from "@/api/linkage";
+import { ChevronDown, Upload } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { categoryOptions } from "@/lib/values/prompts";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
@@ -23,6 +23,13 @@ import { createLinkageAtom } from "@/lib/atoms/auth.atom";
 type Starter = {
   text: string;
 };
+
+const linkageTypeOptions = [
+  { value: "", label: "Select linkage type", disabled: true },
+  { value: "business", label: "Business linkage" },
+  { value: "celebrity", label: "Celebrity linkage" },
+  { value: "personal", label: "Personal linkage" },
+];
 
 const CreateLinkage = () => {
   const router = useRouter();
@@ -36,6 +43,7 @@ const CreateLinkage = () => {
 
   const [selectedId, setSelectedId] = useState<string>("");
   const [name, setName] = useState("");
+  const [linkageType, setlinkageType] = useState("");
   const [description, setDescription] = useState("");
   const [instruction, setInstruction] = useState("");
   const [phone, setPhone] = useState("");
@@ -214,19 +222,49 @@ const CreateLinkage = () => {
           />
         </div>
 
+        <div className="flex flex-col gap-2 relative">
+          <label className="text-sm font-semibold">Linkage type</label>
+
+          <div className="w-full flex items-center justify-center">
+            <select
+              value={linkageType}
+              onChange={(e) => setlinkageType(e.target.value)}
+              className="w-full appearance-none bg-inherit py-3 px-2 rounded-[8px] border border-[#E5E7EB86] text-sm text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none pr-8"
+            >
+              {linkageTypeOptions.map((option, index) => (
+                <option
+                  key={index}
+                  value={option.value}
+                  disabled={option.disabled}
+                  className="bg-[#0B0228] text-[#98A2B3]"
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+
+            <ChevronDown
+              size={18}
+              className="absolute right-2 transform text-gray-400"
+            />
+          </div>
+        </div>
+
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold">Description</label>
+          <label className="text-sm font-semibold">Linkage description</label>
           <textarea
             rows={6}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Write about your Linkages and its capabilities"
+            placeholder="Add a short description about what this AI does"
             className="appearance-none bg-inherit p-2 rounded-[8px] border border-[#E5E7EB86] text-sm text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold">Instructions</label>
+          <label className="text-sm font-semibold">
+            Instructions to train the AI
+          </label>
           <textarea
             rows={6}
             value={instruction}

@@ -252,22 +252,27 @@ const LoanApplication = () => {
     }
   };
 
+  // const handleAmountSubmit = () => {
+  //   requestLoan(
+  //     { slug, body: { id: loanId } },
+
+  //     {
+  //       onSuccess: () => {
+  //         setMessages([
+  //           ...messages,
+  //           {
+  //             sender: "ai",
+  //             text: `Your loan of ${loanData?.amount} has been successfully disbursed to ${shortWalletAddress}.`,
+  //           },
+  //         ]);
+  //         setCurrentStep(4);
+  //       },
+  //     }
+  //   );
+  // };
+
   const handleAmountSubmit = () => {
-    requestLoan(
-      { slug, body: { id: loanId } },
-      {
-        onSuccess: () => {
-          setMessages([
-            ...messages,
-            {
-              sender: "ai",
-              text: `Your loan of ${loanData?.amount} has been successfully disbursed to ${shortWalletAddress}.`,
-            },
-          ]);
-          setCurrentStep(4);
-        },
-      }
-    );
+    requestLoan({ slug, body: { id: loanId } });
   };
 
   useEffect(() => {
@@ -349,7 +354,12 @@ const LoanApplication = () => {
       {currentStep === 3 && (
         <div className="flex flex-col gap-4 fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
           <button
-            onClick={handleAmountSubmit}
+            onClick={() => {
+              handleAmountSubmit(),
+                toast.success(
+                  "Loan disbursement processing, please check your wallet in a while"
+                );
+            }}
             className={clsx(
               "flex justify-center py-2.5 mt-8 text-[15px] text-start font-bold w-full rounded-[8px] text-[#290064]",
               isPending ? "border-stone-300 bg-stone-400/50" : "bg-white"

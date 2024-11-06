@@ -3,11 +3,10 @@
 import Image from "next/image";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
+import { Copy, Gift, Share } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
-import { Gift, Share } from "lucide-react";
+import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
 
 const tabs = [
   { name: "Tyla AI", value: "ai" },
@@ -80,8 +79,8 @@ const Influencer = () => {
 
   return (
     <AuthLayout>
-      <main className="w-full relative h-screen text-white bg-[#251F2E]">
-        <div className="p-4 sm:p-6 fixed bg-[#2c2151] z-20 w-full">
+      <main className="w-auto max-w-[450px] relative h-screen text-white bg-[#251F2E]">
+        <div className="p-4 sm:p-6 fixed bg-[#2c2151] z-20 w-full max-w-[450px] ">
           <div className="flex flex-row items-center gap-4 mt-2">
             <ArrowLeft2
               size="24"
@@ -92,7 +91,7 @@ const Influencer = () => {
             <p className="text-[20px] font-bold">Tyla AI</p>
           </div>
 
-          <div className="bg-[#5e5482] mt-4 flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:min-w-full max-w-[452px] h-auto p-4 my-2 border border-[#D6CBFF4D]">
+          <div className="bg-[#5e5482] h-auto mt-4 flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:min-w-full max-w-[452px] p-4 my-2 border border-[#D6CBFF4D]">
             <div className="flex flex-row items-start justify-between">
               <div className="flex flex-row gap-2 items-center">
                 <Image
@@ -114,7 +113,16 @@ const Influencer = () => {
                   </p>
                 </div>
               </div>
-              <Button className="self-end max-w-fit px-3 py-0.5">Follow</Button>
+
+              <div className="min-h-[86px] flex flex-col items-end justify-between h-[inherit]">
+                <div className="text-[#DFCBFB] text-sm font-normal flex flex-row gap-1 items-center">
+                  walletaddresshere
+                  <Copy size={16} />
+                </div>
+                <Button className="self-end max-w-fit px-3 py-0.5">
+                  Follow
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -135,10 +143,10 @@ const Influencer = () => {
           </div>
         </div>
 
-        <main className="relative rounded-xl w-full top-[270px] overflow-y-auto bg-[#251F2E] flex flex-col">
+        <main className="relative rounded-xl w-full top-[286px] overflow-y-auto bg-[#251F2E] flex flex-col">
           {selectedTab === "ai" && (
             <main className="h-full text-white flex flex-col rounded-xl">
-              <div className="fixed z-20 p-4 py-6 w-full border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+              <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                 <p className="text-xl font-bold">Tyla AI Chat</p>
                 <div className="flex flex-col justify-center gap-1 text-xs font-medium">
                   <p>Balance</p>
@@ -199,6 +207,14 @@ const Influencer = () => {
               </section>
 
               <section className="fixed bottom-0 pb-5 pt-3 px-4 w-full pr-10 z-10 max-w-[450px]">
+                {messages.length === 0 && (
+                  <div className="mt-auto mb-8 text-center text-[#D6CBFF4D]">
+                    <p className="text-lg font-medium">
+                      Start a conversation with Tyla AI!
+                    </p>
+                  </div>
+                )}
+
                 <div className="flex flex-row items-center">
                   <input
                     type="text"
@@ -229,7 +245,7 @@ const Influencer = () => {
 
           {selectedTab === "token" && (
             <main className="h-full text-white flex flex-col rounded-xl">
-              <div className="fixed z-20 p-4 py-6 w-full border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+              <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                 <div className="flex flex-col justify-center gap-1 text-xs font-medium">
                   <p className="text-xl font-bold">3,839.65</p>
                   <p className="text-[10px] font-normal">105 (%0.8)</p>
@@ -266,7 +282,7 @@ const Influencer = () => {
 
           {selectedTab === "store" && (
             <main className="h-full text-white flex flex-col rounded-xl">
-              <div className="fixed z-20 p-4 py-6 w-full border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+              <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                 <p className="text-xl font-bold">Tyla Store</p>
                 <div className="flex flex-col justify-center gap-1 text-xs font-medium">
                   <p>Balance</p>

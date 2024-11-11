@@ -47,12 +47,12 @@ export function Toggle({
       data-component="Toggle"
       onClick={toggleValue}
       data-enabled={value.toString()}
-      className="relative flex items-center gap-2 cursor-pointer overflow-hidden bg-gray-200 text-gray-900 h-10 rounded-full"
+      className="relative flex items-center gap-2 cursor-pointer overflow-hidden bg-[#211d26] h-10 text-white border border-[#D6CBFF4D] rounded-full"
     >
       {labels && (
         <div
           ref={leftRef}
-          className="relative text-gray-600 px-4 z-10 transition-all duration-100 ease-in-out"
+          className="relative text-white px-4 z-10 transition-all duration-100 ease-in-out"
         >
           {labels[0]}
         </div>
@@ -60,14 +60,14 @@ export function Toggle({
       {labels && (
         <div
           ref={rightRef}
-          className="relative text-gray-600 px-4 z-10 transition-all duration-100 ease-in-out"
+          className="relative text-white px-4 z-10 transition-all duration-100 ease-in-out"
         >
           {labels[1]}
         </div>
       )}
       <div
         ref={bgRef}
-        className={`absolute top-0 left-0 h-full bg-gray-900 rounded-full transition-all duration-100 ease-in-out`}
+        className={`absolute top-0 left-0 h-full bg-[#D6CBFF4D] rounded-full transition-all duration-100 ease-in-out`}
       ></div>
     </div>
   );

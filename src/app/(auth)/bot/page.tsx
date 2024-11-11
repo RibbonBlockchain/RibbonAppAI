@@ -13,6 +13,7 @@ import { ArrowLeft2, VolumeHigh } from "iconsax-react";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { Link } from "lucide-react";
 
 interface Message {
   sender: "user" | "ai";
@@ -22,7 +23,7 @@ interface Message {
 const RibbonBot: React.FC = () => {
   const router = useRouter();
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = "harmony-2";
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -120,7 +121,10 @@ const RibbonBot: React.FC = () => {
               </div>
             </div>
           </div>
-          <VolumeHigh size="32" color="#ffffff" />
+
+          <div onClick={() => router.push("/bot/realtime")}>
+            <VolumeHigh size="32" color="#ffffff" />
+          </div>
         </div>
 
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">

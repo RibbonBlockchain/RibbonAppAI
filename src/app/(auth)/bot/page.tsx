@@ -6,7 +6,7 @@ import {
   useGetLinkageQuestionnaire,
 } from "@/api/linkage";
 import Image from "next/image";
-import { Send, User } from "iconsax-react";
+import { Send, Sound, User } from "iconsax-react";
 import { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
@@ -121,10 +121,6 @@ const RibbonBot: React.FC = () => {
               </div>
             </div>
           </div>
-
-          <div onClick={() => router.push("/bot/realtime")}>
-            <VolumeHigh size="32" color="#ffffff" />
-          </div>
         </div>
 
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg bg-aiBackground bg-contain bg-no-repeat">
@@ -179,11 +175,20 @@ const RibbonBot: React.FC = () => {
                 onKeyDown={handleKeyDown}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type a message..."
-                className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
+                className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-28 py-4 border rounded-full"
               />
-              <button onClick={handleSend} className="absolute right-8 z-10">
-                <Send size="32" color="#ffffff" />
-              </button>
+
+              <div className="absolute right-8 z-10 flex flex-row items-center gap-2">
+                <button onClick={handleSend}>
+                  <Send size="32" color="#ffffff" />
+                </button>
+                <div
+                  onClick={() => router.push("/bot/realtime")}
+                  className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full "
+                >
+                  <Sound size="24" color="#FFF" />
+                </div>
+              </div>
             </div>
           </div>
         </div>

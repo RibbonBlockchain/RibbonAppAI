@@ -30,6 +30,7 @@ import { X, Edit, Zap, ArrowUp, ArrowDown } from "lucide-react";
 import clsx from "clsx";
 import { AudioWithWaveform } from "../../../../lib/utils/wavesurfer";
 import WaveSurfer from "wavesurfer.js";
+import Button from "@/components/button";
 
 interface Coordinates {
   lat: number;
@@ -58,12 +59,24 @@ const capitalize = (str: string) => {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
+const LOCAL_RELAY_SERVER_URL: string =
+  process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || "";
+
 const RealtimeInteraction: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = "harmony-2";
 
-  const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY;
+  const apiKey = LOCAL_RELAY_SERVER_URL
+    ? ""
+    : localStorage.getItem("tmp::voice_api_key") ||
+      prompt("OpenAI API Key") ||
+      "";
+  if (apiKey !== "") {
+    localStorage.setItem("tmp::voice_api_key", apiKey);
+  }
+
+  // const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY;
 
   const wavRecorderRef = useRef<WavRecorder>(
     new WavRecorder({ sampleRate: 24000 })
@@ -128,14 +141,14 @@ const RealtimeInteraction: React.FC = () => {
     return `${pad(m)}:${pad(s)}.${pad(hs)}`;
   }, []);
 
-  // const resetAPIKey = useCallback(() => {
-  //   const apiKey = prompt("OpenAI API Key");
-  //   if (apiKey !== null) {
-  //     localStorage.clear();
-  //     localStorage.setItem("tmp::voice_api_key", apiKey);
-  //     window.location.reload();
-  //   }
-  // }, []);
+  const resetAPIKey = useCallback(() => {
+    const apiKey = prompt("OpenAI API Key");
+    if (apiKey !== null) {
+      localStorage.clear();
+      localStorage.setItem("tmp::voice_api_key", apiKey);
+      window.location.reload();
+    }
+  }, []);
 
   const connectConversation = useCallback(async () => {
     const client = clientRef.current;
@@ -503,6 +516,17 @@ const RealtimeInteraction: React.FC = () => {
               />
               <div>
                 <p className="text-lg font-bold">Ribbon AI</p>
+              </div>
+
+              <div>
+                {!LOCAL_RELAY_SERVER_URL && (
+                  <Button
+                    className="h-[40px] bg-[inherit]"
+                    onClick={() => resetAPIKey()}
+                  >
+                    <Edit color="white" size={24} />
+                  </Button>
+                )}
               </div>
             </div>
           </div>

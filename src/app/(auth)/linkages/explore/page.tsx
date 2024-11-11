@@ -22,6 +22,7 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
 import { Add } from "iconsax-react";
+import CelebrityLinkageCard from "@/containers/linkages/celebrity-linkage-card";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -273,6 +274,54 @@ const Linkages = () => {
                         ))}
                       </div>
                     )}
+
+                    {busnessLinkage?.data?.data && (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          <p className="text-lg font-semibold">
+                            Business Linkages
+                          </p>
+                          <p className="text-sm">
+                            Linkages from most popular companies
+                          </p>
+                        </div>
+
+                        {busnessLinkage?.data?.data.map((i: any) => (
+                          <CelebrityLinkageCard
+                            key={i.name}
+                            name={i.name}
+                            slug={i.slug}
+                            image={i.logo}
+                            author={i.userId}
+                            description={i.description}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {celebrityLinkages?.data?.data && (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          <p className="text-lg font-semibold">
+                            Celebrity Linkages
+                          </p>
+                          <p className="text-sm">
+                            Linkages from your favorite celebrities{" "}
+                          </p>
+                        </div>
+
+                        {celebrityLinkages?.data?.data.map((i: any) => (
+                          <CelebrityLinkageCard
+                            key={i.name}
+                            name={i.name}
+                            slug={i.slug}
+                            image={i.logo}
+                            author={i.userId}
+                            description={i.description}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -343,3 +392,116 @@ const Linkages = () => {
 };
 
 export default Linkages;
+
+const busnessLinkage = {
+  data: {
+    data: [
+      {
+        name: "TechCorp Solutions",
+        slug: "techcorp-solutions",
+        logo: "",
+        userId: "user123",
+        description:
+          "TechCorp Solutions is a global leader in software and AI-driven solutions, specializing in enterprise resource planning and automation tools.",
+        industry: "Technology",
+        location: "San Francisco, CA",
+        contactEmail: "contact@techcorp.com",
+        website: "https://www.techcorp.com",
+        establishedYear: 2010,
+        employeeCount: 500,
+      },
+      {
+        name: "Green Ventures Group",
+        slug: "green-ventures-group",
+        logo: "",
+        userId: "user456",
+        description:
+          "Green Ventures Group is committed to sustainable practices and green technology, focusing on renewable energy and eco-friendly innovations.",
+        industry: "Renewable Energy",
+        location: "Denver, CO",
+        contactEmail: "info@greenventures.com",
+        website: "https://www.greenventures.com",
+        establishedYear: 2015,
+        employeeCount: 200,
+      },
+      {
+        name: "Health Innovations Ltd.",
+        slug: "health-innovations-ltd",
+        logo: "",
+        userId: "user789",
+        description:
+          "Health Innovations Ltd. pioneers new medical technologies aimed at improving patient outcomes and enhancing healthcare delivery through AI and IoT.",
+        industry: "Healthcare & MedTech",
+        location: "New York, NY",
+        contactEmail: "support@healthinnovations.com",
+        website: "https://www.healthinnovations.com",
+        establishedYear: 2018,
+        employeeCount: 150,
+      },
+    ],
+  },
+};
+
+const celebrityLinkages = {
+  data: {
+    data: [
+      {
+        name: "Zendaya",
+        slug: "zendaya",
+        logo: "",
+        userId: "user101",
+        description:
+          "Zendaya is an award-winning actress, singer, and fashion icon known for her roles in 'Euphoria' and 'Spider-Man'.",
+        profession: "Actress, Singer",
+        location: "Los Angeles, CA",
+        contactEmail: "contact@zendaya.com",
+        website: "https://www.zendaya.com",
+        establishedYear: 2010,
+        popularityRank: 1, // Ranking based on fame or social media presence
+        socialMedia: {
+          instagram: "@zendaya",
+          twitter: "@Zendaya",
+          facebook: "/ZendayaOfficial",
+        },
+      },
+      {
+        name: "Chris Hemsworth",
+        slug: "chris-hemsworth",
+        logo: "",
+        userId: "user102",
+        description:
+          "Chris Hemsworth is an Australian actor famous for portraying Thor in the Marvel Cinematic Universe.",
+        profession: "Actor",
+        location: "Byron Bay, Australia",
+        contactEmail: "info@chrishemsworth.com",
+        website: "https://www.chrishemsworth.com",
+        establishedYear: 2002,
+        popularityRank: 2,
+        socialMedia: {
+          instagram: "@chrishemsworth",
+          twitter: "@chrishemsworth",
+          facebook: "/ChrisHemsworthOfficial",
+        },
+      },
+      {
+        name: "Taylor Swift",
+        slug: "taylor-swift",
+        logo: "",
+        userId: "user103",
+        description:
+          "Taylor Swift is a Grammy-winning singer-songwriter known for her genre-defying music and chart-topping albums.",
+        profession: "Singer-Songwriter",
+        location: "Nashville, TN",
+        contactEmail: "contact@taylorswift.com",
+        website: "https://www.taylorswift.com",
+        establishedYear: 2006,
+        popularityRank: 3,
+        socialMedia: {
+          instagram: "@taylorswift",
+          twitter: "@taylorswift13",
+          facebook: "/taylorswift",
+        },
+      },
+    ],
+  },
+};

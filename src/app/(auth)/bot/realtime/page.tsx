@@ -29,6 +29,7 @@ import { WavRenderer } from "../../../../components/realtime/utils/wav_renderer"
 import { X, Edit, Zap, ArrowUp, ArrowDown } from "lucide-react";
 import clsx from "clsx";
 import { AudioWithWaveform } from "../../../../lib/utils/wavesurfer";
+import WaveSurfer from "wavesurfer.js";
 
 interface Coordinates {
   lat: number;
@@ -81,6 +82,10 @@ const RealtimeInteraction: React.FC = () => {
 
   const clientCanvasRef = useRef<HTMLCanvasElement>(null);
   const serverCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [currentSpeaker, setCurrentSpeaker] = useState<"client" | "server">(
+    "client"
+  ); // State to track the active speaker
+
   const eventsScrollHeightRef = useRef(0);
   const eventsScrollRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<string>(new Date().toISOString());
@@ -273,7 +278,9 @@ const RealtimeInteraction: React.FC = () => {
 
     const render = () => {
       if (isLoaded) {
-        if (clientCanvas) {
+        // Check which canvas is active and only render that one
+        if (clientCanvas && wavRecorder.recording) {
+          // Set width and height if not set
           if (!clientCanvas.width || !clientCanvas.height) {
             clientCanvas.width = clientCanvas.offsetWidth;
             clientCanvas.height = clientCanvas.offsetHeight;
@@ -289,13 +296,17 @@ const RealtimeInteraction: React.FC = () => {
               clientCtx,
               result.values,
               "#0099ff",
-              10,
+              24,
               0,
-              8
+              10
             );
           }
-        }
-        if (serverCanvas) {
+
+          // Hide server canvas if it's not active
+          if (serverCanvas) serverCanvas.style.display = "none";
+          if (clientCanvas) clientCanvas.style.display = "block";
+        } else if (serverCanvas && wavStreamPlayer.analyser) {
+          // Set width and height if not set
           if (!serverCanvas.width || !serverCanvas.height) {
             serverCanvas.width = serverCanvas.offsetWidth;
             serverCanvas.height = serverCanvas.offsetHeight;
@@ -310,21 +321,41 @@ const RealtimeInteraction: React.FC = () => {
               serverCanvas,
               serverCtx,
               result.values,
-              "#009900",
-              10,
+              "#009900", // Bar color for server canvas
+              24,
               0,
-              8
+              10
             );
           }
+
+          // Hide client canvas if it's not active
+          if (clientCanvas) clientCanvas.style.display = "none";
+          if (serverCanvas) serverCanvas.style.display = "block";
         }
+
+        // Recurse the render function using requestAnimationFrame
         window.requestAnimationFrame(render);
       }
     };
+
     render();
 
     return () => {
       isLoaded = false;
     };
+  }, []);
+
+  useEffect(() => {
+    // Simulating an event that changes the current speaker (this can be replaced with actual logic)
+    const switchSpeaker = () => {
+      setCurrentSpeaker((prev) => (prev === "client" ? "server" : "client"));
+    };
+
+    // Switch speakers every 5 seconds for demonstration purposes
+    const speakerSwitchInterval = setInterval(switchSpeaker, 5000);
+
+    // Clean up the interval when component unmounts
+    return () => clearInterval(speakerSwitchInterval);
   }, []);
 
   useEffect(() => {
@@ -478,15 +509,29 @@ const RealtimeInteraction: React.FC = () => {
         </div>
 
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg">
-          <div className="bg-white py-4 z-10 gap-0.5 flex flex-row items-center justify-between">
-            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-blue-600">
+          <div className="bg-[#CBBEF71A] py-4 z-10 gap-0.5 flex flex-row items-center justify-center">
+            <div
+              className={`relative flex items-center h-20 w-3/4 gap-1 ${
+                currentSpeaker === "client" ? "text-blue-600" : "text-gray-400"
+              }`}
+              style={{
+                display: currentSpeaker === "client" ? "block" : "none",
+              }} // Hide if not active
+            >
               <canvas
                 ref={clientCanvasRef}
                 className="w-full h-full text-current"
               />
             </div>
 
-            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-green-600">
+            <div
+              className={`relative flex items-center h-20 w-3/4 gap-1 ${
+                currentSpeaker === "server" ? "text-green-600" : "text-gray-400"
+              }`}
+              style={{
+                display: currentSpeaker === "server" ? "block" : "none",
+              }} // Hide if not active
+            >
               <canvas
                 ref={serverCanvasRef}
                 className="w-full h-full text-current"

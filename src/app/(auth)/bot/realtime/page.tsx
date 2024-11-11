@@ -6,7 +6,7 @@ import {
   useGetLinkageQuestionnaire,
 } from "@/api/linkage";
 import Image from "next/image";
-import { Send, User } from "iconsax-react";
+import { Microphone2, MicrophoneSlash, Send, Sound, User } from "iconsax-react";
 import { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
@@ -28,6 +28,7 @@ import { instructions } from "../../../../components/realtime/utils/conversation
 import { WavRenderer } from "../../../../components/realtime/utils/wav_renderer";
 import { X, Edit, Zap, ArrowUp, ArrowDown } from "lucide-react";
 import clsx from "clsx";
+import { AudioWithWaveform } from "../../../../lib/utils/wavesurfer";
 
 interface Coordinates {
   lat: number;
@@ -477,7 +478,7 @@ const RealtimeInteraction: React.FC = () => {
         </div>
 
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg">
-          <div className=" p-1 rounded-xl z-10 gap-0.5 flex flex-row items-center justify-between">
+          <div className="bg-white py-4 z-10 gap-0.5 flex flex-row items-center justify-between">
             <div className="relative flex items-center h-10 w-1/2 gap-1 server text-blue-600">
               <canvas
                 ref={clientCanvasRef}
@@ -495,71 +496,90 @@ const RealtimeInteraction: React.FC = () => {
 
           <div
             ref={conversationScrollRef}
-            className="flex-1  h-[600px] overflow-auto mb-10 py-2"
+            className="flex-1 h-[600px] overflow-auto mb-10 py-2"
           >
-            <div className="text-base font-bold">Conversation Logs</div>
-
             <div className="mb-5 flex flex-col py-2 gap-3">
-              {!items.length && `awaiting connection...`}
+              {!items.length && `Umute your mic to start a conversation.`}
               {items.map((conversationItem, i) => {
-                return (
-                  <div className="" key={conversationItem.id}>
-                    <div
-                      className={clsx(
-                        `${conversationItem.role || ""}`,
-                        "flex flex-row items-center justify-between"
-                      )}
-                    >
-                      <div className="text-base font-bold">
-                        {capitalize(
-                          conversationItem.role || conversationItem.type
-                        ).replaceAll("_", " ")}
-                      </div>
-                      <div
-                        onClick={() =>
-                          deleteConversationItem(conversationItem.id)
-                        }
-                      >
-                        <X className="flex flex-end self-end" />
-                      </div>
-                    </div>
+                const isAssistant = conversationItem.role === "assistant";
+                const isUser = conversationItem.role === "user";
 
-                    <div>
-                      {/* tool response */}
-                      {conversationItem.type === "function_call_output" && (
-                        <div>{conversationItem.formatted.output}</div>
-                      )}
-                      {/* tool call */}
-                      {!!conversationItem.formatted.tool && (
-                        <div>
-                          {conversationItem.formatted.tool.name}(
-                          {conversationItem.formatted.tool.arguments})
-                        </div>
-                      )}
-                      {!conversationItem.formatted.tool &&
-                        conversationItem.role === "user" && (
-                          <div>
-                            {conversationItem.formatted.transcript ||
-                              (conversationItem.formatted.audio?.length
-                                ? "(awaiting transcript)"
-                                : conversationItem.formatted.text ||
-                                  "(item sent)")}
-                          </div>
-                        )}
-                      {!conversationItem.formatted.tool &&
-                        conversationItem.role === "assistant" && (
-                          <div>
-                            {conversationItem.formatted.transcript ||
-                              conversationItem.formatted.text ||
-                              "(truncated)"}
-                          </div>
-                        )}
-                      {/* {conversationItem.formatted.file && (
-                        <audio
-                          src={conversationItem.formatted.file.url}
-                          controls
+                return (
+                  <div
+                    className="flex flex-col gap-2"
+                    key={conversationItem.id}
+                  >
+                    {/* Message content */}
+                    <div
+                      className={`flex items-start ${
+                        isAssistant ? "flex-row" : "flex-row-reverse"
+                      }`}
+                    >
+                      {/* Avatar */}
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                        <img
+                          src={
+                            isAssistant
+                              ? "/path/to/assistant-avatar.png"
+                              : "/path/to/user-avatar.png"
+                          }
+                          alt={isAssistant ? "Assistant Avatar" : "User Avatar"}
+                          className="w-full h-full object-cover"
                         />
-                      )} */}
+                      </div>
+
+                      {/* Message bubble */}
+                      <div
+                        className={`max-w-[70%] p-2 rounded-lg shadow-sm ${
+                          isAssistant
+                            ? "text-white  text-sm font-medium" // Assistant message
+                            : " text-white text-sm  font-medium" // User message
+                        }`}
+                      >
+                        {/* Tool call */}
+                        {conversationItem.type === "function_call_output" && (
+                          <div className="text-sm">
+                            {conversationItem.formatted.output}
+                          </div>
+                        )}
+
+                        {/* Tool details */}
+                        {!!conversationItem.formatted.tool && (
+                          <div className="text-sm text-gray-700">
+                            {conversationItem.formatted.tool.name} (
+                            {conversationItem.formatted.tool.arguments})
+                          </div>
+                        )}
+
+                        {/* User message */}
+                        {!conversationItem.formatted.tool &&
+                          conversationItem.role === "user" && (
+                            <div className="text-sm">
+                              {conversationItem.formatted.transcript ||
+                                (conversationItem.formatted.audio?.length
+                                  ? "(awaiting transcript)"
+                                  : conversationItem.formatted.text ||
+                                    "(item sent)")}
+                            </div>
+                          )}
+
+                        {/* Assistant message */}
+                        {!conversationItem.formatted.tool &&
+                          conversationItem.role === "assistant" && (
+                            <div className="text-sm">
+                              {conversationItem.formatted.transcript ||
+                                conversationItem.formatted.text ||
+                                "(truncated)"}
+                            </div>
+                          )}
+
+                        {/* Audio file */}
+                        {conversationItem.formatted.file && (
+                          <AudioWithWaveform
+                            audioUrl={conversationItem.formatted.file.url}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
@@ -567,15 +587,31 @@ const RealtimeInteraction: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col grow-0 shrink-0 items-center justify-center gap-1">
+          <div className="flex flex-row grow-0 shrink-0 items-start justify-between gap-1">
             <Toggle
               defaultValue={false}
-              labels={["manual", "auto"]}
+              labels={["Manual", "Auto"]}
               values={["none", "server_vad"]}
               onChange={(_, value) => changeTurnEndType(value)}
             />
-            <div className="flex-1" />
-            {isConnected && canPushToTalk && (
+
+            <div>
+              {isConnected && canPushToTalk && (
+                <div
+                  onClick={() => {}}
+                  onMouseDown={startRecording}
+                  onMouseUp={stopRecording}
+                  className="flex flex-col gap-1 items-center justify-center font-bold"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
+                    <Sound size="24" color="#FFF" />
+                  </div>
+                  {isRecording ? "Release to send" : "Push to talk"}
+                </div>
+              )}
+            </div>
+
+            {/* {isConnected && canPushToTalk && (
               <RealtimeButton
                 label={isRecording ? "release to send" : "push to talk"}
                 buttonStyle={isRecording ? "alert" : "regular"}
@@ -584,18 +620,31 @@ const RealtimeInteraction: React.FC = () => {
                 onMouseUp={stopRecording}
                 className="bg-green-500 px-4 py-2 rounded-full"
               />
-            )}
-            <div className="flex-1" />
-            <RealtimeButton
-              label={isConnected ? "disconnect" : "connect"}
-              iconPosition={isConnected ? "end" : "start"}
-              icon={isConnected ? X : Zap}
-              buttonStyle={isConnected ? "regular" : "action"}
-              onClick={
-                isConnected ? disconnectConversation : connectConversation
-              }
-              className="bg-red-500 flex flex-row gap-2 px-4 py-2 rounded-full"
-            />
+            )} */}
+
+            <div className="w-16">
+              {isConnected ? (
+                <div
+                  onClick={disconnectConversation}
+                  className="flex flex-col gap-1 items-center justify-center font-bold"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
+                    <Microphone2 size="24" color="#FFF" />
+                  </div>
+                  Mute
+                </div>
+              ) : (
+                <div
+                  onClick={connectConversation}
+                  className="flex flex-col gap-1 items-center justify-center font-bold"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#D40C0C52] rounded-full ">
+                    <MicrophoneSlash size="24" color="#F2B4B4" />
+                  </div>
+                  Unmute
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

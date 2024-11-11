@@ -148,7 +148,14 @@ const LinkageAIChatInterface: React.FC = () => {
               <p className="text-lg font-bold">{data?.data?.name}</p>
             </div>
           </div>
-          <VolumeHigh size="32" color="#ffffff" />
+
+          <VolumeHigh
+            onClick={() =>
+              router.push(`/linkages/explore/${slug}/chat/realtime`)
+            }
+            size="32"
+            color="#ffffff"
+          />
         </div>
 
         {/* <div onClick={handleGetLinkageLoan}>get loan</div> */}

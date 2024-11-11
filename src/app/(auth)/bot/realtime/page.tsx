@@ -1,22 +1,33 @@
 "use client";
 
+import {
+  useChatLinkage,
+  useGetLinkageBySlug,
+  useGetLinkageQuestionnaire,
+} from "@/api/linkage";
+import Image from "next/image";
+import { Send, User } from "iconsax-react";
+import { Toaster } from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft2, VolumeHigh } from "iconsax-react";
+import { alternatePrompts } from "@/lib/values/prompts";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { RealtimeButton } from "../../../../components/realtime/components/realtimeButton";
+import { Toggle } from "../../../../components/realtime/components/toggle";
+
 import React from "react";
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useCallback } from "react";
 import { RealtimeClient } from "@openai/realtime-api-beta";
 import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
-import { WavRecorder, WavStreamPlayer } from "./wavtools/index";
-import { instructions } from "./utils/conversation_config.js";
-import { WavRenderer } from "./utils/wav_renderer";
-
+import {
+  WavRecorder,
+  WavStreamPlayer,
+} from "../../../../components/realtime/wavtools/index";
+import { instructions } from "../../../../components/realtime/utils/conversation_config.js";
+import { WavRenderer } from "../../../../components/realtime/utils/wav_renderer";
 import { X, Edit, Zap, ArrowUp, ArrowDown } from "lucide-react";
-import AuthLayout from "@/containers/layout/auth/auth.layout";
-import Button from "@/components/button";
-import Image from "next/image";
-import { Toggle } from "./components/toggle";
-import { RealtimeButton } from "./components/realtimeButton";
-
-const LOCAL_RELAY_SERVER_URL: string =
-  process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || "";
+import clsx from "clsx";
 
 interface Coordinates {
   lat: number;
@@ -39,15 +50,18 @@ interface RealtimeEvent {
   event: { [key: string]: any };
 }
 
-const Realtime = () => {
-  const apiKey = LOCAL_RELAY_SERVER_URL
-    ? ""
-    : localStorage.getItem("tmp::voice_api_key") ||
-      prompt("OpenAI API Key") ||
-      "";
-  if (apiKey !== "") {
-    localStorage.setItem("tmp::voice_api_key", apiKey);
-  }
+const capitalize = (str: string) => {
+  return str
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const RealtimeInteraction: React.FC = () => {
+  const router = useRouter();
+  const params = useParams();
+  const slug = "harmony-2";
+
+  const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY;
 
   const wavRecorderRef = useRef<WavRecorder>(
     new WavRecorder({ sampleRate: 24000 })
@@ -58,14 +72,10 @@ const Realtime = () => {
   );
 
   const clientRef = useRef<RealtimeClient>(
-    new RealtimeClient(
-      LOCAL_RELAY_SERVER_URL
-        ? { url: LOCAL_RELAY_SERVER_URL }
-        : {
-            apiKey: apiKey,
-            dangerouslyAllowAPIKeyInBrowser: true,
-          }
-    )
+    new RealtimeClient({
+      apiKey: apiKey,
+      dangerouslyAllowAPIKeyInBrowser: true,
+    })
   );
 
   const clientCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -112,14 +122,14 @@ const Realtime = () => {
     return `${pad(m)}:${pad(s)}.${pad(hs)}`;
   }, []);
 
-  const resetAPIKey = useCallback(() => {
-    const apiKey = prompt("OpenAI API Key");
-    if (apiKey !== null) {
-      localStorage.clear();
-      localStorage.setItem("tmp::voice_api_key", apiKey);
-      window.location.reload();
-    }
-  }, []);
+  // const resetAPIKey = useCallback(() => {
+  //   const apiKey = prompt("OpenAI API Key");
+  //   if (apiKey !== null) {
+  //     localStorage.clear();
+  //     localStorage.setItem("tmp::voice_api_key", apiKey);
+  //     window.location.reload();
+  //   }
+  // }, []);
 
   const connectConversation = useCallback(async () => {
     const client = clientRef.current;
@@ -446,193 +456,125 @@ const Realtime = () => {
   }, []);
 
   return (
-    <AuthLayout>
-      <div className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col">
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center justify-center gap-1">
-            <Image
-              src=""
-              alt=""
-              width={16}
-              height={16}
-              className="bg-red-500 w-6 h-6"
-            />
-            <span>realtime console</span>
-          </div>
-          <div>
-            {!LOCAL_RELAY_SERVER_URL && (
-              <Button
-                className="h-[40px] bg-[inherit]"
-                onClick={() => resetAPIKey()}
-              >
-                <Edit color="white" size={24} />
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {/* Visualization Component */}
-        <div className="p-1 rounded-xl z-10 gap-0.5 flex">
-          <div className="relative flex items-center h-10 w-24 gap-1 client text-blue-500">
-            <canvas
-              ref={clientCanvasRef}
-              className="w-full h-full text-current"
-            />
-          </div>
-          <div className="relative flex items-center h-10 w-24 gap-1 server text-green-600">
-            <canvas
-              ref={serverCanvasRef}
-              className="w-full h-full text-current"
-            />
-          </div>
-        </div>
-
-        {/* {events component} */}
-        {/* <div className="">events</div>
-        <div className="" ref={eventsScrollRef}>
-          {!realtimeEvents.length && `awaiting connection...`}
-          {realtimeEvents.map((realtimeEvent, i) => {
-            const count = realtimeEvent.count;
-            const event = { ...realtimeEvent.event };
-            if (event.type === "input_audio_buffer.append") {
-              event.audio = `[trimmed: ${event.audio.length} bytes]`;
-            } else if (event.type === "response.audio.delta") {
-              event.delta = `[trimmed: ${event.delta.length} bytes]`;
-            }
-            return (
-              <div className="event" key={event.event_id}>
-                <div className="event-timestamp">
-                  {formatTime(realtimeEvent.time)}
-                </div>
-                <div className="event-details">
-                  <div
-                    className="event-summary"
-                    onClick={() => {
-                      // toggle event details
-                      const id = event.event_id;
-                      const expanded = { ...expandedEvents };
-                      if (expanded[id]) {
-                        delete expanded[id];
-                      } else {
-                        expanded[id] = true;
-                      }
-                      setExpandedEvents(expanded);
-                    }}
-                  >
-                    <div
-                      className={`event-source ${
-                        event.type === "error" ? "error" : realtimeEvent.source
-                      }`}
-                    >
-                      {realtimeEvent.source === "client" ? (
-                        <ArrowUp />
-                      ) : (
-                        <ArrowDown />
-                      )}
-                      <span>
-                        {event.type === "error"
-                          ? "error!"
-                          : realtimeEvent.source}
-                      </span>
-                    </div>
-                    <div className="event-type">
-                      {event.type}
-                      {count && ` (${count})`}
-                    </div>
-                  </div>
-                  {!!expandedEvents[event.event_id] && (
-                    <div className="event-payload">
-                      {JSON.stringify(event, null, 2)}
-                    </div>
-                  )}
-                </div>
+    <AuthNavLayout>
+      <Toaster />
+      <div className="w-full h-screen overflow-hidden text-white bg-[#0B0228] flex flex-col">
+        <div className="p-4 sm:p-6 py-6 flex flex-row items-center justify-between border-b border-[#C3B1FF4D]">
+          <div className="flex flex-row items-center gap-4">
+            <ArrowLeft2 className="w-6 h-6" onClick={() => router.back()} />
+            <div className="flex flex-row items-center gap-4">
+              <Image
+                alt="AI"
+                width={44}
+                height={44}
+                src={"/assets/sample-icon.png"}
+              />
+              <div>
+                <p className="text-lg font-bold">Ribbon AI</p>
               </div>
-            );
-          })}
-        </div> */}
-
-        {/* Conversation Component */}
-        <div
-          ref={conversationScrollRef}
-          className="flex-1 mt-1 h-[500px] overflow-auto border border-white mb-20"
-        >
-          <div>conversation</div>
-          <div className="h-[300px]">
-            {!items.length && `awaiting connection...`}
-            {items.map((conversationItem, i) => {
-              return (
-                <div key={conversationItem.id}>
-                  <div className={`${conversationItem.role || ""}`}>
-                    <div>
-                      {(
-                        conversationItem.role || conversationItem.type
-                      ).replaceAll("_", " ")}
-                    </div>
-                    <div
-                      onClick={() =>
-                        deleteConversationItem(conversationItem.id)
-                      }
-                    >
-                      <X />
-                    </div>
-                  </div>
-                  <div>
-                    {/* tool response */}
-                    {conversationItem.type === "function_call_output" && (
-                      <div>{conversationItem.formatted.output}</div>
-                    )}
-                    {/* tool call */}
-                    {!!conversationItem.formatted.tool && (
-                      <div>
-                        {conversationItem.formatted.tool.name}(
-                        {conversationItem.formatted.tool.arguments})
-                      </div>
-                    )}
-                    {!conversationItem.formatted.tool &&
-                      conversationItem.role === "user" && (
-                        <div>
-                          {conversationItem.formatted.transcript ||
-                            (conversationItem.formatted.audio?.length
-                              ? "(awaiting transcript)"
-                              : conversationItem.formatted.text ||
-                                "(item sent)")}
-                        </div>
-                      )}
-                    {!conversationItem.formatted.tool &&
-                      conversationItem.role === "assistant" && (
-                        <div>
-                          {conversationItem.formatted.transcript ||
-                            conversationItem.formatted.text ||
-                            "(truncated)"}
-                        </div>
-                      )}
-                    {conversationItem.formatted.file && (
-                      <audio
-                        src={conversationItem.formatted.file.url}
-                        controls
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Fixed Bottom Toolbar */}
-      <div className="fixed bottom-2 flex items-center justify-center self-center text-white w-full max-w-[450px]">
-        <div className="flex flex-col grow-0 shrink-0 items-center justify-center gap-1">
-          <Toggle
-            defaultValue={false}
-            labels={["manual", "auto"]}
-            values={["none", "server_vad"]}
-            onChange={(_, value) => changeTurnEndType(value)}
-          />
+        <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg">
+          <div className=" p-1 rounded-xl z-10 gap-0.5 flex flex-row items-center justify-between">
+            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-blue-600">
+              <canvas
+                ref={clientCanvasRef}
+                className="w-full h-full text-current"
+              />
+            </div>
 
-          <div className="flex-1" />
+            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-green-600">
+              <canvas
+                ref={serverCanvasRef}
+                className="w-full h-full text-current"
+              />
+            </div>
+          </div>
 
-          <div className="flex flex-row items-center justify-center gap-4">
+          <div
+            ref={conversationScrollRef}
+            className="flex-1  h-[600px] overflow-auto mb-10 py-2"
+          >
+            <div className="text-base font-bold">Conversation Logs</div>
+
+            <div className="mb-5 flex flex-col py-2 gap-3">
+              {!items.length && `awaiting connection...`}
+              {items.map((conversationItem, i) => {
+                return (
+                  <div className="" key={conversationItem.id}>
+                    <div
+                      className={clsx(
+                        `${conversationItem.role || ""}`,
+                        "flex flex-row items-center justify-between"
+                      )}
+                    >
+                      <div className="text-base font-bold">
+                        {capitalize(
+                          conversationItem.role || conversationItem.type
+                        ).replaceAll("_", " ")}
+                      </div>
+                      <div
+                        onClick={() =>
+                          deleteConversationItem(conversationItem.id)
+                        }
+                      >
+                        <X className="flex flex-end self-end" />
+                      </div>
+                    </div>
+
+                    <div>
+                      {/* tool response */}
+                      {conversationItem.type === "function_call_output" && (
+                        <div>{conversationItem.formatted.output}</div>
+                      )}
+                      {/* tool call */}
+                      {!!conversationItem.formatted.tool && (
+                        <div>
+                          {conversationItem.formatted.tool.name}(
+                          {conversationItem.formatted.tool.arguments})
+                        </div>
+                      )}
+                      {!conversationItem.formatted.tool &&
+                        conversationItem.role === "user" && (
+                          <div>
+                            {conversationItem.formatted.transcript ||
+                              (conversationItem.formatted.audio?.length
+                                ? "(awaiting transcript)"
+                                : conversationItem.formatted.text ||
+                                  "(item sent)")}
+                          </div>
+                        )}
+                      {!conversationItem.formatted.tool &&
+                        conversationItem.role === "assistant" && (
+                          <div>
+                            {conversationItem.formatted.transcript ||
+                              conversationItem.formatted.text ||
+                              "(truncated)"}
+                          </div>
+                        )}
+                      {/* {conversationItem.formatted.file && (
+                        <audio
+                          src={conversationItem.formatted.file.url}
+                          controls
+                        />
+                      )} */}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-col grow-0 shrink-0 items-center justify-center gap-1">
+            <Toggle
+              defaultValue={false}
+              labels={["manual", "auto"]}
+              values={["none", "server_vad"]}
+              onChange={(_, value) => changeTurnEndType(value)}
+            />
+            <div className="flex-1" />
             {isConnected && canPushToTalk && (
               <RealtimeButton
                 label={isRecording ? "release to send" : "push to talk"}
@@ -643,9 +585,7 @@ const Realtime = () => {
                 className="bg-green-500 px-4 py-2 rounded-full"
               />
             )}
-
             <div className="flex-1" />
-
             <RealtimeButton
               label={isConnected ? "disconnect" : "connect"}
               iconPosition={isConnected ? "end" : "start"}
@@ -659,8 +599,8 @@ const Realtime = () => {
           </div>
         </div>
       </div>
-    </AuthLayout>
+    </AuthNavLayout>
   );
 };
 
-export default Realtime;
+export default RealtimeInteraction;

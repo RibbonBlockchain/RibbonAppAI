@@ -19,6 +19,9 @@ import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import { WavRenderer } from "@/components/realtime/utils/wav_renderer";
 import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
 import { instructions } from "@/components/realtime/utils/conversation_config.js";
+import { RealtimeButton } from "@/components/realtime/components/realtimeButton";
+import { Toggle } from "@/components/realtime/components/toggle";
+import { X, Zap } from "lucide-react";
 
 interface Coordinates {
   lat: number;
@@ -41,6 +44,11 @@ interface RealtimeEvent {
   event: { [key: string]: any };
 }
 
+const LOCAL_RELAY_SERVER_URL: string =
+  process.env.NEXT_PUBLIC_LOCAL_RELAY_SERVER_URL || "";
+
+const apiKey: string = process.env.NEXT_PUBLIC_OPENAI_API_KEY || "";
+
 const RealtimeInteraction: React.FC = () => {
   const router = useRouter();
   const params = useParams();
@@ -57,10 +65,20 @@ const RealtimeInteraction: React.FC = () => {
   );
 
   const clientRef = useRef<RealtimeClient>(
-    new RealtimeClient({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-      dangerouslyAllowAPIKeyInBrowser: true,
-    })
+    // new RealtimeClient({
+    // url: process.env.NEXT_PUBLIC_LOCAL_RELAY_SERVER_URL,
+    // apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    // dangerouslyAllowAPIKeyInBrowser: true,
+    // })
+
+    new RealtimeClient(
+      LOCAL_RELAY_SERVER_URL
+        ? { url: LOCAL_RELAY_SERVER_URL }
+        : {
+            apiKey: apiKey,
+            dangerouslyAllowAPIKeyInBrowser: true,
+          }
+    )
   );
 
   const clientCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -163,6 +181,32 @@ const RealtimeInteraction: React.FC = () => {
     const wavStreamPlayer = wavStreamPlayerRef.current;
     await wavStreamPlayer.interrupt();
   }, []);
+
+  const deleteConversationItem = useCallback(async (id: string) => {
+    const client = clientRef.current;
+    client.deleteItem(id);
+  }, []);
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    const client = clientRef.current;
+    const wavRecorder = wavRecorderRef.current;
+    const wavStreamPlayer = wavStreamPlayerRef.current;
+    const trackSampleOffset = await wavStreamPlayer.interrupt();
+    if (trackSampleOffset?.trackId) {
+      const { trackId, offset } = trackSampleOffset;
+      await client.cancelResponse(trackId, offset);
+    }
+    await wavRecorder.record((data) => client.appendInputAudio(data.mono));
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    const client = clientRef.current;
+    const wavRecorder = wavRecorderRef.current;
+    await wavRecorder.pause();
+    client.createResponse();
+  };
 
   const changeTurnEndType = async (value: string) => {
     const client = clientRef.current;
@@ -578,37 +622,42 @@ const RealtimeInteraction: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row grow-0 shrink-0 items-start justify-center gap-1">
-            <button
-              className="bg-[inherit] text-[#0B0228] rounded-full py-2 px-3 absolute right-0"
-              onClick={() => changeTurnEndType("server_vad")}
-              disabled
-            >
-              Auto
-            </button>
+          <div className="fixed bottom-2 flex items-center justify-center self-center text-white w-full max-w-[450px]">
+            <div className="flex flex-col grow-0 shrink-0 items-center justify-center gap-1">
+              <Toggle
+                defaultValue={false}
+                labels={["manual", "auto"]}
+                values={["none", "server_vad"]}
+                onChange={(_, value) => changeTurnEndType(value)}
+              />
 
-            <div className="w-16">
-              {isConnected ? (
-                <div
-                  onClick={disconnectConversation}
-                  className="flex flex-col gap-1 items-center justify-center font-bold"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full">
-                    <Microphone2 size="24" color="#FFF" />
-                  </div>
-                  Mute
-                </div>
-              ) : (
-                <div
-                  onClick={connectConversation}
-                  className="flex flex-col gap-1 items-center justify-center font-bold"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D40C0C52] rounded-full ">
-                    <MicrophoneSlash size="24" color="#F2B4B4" />
-                  </div>
-                  Unmute
-                </div>
-              )}
+              <div className="flex-1" />
+
+              <div className="flex flex-row items-center justify-center gap-4">
+                {isConnected && canPushToTalk && (
+                  <RealtimeButton
+                    label={isRecording ? "release to send" : "push to talk"}
+                    buttonStyle={isRecording ? "alert" : "regular"}
+                    disabled={!isConnected || !canPushToTalk}
+                    onMouseDown={startRecording}
+                    onMouseUp={stopRecording}
+                    className="bg-green-500 px-4 py-2 rounded-full"
+                  />
+                )}
+
+                <div className="flex-1" />
+
+                <RealtimeButton
+                  label={isConnected ? "mute" : "unmute"}
+                  iconPosition={isConnected ? "end" : "start"}
+                  // icon={isConnected ? <Microphone2 /> : <MicrophoneSlash />}
+                  buttonStyle={isConnected ? "regular" : "action"}
+                  onClick={
+                    isConnected ? disconnectConversation : connectConversation
+                  }
+                  className="bg-red-500 flex flex-row gap-2 px-4 py-2 rounded-full"
+                />
+              </div>
             </div>
           </div>
         </div>

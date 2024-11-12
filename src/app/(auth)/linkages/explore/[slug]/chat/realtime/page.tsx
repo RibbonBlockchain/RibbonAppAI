@@ -1,26 +1,24 @@
 "use client";
 
-import { useGetLinkageBySlug } from "@/api/linkage";
-import Image from "next/image";
-import { Microphone2, MicrophoneSlash, Sound } from "iconsax-react";
-import { Toaster } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft2 } from "iconsax-react";
-import { useState, useRef, useEffect } from "react";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { Toggle } from "../../../../../../../components/realtime/components/toggle";
-
-import React from "react";
-import { useCallback } from "react";
-import { RealtimeClient } from "@openai/realtime-api-beta";
-import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
 import {
   WavRecorder,
   WavStreamPlayer,
-} from "../../../../../../../components/realtime/wavtools/index";
-import { instructions } from "../../../../../../../components/realtime/utils/conversation_config.js";
-import { WavRenderer } from "../../../../../../../components/realtime/utils/wav_renderer";
+} from "@/components/realtime/wavtools/index";
+import React from "react";
+import Image from "next/image";
+import { useCallback } from "react";
+import { Toaster } from "react-hot-toast";
+import { ArrowLeft2 } from "iconsax-react";
+import { useGetLinkageBySlug } from "@/api/linkage";
+import { useState, useRef, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { RealtimeClient } from "@openai/realtime-api-beta";
 import { AudioWithWaveform } from "@/lib/utils/wavesurfer";
+import { Microphone2, MicrophoneSlash } from "iconsax-react";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { WavRenderer } from "@/components/realtime/utils/wav_renderer";
+import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
+import { instructions } from "@/components/realtime/utils/conversation_config.js";
 
 interface Coordinates {
   lat: number;
@@ -43,20 +41,12 @@ interface RealtimeEvent {
   event: { [key: string]: any };
 }
 
-const capitalize = (str: string) => {
-  return str
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-};
-
 const RealtimeInteraction: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug;
 
-  const { data, isLoading, isError } = useGetLinkageBySlug(slug as string);
-
-  const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY;
+  const { data } = useGetLinkageBySlug(slug as string);
 
   const wavRecorderRef = useRef<WavRecorder>(
     new WavRecorder({ sampleRate: 24000 })
@@ -68,13 +58,17 @@ const RealtimeInteraction: React.FC = () => {
 
   const clientRef = useRef<RealtimeClient>(
     new RealtimeClient({
-      apiKey: apiKey,
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
       dangerouslyAllowAPIKeyInBrowser: true,
     })
   );
 
   const clientCanvasRef = useRef<HTMLCanvasElement>(null);
   const serverCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [currentSpeaker, setCurrentSpeaker] = useState<"client" | "server">(
+    "client"
+  ); // State to track the active speaker
+
   const eventsScrollHeightRef = useRef(0);
   const eventsScrollRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<string>(new Date().toISOString());
@@ -116,15 +110,6 @@ const RealtimeInteraction: React.FC = () => {
     };
     return `${pad(m)}:${pad(s)}.${pad(hs)}`;
   }, []);
-
-  // const resetAPIKey = useCallback(() => {
-  //   const apiKey = prompt("OpenAI API Key");
-  //   if (apiKey !== null) {
-  //     localStorage.clear();
-  //     localStorage.setItem("tmp::voice_api_key", apiKey);
-  //     window.location.reload();
-  //   }
-  // }, []);
 
   const connectConversation = useCallback(async () => {
     const client = clientRef.current;
@@ -178,32 +163,6 @@ const RealtimeInteraction: React.FC = () => {
     const wavStreamPlayer = wavStreamPlayerRef.current;
     await wavStreamPlayer.interrupt();
   }, []);
-
-  const deleteConversationItem = useCallback(async (id: string) => {
-    const client = clientRef.current;
-    client.deleteItem(id);
-  }, []);
-
-  const startRecording = async () => {
-    setIsRecording(true);
-    const client = clientRef.current;
-    const wavRecorder = wavRecorderRef.current;
-    const wavStreamPlayer = wavStreamPlayerRef.current;
-    const trackSampleOffset = await wavStreamPlayer.interrupt();
-    if (trackSampleOffset?.trackId) {
-      const { trackId, offset } = trackSampleOffset;
-      await client.cancelResponse(trackId, offset);
-    }
-    await wavRecorder.record((data) => client.appendInputAudio(data.mono));
-  };
-
-  const stopRecording = async () => {
-    setIsRecording(false);
-    const client = clientRef.current;
-    const wavRecorder = wavRecorderRef.current;
-    await wavRecorder.pause();
-    client.createResponse();
-  };
 
   const changeTurnEndType = async (value: string) => {
     const client = clientRef.current;
@@ -267,7 +226,9 @@ const RealtimeInteraction: React.FC = () => {
 
     const render = () => {
       if (isLoaded) {
-        if (clientCanvas) {
+        // Check which canvas is active and only render that one
+        if (clientCanvas && wavRecorder.recording) {
+          // Set width and height if not set
           if (!clientCanvas.width || !clientCanvas.height) {
             clientCanvas.width = clientCanvas.offsetWidth;
             clientCanvas.height = clientCanvas.offsetHeight;
@@ -283,13 +244,17 @@ const RealtimeInteraction: React.FC = () => {
               clientCtx,
               result.values,
               "#0099ff",
-              10,
+              24,
               0,
-              8
+              10
             );
           }
-        }
-        if (serverCanvas) {
+
+          // Hide server canvas if it's not active
+          if (serverCanvas) serverCanvas.style.display = "none";
+          if (clientCanvas) clientCanvas.style.display = "block";
+        } else if (serverCanvas && wavStreamPlayer.analyser) {
+          // Set width and height if not set
           if (!serverCanvas.width || !serverCanvas.height) {
             serverCanvas.width = serverCanvas.offsetWidth;
             serverCanvas.height = serverCanvas.offsetHeight;
@@ -305,20 +270,38 @@ const RealtimeInteraction: React.FC = () => {
               serverCtx,
               result.values,
               "#009900",
-              10,
+              24,
               0,
-              8
+              10
             );
           }
+
+          if (clientCanvas) clientCanvas.style.display = "none";
+          if (serverCanvas) serverCanvas.style.display = "block";
         }
+
         window.requestAnimationFrame(render);
       }
     };
+
     render();
 
     return () => {
       isLoaded = false;
     };
+  }, []);
+
+  useEffect(() => {
+    // Simulating an event that changes the current speaker (this can be replaced with actual logic)
+    const switchSpeaker = () => {
+      setCurrentSpeaker((prev) => (prev === "client" ? "server" : "client"));
+    };
+
+    // Switch speakers every 5 seconds for demonstration purposes
+    const speakerSwitchInterval = setInterval(switchSpeaker, 5000);
+
+    // Clean up the interval when component unmounts
+    return () => clearInterval(speakerSwitchInterval);
   }, []);
 
   useEffect(() => {
@@ -472,15 +455,29 @@ const RealtimeInteraction: React.FC = () => {
         </div>
 
         <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg">
-          <div className=" p-1 rounded-xl z-10 gap-0.5 flex flex-row items-center justify-between">
-            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-blue-600">
+          <div className="bg-[#CBBEF71A] py-4 z-10 gap-0.5 flex flex-row items-center justify-center">
+            <div
+              className={`relative flex items-center h-20 w-3/4 gap-1 ${
+                currentSpeaker === "client" ? "text-blue-600" : "text-gray-400"
+              }`}
+              style={{
+                display: currentSpeaker === "client" ? "block" : "none",
+              }} // Hide if not active
+            >
               <canvas
                 ref={clientCanvasRef}
                 className="w-full h-full text-current"
               />
             </div>
 
-            <div className="relative flex items-center h-10 w-1/2 gap-1 server text-green-600">
+            <div
+              className={`relative flex items-center h-20 w-3/4 gap-1 ${
+                currentSpeaker === "server" ? "text-green-600" : "text-gray-400"
+              }`}
+              style={{
+                display: currentSpeaker === "server" ? "block" : "none",
+              }} // Hide if not active
+            >
               <canvas
                 ref={serverCanvasRef}
                 className="w-full h-full text-current"
@@ -526,8 +523,8 @@ const RealtimeInteraction: React.FC = () => {
                       <div
                         className={`max-w-[70%] p-2 rounded-lg shadow-sm ${
                           isAssistant
-                            ? "text-white  text-sm font-medium" // Assistant message
-                            : " text-white text-sm  font-medium" // User message
+                            ? "text-white  text-sm font-medium"
+                            : " text-white text-sm  font-medium"
                         }`}
                       >
                         {/* Tool call */}
@@ -581,40 +578,14 @@ const RealtimeInteraction: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row grow-0 shrink-0 items-start justify-between gap-1">
-            <Toggle
-              defaultValue={false}
-              labels={["Manual", "Auto"]}
-              values={["none", "server_vad"]}
-              onChange={(_, value) => changeTurnEndType(value)}
-            />
-
-            <div>
-              {isConnected && canPushToTalk && (
-                <div
-                  onClick={() => {}}
-                  onMouseDown={startRecording}
-                  onMouseUp={stopRecording}
-                  className="flex flex-col gap-1 items-center justify-center font-bold"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
-                    <Sound size="24" color="#FFF" />
-                  </div>
-                  {isRecording ? "Release to send" : "Push to talk"}
-                </div>
-              )}
-            </div>
-
-            {/* {isConnected && canPushToTalk && (
-              <RealtimeButton
-                label={isRecording ? "release to send" : "push to talk"}
-                buttonStyle={isRecording ? "alert" : "regular"}
-                disabled={!isConnected || !canPushToTalk}
-                onMouseDown={startRecording}
-                onMouseUp={stopRecording}
-                className="bg-green-500 px-4 py-2 rounded-full"
-              />
-            )} */}
+          <div className="flex flex-row grow-0 shrink-0 items-start justify-center gap-1">
+            <button
+              className="bg-[inherit] text-[#0B0228] rounded-full py-2 px-3 absolute right-0"
+              onClick={() => changeTurnEndType("server_vad")}
+              disabled
+            >
+              Auto
+            </button>
 
             <div className="w-16">
               {isConnected ? (
@@ -622,7 +593,7 @@ const RealtimeInteraction: React.FC = () => {
                   onClick={disconnectConversation}
                   className="flex flex-col gap-1 items-center justify-center font-bold"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full">
                     <Microphone2 size="24" color="#FFF" />
                   </div>
                   Mute

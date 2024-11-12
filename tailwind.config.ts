@@ -23,6 +23,7 @@ const config: Config = {
         // account: "url('/images/user-bg.png')",
         peronalDetails: "url('/images/personal-details.png')",
         walletBg: 'url("/assets/wallet-bg-cover.png")',
+        voiceBg: 'url("/assets/voice-bg.png")',
       },
     },
   },

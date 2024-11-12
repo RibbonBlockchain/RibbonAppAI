@@ -1,36 +1,24 @@
 "use client";
 
 import {
-  useChatLinkage,
-  useGetLinkageBySlug,
-  useGetLinkageQuestionnaire,
-} from "@/api/linkage";
-import Image from "next/image";
-import { Microphone2, MicrophoneSlash, Send, Sound, User } from "iconsax-react";
-import { Toaster } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft2, VolumeHigh } from "iconsax-react";
-import { alternatePrompts } from "@/lib/values/prompts";
-import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import { RealtimeButton } from "../../../../components/realtime/components/realtimeButton";
-import { Toggle } from "../../../../components/realtime/components/toggle";
-
-import React from "react";
-import { useCallback } from "react";
-import { RealtimeClient } from "@openai/realtime-api-beta";
-import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
-import {
   WavRecorder,
   WavStreamPlayer,
-} from "../../../../components/realtime/wavtools/index";
-import { instructions } from "../../../../components/realtime/utils/conversation_config.js";
-import { WavRenderer } from "../../../../components/realtime/utils/wav_renderer";
-import { X, Edit, Zap, ArrowUp, ArrowDown } from "lucide-react";
-import clsx from "clsx";
-import { AudioWithWaveform } from "../../../../lib/utils/wavesurfer";
-import WaveSurfer from "wavesurfer.js";
-import Button from "@/components/button";
+} from "@/components/realtime/wavtools/index";
+import React from "react";
+import Image from "next/image";
+import { useCallback } from "react";
+import { Toaster } from "react-hot-toast";
+import { ArrowLeft2 } from "iconsax-react";
+import { useGetLinkageBySlug } from "@/api/linkage";
+import { useState, useRef, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { RealtimeClient } from "@openai/realtime-api-beta";
+import { AudioWithWaveform } from "@/lib/utils/wavesurfer";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import { WavRenderer } from "@/components/realtime/utils/wav_renderer";
+import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
+import { Microphone2, MicrophoneSlash, Send, Sound, User } from "iconsax-react";
+import { instructions } from "@/components/realtime/utils/conversation_config.js";
 
 interface Coordinates {
   lat: number;
@@ -53,30 +41,10 @@ interface RealtimeEvent {
   event: { [key: string]: any };
 }
 
-const capitalize = (str: string) => {
-  return str
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-};
-
-const LOCAL_RELAY_SERVER_URL: string =
-  process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || "";
-
 const RealtimeInteraction: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = "harmony-2";
-
-  const apiKey = LOCAL_RELAY_SERVER_URL
-    ? ""
-    : localStorage.getItem("tmp::voice_api_key") ||
-      prompt("OpenAI API Key") ||
-      "";
-  if (apiKey !== "") {
-    localStorage.setItem("tmp::voice_api_key", apiKey);
-  }
-
-  // const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY;
 
   const wavRecorderRef = useRef<WavRecorder>(
     new WavRecorder({ sampleRate: 24000 })
@@ -88,7 +56,7 @@ const RealtimeInteraction: React.FC = () => {
 
   const clientRef = useRef<RealtimeClient>(
     new RealtimeClient({
-      apiKey: apiKey,
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
       dangerouslyAllowAPIKeyInBrowser: true,
     })
   );
@@ -139,15 +107,6 @@ const RealtimeInteraction: React.FC = () => {
       return s;
     };
     return `${pad(m)}:${pad(s)}.${pad(hs)}`;
-  }, []);
-
-  const resetAPIKey = useCallback(() => {
-    const apiKey = prompt("OpenAI API Key");
-    if (apiKey !== null) {
-      localStorage.clear();
-      localStorage.setItem("tmp::voice_api_key", apiKey);
-      window.location.reload();
-    }
   }, []);
 
   const connectConversation = useCallback(async () => {
@@ -202,32 +161,6 @@ const RealtimeInteraction: React.FC = () => {
     const wavStreamPlayer = wavStreamPlayerRef.current;
     await wavStreamPlayer.interrupt();
   }, []);
-
-  const deleteConversationItem = useCallback(async (id: string) => {
-    const client = clientRef.current;
-    client.deleteItem(id);
-  }, []);
-
-  const startRecording = async () => {
-    setIsRecording(true);
-    const client = clientRef.current;
-    const wavRecorder = wavRecorderRef.current;
-    const wavStreamPlayer = wavStreamPlayerRef.current;
-    const trackSampleOffset = await wavStreamPlayer.interrupt();
-    if (trackSampleOffset?.trackId) {
-      const { trackId, offset } = trackSampleOffset;
-      await client.cancelResponse(trackId, offset);
-    }
-    await wavRecorder.record((data) => client.appendInputAudio(data.mono));
-  };
-
-  const stopRecording = async () => {
-    setIsRecording(false);
-    const client = clientRef.current;
-    const wavRecorder = wavRecorderRef.current;
-    await wavRecorder.pause();
-    client.createResponse();
-  };
 
   const changeTurnEndType = async (value: string) => {
     const client = clientRef.current;
@@ -334,19 +267,17 @@ const RealtimeInteraction: React.FC = () => {
               serverCanvas,
               serverCtx,
               result.values,
-              "#009900", // Bar color for server canvas
+              "#009900",
               24,
               0,
               10
             );
           }
 
-          // Hide client canvas if it's not active
           if (clientCanvas) clientCanvas.style.display = "none";
           if (serverCanvas) serverCanvas.style.display = "block";
         }
 
-        // Recurse the render function using requestAnimationFrame
         window.requestAnimationFrame(render);
       }
     };
@@ -517,17 +448,6 @@ const RealtimeInteraction: React.FC = () => {
               <div>
                 <p className="text-lg font-bold">Ribbon AI</p>
               </div>
-
-              <div>
-                {!LOCAL_RELAY_SERVER_URL && (
-                  <Button
-                    className="h-[40px] bg-[inherit]"
-                    onClick={() => resetAPIKey()}
-                  >
-                    <Edit color="white" size={24} />
-                  </Button>
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -601,8 +521,8 @@ const RealtimeInteraction: React.FC = () => {
                       <div
                         className={`max-w-[70%] p-2 rounded-lg shadow-sm ${
                           isAssistant
-                            ? "text-white  text-sm font-medium" // Assistant message
-                            : " text-white text-sm  font-medium" // User message
+                            ? "text-white  text-sm font-medium"
+                            : " text-white text-sm  font-medium"
                         }`}
                       >
                         {/* Tool call */}
@@ -656,40 +576,14 @@ const RealtimeInteraction: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row grow-0 shrink-0 items-start justify-between gap-1">
-            <Toggle
-              defaultValue={false}
-              labels={["Manual", "Auto"]}
-              values={["none", "server_vad"]}
-              onChange={(_, value) => changeTurnEndType(value)}
-            />
-
-            <div>
-              {isConnected && canPushToTalk && (
-                <div
-                  onClick={() => {}}
-                  onMouseDown={startRecording}
-                  onMouseUp={stopRecording}
-                  className="flex flex-col gap-1 items-center justify-center font-bold"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
-                    <Sound size="24" color="#FFF" />
-                  </div>
-                  {isRecording ? "Release to send" : "Push to talk"}
-                </div>
-              )}
-            </div>
-
-            {/* {isConnected && canPushToTalk && (
-              <RealtimeButton
-                label={isRecording ? "release to send" : "push to talk"}
-                buttonStyle={isRecording ? "alert" : "regular"}
-                disabled={!isConnected || !canPushToTalk}
-                onMouseDown={startRecording}
-                onMouseUp={stopRecording}
-                className="bg-green-500 px-4 py-2 rounded-full"
-              />
-            )} */}
+          <div className="flex flex-row grow-0 shrink-0 items-start justify-center gap-1">
+            <button
+              className="bg-[inherit] text-[#0B0228] rounded-full py-2 px-3 absolute right-0"
+              onClick={() => changeTurnEndType("server_vad")}
+              disabled
+            >
+              Auto
+            </button>
 
             <div className="w-16">
               {isConnected ? (
@@ -697,7 +591,7 @@ const RealtimeInteraction: React.FC = () => {
                   onClick={disconnectConversation}
                   className="flex flex-col gap-1 items-center justify-center font-bold"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full ">
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full">
                     <Microphone2 size="24" color="#FFF" />
                   </div>
                   Mute

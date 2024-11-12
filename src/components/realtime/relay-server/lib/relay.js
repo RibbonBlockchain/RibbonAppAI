@@ -13,7 +13,7 @@ export class RealtimeRelay {
   listen(port) {
     this.wss = new WebSocketServer({ port });
     this.wss.on("connection", this.connectionHandler.bind(this));
-    this.log(`Listening on ws://${baseURL}`);
+    this.log(`Listening on ws://https://ribbonai-bf81cd0773a8.herokuapp.com`);
   }
 
   async connectionHandler(ws, req) {

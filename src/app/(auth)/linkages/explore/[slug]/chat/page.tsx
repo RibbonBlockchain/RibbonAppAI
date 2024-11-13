@@ -11,7 +11,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
 import { useAddWallet } from "@/api/user";
-import { Add, Minus, Send, User } from "iconsax-react";
+import { Add, Minus, Send, Sound, User } from "iconsax-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft2, VolumeHigh } from "iconsax-react";
@@ -149,16 +149,15 @@ const LinkageAIChatInterface: React.FC = () => {
             </div>
           </div>
 
-          <VolumeHigh
+          <div
             onClick={() =>
               router.push(`/linkages/explore/${slug}/chat/realtime`)
             }
-            size="32"
-            color="#ffffff"
-          />
+            className="w-10 h-10 flex items-center justify-center bg-[#D6CBFF4D] rounded-full "
+          >
+            <Sound size="28" color="#FFF" />
+          </div>
         </div>
-
-        {/* <div onClick={handleGetLinkageLoan}>get loan</div> */}
 
         <div className="flex flex-row items-center justify-center self-center bg-[#3f3856] p-1 rounded-full mt-2 w-[90%]">
           {tabs.map((tab) => (

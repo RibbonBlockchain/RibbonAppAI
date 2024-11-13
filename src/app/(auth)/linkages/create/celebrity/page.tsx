@@ -147,7 +147,7 @@ const CreateLinkage = () => {
           className="my-2"
           onClick={() => router.back()}
         />
-        <p className="text-[20px] font-bold">Create Personalized AI Linkage</p>
+        <p className="text-[20px] font-bold">Create Celebrity AI Linkage</p>
       </div>
 
       <div className="flex flex-col gap-6">

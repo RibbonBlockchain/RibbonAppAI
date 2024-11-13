@@ -23,6 +23,7 @@ import DisplayStatusModal from "@/containers/linkages/display-status-modal";
 import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
 import { Add } from "iconsax-react";
 import CelebrityLinkageCard from "@/containers/linkages/celebrity-linkage-card";
+import CreateLinkageTypeModal from "@/containers/linkages/create-linkage-modal";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -37,6 +38,7 @@ const Linkages = () => {
   const [query, setQuery] = useState<string>("");
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [featureModalOpen, setFeatureModalOpen] = useState(false);
+  const [createLinkageModalOpen, setCreateLinkageModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState<
     {
       url: string;
@@ -115,12 +117,12 @@ const Linkages = () => {
           <div className="flex flex-col gap-3 py-4">
             <div className="flex flex-row items-center justify-between">
               <p className="text-[24px] font-semibold">Linkages</p>
-              <Link
-                href="/linkages/create"
+              <div
+                onClick={() => setCreateLinkageModalOpen(true)}
                 className="py-2 px-3 text-xs font-semibold border border-[#FFFFFF36] rounded-[10px]"
               >
                 Create your Linkages
-              </Link>
+              </div>
             </div>
           </div>
 
@@ -384,6 +386,13 @@ const Linkages = () => {
           <FeatureLinkageModal
             isOpen={featureModalOpen}
             onClose={() => setFeatureModalOpen(false)}
+          />
+        )}
+
+        {createLinkageModalOpen && (
+          <CreateLinkageTypeModal
+            isOpen={createLinkageModalOpen}
+            onClose={() => setCreateLinkageModalOpen(false)}
           />
         )}
       </main>

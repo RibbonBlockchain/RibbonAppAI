@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useCreateLinkage } from "@/api/linkage";
 import { ChevronDown, Upload } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
-import { categoryOptions } from "@/lib/values/prompts";
+import { categoryOptions, celebrityFieldOptions } from "@/lib/values/prompts";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
 
 type Starter = {
@@ -239,7 +239,7 @@ const CreateLinkage = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">
             Mobile number{" "}
             <span className="text-xs font-normal">
@@ -256,9 +256,9 @@ const CreateLinkage = () => {
               className="w-full bg-inherit pl-10 py-3 rounded-[8px] text-sm border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Email address</label>
           <div className="relative flex flex-row items-center">
             <Sms size="20" color="#ffffff" className="absolute left-3" />
@@ -270,7 +270,7 @@ const CreateLinkage = () => {
               className="w-full bg-inherit pl-10 py-3 rounded-[8px] text-sm border border-[#E5E7EB86] text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Location</label>
@@ -287,13 +287,13 @@ const CreateLinkage = () => {
         </div>
 
         <div className="flex flex-col gap-2 mt-6">
-          <h1 className="text-sm font-semibold">Business category</h1>
+          <h1 className="text-sm font-semibold">Professional field</h1>
           <p className="text-sm font-light">
-            This enables us to create a Linkage that aligns with your business.
+            This enables us to create a Linkage that aligns with your field.
           </p>
 
           <div className="space-y-2">
-            {categoryOptions.map((option) => (
+            {celebrityFieldOptions.map((option) => (
               <div
                 key={option.id}
                 onClick={() => handleSelect(option.id, option.label)}

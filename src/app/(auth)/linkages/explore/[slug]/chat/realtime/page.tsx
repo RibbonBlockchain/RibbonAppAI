@@ -657,6 +657,14 @@ const RealtimeInteraction: React.FC = () => {
                   }
                   className="bg-red-500 flex flex-row gap-2 px-4 py-2 rounded-full"
                 />
+                <div
+                  onClick={
+                    isConnected ? disconnectConversation : connectConversation
+                  }
+                  className="bg-red-500 flex flex-row gap-2 px-4 py-2 rounded-full"
+                >
+                  {isConnected ? <Microphone2 /> : <MicrophoneSlash />}
+                </div>
               </div>
             </div>
           </div>

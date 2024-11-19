@@ -12,7 +12,7 @@ export const alternatePrompts = [
 ];
 
 export const categoryOptions = [
-  { id: "mental-health", label: "Mental healthes" },
+  { id: "mental-health", label: "Mental health" },
   { id: "diseases-control", label: "Diseases control" },
   { id: "finance", label: "Finance" },
   { id: "fitness-programs", label: "Fitness programs" },
@@ -20,5 +20,17 @@ export const categoryOptions = [
   { id: "environmental-sector", label: "Environmental sector" },
   { id: "employment-sector", label: "Employment sector" },
   { id: "relationship-lifestyle", label: "Relationships & Lifestyle" },
+  { id: "other", label: "Other" },
+];
+
+export const celebrityFieldOptions = [
+  { id: "music-artist", label: "Music Artists" },
+  { id: "actors", label: "Actors/Movie makers" },
+  { id: "comedian", label: "Comedians/Skit makers" },
+  { id: "sports", label: "Sport Personalities" },
+  { id: "influencers", label: "Influencers/Content creators" },
+  { id: "authors", label: "Authors/Writers" },
+  { id: "fashion", label: "Fashion/Icon designers" },
+  { id: "activists", label: "Public Speakers/Activists" },
   { id: "other", label: "Other" },
 ];

@@ -6,6 +6,7 @@ import {
   financeMenu,
   categoryTabs,
   ecommerceMenu,
+  trendingItems,
 } from "@/lib/values/constants";
 import {
   useGetUncompletedTasks,
@@ -21,6 +22,7 @@ import Topbar from "@/containers/dashboard/top-bar";
 import MoodModal from "@/containers/dashboard/mood-modal";
 import SwipeCards from "@/containers/dashboard/swipe-cards";
 import ActivityButton from "@/components/button/activity-button";
+import { serviceList } from "@/components/store/store-component";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
@@ -100,7 +102,15 @@ const Dashboard = () => {
     <AuthNavLayout>
       <div className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6">
         <div className="relative mx-auto flex flex-col items-center justify-center content-center">
-          <Topbar />
+          <Topbar>
+            <Image
+              src="/assets/ribbon.png"
+              alt="coin"
+              height={15}
+              width={72}
+              className="w-[72px] h-[15px]"
+            />
+          </Topbar>
 
           <div className="w-full">
             <SwipeCards />
@@ -338,7 +348,60 @@ const Dashboard = () => {
 
             <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
               {activeMenu === "shop" && (
-                <div>No shop club entry at the moment</div>
+                <div className="h-auto w-[inherit] flex flex-col gap-10 mb-20 overflow-y-auto">
+                  <div className="mt-4 grid grid-cols-4 gap-x-4 gap-y-8">
+                    {serviceList.map((i) => (
+                      <Link
+                        href={i.href}
+                        key={i.name}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <div className="bg-[#3f3952] bg-opacity-95 p-3 rounded-full">
+                          {i.icon}
+                        </div>
+                        <p className="text-xs font-semibold">{i.name}</p>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div>
+                    <p className="text-base font-bold mb-2">
+                      Trending products
+                    </p>
+
+                    <div key={trendingItems.data.id}>
+                      <div className="flex flex-col gap-3 pb-6">
+                        {trendingItems.data.items.map((item: any) => (
+                          <div
+                            key={item.id}
+                            className="relative flex flex-row items-center justify-between"
+                          >
+                            <div className="flex flex-row items-center gap-1">
+                              <Image
+                                width={68}
+                                alt={item.name}
+                                height={68}
+                                src={""}
+                                className="bg-white rounded-md w-[68px] h-[68px]"
+                              />
+                              <div className="flex flex-col items-start justify-between py-1">
+                                <p className="text-xs">Item info</p>
+                                <p className="text-sm font-semibold line-clamp-2">
+                                  Item Id: {item.name || item.itemId}
+                                </p>
+
+                                <p className="text-sm font-bold">
+                                  {item.currency || "$"}
+                                  {item.price}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {activeMenu === "drop-ship" && (

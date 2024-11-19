@@ -4,17 +4,16 @@ import {
   Home,
   Global,
   Activity,
-  ShoppingCart,
   ProfileCircle,
   ArrowCircleLeft,
   ArrowCircleRight,
+  Hierarchy,
+  HierarchySquare,
 } from "iconsax-react";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import FloatingIcon from "@/app/(auth)/dashboard/floating-icon";
-import { MicrophoneIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
 
 const items = [
   {
@@ -23,9 +22,9 @@ const items = [
     icon: <Home size="32" color="#ffffff" variant="Bold" />,
   },
   {
-    route: "/store",
-    name: "Store",
-    icon: <ShoppingCart size="32" color="#ffffff" variant="Bold" />,
+    route: "/timeline",
+    name: "Timeline",
+    icon: <HierarchySquare size="32" color="#ffffff" variant="Bold" />,
   },
   {
     route: "/linkages",

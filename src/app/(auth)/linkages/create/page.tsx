@@ -286,7 +286,7 @@ const CreateLinkage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 mt-6">
+        {/* <div className="flex flex-col gap-2 mt-6">
           <h1 className="text-sm font-semibold">Business category</h1>
           <p className="text-sm font-light">
             This enables us to create a Linkage that aligns with your business.
@@ -310,7 +310,7 @@ const CreateLinkage = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="flex flex-col gap-2 mt-4">
           <div className="flex flex-row items-center justify-between">

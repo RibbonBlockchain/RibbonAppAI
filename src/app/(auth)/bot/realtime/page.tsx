@@ -621,9 +621,9 @@ const RealtimeInteraction: React.FC = () => {
           </div>
 
           <div className="fixed bottom-2 flex items-center justify-center self-center text-white w-full max-w-[450px]">
-            <div className="flex flex-col grow-0 shrink-0 items-center justify-center gap-1">
+            <div className="flex flex-row grow-0 shrink-0 items-center justify-between gap-1">
               <Toggle
-                defaultValue={false}
+                defaultValue={"server_vad"}
                 labels={["manual", "auto"]}
                 values={["none", "server_vad"]}
                 onChange={(_, value) => changeTurnEndType(value)}
@@ -633,19 +633,37 @@ const RealtimeInteraction: React.FC = () => {
 
               <div className="flex flex-row items-center justify-center gap-4">
                 {isConnected && canPushToTalk && (
-                  <RealtimeButton
-                    label={isRecording ? "release to send" : "push to talk"}
-                    buttonStyle={isRecording ? "alert" : "regular"}
+                  // <RealtimeButton
+                  //   label={isRecording ? "release to send" : "push to talk"}
+                  //   buttonStyle={isRecording ? "alert" : "regular"}
+                  //   disabled={!isConnected || !canPushToTalk}
+                  //   onMouseDown={startRecording}
+                  //   onMouseUp={stopRecording}
+                  //   className="bg-green-500 px-4 py-2 rounded-full"
+                  // />
+
+                  <button
                     disabled={!isConnected || !canPushToTalk}
                     onMouseDown={startRecording}
                     onMouseUp={stopRecording}
-                    className="bg-green-500 px-4 py-2 rounded-full"
-                  />
+                  >
+                    {isRecording ? (
+                      <div className="flex flex-col gap-1 items-center justify-center font-bold">
+                        <Sound />
+                        <p>Release to send</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-1 items-center justify-center font-bold">
+                        <Sound />
+                        <p>push to talk</p>
+                      </div>
+                    )}
+                  </button>
                 )}
 
                 <div className="flex-1" />
 
-                <RealtimeButton
+                {/* <RealtimeButton
                   label={isConnected ? "mute" : "unmute"}
                   iconPosition={isConnected ? "end" : "start"}
                   // icon={isConnected ? X : Zap}
@@ -654,7 +672,25 @@ const RealtimeInteraction: React.FC = () => {
                     isConnected ? disconnectConversation : connectConversation
                   }
                   className="bg-red-500 flex flex-row gap-2 px-4 py-2 rounded-full"
-                />
+                /> */}
+
+                <div
+                  onClick={
+                    isConnected ? disconnectConversation : connectConversation
+                  }
+                >
+                  {isConnected ? (
+                    <div className="flex flex-col gap-1 items-center justify-center font-bold">
+                      <Microphone2 />
+                      <p>Mute</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-1 items-center justify-center font-bold">
+                      <MicrophoneSlash />
+                      <p>Unmute</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -93,3 +93,8 @@ export type TUserOrderItemBody = {
   asset?: string;
   items: Item[];
 };
+
+export type TRespondBasedAgent = {
+  message: any;
+  type: any;
+};

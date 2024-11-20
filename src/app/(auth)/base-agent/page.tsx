@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 import { useRespondBasedAgent } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";
@@ -26,7 +26,7 @@ const BasedAgent = () => {
     <div className="text-white bg-[#0B0228] flex flex-col h-[inherit] gap-6 p-4 sm:p-6">
       <p>BasedAgent</p>
 
-      {!data?.data?.messages.length && (
+      {!data?.data?.messages.length && !isPending && (
         <div
           onClick={handleStartConversation}
           className="py-1 px-3 w-fit bg-green-200 rounded-md text-black"

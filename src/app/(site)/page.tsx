@@ -1,5 +1,6 @@
 import Image from "next/image";
 import LinkButton from "@/components/button/link";
+import { WorldIdButton } from "@/containers/auth/landing/button";
 
 const Home = () => {
   return (
@@ -46,6 +47,8 @@ const Home = () => {
           Already have an account?{" "}
           <span className="text-[#290064] font-semibold">Sign In</span>
         </LinkButton>
+
+        <WorldIdButton>Sign In with World ID</WorldIdButton>
       </div>
     </div>
   );

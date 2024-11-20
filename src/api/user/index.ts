@@ -14,6 +14,7 @@ import {
   TBaseNameody,
   TClaimUsdcBody,
   TUserOrderItemBody,
+  TRespondBasedAgent,
 } from "./types";
 import {
   getTasks,
@@ -54,6 +55,7 @@ import {
   userBaseName,
   userListTokens,
   userGetOnramp,
+  respondBasedAgent,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -408,5 +410,12 @@ export const useGetUserOrders = () => {
   return useQuery({
     queryKey: ["user-orders"],
     queryFn: () => getUserOrders(),
+  });
+};
+
+export const useRespondBasedAgent = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TRespondBasedAgent) => respondBasedAgent(body),
   });
 };

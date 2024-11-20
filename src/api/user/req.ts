@@ -14,6 +14,7 @@ import {
   TBaseNameody,
   TClaimUsdcBody,
   TUserOrderItemBody,
+  TRespondBasedAgent,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -230,5 +231,10 @@ export const userOrderItems = async (
 
 export const getUserOrders = async () => {
   const res = await client.get<any>("/user/store/orders");
+  return res.data;
+};
+
+export const respondBasedAgent = async (body: TRespondBasedAgent) => {
+  const res = await client.post("ai/chat", body);
   return res.data;
 };

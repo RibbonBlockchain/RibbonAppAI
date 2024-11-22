@@ -1,31 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import React, { useState, KeyboardEvent } from "react";
 import { useRespondBasedAgent } from "@/api/user";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import AgentQuestionnaire from "@/containers/dashboard/agent-questionnaire";
+import { Send } from "iconsax-react";
 
 const BasedAgent = () => {
   const { mutate, data, isPending } = useRespondBasedAgent();
-  const [userInput, setUserInput] = useState("");
 
-  const lastQuestion =
-    data?.data?.messages[data?.data?.messages.length - 1].content;
+  const [input, setInput] = useState("");
 
-  const handleStartConversation = () => {
-    mutate({ message: "Hello there", type: "conversation.starter" });
+  const handleSend = () => {
+    mutate({
+      message: input,
+      type: "conversation.start",
+    });
   };
 
-  const handleResponse = () => {
-    mutate(
-      { message: userInput, type: "questionnaire.respond" },
-      {
-        onSuccess: () => {
-          toast.success("Response successfully recorded");
-          setUserInput("");
-        },
-      }
-    );
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const questionnaireTitle = data?.data.messages?.[0]?.content;
+  const questions = data?.data.messages?.[0]?.extra?.questions;
+
+  const handleStartConversation = () => {
+    mutate({ message: "Hello there", type: "conversation.start" });
   };
 
   return (
@@ -33,45 +37,36 @@ const BasedAgent = () => {
       <p>BasedAgent</p>
 
       {!data?.data?.messages.length && !isPending && (
-        <div
-          onClick={handleStartConversation}
-          className="py-1 px-3 w-fit bg-green-200 rounded-md text-black"
-        >
-          Begin
-        </div>
-      )}
-
-      {data?.data?.messages.length && (
         <>
-          {isPending ? (
-            <SpinnerIcon />
-          ) : (
-            <>
-              <div className="flex flex-col gap-1">
-                <p className="italic text-base">{lastQuestion}</p>
-              </div>
-            </>
-          )}
+          <div className="py-1 px-3 w-fit flex flex-col self-end rounded-md text-white">
+            <div onClick={handleStartConversation} className="italic gap-1">
+              <p>Conversational starters</p>
+              <p>Conversational starters</p>
+            </div>
+          </div>
+          <div className="fixed self-center bottom-4 p-4 w-[90%] max-w-[450px]">
+            <div className="flex flex-row items-center">
+              <input
+                type="text"
+                value={input}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type a message..."
+                className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
+              />
+              <button onClick={handleSend} className="absolute right-8 z-10">
+                <Send size="32" color="#ffffff" />
+              </button>
+            </div>
+          </div>
         </>
       )}
 
-      {/* Input field for user to respond */}
-      <div className="mt-auto">
-        <input
-          type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Type your response..."
-          className="w-full py-2 px-4 rounded-md bg-[#2d2d2d] text-white border border-gray-600"
-        />
-        <button
-          onClick={handleResponse}
-          disabled={!userInput.trim()} // Disable if input is empty
-          className="mt-2 py-2 px-4 w-full bg-green-200 rounded-md text-black disabled:bg-gray-400"
-        >
-          Submit Response
-        </button>
-      </div>
+      {isPending && <SpinnerIcon />}
+
+      {data?.data?.messages.length && (
+        <AgentQuestionnaire questions={questions} />
+      )}
     </div>
   );
 };

@@ -370,7 +370,7 @@ const Dashboard = () => {
                     </p>
 
                     <div key={trendingItems.data.id}>
-                      <div className="flex flex-col gap-3 pb-6">
+                      <div className="mt-4 grid xxxs:grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-8 pb-6">
                         {trendingItems.data.items.map((item: any) => (
                           <div
                             key={item.id}

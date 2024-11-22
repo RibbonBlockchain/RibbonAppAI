@@ -95,6 +95,9 @@ export type TUserOrderItemBody = {
 };
 
 export type TRespondBasedAgent = {
-  message: any;
+  message?: any;
   type: any;
+  questionId?: number;
+  taskId?: number;
+  optionId?: number | string | number[];
 };

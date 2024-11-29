@@ -79,6 +79,8 @@ const Influencer = () => {
     scrollToBottom();
   }, [messages]);
 
+  const createdToken = false;
+
   return (
     <AuthLayout>
       <main className="w-auto max-w-[450px] relative h-screen text-white bg-[#251F2E]">
@@ -246,40 +248,57 @@ const Influencer = () => {
           )}
 
           {selectedTab === "token" && (
-            <main className="h-full text-white flex flex-col rounded-xl">
-              <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                  <p className="text-xl font-bold">3,839.65</p>
-                  <p className="text-[10px] font-normal">105 (%0.8)</p>
-                </div>
-                <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                  <p>Balance</p>
-                  <div className="flex flex-row items-center text-[13px] justify-center gap-1">
-                    <Image
-                      src={"/assets/ribbon.svg"}
-                      alt=""
-                      width={16}
-                      height={16}
-                      className="max-h-4 max-w-4"
-                    />
-                    <p>20 $Tyla</p>
+            <section>
+              {createdToken && (
+                <main className="h-full text-white flex flex-col rounded-xl">
+                  <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+                    <div className="flex flex-col justify-center gap-1 text-xs font-medium">
+                      <p className="text-xl font-bold">3,839.65</p>
+                      <p className="text-[10px] font-normal">105 (%0.8)</p>
+                    </div>
+                    <div className="flex flex-col justify-center gap-1 text-xs font-medium">
+                      <p>Balance</p>
+                      <div className="flex flex-row items-center text-[13px] justify-center gap-1">
+                        <Image
+                          src={"/assets/ribbon.svg"}
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="max-h-4 max-w-4"
+                        />
+                        <p>20 $Tyla</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              <section className="flex-1 overflow-y-auto pt-[100px] px-4 mb-16">
-                <div className="w-full h-auto flex self-center items-center justify-center ">
-                  <div className="w-full bg-white min-h-[400px] mx-4">
-                    graph for coin
+                  <section className="flex-1 overflow-y-auto pt-[100px] px-4 mb-16">
+                    <div className="w-full h-auto flex self-center items-center justify-center ">
+                      <div className="w-full bg-white min-h-[400px] mx-4">
+                        graph for coin
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 mt-6 px-4 ">
+                      <Button className="bg-[#40BF6A]">Buy</Button>
+                      <Button className="bg-[#DF2040]">Sell</Button>
+                    </div>
+                  </section>
+                </main>
+              )}
+              {!createdToken && (
+                <main className="h-full text-white flex flex-col items-center rounded-xl">
+                  <div className="mt-10 p-4 py-6 w-full max-w-[300px] flex flex-col gap-4 items-center justify-center bg-[#251F2E]">
+                    <p> No token</p>
+                    <p className="text-center">
+                      This Linkage is Not Yet Connected to a Token
+                    </p>
+                    <Button className="max-w-fit px-3 py-2 rounded-md">
+                      Create a Token
+                    </Button>
                   </div>
-                </div>
-
-                <div className="flex gap-4 mt-6 px-4 ">
-                  <Button className="bg-[#40BF6A]">Buy</Button>
-                  <Button className="bg-[#DF2040]">Sell</Button>
-                </div>
-              </section>
-            </main>
+                </main>
+              )}
+            </section>
           )}
 
           {selectedTab === "store" && (

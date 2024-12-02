@@ -8,7 +8,6 @@ import {
   useSubmitTask,
 } from "@/api/user";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import { SpinnerIcon } from "@/components/icons/spinner";
 import toast from "react-hot-toast";
 
 interface Option {
@@ -271,9 +270,7 @@ const AgentQuestionnaire = ({
         ))}
 
         {isPending && (
-          <h1 className="mb-2">
-            <SpinnerIcon />
-          </h1>
+          <div className="mb-2 italic text-[15px] animate-pulse">Typing...</div>
         )}
 
         <div ref={messagesEndRef} />

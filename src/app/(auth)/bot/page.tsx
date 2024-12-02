@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowLeft2, Send } from "iconsax-react";
-import { useRespondBasedAgent } from "@/api/user";
-import React, { useState, KeyboardEvent, useEffect } from "react";
-import { SpinnerIcon } from "@/components/icons/spinner";
-import AgentQuestionnaire from "@/containers/dashboard/agent-questionnaire";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import Image from "next/image";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { ArrowLeft2, Send } from "iconsax-react";
+import { useRespondBasedAgent } from "@/api/user";
+import { SpinnerIcon } from "@/components/icons/spinner";
+import React, { useState, KeyboardEvent, useEffect } from "react";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import AgentQuestionnaire from "@/containers/dashboard/agent-questionnaire";
 
 const BasedAgent = () => {
   const router = useRouter();

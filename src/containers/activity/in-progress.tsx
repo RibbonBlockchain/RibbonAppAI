@@ -18,7 +18,7 @@ const InProgress = () => {
 
       {data?.length > 0 && (
         <div className="mb-8">
-          <div>Questionnaire</div>
+          <div className="mb-2">Questionnaire</div>
           {data?.map((i: any) => (
             <Pending
               id={i?.id}
@@ -38,7 +38,7 @@ const InProgress = () => {
 
       {surveyInDrogressData?.length > 0 && (
         <div className="mb-8">
-          <div>Survey</div>
+          <div className="mb-2">Survey</div>
           {surveyInDrogressData?.map((i: any) => (
             <Pending
               id={i?.id}

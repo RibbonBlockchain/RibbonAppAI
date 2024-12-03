@@ -56,6 +56,7 @@ import {
   userListTokens,
   userGetOnramp,
   respondBasedAgent,
+  getUserSesScore,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -97,6 +98,13 @@ export const useUpdateProfile = () => {
   return useMutation({
     onError,
     mutationFn: (body: TUpdateProfileBody) => updateProfile(body),
+  });
+};
+
+export const useGetUserSesScore = () => {
+  return useQuery({
+    queryKey: ["user-ses"],
+    queryFn: () => getUserSesScore(),
   });
 };
 

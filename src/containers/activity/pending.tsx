@@ -23,34 +23,30 @@ const Pending = (props: Props) => {
   const rewardPoints = props.reward * 5000;
 
   return (
-    <div
+    <Link
+      href={props.href}
       id={props.id}
       className={`${
-        props.priority
-          ? "bg-[#EDE8F5]"
-          : "bg-white border-[1px] border-[#E8E8E8]"
-      }   w-full p-2.5 flex flex-row self-center items-center justify-between rounded-lg mb-3`}
+        props.priority ? "bg-[#EDE8F5]" : "bg-[#3B3247] rounded-md"
+      }   w-full p-2.5 flex flex-row text-white self-center items-center justify-between rounded-lg mb-3`}
     >
-      <div className="flex flex-row items-start justify-start text-black gap-1">
+      <div className="flex flex-row items-start justify-start gap-1">
         {props.icon === undefined && <></>}
         {props.icon && (
           <Image src={props.icon} alt="icons" height={32} width={32} />
         )}
 
         <div className="flex flex-col text-xs gap-[3px]">
-          <Link
-            href={props.href}
+          <h1
             className={`font-extrabold whitespace-nowrap truncate max-w-[130px] xxs:max-w-[150px] xs:max-w-[170px] ${
-              props.priority ? "text-black" : "text-gradient-2"
+              props.priority ? "text-white" : "text-white"
             }`}
           >
             {props.taskTitle}
-          </Link>
+          </h1>
 
           <div className="flex flex-row items-center text-[11px]">
-            <p className="text-[#434343]">
-              Claim {rewardPoints.toLocaleString()} ribbon
-            </p>
+            <p>Claim {rewardPoints.toLocaleString()} ribbon</p>
           </div>
           {<RatingCompleted rating={props.ratings} />}
         </div>
@@ -62,7 +58,7 @@ const Pending = (props: Props) => {
       </div>
 
       <div className="flex flex-col gap-[3px]">
-        <p className="text-[#626262] text-xs font-medium self-end">Reward</p>
+        <p className="text-xs font-medium self-end">Reward</p>
         <div
           className={`text-[#A81DA6] flex flex-row gap-1 items-center self-end text-sm font-black`}
         >
@@ -76,12 +72,12 @@ const Pending = (props: Props) => {
           {props.reward} ribbon
         </div>
         {
-          <p className="text-[10px] font-medium text-[#626262] self-end">
+          <p className="text-[10px] font-medium self-end">
             ({props.totalRatings}) Ratings
           </p>
         }
       </div>
-    </div>
+    </Link>
   );
 };
 

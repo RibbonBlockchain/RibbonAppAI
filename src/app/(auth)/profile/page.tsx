@@ -9,10 +9,10 @@ import Menu, {
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogoutCurve, Profile } from "iconsax-react";
 import User from "@/containers/account/user";
 import { ChevronRight, Scan } from "lucide-react";
 import { useGetAuth, useLogout } from "@/api/auth";
+import { LogoutCurve, Profile } from "iconsax-react";
 import { SpinnerIconPurple } from "@/components/icons/spinner";
 import InviteFriends from "@/containers/account/invite-friends";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";

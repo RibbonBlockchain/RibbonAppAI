@@ -43,7 +43,7 @@ const Activity = () => {
           <h1 className="text-2xl font-extrabold mt-3">Activity</h1>
           <div
             onClick={() => setSwitchBalance(!switchBalance)}
-            className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-2 gap-2 items-center justify-center text-[10px] font-bold cursor-pointer"
+            className="bg-[#FCECF0] text-[#7C56FE] rounded-full flex flex-row px-2 py-1 gap-2 items-center justify-center text-[10px] font-bold cursor-pointer"
           >
             <Image
               alt="coin"
@@ -62,14 +62,18 @@ const Activity = () => {
           <div
             className={
               activeTab === "pending"
-                ? "w-[109px] h-[45px] flex flex-row items-center gap-2 text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-xs"
-                : "w-[109px] h-[45px] flex flex-row items-center gap-2 text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-4 rounded-full text-xs"
+                ? "w-[109px] h-[45px] flex flex-row items-center gap-2 text-white font-semibold  bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-4 rounded-full text-xs"
+                : "w-[109px] h-[45px] flex flex-row items-center gap-2 text-[#080808] font-semibold   bg-[#F2EEFF] py-3 px-4 rounded-full text-xs"
             }
             onClick={() => handleTabClick("pending")}
           >
             Pending
-            {activeTab === "pending" && (
-              <p className="w-5 h-5 text-xs text-center pt-[2px] bg-white text-[#DF900A] rounded-full">
+            {activeTab === "pending" ? (
+              <p className="w-5 h-5 text-xs text-center pt-[2px] mx-auto bg-white text-[#DF900A] rounded-full">
+                {totalInPending}
+              </p>
+            ) : (
+              <p className="w-5 h-5 text-xs text-center pt-[2px] mx-auto text-[#DF900A] rounded-full">
                 {totalInPending}
               </p>
             )}
@@ -77,8 +81,8 @@ const Activity = () => {
           <div
             className={
               activeTab === "completed"
-                ? "h-[45px] text-white font-semibold border border-[#6200EE] bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-2 rounded-full text-xs flex items-center text-center"
-                : "h-[45px] text-[#080808] font-semibold border border-[#6200EE] bg-[#F2EEFF] py-3 px-2 rounded-full text-xs flex items-center text-center"
+                ? "h-[45px] text-white font-semibold  bg-gradient-to-r from-[#714EE7] to-[#A81DA6] py-3 px-3 rounded-full text-xs flex items-center text-center"
+                : "h-[45px] text-[#080808] font-semibold bg-[#F2EEFF] py-3 px-3 rounded-full text-xs flex items-center text-center"
             }
             onClick={() => handleTabClick("completed")}
           >

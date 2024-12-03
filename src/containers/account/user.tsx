@@ -1,15 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import { useGetAuth } from "@/api/auth";
+import { useGetUserSesScore } from "@/api/user";
 
 const User = () => {
   const { data: user } = useGetAuth({ enabled: true });
-
-  const SES_Score = user?.wallet.ses;
-
-  // const capitalizeFirstLetter = (str: string) => {
-  //   return str.charAt(0).toUpperCase() + str.slice(1);
-  // };
+  const { data: ses } = useGetUserSesScore();
 
   return (
     <div className="bg-cover flex flex-row mx-auto mt-4 py-6 items-center justify-between rounded-md">
@@ -34,11 +30,11 @@ const User = () => {
 
         <div className="flex flex-col items-start justify-between py-2">
           <p className="text-2xl font-bold">
-            {user?.firstName} {""}
+            {user?.firstName}
             {user?.lastName}
           </p>
           <div className="lex flex-row gap-2 items-center justify-center text-base font-bold">
-            SES Score: {SES_Score}
+            SES Score: {ses?.data}
           </div>
         </div>
       </div>

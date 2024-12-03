@@ -226,7 +226,7 @@ const CompletedActivities = () => {
                               {i.type === "DAILY_REWARD" ? (
                                 <div
                                   key={i.id}
-                                  className="text-[#626262] mb-3 bg-white font-bold flex items-center justify-between p-3 rounded-xl"
+                                  className="text-white bg-[#3B3247] mb-3 font-bold flex items-center justify-between p-3 rounded-xl"
                                 >
                                   <p className="text-xs">Daily rewards</p>
                                   <p className="text-sm">100 ribbon</p>

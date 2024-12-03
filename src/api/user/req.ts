@@ -23,6 +23,11 @@ export const updateProfile = async (body: TUpdateProfileBody) => {
   return res.data.data;
 };
 
+export const getUserSesScore = async () => {
+  const res = await client.get<any>("/user/ses");
+  return res.data;
+};
+
 export const submitTask = async (body: TSubmitTaskBody) => {
   const res = await client.post<TResponse<any>>("/task/user/respond", body);
   return res.data;

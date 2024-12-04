@@ -1,24 +1,29 @@
 "use client";
 
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAtomValue } from "jotai";
 import { signIn } from "next-auth/react";
 import Button from "@/components/button";
-import { authAtom } from "@/lib/atoms/auth.atom";
 import { useRouter } from "next/navigation";
+import { authAtom } from "@/lib/atoms/auth.atom";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
+  const [isLoading, setIsLoading] = useState(false);
   const isFormInvalid = !form.phoneNumber.trim() || !form.pin.trim();
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const res = await signIn("credentials", {
       pin: form.pin,
       phone: form.phoneNumber,
     });
+    setIsLoading(false);
 
     if (res?.error) {
+      setIsLoading(false);
       router.push("/");
       toast.error("Invalid Credentials");
     }
@@ -27,11 +32,11 @@ const Submit = () => {
   return (
     <div className="flex items-center justify-center w-full pb-6">
       <Button
-        // loading={}
+        loading={isLoading}
         onClick={handleSubmit}
         disabled={isFormInvalid}
       >
-        Sign In
+        Sign in
       </Button>
     </div>
   );

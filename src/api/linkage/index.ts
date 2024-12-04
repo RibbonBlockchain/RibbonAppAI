@@ -41,10 +41,12 @@ import {
   createLoan,
   linkageGetLoanById,
   requestLoan,
+  createCelebrityLinkage,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
   TChatLinkageBody,
+  TCreateCelebrityLinkageBody,
   TCreateLinkageBody,
   TDisburseLoanBody,
   TSubmitLinkageQuestionnaireAnswer,
@@ -68,6 +70,14 @@ export const useCreateLinkage = () => {
   return useMutation({
     onError,
     mutationFn: (body: TCreateLinkageBody) => createLinkage(body),
+  });
+};
+
+export const useCreateCelebrityLinkage = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TCreateCelebrityLinkageBody) =>
+      createCelebrityLinkage(body),
   });
 };
 

@@ -379,9 +379,10 @@ const Dashboard = () => {
                             <div className="flex flex-row items-center gap-1">
                               <Image
                                 width={68}
-                                alt={item.name}
+                                // alt={item.name}
+                                alt={"name"}
                                 height={68}
-                                src={""}
+                                src={"/assets/status-circle.png"}
                                 className="bg-white rounded-md w-[68px] h-[68px]"
                               />
                               <div className="flex flex-col items-start justify-between py-1">

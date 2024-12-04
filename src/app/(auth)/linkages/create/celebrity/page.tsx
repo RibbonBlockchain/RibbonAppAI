@@ -14,11 +14,12 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useCreateLinkage } from "@/api/linkage";
+import { useCreateCelebrityLinkage, useCreateLinkage } from "@/api/linkage";
 import { ChevronDown, Upload } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import { categoryOptions, celebrityFieldOptions } from "@/lib/values/prompts";
 import { createLinkageAtom } from "@/lib/atoms/auth.atom";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 type Starter = {
   text: string;
@@ -71,7 +72,7 @@ const CreateLinkage = () => {
     setLogo(file);
   };
 
-  const { mutate } = useCreateLinkage();
+  const { mutate, isPending } = useCreateCelebrityLinkage();
 
   const handleCreateLinkage = () => {
     const [prompt, prompt1, prompt2] = starters
@@ -82,8 +83,6 @@ const CreateLinkage = () => {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("instruction", instruction);
-    formData.append("phone", phone);
-    formData.append("email", email);
     formData.append("location", location);
     formData.append("category", category);
     formData.append("prompts", prompt);
@@ -130,13 +129,7 @@ const CreateLinkage = () => {
   };
 
   const isSubmitDisabled =
-    !name ||
-    !description ||
-    !instruction ||
-    !phone ||
-    !email ||
-    !location ||
-    !category;
+    !name || !description || !instruction || !location || !category;
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
@@ -381,7 +374,7 @@ const CreateLinkage = () => {
               : "bg-white text-[#290064]"
           )}
         >
-          Train your AI Linkage
+          {isPending ? <SpinnerIconPurple /> : "Train your AI Linkage"}
         </button>
       </div>
     </main>

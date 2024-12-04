@@ -79,7 +79,12 @@ const TrainLinkage = () => {
           setTrained(true),
             toast.success("File uploaded, Linkage trained successfully");
         },
-        onError: (error) => console.error("Upload failed", error),
+        onError: (error) => {
+          toast.error(
+            "Failed. Make sure you have not uploaded this file before."
+          );
+          console.error("Upload failed", error);
+        },
       }
     );
   };

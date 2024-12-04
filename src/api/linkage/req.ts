@@ -1,6 +1,7 @@
 import {
   TAddLinkageStoreItemBody,
   TChatLinkageBody,
+  TCreateCelebrityLinkageBody,
   TCreateLinkageBody,
   TDisburseLoanBody,
   TDiscoveryLinkageResponse,
@@ -22,6 +23,13 @@ import {
 
 export const createLinkage = async (body: TCreateLinkageBody) => {
   const res = await client.post("/linkage", body);
+  return res.data;
+};
+
+export const createCelebrityLinkage = async (
+  body: TCreateCelebrityLinkageBody
+) => {
+  const res = await client.post("/linkage/celebrity", body);
   return res.data;
 };
 

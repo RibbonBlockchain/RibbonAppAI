@@ -1,14 +1,10 @@
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { Send, User } from "iconsax-react";
 import { useRouter } from "next/navigation";
 import SuccessAnimation from "@/components/success-animation";
-import {
-  useRateQuestionnaire,
-  useRespondBasedAgent,
-  useSubmitTask,
-} from "@/api/user";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import toast from "react-hot-toast";
+import { useRateQuestionnaire, useRespondBasedAgent } from "@/api/user";
 
 interface Option {
   id: number;
@@ -113,7 +109,18 @@ const AgentQuestionnaire = ({
     if (currentQuestion) {
       if (currentQuestionIndex < questions.length - 1) {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        // is pending
+
+        setTimeout(() => {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              sender: "ai",
+              text: questions[nextQuestionIndex].text,
+              options: questions[nextQuestionIndex].options,
+            },
+          ]);
+          setCurrentQuestionIndex(nextQuestionIndex);
+        }, 1500);
       } else {
         if (!isSubmitting && !ratingMode && !claimReward) {
           setIsSubmitting(true);
@@ -134,18 +141,77 @@ const AgentQuestionnaire = ({
           ? questions[questions.length - 1].id
           : currentQuestion.id;
 
-      mutate(
-        {
-          optionId: 0,
-          questionId: questionIdToSubmit,
-          taskId: currentQuestion.taskId,
-          type: "questionnaire.respond",
-        },
-        { onSuccess }
-      );
+      mutate({
+        optionId: 0,
+        questionId: questionIdToSubmit,
+        taskId: currentQuestion.taskId,
+        type: "questionnaire.respond",
+      });
     } else {
+      // error
     }
   };
+
+  // const handleSend = () => {
+  //   const currentQuestion = questions[currentQuestionIndex];
+  //   const currentQuestionHasOptions = currentQuestion?.options?.length > 0;
+
+  //   if (input.trim() === "" && !currentQuestionHasOptions) return;
+
+  //   setMessages((prevMessages) => [
+  //     ...prevMessages,
+  //     { sender: "user", text: input },
+  //   ]);
+
+  //   setInput("");
+
+  //   if (currentQuestion) {
+  //     if (currentQuestionIndex < questions.length - 1) {
+  //       const nextQuestionIndex = currentQuestionIndex + 1;
+
+  //       setTimeout(() => {
+  //         setMessages((prevMessages) => [
+  //           ...prevMessages,
+  //           {
+  //             sender: "ai",
+  //             text: questions[nextQuestionIndex].text,
+  //             options: questions[nextQuestionIndex].options,
+  //           },
+  //         ]);
+  //         setCurrentQuestionIndex(nextQuestionIndex);
+  //       }, 1500);
+  //     } else {
+  //       if (!isSubmitting && !ratingMode && !claimReward) {
+  //         setIsSubmitting(true);
+  //         setTimeout(() => {
+  //           setMessages((prevMessages) => [
+  //             ...prevMessages,
+  //             {
+  //               sender: "ai",
+  //               text: "Do you want to submit the questionnaire?",
+  //             },
+  //           ]);
+  //         }, 1000);
+  //       }
+  //     }
+
+  //     const questionIdToSubmit =
+  //       currentQuestionIndex === questions.length - 1
+  //         ? questions[questions.length - 1].id
+  //         : currentQuestion.id;
+
+  //     mutate(
+  //       {
+  //         optionId: 0,
+  //         questionId: questionIdToSubmit,
+  //         taskId: currentQuestion.taskId,
+  //         type: "questionnaire.respond",
+  //       }
+  //       // { onSuccess }
+  //     );
+  //   } else {
+  //   }
+  // };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -164,10 +230,31 @@ const AgentQuestionnaire = ({
 
     if (currentQuestionIndex < questions.length - 1) {
       const nextQuestionIndex = currentQuestionIndex + 1;
-      // is pending
+
+      setTimeout(() => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            sender: "ai",
+            text: questions[nextQuestionIndex].text,
+            options: questions[nextQuestionIndex].options,
+          },
+        ]);
+        setCurrentQuestionIndex(nextQuestionIndex);
+      }, 1500);
     } else {
-      if (!isPending && !isSubmitting && !ratingMode && !claimReward) {
+      if (!isSubmitting && !ratingMode && !claimReward) {
         setIsSubmitting(true);
+        setTimeout(() => {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              sender: "ai",
+              text: "Do you want to submit the questionnaire?",
+            },
+          ]);
+        }, 1000);
+        toast.success("Reward received");
       }
     }
 
@@ -176,16 +263,58 @@ const AgentQuestionnaire = ({
         ? questions[questions.length - 1].id
         : currentQuestion.id;
 
-    mutate(
-      {
-        optionId: option.id,
-        questionId: questionIdToSubmit,
-        taskId: currentQuestion?.taskId,
-        type: "questionnaire.respond",
-      },
-      { onSuccess }
-    );
+    mutate({
+      optionId: option.id,
+      questionId: questionIdToSubmit,
+      taskId: currentQuestion?.taskId,
+      type: "questionnaire.respond",
+    });
   };
+
+  // const handleOptionClick = (option: Option) => {
+  //   setMessages((prevMessages) => [
+  //     ...prevMessages,
+  //     { sender: "user", text: option.text },
+  //   ]);
+
+  //   const currentQuestion = questions[currentQuestionIndex];
+
+  //   if (currentQuestionIndex < questions.length - 1) {
+  //     const nextQuestionIndex = currentQuestionIndex + 1;
+
+  //     setTimeout(() => {
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         {
+  //           sender: "ai",
+  //           text: questions[nextQuestionIndex].text,
+  //           options: questions[nextQuestionIndex].options,
+  //         },
+  //       ]);
+  //       setCurrentQuestionIndex(nextQuestionIndex);
+  //     }, 1500);
+  //   } else {
+  //     if (!isPending && !isSubmitting && !ratingMode && !claimReward) {
+  //       setIsSubmitting(true);
+  //     }
+
+  //   }
+
+  //   const questionIdToSubmit =
+  //     currentQuestionIndex === questions.length - 1
+  //       ? questions[questions.length - 1].id
+  //       : currentQuestion.id;
+
+  //   mutate(
+  //     {
+  //       optionId: option.id,
+  //       questionId: questionIdToSubmit,
+  //       taskId: currentQuestion?.taskId,
+  //       type: "questionnaire.respond",
+  //     }
+  //     // { onSuccess }
+  //   );
+  // };
 
   const handleRatingClick = (rating: number) => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -269,9 +398,9 @@ const AgentQuestionnaire = ({
           </div>
         ))}
 
-        {isPending && (
+        {/* {isPending && (
           <div className="mb-2 italic text-[15px] animate-pulse">Typing...</div>
-        )}
+        )} */}
 
         <div ref={messagesEndRef} />
       </div>

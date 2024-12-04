@@ -2,7 +2,6 @@ import clsx from "clsx";
 import Image from "next/image";
 import { X } from "lucide-react";
 import React, { useState } from "react";
-import { useGetAuth } from "@/api/auth";
 import LinkagesCard from "../linkages/linkages-card";
 import { useGetDiscoveryLinkages } from "@/api/linkage";
 
@@ -140,11 +139,46 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="flex flex-col gap-8">
               <div className="flex flex-col items-start justify-center mb-4">
                 <p className="text-2xl font-bold">We&apos;re here to help</p>
-                <p className="text-base font-medium">
-                  We&apos;re sorry to hear you&apos;re feeling{" "}
-                  {selectedMood?.name.toLowerCase()}, we&apos;ll recommend some
-                  helpful Linkage.
-                </p>
+
+                {selectedMood?.name === "Unhappy" && (
+                  <p className="text-base font-medium">
+                    We&apos;re sorry to hear you&apos;re feeling{" "}
+                    {selectedMood?.name.toLowerCase()}, but we&apos;re here to
+                    help. We&apos;ll recommend some linkages to support you.
+                  </p>
+                )}
+
+                {selectedMood?.name === "Sad" && (
+                  <p className="text-base font-medium">
+                    We&apos;re sorry you&apos;re feeling{" "}
+                    {selectedMood?.name.toLowerCase()}, but we&apos;ll provide
+                    some helpful linkages to lift your spirits.
+                  </p>
+                )}
+
+                {selectedMood?.name === "Neutral" && (
+                  <p className="text-base font-medium">
+                    It seems you&apos;re feeling{" "}
+                    {selectedMood?.name.toLowerCase()}. Let&apos;s explore some
+                    linkages that might help brighten your day.
+                  </p>
+                )}
+
+                {selectedMood?.name === "Good" && (
+                  <p className="text-base font-medium">
+                    We&apos;re glad you&apos;re feeling{" "}
+                    {selectedMood?.name.toLowerCase()}! Let&apos;s find
+                    something inspiring or helpful for you.
+                  </p>
+                )}
+
+                {selectedMood?.name === "Happy" && (
+                  <p className="text-base font-medium">
+                    We&apos;re thrilled to hear you&apos;re feeling{" "}
+                    {selectedMood?.name.toLowerCase()}! Let&apos;s keep that
+                    positivity going with some helpful linkages.
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2 mb-4">

@@ -13,6 +13,20 @@ export type TCreateLinkageBody = {
   banner?: string;
 };
 
+export type TCreateCelebrityLinkageBody = {
+  name: string;
+  description: string;
+  phone: string;
+  location: string;
+  category: string;
+  image: string;
+  instruction: string;
+  prompts: string;
+  prompts1?: string;
+  logo?: string;
+  banner?: string;
+};
+
 export type TTrainLinkage = {
   name: string;
   description: string;

@@ -24,6 +24,7 @@ import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
 import { Add } from "iconsax-react";
 import CelebrityLinkageCard from "@/containers/linkages/celebrity-linkage-card";
 import CreateLinkageTypeModal from "@/containers/linkages/create-linkage-modal";
+import Pagination from "@/containers/linkages/pagination";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -56,9 +57,28 @@ const Linkages = () => {
     setSelectedTab(tab);
   };
 
+  const pageSize = 20;
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
-    params: { page: 1, pageSize: 10, query },
+    params: { page: pageNumber, pageSize: pageSize, query, type: "" },
   });
+
+  const handleNextPage = () => {
+    if (discoveryLinkages?.data?.pagination?.hasNextPage) {
+      setPageNumber((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (discoveryLinkages?.data?.pagination?.hasPreviousPage) {
+      setPageNumber((prev) => prev - 1);
+    }
+  };
+
+  const celebrityLinkageData = discoveryLinkages?.data?.data.filter(
+    (item: any) => item.type === "CELEBRITY"
+  );
 
   const handleQueryChange = (newQuery: string) => {
     setQuery(newQuery);
@@ -274,6 +294,12 @@ const Linkages = () => {
                             description={i.description}
                           />
                         ))}
+
+                        {/* <Pagination
+                          handlePreviousPage={handlePreviousPage}
+                          handleNextPage={handleNextPage}
+                          pagination={discoveryLinkages?.data?.pagination}
+                        /> */}
                       </div>
                     )}
 
@@ -301,7 +327,7 @@ const Linkages = () => {
                       </div>
                     )}
 
-                    {celebrityLinkages?.data?.data && (
+                    {celebrityLinkageData && (
                       <div className="flex flex-col gap-3">
                         <div>
                           <p className="text-lg font-semibold">
@@ -312,7 +338,7 @@ const Linkages = () => {
                           </p>
                         </div>
 
-                        {celebrityLinkages?.data?.data.map((i: any) => (
+                        {celebrityLinkageData.map((i: any) => (
                           <CelebrityLinkageCard
                             key={i.name}
                             name={i.name}
@@ -451,66 +477,66 @@ const busnessLinkage = {
   },
 };
 
-const celebrityLinkages = {
-  data: {
-    data: [
-      {
-        name: "Zendaya",
-        slug: "zendaya",
-        logo: "",
-        userId: "user101",
-        description:
-          "Zendaya is an award-winning actress, singer, and fashion icon known for her roles in 'Euphoria' and 'Spider-Man'.",
-        profession: "Actress, Singer",
-        location: "Los Angeles, CA",
-        contactEmail: "contact@zendaya.com",
-        website: "https://www.zendaya.com",
-        establishedYear: 2010,
-        popularityRank: 1, // Ranking based on fame or social media presence
-        socialMedia: {
-          instagram: "@zendaya",
-          twitter: "@Zendaya",
-          facebook: "/ZendayaOfficial",
-        },
-      },
-      {
-        name: "Chris Hemsworth",
-        slug: "chris-hemsworth",
-        logo: "",
-        userId: "user102",
-        description:
-          "Chris Hemsworth is an Australian actor famous for portraying Thor in the Marvel Cinematic Universe.",
-        profession: "Actor",
-        location: "Byron Bay, Australia",
-        contactEmail: "info@chrishemsworth.com",
-        website: "https://www.chrishemsworth.com",
-        establishedYear: 2002,
-        popularityRank: 2,
-        socialMedia: {
-          instagram: "@chrishemsworth",
-          twitter: "@chrishemsworth",
-          facebook: "/ChrisHemsworthOfficial",
-        },
-      },
-      {
-        name: "Taylor Swift",
-        slug: "taylor-swift",
-        logo: "",
-        userId: "user103",
-        description:
-          "Taylor Swift is a Grammy-winning singer-songwriter known for her genre-defying music and chart-topping albums.",
-        profession: "Singer-Songwriter",
-        location: "Nashville, TN",
-        contactEmail: "contact@taylorswift.com",
-        website: "https://www.taylorswift.com",
-        establishedYear: 2006,
-        popularityRank: 3,
-        socialMedia: {
-          instagram: "@taylorswift",
-          twitter: "@taylorswift13",
-          facebook: "/taylorswift",
-        },
-      },
-    ],
-  },
-};
+// const celebrityLinkages = {
+//   data: {
+//     data: [
+//       {
+//         name: "Zendaya",
+//         slug: "zendaya",
+//         logo: "",
+//         userId: "user101",
+//         description:
+//           "Zendaya is an award-winning actress, singer, and fashion icon known for her roles in 'Euphoria' and 'Spider-Man'.",
+//         profession: "Actress, Singer",
+//         location: "Los Angeles, CA",
+//         contactEmail: "contact@zendaya.com",
+//         website: "https://www.zendaya.com",
+//         establishedYear: 2010,
+//         popularityRank: 1, // Ranking based on fame or social media presence
+//         socialMedia: {
+//           instagram: "@zendaya",
+//           twitter: "@Zendaya",
+//           facebook: "/ZendayaOfficial",
+//         },
+//       },
+//       {
+//         name: "Chris Hemsworth",
+//         slug: "chris-hemsworth",
+//         logo: "",
+//         userId: "user102",
+//         description:
+//           "Chris Hemsworth is an Australian actor famous for portraying Thor in the Marvel Cinematic Universe.",
+//         profession: "Actor",
+//         location: "Byron Bay, Australia",
+//         contactEmail: "info@chrishemsworth.com",
+//         website: "https://www.chrishemsworth.com",
+//         establishedYear: 2002,
+//         popularityRank: 2,
+//         socialMedia: {
+//           instagram: "@chrishemsworth",
+//           twitter: "@chrishemsworth",
+//           facebook: "/ChrisHemsworthOfficial",
+//         },
+//       },
+//       {
+//         name: "Taylor Swift",
+//         slug: "taylor-swift",
+//         logo: "",
+//         userId: "user103",
+//         description:
+//           "Taylor Swift is a Grammy-winning singer-songwriter known for her genre-defying music and chart-topping albums.",
+//         profession: "Singer-Songwriter",
+//         location: "Nashville, TN",
+//         contactEmail: "contact@taylorswift.com",
+//         website: "https://www.taylorswift.com",
+//         establishedYear: 2006,
+//         popularityRank: 3,
+//         socialMedia: {
+//           instagram: "@taylorswift",
+//           twitter: "@taylorswift13",
+//           facebook: "/taylorswift",
+//         },
+//       },
+//     ],
+//   },
+// };

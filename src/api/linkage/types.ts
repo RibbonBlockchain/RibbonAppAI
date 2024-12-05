@@ -44,6 +44,7 @@ export interface getDiscoveryLinkagesParams {
   page: number;
   pageSize: number;
   query: string;
+  type: string;
 }
 
 export interface getPageandSizeParams {

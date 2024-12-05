@@ -76,9 +76,9 @@ export const getDiscoverLinkages = async ({
 }: {
   params: getDiscoveryLinkagesParams;
 }) => {
-  const { page, pageSize, query } = params;
+  const { page, pageSize, query, type } = params;
   const res = await client.get<TResponse<TDiscoveryLinkageResponse>>(
-    `/linkage/discover?page=${page}&pageSize=${pageSize}&q=${query}`
+    `/linkage/discover?page=${page}&pageSize=${pageSize}&q=${query}&type=${type}`
   );
   return res.data;
 };

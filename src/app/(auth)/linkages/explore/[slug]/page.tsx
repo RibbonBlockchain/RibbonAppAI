@@ -53,7 +53,7 @@ const LinkageViewDetails = () => {
   const { data, isLoading } = useGetLinkageBySlug(slug);
 
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
-    params: { page: 1, pageSize: 5, query: "" },
+    params: { page: 1, pageSize: 5, query: "", type: "" },
   });
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

@@ -7,13 +7,8 @@ import { Copy, Gift, Share } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
 import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
-
-const tabs = [
-  { name: "Tyla AI", value: "ai" },
-  { name: "$Token", value: "token" },
-  { name: "Store", value: "store" },
-  { name: "LIVE", value: "live" },
-];
+import { useGetLinkageBySlug } from "@/api/linkage";
+import { shorten } from "@/lib/utils/shorten";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -39,6 +34,8 @@ const Influencer = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug;
+
+  const { data, isLoading } = useGetLinkageBySlug(slug as string);
 
   const [selectedTab, setSelectedTab] = useState("ai");
   const handleTabCLick = (tab: string) => setSelectedTab(tab);
@@ -81,6 +78,13 @@ const Influencer = () => {
 
   const createdToken = false;
 
+  const tabs = [
+    { name: `${slug} AI`, value: "ai" },
+    { name: "$Token", value: "token" },
+    { name: "Store", value: "store" },
+    { name: "LIVE", value: "live" },
+  ];
+
   return (
     <AuthLayout>
       <main className="w-auto max-w-[450px] relative h-screen text-white bg-[#251F2E]">
@@ -103,14 +107,13 @@ const Influencer = () => {
                   height={64}
                   alt="avatar"
                   className="bg-white rounded-full"
-                  src={""}
+                  src={data?.data?.logo}
                 />
                 <div className="flex flex-col text-xs font-medium gap-1">
                   <div className="flex flex-row gap-1 text-base font-bold">
                     <p>{slug}</p>
-                    <p>B</p>
                   </div>
-                  <p>amapiano music</p>
+                  <p>{data?.data?.category}</p>
                   <p className="text-[#DFCBFB] text-underline">audio link</p>
                   <p>
                     <span className="font-extrabold">92.5M</span> followers
@@ -120,7 +123,7 @@ const Influencer = () => {
 
               <div className="min-h-[86px] flex flex-col items-end justify-between h-[inherit]">
                 <div className="text-[#DFCBFB] text-sm font-normal flex flex-row gap-1 items-center">
-                  walletaddresshere
+                  {shorten(data?.data.walletAddress)}
                   <Copy size={16} />
                 </div>
                 <Button className="self-end max-w-fit px-3 py-0.5">

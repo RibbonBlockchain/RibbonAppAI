@@ -60,7 +60,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [selectedReason, setSelectedReason] = useState<string>("");
 
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
-    params: { page: 1, pageSize: 10, query: "" },
+    params: { page: 1, pageSize: 10, query: "", type: "" },
   });
 
   // Return early if modal is not open

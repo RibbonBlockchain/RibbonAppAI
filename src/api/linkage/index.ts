@@ -145,7 +145,7 @@ export const useGetDiscoveryLinkages = ({
 }: {
   params: getDiscoveryLinkagesParams;
 }) => {
-  const { page, pageSize, query } = params;
+  const { page, pageSize, query, type } = params;
 
   return useQuery({
     queryKey: ["discovery-linkages"],

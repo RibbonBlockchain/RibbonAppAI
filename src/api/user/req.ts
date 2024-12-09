@@ -243,3 +243,19 @@ export const respondBasedAgent = async (body: TRespondBasedAgent) => {
   const res = await client.post("ai/chat", body);
   return res.data;
 };
+
+//TOKENS WALLET
+export const createUserToken = async (body: { name: string }) => {
+  const res = await client.post("user/wallet/create-token", body);
+  return res.data;
+};
+
+export const buyUserToken = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("user/wallet/buy-token", body);
+  return res.data;
+};
+
+export const sellUserToken = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("user/wallet/sell-token", body);
+  return res.data;
+};

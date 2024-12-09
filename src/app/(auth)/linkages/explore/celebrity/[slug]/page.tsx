@@ -15,6 +15,8 @@ import {
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import { useCreateUserToken } from "@/api/user";
+import toast from "react-hot-toast";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -107,14 +109,34 @@ const Influencer = () => {
     scrollToBottom();
   }, [messages]);
 
-  const createdToken = false;
-
   const tabs = [
     { name: `${slug} AI`, value: "ai" },
     { name: "$Token", value: "token" },
     { name: "Store", value: "store" },
     { name: "LIVE", value: "live" },
   ];
+
+  const [tokenName, setTokenName] = useState("");
+
+  const [createTokenModal, setCreateTokenModal] = useState(false);
+  const { mutate } = useCreateUserToken();
+
+  const handleCreateToken = () => {
+    mutate(
+      { name: tokenName },
+      {
+        onSuccess: () => {
+          toast.success(`Token ${tokenName} created`);
+          setCreateTokenModal(false);
+        },
+      }
+    );
+  };
+
+  const handleBuyToken = () => {};
+  const handleSellToken = () => {};
+
+  const createdToken = false;
 
   return (
     <AuthLayout>
@@ -343,12 +365,20 @@ const Influencer = () => {
                     </div>
 
                     <div className="flex gap-4 mt-6 px-4 ">
-                      <Button className="bg-[#40BF6A]">Buy</Button>
-                      <Button className="bg-[#DF2040]">Sell</Button>
+                      <Button onClick={handleBuyToken} className="bg-[#40BF6A]">
+                        Buy
+                      </Button>
+                      <Button
+                        onClick={handleSellToken}
+                        className="bg-[#DF2040]"
+                      >
+                        Sell
+                      </Button>
                     </div>
                   </section>
                 </main>
               )}
+
               {!createdToken && (
                 <main className="h-full text-white flex flex-col items-center rounded-xl">
                   <div className="mt-10 p-4 py-6 w-full max-w-[300px] flex flex-col gap-4 items-center justify-center bg-[#251F2E]">
@@ -356,7 +386,10 @@ const Influencer = () => {
                     <p className="text-center">
                       This Linkage is Not Yet Connected to a Token
                     </p>
-                    <Button className="max-w-fit px-3 py-2 rounded-md">
+                    <Button
+                      onClick={() => setCreateTokenModal(true)}
+                      className="max-w-fit px-3 py-2 rounded-md"
+                    >
                       Create a Token
                     </Button>
                   </div>
@@ -558,6 +591,35 @@ const Influencer = () => {
             </main>
           )}
         </main>
+
+        {createTokenModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-[#251F2E] p-6 rounded-xl w-[300px]">
+              <h2 className="text-center text-xl mb-4">Create a Token</h2>
+              <input
+                type="text"
+                value={tokenName}
+                onChange={(e) => setTokenName(e.target.value)}
+                placeholder="Enter token name"
+                className="w-full p-2 rounded-md bg-[#3E3A4E] text-white mb-4"
+              />
+              <div className="flex justify-between gap-2">
+                <Button
+                  onClick={() => setCreateTokenModal(false)}
+                  className="px-3 py-2 rounded-md bg-red-300"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateToken}
+                  className="px-3 py-2 rounded-md bg-[#F6F1FE]"
+                >
+                  Create
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </AuthLayout>
   );

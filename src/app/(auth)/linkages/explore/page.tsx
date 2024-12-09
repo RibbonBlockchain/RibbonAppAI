@@ -12,7 +12,7 @@ import {
 } from "@/lib/values/format-dateandtime-ago";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SearchComponent from "@/components/search";
@@ -24,7 +24,7 @@ import FeatureLinkageModal from "@/containers/linkages/feature-linkage-modal";
 import { Add } from "iconsax-react";
 import CelebrityLinkageCard from "@/containers/linkages/celebrity-linkage-card";
 import CreateLinkageTypeModal from "@/containers/linkages/create-linkage-modal";
-import Pagination from "@/containers/linkages/pagination";
+import Pagination from "@/containers/linkages/containers/pagination";
 
 const tabs = [
   { name: "For you", value: "for-you" },
@@ -58,23 +58,34 @@ const Linkages = () => {
   };
 
   const pageSize = 20;
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { data: discoveryLinkages, refetch } = useGetDiscoveryLinkages({
-    params: { page: pageNumber, pageSize: pageSize, query, type: "" },
+    params: {
+      page: currentPage,
+      pageSize: pageSize,
+      query,
+      type: "",
+    },
   });
 
   const handleNextPage = () => {
     if (discoveryLinkages?.data?.pagination?.hasNextPage) {
-      setPageNumber((prev) => prev + 1);
+      console.log("clicked");
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (discoveryLinkages?.data?.pagination?.hasPreviousPage) {
-      setPageNumber((prev) => prev - 1);
+      console.log("clicked");
+      setCurrentPage((prev) => prev - 1);
     }
   };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
 
   const celebrityLinkageData = discoveryLinkages?.data?.data.filter(
     (item: any) => item.type === "CELEBRITY"
@@ -218,6 +229,7 @@ const Linkages = () => {
                       image={i.logo}
                       author={i.userId}
                       description={i.description}
+                      type={i.type}
                     />
                   ))}
                 </div>
@@ -240,7 +252,7 @@ const Linkages = () => {
                   </button>
                 ))}
               </div>
-              <div className="w-full flex">
+              <div className="w-full flex sm:mb-24">
                 {selectedTab === "for-you" && (
                   <div className="w-full flex flex-col gap-10">
                     {featuredLinkages?.data && (
@@ -268,6 +280,7 @@ const Linkages = () => {
                             image={i.linkage.logo}
                             author={i.linkage.userId}
                             description={i.linkage.description}
+                            type={i.type}
                           />
                         ))}
                       </div>
@@ -292,14 +305,15 @@ const Linkages = () => {
                             image={i.logo}
                             author={i.userId}
                             description={i.description}
+                            type={i.type}
                           />
                         ))}
 
-                        {/* <Pagination
+                        <Pagination
                           handlePreviousPage={handlePreviousPage}
                           handleNextPage={handleNextPage}
                           pagination={discoveryLinkages?.data?.pagination}
-                        /> */}
+                        />
                       </div>
                     )}
 
@@ -360,7 +374,7 @@ const Linkages = () => {
                 )}
 
                 {selectedTab === "my-linkages" && (
-                  <div>
+                  <div className="w-full">
                     {linkages?.data && (
                       <div className="flex flex-col gap-3">
                         {linkages?.data.map((i: any) => (
@@ -371,6 +385,7 @@ const Linkages = () => {
                             image={i.logo}
                             author={i.userId}
                             description={i.description}
+                            type={i.type}
                           />
                         ))}
                       </div>

@@ -10,6 +10,7 @@ const LinkagesCard = ({
   author,
   description,
   featured,
+  type,
 }: {
   name: string;
   slug: string;
@@ -17,12 +18,17 @@ const LinkagesCard = ({
   author: string;
   description: string;
   featured?: boolean;
+  type: string;
 }) => {
   return (
     <div className="w-full flex flex-col bg-[#dac4fa14] text-white px-2 py-4 rounded-[10px]">
       <Link
-        href={`/linkages/explore/${slug}`}
-        className="flex flex-row items-center gap-4"
+        href={
+          type === "CELEBRITY"
+            ? `/linkages/explore/celebrity/${slug}`
+            : `/linkages/explore/${slug}`
+        }
+        className="flex flex-row items-center gap-4 w-full"
       >
         <div className="relative min-w-fit flex flex-row">
           <Image

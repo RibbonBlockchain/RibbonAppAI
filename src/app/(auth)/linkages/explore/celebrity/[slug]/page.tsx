@@ -4,11 +4,19 @@ import Image from "next/image";
 import Button from "@/components/button";
 import { useParams, useRouter } from "next/navigation";
 import { Copy, Gift, Share } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
 import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
-import { useGetLinkageBySlug } from "@/api/linkage";
+import {
+  useChatLinkage,
+  useGetChatHistory,
+  useGetLinkageBySlug,
+  useGetLinkageQuestionnaire,
+} from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
+import { alternatePrompts } from "@/lib/values/prompts";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
+import { useCreateUserToken } from "@/api/user";
+import toast from "react-hot-toast";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -33,40 +41,65 @@ interface Message {
 const Influencer = () => {
   const router = useRouter();
   const params = useParams();
-  const slug = params.slug;
-
-  const { data, isLoading } = useGetLinkageBySlug(slug as string);
+  const slug = params.slug as string;
 
   const [selectedTab, setSelectedTab] = useState("ai");
   const handleTabCLick = (tab: string) => setSelectedTab(tab);
 
-  const [input, setInput] = useState<string>("");
+  const { data, isLoading, isError } = useGetLinkageBySlug(slug);
+  const { mutateAsync } = useChatLinkage();
+
+  const id = data?.data?.id;
+  const { data: linkageQuestionnaire } = useGetLinkageQuestionnaire({
+    linkageId: id,
+  });
+
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [oldMessages, setOldMessages] = useState<Message[]>([]);
 
-  const handleSend = async (messageText: string) => {
-    if (!messageText.trim()) return;
+  const prompts: string[] =
+    (data?.data?.prompts || []).filter((prompt: any) => prompt.trim() !== "") ||
+    alternatePrompts;
 
-    const newMessages = [...messages, { sender: "user", text: messageText }];
-    setMessages(newMessages as any);
-    setLoading(true);
-    setInput("");
+  const sendMessage = async (message: string) => {
+    try {
+      const newUserMessage: Message = { sender: "user", text: message };
+      setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
-    setTimeout(() => {
+      const response = await mutateAsync({ slug, body: { message } });
+      const aiMessage =
+        response?.data?.message || "Sorry, I didn't get a response.";
+      const newAiMessage: Message = { sender: "ai", text: aiMessage };
+      setMessages((prevMessages) => [...prevMessages, newAiMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: "ai", text: "AI Response to: " + messageText },
+        {
+          sender: "ai",
+          text: "Sorry, there was an error processing your request.",
+        },
       ]);
-      setLoading(false);
-    }, 1000);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !loading && input.trim()) {
-      handleSend(input);
     }
   };
+
+  const handleSend = () => {
+    if (input.trim() === "") return;
+
+    sendMessage(input);
+    setInput("");
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const { data: chatHistory } = useGetChatHistory(slug);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,14 +109,34 @@ const Influencer = () => {
     scrollToBottom();
   }, [messages]);
 
-  const createdToken = false;
-
   const tabs = [
     { name: `${slug} AI`, value: "ai" },
     { name: "$Token", value: "token" },
     { name: "Store", value: "store" },
     { name: "LIVE", value: "live" },
   ];
+
+  const [tokenName, setTokenName] = useState("");
+
+  const [createTokenModal, setCreateTokenModal] = useState(false);
+  const { mutate } = useCreateUserToken();
+
+  const handleCreateToken = () => {
+    mutate(
+      { name: tokenName },
+      {
+        onSuccess: () => {
+          toast.success(`Token ${tokenName} created`);
+          setCreateTokenModal(false);
+        },
+      }
+    );
+  };
+
+  const handleBuyToken = () => {};
+  const handleSellToken = () => {};
+
+  const createdToken = false;
 
   return (
     <AuthLayout>
@@ -101,7 +154,7 @@ const Influencer = () => {
 
           <div className="bg-[#5e5482] h-auto mt-4 flex flex-col justify-between text-white rounded-2xl w-full min-w-[270px] xxs:min-w-[330px] xs:min-w-full max-w-[452px] p-4 my-2 border border-[#D6CBFF4D]">
             <div className="flex flex-row items-start justify-between">
-              <div className="flex flex-row gap-2 items-center">
+              <div className="flex flex-col xxs:flex-row gap-2 items-center">
                 <Image
                   width={64}
                   height={64}
@@ -122,7 +175,7 @@ const Influencer = () => {
               </div>
 
               <div className="min-h-[86px] flex flex-col items-end justify-between h-[inherit]">
-                <div className="text-[#DFCBFB] text-sm font-normal flex flex-row gap-1 items-center">
+                <div className="text-[#DFCBFB] text-xs font-bold flex flex-row gap-1 items-center">
                   {shorten(data?.data.walletAddress)}
                   <Copy size={16} />
                 </div>
@@ -150,7 +203,7 @@ const Influencer = () => {
           </div>
         </div>
 
-        <main className="relative rounded-xl w-full top-[286px] overflow-y-auto bg-[#251F2E] flex flex-col">
+        <main className="relative rounded-xl w-full top-[274px] overflow-y-auto bg-[#251F2E] flex flex-col">
           {selectedTab === "ai" && (
             <main className="h-full text-white flex flex-col rounded-xl">
               <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
@@ -170,81 +223,111 @@ const Influencer = () => {
                 </div>
               </div>
 
-              <section className="flex-1 overflow-y-auto pt-[100px] px-4 mb-16">
-                <div className="w-full flex flex-col h-full flex-1">
-                  {messages.map((msg, index) => (
-                    <div
-                      key={index}
-                      className={`mb-6 flex flex-row gap-2 items-start ${
-                        msg.sender === "user" ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      {msg.sender === "ai" && (
-                        <div className="w-8 h-8 self-end flex-shrink-0">
-                          <Image
-                            alt="AI"
-                            width={32}
-                            height={32}
-                            src="/assets/AI.png"
-                          />
-                        </div>
-                      )}
+              <section className="flex-1 overflow-y-auto pt-[100px] mb-16">
+                <div className="relative w-full mt-2 p-4 flex flex-col h-full overflow-auto scroll-hidden mx-auto rounded-lg shadow-lg">
+                  <div className="flex-1 h-full overflow-y-auto mb-16">
+                    {/* Display old messages first */}
+                    {oldMessages.map((msg, index) => (
                       <div
-                        className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal break-words ${
+                        key={index}
+                        className={`mb-6 flex flex-row gap-2 items-start ${
                           msg.sender === "user"
-                            ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
-                            : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
+                            ? "justify-end"
+                            : "justify-start"
                         }`}
                       >
-                        {msg.text}
-                      </div>
-                      {msg.sender === "user" && (
-                        <div className="w-8 h-8 self-end flex-shrink-0">
-                          <User
-                            size="32"
-                            fill="gray"
-                            className="flex bg-white rounded-full"
-                          />
+                        {msg.sender === "ai" && (
+                          <div className="w-8 h-8 self-end flex-shrink-0">
+                            <Image
+                              alt="AI"
+                              width={32}
+                              height={32}
+                              src="/assets/AI.png"
+                            />
+                          </div>
+                        )}
+                        <div
+                          className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
+                            msg.sender === "user"
+                              ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
+                              : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
+                          }`}
+                        >
+                          {msg.text}
                         </div>
-                      )}
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
-              </section>
+                        {msg.sender === "user" && (
+                          <div className="w-8 h-8 self-end flex-shrink-0">
+                            <User
+                              size="32"
+                              fill="gray"
+                              className="flex bg-white rounded-full"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
 
-              <section className="fixed bottom-0 pb-5 pt-3 px-4 w-full pr-10 z-10 max-w-[450px]">
-                {messages.length === 0 && (
-                  <div className="mt-auto mb-8 text-center text-[#D6CBFF4D]">
-                    <p className="text-lg font-medium">
-                      Start a conversation with {slug} AI!
-                    </p>
+                    {/* Display new messages */}
+                    {messages.map((msg, index) => (
+                      <div
+                        key={index}
+                        className={`mb-6 flex flex-row gap-2 items-start ${
+                          msg.sender === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                      >
+                        {msg.sender === "ai" && (
+                          <div className="w-8 h-8 self-end flex-shrink-0">
+                            <Image
+                              alt="AI"
+                              width={32}
+                              height={32}
+                              src="/assets/AI.png"
+                            />
+                          </div>
+                        )}
+                        <div
+                          className={`inline-block px-4 py-2.5 rounded-lg w-auto max-w-[65%] text-sm font-normal ${
+                            msg.sender === "user"
+                              ? "bg-[#3f3952] bg-opacity-95 text-white rounded-l-[12px] rounded-tr-[12px] rounded-br-[4px]"
+                              : "bg-[#3f3952] bg-opacity-95 text-white rounded-r-[12px] rounded-tl-[12px] rounded-bl-[4px]"
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
+                        {msg.sender === "user" && (
+                          <div className="w-8 h-8 self-end flex-shrink-0">
+                            <User
+                              size="32"
+                              fill="gray"
+                              className="flex bg-white rounded-full"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    <div ref={messagesEndRef} />
                   </div>
-                )}
 
-                <div className="flex flex-row items-center">
-                  <input
-                    type="text"
-                    value={input}
-                    onKeyDown={handleKeyDown}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type a message..."
-                    className="w-full text-sm bg-[#3f3952] bg-opacity-90 text-white rounded-lg py-2 px-4 focus:outline-none"
-                  />
-                  <button
-                    onClick={() => handleSend(input)}
-                    disabled={loading}
-                    className="ml-3 p-2 rounded-full bg-[#D6CBFF4D] text-[#2c2151] disabled:opacity-50"
-                  >
-                    <Send size={22} />
-                  </button>
-                  <button
-                    // onClick={() => handleSend(input)}
-                    // disabled={loading}
-                    className="ml-3 p-2 rounded-full disabled:opacity-50"
-                  >
-                    <Microphone size={24} />
-                  </button>
+                  <div className="fixed self-center bottom-2 p-4 w-[90%] max-w-[450px]">
+                    <div className="flex flex-row items-center">
+                      <input
+                        type="text"
+                        value={input}
+                        onKeyDown={handleKeyDown}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type a message..."
+                        className="w-full text-sm bg-[#3f3952] bg-opacity-75 backdrop-blur-sm pl-4 pr-14 py-4 border rounded-full"
+                      />
+                      <button
+                        onClick={handleSend}
+                        className="absolute right-8 z-10"
+                      >
+                        <Send size="32" color="#ffffff" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </section>
             </main>
@@ -282,12 +365,20 @@ const Influencer = () => {
                     </div>
 
                     <div className="flex gap-4 mt-6 px-4 ">
-                      <Button className="bg-[#40BF6A]">Buy</Button>
-                      <Button className="bg-[#DF2040]">Sell</Button>
+                      <Button onClick={handleBuyToken} className="bg-[#40BF6A]">
+                        Buy
+                      </Button>
+                      <Button
+                        onClick={handleSellToken}
+                        className="bg-[#DF2040]"
+                      >
+                        Sell
+                      </Button>
                     </div>
                   </section>
                 </main>
               )}
+
               {!createdToken && (
                 <main className="h-full text-white flex flex-col items-center rounded-xl">
                   <div className="mt-10 p-4 py-6 w-full max-w-[300px] flex flex-col gap-4 items-center justify-center bg-[#251F2E]">
@@ -295,7 +386,10 @@ const Influencer = () => {
                     <p className="text-center">
                       This Linkage is Not Yet Connected to a Token
                     </p>
-                    <Button className="max-w-fit px-3 py-2 rounded-md">
+                    <Button
+                      onClick={() => setCreateTokenModal(true)}
+                      className="max-w-fit px-3 py-2 rounded-md"
+                    >
                       Create a Token
                     </Button>
                   </div>
@@ -467,8 +561,8 @@ const Influencer = () => {
                   />
 
                   <button
-                    onClick={() => handleSend(input)}
-                    disabled={loading}
+                    // onClick={() => handleSend(input)}
+                    // disabled={loading}
                     className="ml-3 p-2 rounded-full disabled:opacity-50 bg-[#1F222B] bg-opacity-50"
                   >
                     <Send size={22} fill="#FFF" stroke="#FFF" />
@@ -497,6 +591,35 @@ const Influencer = () => {
             </main>
           )}
         </main>
+
+        {createTokenModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-[#251F2E] p-6 rounded-xl w-[300px]">
+              <h2 className="text-center text-xl mb-4">Create a Token</h2>
+              <input
+                type="text"
+                value={tokenName}
+                onChange={(e) => setTokenName(e.target.value)}
+                placeholder="Enter token name"
+                className="w-full p-2 rounded-md bg-[#3E3A4E] text-white mb-4"
+              />
+              <div className="flex justify-between gap-2">
+                <Button
+                  onClick={() => setCreateTokenModal(false)}
+                  className="px-3 py-2 rounded-md bg-red-300"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateToken}
+                  className="px-3 py-2 rounded-md bg-[#F6F1FE]"
+                >
+                  Create
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </AuthLayout>
   );

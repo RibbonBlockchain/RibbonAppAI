@@ -57,6 +57,9 @@ import {
   userGetOnramp,
   respondBasedAgent,
   getUserSesScore,
+  createUserToken,
+  buyUserToken,
+  sellUserToken,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -425,5 +428,27 @@ export const useRespondBasedAgent = () => {
   return useMutation({
     onError,
     mutationFn: (body: TRespondBasedAgent) => respondBasedAgent(body),
+  });
+};
+
+// TOKENS WALLET
+export const useCreateUserToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { name: string }) => createUserToken(body),
+  });
+};
+
+export const useBuyUserToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => buyUserToken(body),
+  });
+};
+
+export const useSellUserToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => sellUserToken(body),
   });
 };

@@ -227,6 +227,7 @@ const LinkageViewDetails = () => {
                   image={i.logo}
                   author={i.userId}
                   description={i.description}
+                  type={i.type}
                 />
               ))}
             </div>

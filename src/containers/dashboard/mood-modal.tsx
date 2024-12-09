@@ -241,6 +241,7 @@ const MoodModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     description={i.description}
                     author={i.userId}
                     slug={i.slug}
+                    type={i.type}
                   />
                 ))}
               </div>

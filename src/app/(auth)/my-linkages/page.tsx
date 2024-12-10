@@ -33,11 +33,14 @@ import LinkageWallet from "../../../containers/manage-linkage/linkage-wallet";
 import ManageLinkage from "../../../containers/manage-linkage/manage-linkages";
 import UploadQuestionnaire from "../../../containers/manage-linkage/upload-questionnaire";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import { useCreateUserToken } from "@/api/user";
+import Button from "@/components/button";
 
 const tabs = [
   { name: "AI Bot", value: "ai-bot" },
   { name: "Retrain", value: "retrain" },
   { name: "Wallet", value: "wallet" },
+  { name: "Token", value: "token" },
   { name: "Mass payment", value: "mass-payment" },
   { name: "Questionnaires", value: "questionnaires" },
   { name: "Create Loan", value: "loan" },
@@ -63,7 +66,7 @@ const MyLinkageDetails: React.FC = () => {
   const walletConvertedBalance = data?.data?.wallet?.balance * currentPrice;
 
   const lastTrainedDate: Date = new Date(
-    linkageFile?.data[linkageFile?.data?.length - 1].updatedAt
+    linkageFile?.data[linkageFile?.data?.length - 1]?.updatedAt
   );
 
   const [selectedTab, setSelectedTab] = useState(() => {
@@ -292,6 +295,25 @@ const MyLinkageDetails: React.FC = () => {
               refetch={refetch}
               baseName={data?.data?.baseName}
             />
+          )}
+
+          {selectedTab === "token" && (
+            <div className="flex flex-col gap-8">
+              <div className="p-4 py-6 w-full flex flex-col gap-4 items-center justify-center">
+                <p> No token</p>
+                <p className="text-center">
+                  This Linkage is Not Yet Connected to a Token
+                </p>
+                <Button
+                  onClick={() =>
+                    router.push(`/my-linkages/create-token/${selectedAI?.id}`)
+                  }
+                  className="max-w-fit px-3 py-2 rounded-md"
+                >
+                  Create a Token
+                </Button>
+              </div>
+            </div>
           )}
 
           {selectedTab === "mass-payment" && (

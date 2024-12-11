@@ -116,27 +116,17 @@ const Influencer = () => {
     { name: "LIVE", value: "live" },
   ];
 
-  const [tokenName, setTokenName] = useState("");
-
-  const [createTokenModal, setCreateTokenModal] = useState(false);
-  const { mutate } = useCreateUserToken();
-
-  const handleCreateToken = () => {
-    mutate(
-      { name: tokenName },
-      {
-        onSuccess: () => {
-          toast.success(`Token ${tokenName} created`);
-          setCreateTokenModal(false);
-        },
-      }
-    );
+  const handleSwapToken = () => {
+    router.push(`/linkages/explore/celebrity/${slug}/swap`);
+  };
+  const handleBuyToken = () => {
+    router.push(`/linkages/explore/celebrity/${slug}/buy`);
+  };
+  const handleSellToken = () => {
+    router.push(`/linkages/explore/celebrity/${slug}/sell`);
   };
 
-  const handleBuyToken = () => {};
-  const handleSellToken = () => {};
-
-  const createdToken = false;
+  const createdToken = true;
 
   return (
     <AuthLayout>
@@ -339,8 +329,8 @@ const Influencer = () => {
                 <main className="h-full text-white flex flex-col rounded-xl">
                   <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                     <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                      <p className="text-xl font-bold">3,839.65</p>
-                      <p className="text-[10px] font-normal">105 (%0.8)</p>
+                      <p className="text-xl font-bold">xxxx.xx</p>
+                      <p className="text-[10px] font-normal">xxx (%x.x)</p>
                     </div>
                     <div className="flex flex-col justify-center gap-1 text-xs font-medium">
                       <p>Balance</p>
@@ -352,34 +342,83 @@ const Influencer = () => {
                           height={16}
                           className="max-h-4 max-w-4"
                         />
-                        <p>20 $Tyla</p>
+                        <p>X token</p>
                       </div>
                     </div>
                   </div>
 
-                  <section className="flex-1 overflow-y-auto pt-[100px] px-4 mb-16">
+                  <section className="flex-1 overflow-y-auto pt-[100px] mx-4 flex flex-col gap-4 mb-20">
                     <div className="w-full h-auto flex self-center items-center justify-center ">
-                      <div className="w-full bg-white min-h-[400px] mx-4">
-                        graph for coin
+                      <div className="w-full bg-[inherit] min-h-[320px]  border border-[#C3B1FF4D]">
+                        .
                       </div>
                     </div>
 
-                    <div className="flex gap-4 mt-6 px-4 ">
-                      <Button onClick={handleBuyToken} className="bg-[#40BF6A]">
-                        Buy
-                      </Button>
-                      <Button
-                        onClick={handleSellToken}
-                        className="bg-[#DF2040]"
-                      >
-                        Sell
-                      </Button>
+                    <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
+                      <p className="text-[15px] font-bold">Statistics</p>
+
+                      <div className="grid grid-cols-2 text-sm font-normal">
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">Total supply</p>
+                          <p>xx xx</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">Circulating Supply</p>
+                          <p>xx xx</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
+                      <p className="text-[15px] font-bold">Historical Data</p>
+
+                      <div className="grid grid-cols-2 gap-y-3 text-sm font-normal">
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">24H High</p>
+                          <p>xx xx</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">24H Low</p>
+                          <p>xx xx</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">All Time High</p>
+                          <p>xx xx</p>
+                          <p>xx xx</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[#98A2B3]">All Time Low</p>
+                          <p>xx xx</p>
+                          <p>xx xx</p>
+                        </div>
+                      </div>
                     </div>
                   </section>
+
+                  <div className="z-10 fixed w-full bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
+                    <Button
+                      onClick={handleSwapToken}
+                      className="bg-[#FFFFFF36] text-white"
+                    >
+                      Swap
+                    </Button>
+                    <Button
+                      onClick={handleBuyToken}
+                      className="bg-[#40BF6A] text-white"
+                    >
+                      Buy
+                    </Button>
+                    <Button
+                      onClick={handleSellToken}
+                      className="bg-[#DF2040] text-white"
+                    >
+                      Sell
+                    </Button>
+                  </div>
                 </main>
               )}
 
-              {!createdToken && (
+              {/* {!createdToken && (
                 <main className="h-full text-white flex flex-col items-center rounded-xl">
                   <div className="mt-10 p-4 py-6 w-full max-w-[300px] flex flex-col gap-4 items-center justify-center bg-[#251F2E]">
                     <p> No token</p>
@@ -394,7 +433,7 @@ const Influencer = () => {
                     </Button>
                   </div>
                 </main>
-              )}
+              )} */}
             </section>
           )}
 
@@ -591,35 +630,6 @@ const Influencer = () => {
             </main>
           )}
         </main>
-
-        {createTokenModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-[#251F2E] p-6 rounded-xl w-[300px]">
-              <h2 className="text-center text-xl mb-4">Create a Token</h2>
-              <input
-                type="text"
-                value={tokenName}
-                onChange={(e) => setTokenName(e.target.value)}
-                placeholder="Enter token name"
-                className="w-full p-2 rounded-md bg-[#3E3A4E] text-white mb-4"
-              />
-              <div className="flex justify-between gap-2">
-                <Button
-                  onClick={() => setCreateTokenModal(false)}
-                  className="px-3 py-2 rounded-md bg-red-300"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleCreateToken}
-                  className="px-3 py-2 rounded-md bg-[#F6F1FE]"
-                >
-                  Create
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </AuthLayout>
   );

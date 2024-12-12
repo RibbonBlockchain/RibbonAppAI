@@ -379,7 +379,7 @@ const MainWallet = () => {
                   </label>
                   <input
                     id="input"
-                    type="text"
+                    type="number"
                     name={"amount"}
                     value={claimAmount as number}
                     onChange={(e: any) => setClaimAmount(e.target.value)}

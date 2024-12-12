@@ -13,7 +13,7 @@ const ToggleBuySell: React.FC<ToggleProps> = ({ onChange }) => {
   };
 
   return (
-    <div className="w-fit flex items-center border border-[#D6CBFF79] rounded-full bg-[inherit] mt-2 mb-6">
+    <div className="w-fit flex items-center border border-[#D6CBFF79] rounded-full bg-[inherit]">
       <button
         className={`w-[100px] py-2 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out ${
           active === "buy"

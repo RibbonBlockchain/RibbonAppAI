@@ -472,7 +472,7 @@ const Influencer = () => {
                       ].map((entry) => (
                         <div
                           key={entry.rank}
-                          className="w-full flex flex-row items-center justify-between py-2"
+                          className="w-full flex flex-row items-center justify-between"
                         >
                           <div className="flex flex-row items-center gap-2">
                             <p>{entry.rank}</p>

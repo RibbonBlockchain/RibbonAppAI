@@ -12,6 +12,7 @@ import {
   useGetLinkageById,
   useGetLinkages,
   useGetLinkagesFile,
+  useGetLinkageToken,
 } from "@/api/linkage";
 import Link from "next/link";
 import Image from "next/image";
@@ -61,6 +62,8 @@ const MyLinkageDetails: React.FC = () => {
   const { data: linkagesList, isLoading } = useGetLinkages();
   const { data, refetch } = useGetLinkageById(selectedAI?.id as number);
   const { data: linkageFile } = useGetLinkagesFile(selectedAI?.id as number);
+
+  const { data: tokenData } = useGetLinkageToken(selectedAI?.id as number);
 
   const walletBalance = data?.data?.wallet?.balance;
   const walletConvertedBalance = data?.data?.wallet?.balance * currentPrice;
@@ -299,20 +302,28 @@ const MyLinkageDetails: React.FC = () => {
 
           {selectedTab === "token" && (
             <div className="flex flex-col gap-8">
-              <div className="p-4 py-6 w-full flex flex-col gap-4 items-center justify-center">
-                <p> No token</p>
-                <p className="text-center">
-                  This Linkage is Not Yet Connected to a Token
-                </p>
-                <Button
-                  onClick={() =>
-                    router.push(`/my-linkages/create-token/${selectedAI?.id}`)
-                  }
-                  className="max-w-fit px-3 py-2 rounded-md"
-                >
-                  Create a Token
-                </Button>
-              </div>
+              {tokenData?.data ? (
+                <div>
+                  Hurray, you have a token
+                  {tokenData?.data?.token.name}
+                  {tokenData?.data?.token.description}
+                </div>
+              ) : (
+                <div className="p-4 py-6 w-full flex flex-col gap-4 items-center justify-center">
+                  <p> No token</p>
+                  <p className="text-center">
+                    This Linkage is Not Yet Connected to a Token
+                  </p>
+                  <Button
+                    onClick={() =>
+                      router.push(`/my-linkages/create-token/${selectedAI?.id}`)
+                    }
+                    className="max-w-fit px-3 py-2 rounded-md"
+                  >
+                    Create a Token
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 

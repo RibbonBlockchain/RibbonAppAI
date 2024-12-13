@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Button from "@/components/button";
 import { useParams, useRouter } from "next/navigation";
-import { Copy, Gift, Share } from "lucide-react";
+import { Gift, Share } from "lucide-react";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
 import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
 import {
@@ -11,16 +11,24 @@ import {
   useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
+  useGetLinkageToken,
 } from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import { useCreateUserToken } from "@/api/user";
+import {
+  useBuyUserToken,
+  useCreateUserToken,
+  useSellUserToken,
+} from "@/api/user";
 import toast from "react-hot-toast";
 import Buy from "./buy/buy";
 import Sell from "./sell/sell";
 import Swap from "./swap/swap";
 import ToggleBuySell from "@/components/toggleBuySell";
+import { copyToClipboard } from "@/lib/utils";
+import { Copy } from "iconsax-react";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -73,13 +81,13 @@ const Influencer = () => {
   const [activeTokenTab, setActiveTokenTab] = useState<string>("token-sale");
   const [activeTraderPage, setActiveTradePage] = useState<string>("home");
 
-  const [amount, setAmount] = useState<number>();
+  const [amount, setAmount] = useState<number | string>("");
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = event.target.value;
 
-    if (!isNaN(Number(newAmount))) {
-      setAmount(Number(newAmount));
+    if (!isNaN(Number(newAmount)) || newAmount === "") {
+      setAmount(newAmount);
     }
   };
 
@@ -153,17 +161,50 @@ const Influencer = () => {
     { name: "LIVE", value: "live" },
   ];
 
-  const handleSwapToken = () => {
-    router.push(`/linkages/explore/celebrity/${slug}/swap`);
-  };
-  const handleBuyToken = () => {
-    router.push(`/linkages/explore/celebrity/${slug}/buy`);
-  };
-  const handleSellToken = () => {
-    router.push(`/linkages/explore/celebrity/${slug}/sell`);
+  const { data: tokenData } = useGetLinkageToken(id);
+  const createdToken = tokenData?.data;
+
+  const [initialTokenPurchase, setInitialTokenPurchase] = useState<
+    "buy" | "sell"
+  >("buy");
+
+  const toggleBuySell = () => {
+    setInitialTokenPurchase((prevState) =>
+      prevState === "buy" ? "sell" : "buy"
+    );
   };
 
-  const createdToken = true;
+  const { mutate: buyToken, isPending: buyTokenIsPending } = useBuyUserToken();
+  const { mutate: sellToken, isPending: selllTokenIsPending } =
+    useSellUserToken();
+
+  const handleBuyToken = () => {
+    buyToken(
+      { amount: Number(amount) },
+      {
+        onSuccess: () => {
+          toast.success(
+            `You purchased ${amount}ETH worth of ${tokenData?.data?.token?.name}`
+          );
+          setAmount("");
+        },
+      }
+    );
+  };
+
+  const handleSellToken = () => {
+    sellToken(
+      { amount: Number(amount) },
+      {
+        onSuccess: () => {
+          toast.success(
+            `You sold ${amount}ETH worth of ${tokenData?.data?.token?.name}`
+          );
+          setAmount("");
+        },
+      }
+    );
+  };
 
   return (
     <AuthLayout>
@@ -380,10 +421,51 @@ const Influencer = () => {
 
               {activeTokenTab === "token-sale" && (
                 <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
+                  <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+                    <div className="flex flex-col justify-center gap-1 text-xs font-medium">
+                      <p className="font-bold text-sm">
+                        {tokenData?.data?.token?.name}
+                      </p>
+                      <p className="text-xl font-bold">0.00</p>
+                      <p className="text-[10px] font-normal">0 (0.0%)</p>
+                    </div>
+                    <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
+                      <p className="font-medium text-sm">Balance </p>
+                      <div className="flex flex-row items-center text-[13px] justify-center gap-1">
+                        <Image
+                          src={tokenData?.data?.token?.logo}
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="max-h-[20px] max-w-[20px]"
+                        />
+                        <p className="font-semibold">00000</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
+                    {tokenData?.data?.token?.address ||
+                      "NOTAVALID.....ADDRESSS"}
+                    <Copy
+                      size="18"
+                      color="#98A2B3"
+                      className="cursor-pointer"
+                      onClick={() => {
+                        copyToClipboard(tokenData?.data?.token?.address, () =>
+                          toast.success(`Contract address copied`)
+                        );
+                      }}
+                    />
+                  </div>
+
                   <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E]">
                     <div className="w-full p-3 flex flex-col gap-4 border border-white rounded-[12px]">
-                      <ToggleBuySell onChange={() => {}} />
+                      <ToggleBuySell onChange={toggleBuySell} />
 
+                      <p className="text-xs">
+                        use 0.00002ETH for test purposes
+                      </p>
                       <div className="w-full flex flex-row items-center gap-2 relative">
                         <input
                           type="number"
@@ -393,7 +475,7 @@ const Influencer = () => {
                           min="0"
                         />
                         <div className="absolute right-4 flex flex-row gap-1 items-center">
-                          <p className="text-base font-medium">USDC</p>
+                          <p className="text-base font-medium">ETH</p>
                           <Image
                             alt="logo"
                             width={20}
@@ -407,18 +489,40 @@ const Influencer = () => {
                         <p>Default Slippage: 15%</p>
                       </div>
 
-                      <div className="w-[60%] flex items-center justify-center mx-auto">
-                        <Button
-                          disabled={false}
-                          onClick={() => {}}
-                          className="rounded-md py-3"
-                        >
-                          Place Trade
-                        </Button>
-                      </div>
+                      {initialTokenPurchase === "buy" && (
+                        <div className="w-[60%] flex items-center justify-center mx-auto">
+                          <Button
+                            disabled={false}
+                            onClick={handleBuyToken}
+                            className="rounded-md py-3"
+                          >
+                            {buyTokenIsPending ? (
+                              <SpinnerIconPurple />
+                            ) : (
+                              "Place Trade (buy)"
+                            )}
+                          </Button>
+                        </div>
+                      )}
+
+                      {initialTokenPurchase === "sell" && (
+                        <div className="w-[60%] flex items-center justify-center mx-auto">
+                          <Button
+                            disabled={false}
+                            onClick={handleSellToken}
+                            className="rounded-md py-3"
+                          >
+                            {selllTokenIsPending ? (
+                              <SpinnerIconPurple />
+                            ) : (
+                              "Place Trade (sell)"
+                            )}
+                          </Button>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full flex flex-col gap-1 text-sm font-medium">
                       <p>Bonding curve progress: 80%</p>
                       <Image
                         src={"/assets/BCP.svg"}
@@ -429,7 +533,7 @@ const Influencer = () => {
                       <p>Raydium pool seeded! view on raydium here</p>
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full flex flex-col gap-1 text-sm font-medium">
                       <p>King of the hill progress: 80%</p>
                       <Image
                         src={"/assets/KOH.svg"}
@@ -437,7 +541,9 @@ const Influencer = () => {
                         width={300}
                         height={8}
                       />
-                      <p>Crowned King of the hill on 10/28/2024, 9:04:01 pm</p>
+                      <p className="text-[#F5C193]">
+                        Crowned King of the hill on 10/28/2024, 9:04:01 pm
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-4 items-center gap-2">
@@ -458,7 +564,9 @@ const Influencer = () => {
                     <div className="w-full flex flex-col gap-3">
                       <div className="flex flex-row items-center justify-between">
                         <p>Holder distriution</p>
-                        <p>Generate bubble map</p>
+                        <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                          Generate bubble map
+                        </p>
                       </div>
 
                       {[
@@ -492,31 +600,50 @@ const Influencer = () => {
                     <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
                       {activeTraderPage === "home" && (
                         <>
-                          <div className="p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+                          <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                             <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                              <p className="text-xl font-bold">xxxx.xx</p>
+                              <p className="font-bold text-sm">
+                                {tokenData?.data?.token?.name}
+                              </p>
+                              <p className="text-xl font-bold">0.00</p>
                               <p className="text-[10px] font-normal">
-                                xxx (%x.x)
+                                0 (0.0%)
                               </p>
                             </div>
-                            <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                              <p>Balance</p>
+                            <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
+                              <p className="font-medium text-sm">Balance </p>
                               <div className="flex flex-row items-center text-[13px] justify-center gap-1">
                                 <Image
-                                  src={"/assets/ribbon.svg"}
+                                  src={tokenData?.data?.token?.logo}
                                   alt=""
                                   width={16}
                                   height={16}
-                                  className="max-h-4 max-w-4"
+                                  className="max-h-[20px] max-w-[20px]"
                                 />
-                                <p>X token</p>
+                                <p className="font-semibold">00000</p>
                               </div>
                             </div>
                           </div>
 
-                          <section className="flex-1 overflow-y-auto pt-[100px] mx-4 flex flex-col gap-4 mb-20">
+                          <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
+                            {tokenData?.data?.token?.address ||
+                              "NOTAVALID.....ADDRESSS"}
+                            <Copy
+                              size="18"
+                              color="#98A2B3"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                copyToClipboard(
+                                  tokenData?.data?.token?.address,
+                                  () => toast.success(`Contract address copied`)
+                                );
+                              }}
+                            />
+                          </div>
+
+                          <section className="flex-1 overflow-y-auto mt-5 mx-4 flex flex-col gap-4 mb-20">
                             <div className="w-full h-auto flex self-center items-center justify-center ">
-                              <div className="w-full bg-[inherit] min-h-[320px]  border border-[#C3B1FF4D]">
+                              <div className="w-full bg-[inherit] min-h-[320px] border border-[#C3B1FF4D]">
                                 .
                               </div>
                             </div>
@@ -592,7 +719,8 @@ const Influencer = () => {
 
                       <div className="z-10 fixed w-full bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
                         <Button
-                          onClick={() => setActiveTradePage("swap")}
+                          // onClick={() => setActiveTradePage("swap")}
+                          onClick={() => {}}
                           className="bg-[#FFFFFF36] text-white"
                         >
                           Swap

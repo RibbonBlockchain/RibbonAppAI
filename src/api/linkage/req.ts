@@ -3,6 +3,7 @@ import {
   TChatLinkageBody,
   TCreateCelebrityLinkageBody,
   TCreateLinkageBody,
+  TCreateLinkageToken,
   TDisburseLoanBody,
   TDiscoveryLinkageResponse,
   TSubmitLinkageQuestionnaireAnswer,
@@ -382,5 +383,32 @@ export const getLinkageStoreItemBySlug = async (slug: string) => {
 // ORDERS
 export const getLinkageStoreOrders = async (linkageId: number) => {
   const res = await client.get<any>(`/linkage/${linkageId}/store/orders`);
+  return res.data;
+};
+
+//LINKAGE TOKEN
+export const createLinkageToken = async ({
+  linkageId,
+  body,
+}: {
+  linkageId: number;
+  body: TCreateLinkageToken;
+}) => {
+  const res = await client.post(`linkage/${linkageId}/create-token`, body);
+  return res.data;
+};
+
+export const getLinkageToken = async ({ linkageId }: { linkageId: number }) => {
+  const res = await client.get(`linkage/${linkageId}/token`);
+  return res.data;
+};
+
+export const buyTokenDex = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("user/wallet/buy-token-dex", body);
+  return res.data;
+};
+
+export const sellTokenDex = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("user/wallet/sell-token-dex", body);
   return res.data;
 };

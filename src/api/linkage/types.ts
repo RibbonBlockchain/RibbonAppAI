@@ -169,3 +169,10 @@ export type TUpdateLinkageStoreItem = {
   description: string;
   stock: number;
 };
+
+export type TCreateLinkageToken = {
+  name: string;
+  description: string;
+  category: string;
+  file: any;
+};

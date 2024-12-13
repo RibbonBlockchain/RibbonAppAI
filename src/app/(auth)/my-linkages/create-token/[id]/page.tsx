@@ -5,8 +5,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { Upload } from "lucide-react";
 import { ArrowLeft2, Copy } from "iconsax-react";
-import { useCreateUserToken } from "@/api/user";
-import { useGetLinkageById } from "@/api/linkage";
+import { useCreateLinkageToken, useGetLinkageById } from "@/api/linkage";
 import React, { ChangeEvent, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import InputBox from "@/components/questionnarie/input-box";
@@ -42,6 +41,17 @@ const CreateToken = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size exceeds the limit of 5MB.");
+      return;
+    }
+
     setLogoPreview(URL.createObjectURL(file));
     setLogo(file);
   };
@@ -52,23 +62,37 @@ const CreateToken = () => {
 
   const { data } = useGetLinkageById(Number(linkageId));
 
-  const { mutate, isPending } = useCreateUserToken();
+  const { mutate, isPending } = useCreateLinkageToken();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(selectedNetwork, name, symbol, logo, description);
-    // mutate(
-    //   { name: name },
-    //   {
-    //     onSuccess: () => {
-    //       toast.success(`Token ${name} created`);
-    //     },
-    //   }
-    // );
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("symbol", symbol);
+    formData.append("description", description);
+    formData.append("category", selectedNetwork);
+    if (logo) formData.append("file", logo);
+
+    mutate(
+      {
+        linkageId: Number(linkageId),
+        body: formData as any,
+      },
+      {
+        onSuccess: () => {
+          toast.success(`Token ${name} created`);
+          router.push("/my-linkages");
+        },
+        onError: () => {
+          toast.error("An error occurred while creating the token.");
+        },
+      }
+    );
   };
 
-  const isSubmitDisabled = !name || !symbol || !description || !selectedNetwork;
+  const isSubmitDisabled =
+    !name || !symbol || !description || !selectedNetwork || !logo;
 
   return (
     <main className="relative min-h-screen w-full text-white bg-[#0B0228] p-4 sm:p-6 pb-16">
@@ -86,7 +110,7 @@ const CreateToken = () => {
         <div className="mb-4">
           <p className="text-sm font-bold">Token Network</p>
 
-          <div className="">
+          <div>
             {networkOptions.map((option) => (
               <div
                 key={option.id}

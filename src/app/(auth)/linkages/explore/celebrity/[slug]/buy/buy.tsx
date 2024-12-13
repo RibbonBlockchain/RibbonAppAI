@@ -6,9 +6,16 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
-import { SpinnerIcon } from "@/components/icons/spinner";
+import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import { useBuyUserToken, useSellUserToken } from "@/api/user";
 import ToggleBuySell from "@/components/toggleBuySell";
+import {
+  useBuyTokenDex,
+  useGetLinkageBySlug,
+  useGetLinkageToken,
+  useSellTokenDex,
+} from "@/api/linkage";
+import toast from "react-hot-toast";
 
 interface BuyProps {
   handleButtonClick: () => void;
@@ -19,25 +26,57 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
   const params = useParams();
   const slug = params.slug as string;
 
+  const { data } = useGetLinkageBySlug(slug);
+  const id = data?.data?.id;
+
   const [selectedAction, setSelectedAction] = useState<"buy" | "sell">("buy");
 
   const handleToggleChange = (value: "buy" | "sell") => {
     setSelectedAction(value);
   };
 
-  const [amount, setAmount] = useState<number>(0); // Set a default value for amount
+  const [amount, setAmount] = useState<number | string>("");
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = event.target.value;
 
-    // Ensure that the value is a valid number
-    if (!isNaN(Number(newAmount)) && newAmount !== "") {
-      setAmount(Number(newAmount));
+    if (!isNaN(Number(newAmount)) || newAmount === "") {
+      setAmount(newAmount);
     }
   };
 
-  const { mutate: buyToken, isPending: isBuyPending } = useBuyUserToken();
-  const { mutate: sellToken, isPending: isSellPending } = useSellUserToken();
+  const { data: tokenData } = useGetLinkageToken(id);
+
+  const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
+  const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
+
+  const handleBuyToken = () => {
+    buyToken(
+      { amount: Number(amount) },
+      {
+        onSuccess: () => {
+          toast.success(
+            `You purchased ${amount}ETH worth of ${tokenData?.data?.token?.name}`
+          );
+          setAmount("");
+        },
+      }
+    );
+  };
+
+  const handleSellToken = () => {
+    sellToken(
+      { amount: Number(amount) },
+      {
+        onSuccess: () => {
+          toast.success(
+            `You sold ${amount}ETH worth of ${tokenData?.data?.token?.name}`
+          );
+          setAmount("");
+        },
+      }
+    );
+  };
 
   return (
     <main className="relative h-auto w-full text-white bg-[#251F2E] p-4 sm:p-6 pb-28">
@@ -82,7 +121,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={amount}
+                  value={""}
                   onChange={handleAmountChange}
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                   min="0"
@@ -107,10 +146,10 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
           <div className="w-[60%] flex items-center justify-center mx-auto">
             <Button
               disabled={false}
-              onClick={() => {}}
+              onClick={handleBuyToken}
               className="rounded-md mt-16 py-3"
             >
-              {isBuyPending ? <SpinnerIcon /> : "Place Trade"}
+              {isBuyPending ? <SpinnerIconPurple /> : "Place Trade (buy)"}
             </Button>
           </div>
         </>
@@ -142,7 +181,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={amount}
+                  value={""}
                   onChange={handleAmountChange}
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                   min="0"
@@ -167,10 +206,10 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
           <div className="w-[60%] flex items-center justify-center mx-auto">
             <Button
               disabled={false}
-              onClick={() => {}}
+              onClick={handleSellToken}
               className="rounded-md mt-16 py-3"
             >
-              {isSellPending ? <SpinnerIcon /> : "Place Trade"}
+              {isSellPending ? <SpinnerIconPurple /> : "Place Trade (sell)"}
             </Button>
           </div>
         </>

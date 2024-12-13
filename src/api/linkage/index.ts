@@ -42,12 +42,17 @@ import {
   linkageGetLoanById,
   requestLoan,
   createCelebrityLinkage,
+  createLinkageToken,
+  getLinkageToken,
+  sellTokenDex,
+  buyTokenDex,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
   TChatLinkageBody,
   TCreateCelebrityLinkageBody,
   TCreateLinkageBody,
+  TCreateLinkageToken,
   TDisburseLoanBody,
   TSubmitLinkageQuestionnaireAnswer,
   TUpdateLinkageStoreItem,
@@ -507,5 +512,40 @@ export const useGetLinkageStoreOrders = (linkageId: number) => {
   return useQuery({
     queryKey: ["linkage-store-order"],
     queryFn: () => getLinkageStoreOrders(linkageId),
+  });
+};
+
+// LINKAGE TOKEN
+export const useCreateLinkageToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({
+      linkageId,
+      body,
+    }: {
+      linkageId: number;
+      body: TCreateLinkageToken;
+    }) => createLinkageToken({ body, linkageId }),
+  });
+};
+
+export const useGetLinkageToken = (linkageId: number) => {
+  return useQuery({
+    queryKey: ["linkage-token"],
+    queryFn: () => getLinkageToken({ linkageId }),
+  });
+};
+
+export const useBuyTokenDex = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => buyTokenDex(body),
+  });
+};
+
+export const useSellTokenDex = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => sellTokenDex(body),
   });
 };

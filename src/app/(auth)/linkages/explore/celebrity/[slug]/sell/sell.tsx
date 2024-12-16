@@ -13,6 +13,7 @@ import {
   useBuyTokenDex,
   useGetLinkageBySlug,
   useGetLinkageToken,
+  useGetLinkageTokenBySlug,
   useSellTokenDex,
 } from "@/api/linkage";
 import toast from "react-hot-toast";
@@ -41,7 +42,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
     }
   };
 
-  const { data: tokenData } = useGetLinkageToken(id);
+  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
 
   const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
   const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
@@ -101,7 +102,9 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                 min="0"
               />
               <div className="absolute right-4 flex flex-row gap-1 items-center">
-                <p className="text-base font-medium">USDC</p>
+                <p className="text-base font-medium">
+                  {tokenData?.data?.token?.name}
+                </p>
                 <Image
                   alt="logo"
                   width={20}
@@ -183,7 +186,9 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                   min="0"
                 />
                 <div className="absolute right-4 flex flex-row gap-1 items-center">
-                  <p className="text-base font-medium">SOL</p>
+                  <p className="text-base font-medium">
+                    {tokenData?.data?.token?.name}
+                  </p>
                   <Image
                     alt="logo"
                     width={20}

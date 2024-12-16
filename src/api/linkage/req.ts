@@ -403,6 +403,11 @@ export const getLinkageToken = async ({ linkageId }: { linkageId: number }) => {
   return res.data;
 };
 
+export const getLinkageTokenBySlug = async ({ slug }: { slug: string }) => {
+  const res = await client.get(`linkage/slug/${slug}/token`);
+  return res.data;
+};
+
 export const buyTokenDex = async (body: { amount: any; token?: string }) => {
   const res = await client.post("user/wallet/buy-token-dex", body);
   return res.data;

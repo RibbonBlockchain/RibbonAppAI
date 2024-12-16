@@ -12,6 +12,7 @@ import {
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
   useGetLinkageToken,
+  useGetLinkageTokenBySlug,
 } from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
@@ -161,7 +162,7 @@ const Influencer = () => {
     { name: "LIVE", value: "live" },
   ];
 
-  const { data: tokenData } = useGetLinkageToken(id);
+  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
   const createdToken = tokenData?.data;
 
   const [initialTokenPurchase, setInitialTokenPurchase] = useState<
@@ -508,7 +509,7 @@ const Influencer = () => {
                       {initialTokenPurchase === "sell" && (
                         <div className="w-[60%] flex items-center justify-center mx-auto">
                           <Button
-                            disabled={false}
+                            disabled={true}
                             onClick={handleSellToken}
                             className="rounded-md py-3"
                           >

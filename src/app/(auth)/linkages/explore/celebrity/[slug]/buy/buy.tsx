@@ -13,6 +13,7 @@ import {
   useBuyTokenDex,
   useGetLinkageBySlug,
   useGetLinkageToken,
+  useGetLinkageTokenBySlug,
   useSellTokenDex,
 } from "@/api/linkage";
 import toast from "react-hot-toast";
@@ -27,7 +28,6 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
   const slug = params.slug as string;
 
   const { data } = useGetLinkageBySlug(slug);
-  const id = data?.data?.id;
 
   const [selectedAction, setSelectedAction] = useState<"buy" | "sell">("buy");
 
@@ -45,7 +45,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
     }
   };
 
-  const { data: tokenData } = useGetLinkageToken(id);
+  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
 
   const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
   const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
@@ -105,7 +105,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
                 min="0"
               />
               <div className="absolute right-4 flex flex-row gap-1 items-center">
-                <p className="text-base font-medium">USDC</p>
+                <p className="text-base font-medium">USDC </p>
                 <Image
                   alt="logo"
                   width={20}
@@ -127,7 +127,9 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
                   min="0"
                 />
                 <div className="absolute right-4 flex flex-row gap-1 items-center">
-                  <p className="text-base font-medium">SOL</p>
+                  <p className="text-base font-medium">
+                    {tokenData?.data?.token?.name}
+                  </p>
                   <Image
                     alt="logo"
                     width={20}
@@ -165,7 +167,9 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
                 min="0"
               />
               <div className="absolute right-4 flex flex-row gap-1 items-center">
-                <p className="text-base font-medium">USDC</p>
+                <p className="text-base font-medium">
+                  {tokenData?.data?.token?.name}
+                </p>
                 <Image
                   alt="logo"
                   width={20}

@@ -46,6 +46,7 @@ import {
   getLinkageToken,
   sellTokenDex,
   buyTokenDex,
+  getLinkageTokenBySlug,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -533,6 +534,13 @@ export const useGetLinkageToken = (linkageId: number) => {
   return useQuery({
     queryKey: ["linkage-token"],
     queryFn: () => getLinkageToken({ linkageId }),
+  });
+};
+
+export const useGetLinkageTokenBySlug = (slug: string) => {
+  return useQuery({
+    queryKey: ["linkage-token-slug"],
+    queryFn: () => getLinkageTokenBySlug({ slug }),
   });
 };
 

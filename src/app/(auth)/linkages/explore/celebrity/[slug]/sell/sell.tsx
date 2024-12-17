@@ -63,7 +63,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount) },
+      { amount: Number(amount), token: tokenData?.data?.token?.address },
       {
         onSuccess: () => {
           toast.success(

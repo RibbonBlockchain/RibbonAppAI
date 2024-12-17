@@ -195,7 +195,7 @@ const Influencer = () => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount) },
+      { amount: Number(amount), token: tokenData?.data?.token?.address },
       {
         onSuccess: () => {
           toast.success(
@@ -509,7 +509,7 @@ const Influencer = () => {
                       {initialTokenPurchase === "sell" && (
                         <div className="w-[60%] flex items-center justify-center mx-auto">
                           <Button
-                            disabled={true}
+                            disabled={false}
                             onClick={handleSellToken}
                             className="rounded-md py-3"
                           >

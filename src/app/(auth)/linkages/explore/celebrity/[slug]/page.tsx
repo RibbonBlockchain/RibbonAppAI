@@ -181,7 +181,7 @@ const Influencer = () => {
 
   const handleBuyToken = () => {
     buyToken(
-      { amount: Number(amount) },
+      { amount: Number(amount), token: tokenData?.data?.token?.address },
       {
         onSuccess: () => {
           toast.success(
@@ -246,7 +246,16 @@ const Influencer = () => {
               <div className="min-h-[86px] flex flex-col items-end justify-between h-[inherit]">
                 <div className="text-[#DFCBFB] text-xs font-bold flex flex-row gap-1 items-center">
                   {shorten(data?.data.walletAddress)}
-                  <Copy size={16} />
+                  <Copy
+                    size="18"
+                    color="#98A2B3"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      copyToClipboard(data?.data.walletAddress, () =>
+                        toast.success(`Wallet address copied`)
+                      );
+                    }}
+                  />
                 </div>
                 <Button className="self-end max-w-fit px-3 py-0.5">
                   Follow
@@ -404,13 +413,13 @@ const Influencer = () => {
 
           {selectedCelebrityTab === "token" && (
             <section>
-              <div className="bg-[#251F2E] fixed z-20 w-full flex items-center justify-center gap-4 py-2">
+              <div className="bg-[#251F2E] fixed z-20 w-full max-w-[450px] flex items-center justify-center gap-4 py-2">
                 {tokenTabs.map((tab) => (
                   <button
                     key={tab.id}
                     className={`px-4 py-2 ${
                       activeTokenTab === tab.id
-                        ? "border-b border-b-white text-white"
+                        ? "border-b border-b-white text-white "
                         : "text-white"
                     }`}
                     onClick={() => setActiveTokenTab(tab.id)}
@@ -446,7 +455,7 @@ const Influencer = () => {
                   </div>
 
                   <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
-                    {tokenData?.data?.token?.address ||
+                    {shorten(tokenData?.data?.token?.address) ||
                       "NOTAVALID.....ADDRESSS"}
                     <Copy
                       size="18"
@@ -718,7 +727,7 @@ const Influencer = () => {
                         />
                       )}
 
-                      <div className="z-10 fixed w-full bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
+                      <div className="z-10 fixed w-full max-w-[450px] bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
                         <Button
                           // onClick={() => setActiveTradePage("swap")}
                           onClick={() => {}}

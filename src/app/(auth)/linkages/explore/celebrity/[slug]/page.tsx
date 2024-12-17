@@ -195,7 +195,7 @@ const Influencer = () => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount) },
+      { amount: Number(amount), token: tokenData?.data?.token?.address },
       {
         onSuccess: () => {
           toast.success(

@@ -17,6 +17,7 @@ import {
   useSellTokenDex,
 } from "@/api/linkage";
 import toast from "react-hot-toast";
+import { editTokenName } from "@/lib/utils/capitalizeLetters";
 
 const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
   const router = useRouter();
@@ -93,23 +94,27 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
       {selectedAction === "sell" ? (
         <>
           <div className="flex flex-col gap-8 w-full mt-10">
+            <p className="text-xs  -mt-6 -mb-4">
+              You can sell a minimum of 100 {tokenData?.data?.token?.name}
+            </p>
             <div className="w-full flex flex-row items-center gap-2 relative">
               <input
                 type="number"
                 value={amount}
                 onChange={handleAmountChange}
+                placeholder="0"
                 className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                 min="0"
               />
               <div className="absolute right-4 flex flex-row gap-1 items-center">
                 <p className="text-base font-medium">
-                  {tokenData?.data?.token?.name}
+                  {editTokenName(tokenData?.data?.token?.name)}
                 </p>
                 <Image
                   alt="logo"
                   width={20}
                   height={20}
-                  src={"/assets/ETHEREUM.svg"}
+                  src={tokenData?.data?.token?.logo}
                 />
               </div>
             </div>
@@ -126,7 +131,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                   min="0"
                 />
                 <div className="absolute right-4 flex flex-row gap-1 items-center">
-                  <p className="text-base font-medium">SOL</p>
+                  <p className="text-base font-medium">ETH</p>
                   <Image
                     alt="logo"
                     width={20}
@@ -138,7 +143,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
             </div>
 
             <div>
-              <p>Default Slippage: 15%</p>
+              <p>Default Slippage: 5%</p>
             </div>
           </div>
 
@@ -155,16 +160,20 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
       ) : (
         <>
           <div className="flex flex-col gap-8 w-full mt-10">
+            <p className="text-xs -mt-6 -mb-4">
+              You can purchase a minimum of 0.00002 ETH
+            </p>
             <div className="w-full flex flex-row items-center gap-2 relative">
               <input
                 type="number"
                 value={amount}
                 onChange={handleAmountChange}
+                placeholder="0"
                 className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                 min="0"
               />
               <div className="absolute right-4 flex flex-row gap-1 items-center">
-                <p className="text-base font-medium">USDC</p>
+                <p className="text-base font-medium">ETH</p>
                 <Image
                   alt="logo"
                   width={20}
@@ -182,25 +191,26 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                   type="number"
                   value={""}
                   onChange={handleAmountChange}
+                  placeholder="0"
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                   min="0"
                 />
                 <div className="absolute right-4 flex flex-row gap-1 items-center">
                   <p className="text-base font-medium">
-                    {tokenData?.data?.token?.name}
+                    {editTokenName(tokenData?.data?.token?.name)}
                   </p>
                   <Image
                     alt="logo"
                     width={20}
                     height={20}
-                    src={"/assets/ETHEREUM.svg"}
+                    src={tokenData?.data?.token?.logo}
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <p>Default Slippage: 15%</p>
+              <p>Default Slippage: 5%</p>
             </div>
           </div>
 

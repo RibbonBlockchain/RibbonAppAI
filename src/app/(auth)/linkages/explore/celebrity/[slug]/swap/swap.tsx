@@ -86,7 +86,7 @@ const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
         </div>
 
         <div>
-          <p>Default Slippage: 15%</p>
+          <p>Default Slippage: 5%</p>
         </div>
       </div>
 

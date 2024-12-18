@@ -408,12 +408,20 @@ export const getLinkageTokenBySlug = async ({ slug }: { slug: string }) => {
   return res.data;
 };
 
-export const buyTokenDex = async (body: { amount: any; token?: string }) => {
+export const buyTokenDex = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
   const res = await client.post("user/wallet/buy-token-dex", body);
   return res.data;
 };
 
-export const sellTokenDex = async (body: { amount: any; token?: string }) => {
+export const sellTokenDex = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
   const res = await client.post("user/wallet/sell-token-dex", body);
   return res.data;
 };

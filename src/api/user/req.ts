@@ -250,12 +250,20 @@ export const createUserToken = async (body: { name: string }) => {
   return res.data;
 };
 
-export const buyUserToken = async (body: { amount: any; token?: string }) => {
+export const buyUserToken = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
   const res = await client.post("user/wallet/buy-token", body);
   return res.data;
 };
 
-export const sellUserToken = async (body: { amount: any; token?: string }) => {
+export const sellUserToken = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
   const res = await client.post("user/wallet/sell-token", body);
   return res.data;
 };

@@ -1,14 +1,12 @@
 "use client";
 
-import { ArrowDown2, ArrowLeft2 } from "iconsax-react";
-import { ArrowDownUp } from "lucide-react";
+import { ArrowLeft2 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
 import { SpinnerIcon } from "@/components/icons/spinner";
-import { useBuyUserToken, useSellUserToken } from "@/api/user";
-import ToggleBuySell from "@/components/toggleBuySell";
+import { useSellUserToken } from "@/api/user";
 
 const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
   const router = useRouter();

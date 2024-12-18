@@ -5,23 +5,18 @@ import Button from "@/components/button";
 import { useParams, useRouter } from "next/navigation";
 import { Gift, Share } from "lucide-react";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
-import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
+import { ArrowLeft2, People, Send, User } from "iconsax-react";
 import {
   useChatLinkage,
   useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
-  useGetLinkageToken,
   useGetLinkageTokenBySlug,
 } from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import {
-  useBuyUserToken,
-  useCreateUserToken,
-  useSellUserToken,
-} from "@/api/user";
+import { useBuyUserToken, useSellUserToken } from "@/api/user";
 import toast from "react-hot-toast";
 import Buy from "./buy/buy";
 import Sell from "./sell/sell";
@@ -177,13 +172,19 @@ const Influencer = () => {
     );
   };
 
+  const slippage = 5;
+
   const { mutate: buyToken, isPending: buyTokenIsPending } = useBuyUserToken();
   const { mutate: sellToken, isPending: selllTokenIsPending } =
     useSellUserToken();
 
   const handleBuyToken = () => {
     buyToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -197,7 +198,11 @@ const Influencer = () => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -646,6 +651,36 @@ const Influencer = () => {
                         Crowned King of the hill on 10/28/2024, 9:04:01 pm
                       </p>
                     </div>
+
+                    <div className="w-full flex flex-col gap-3">
+                      <div className="flex flex-row items-center justify-between">
+                        <p>Holder distriution</p>
+                        <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                          Generate bubble map
+                        </p>
+                      </div>
+
+                      {[
+                        { rank: 1, name: "Dave", percentage: "4.00%" },
+                        { rank: 2, name: "Sarah", percentage: "3.50%" },
+                        { rank: 3, name: "John", percentage: "3.25%" },
+                        { rank: 4, name: "Alice", percentage: "2.75%" },
+                        { rank: 5, name: "Bob", percentage: "2.50%" },
+                        { rank: 6, name: "Charlie", percentage: "2.20%" },
+                        { rank: 7, name: "Eve", percentage: "2.00%" },
+                      ].map((entry) => (
+                        <div
+                          key={entry.rank}
+                          className="w-full flex flex-row items-center justify-between"
+                        >
+                          <div className="flex flex-row items-center gap-2">
+                            <p>{entry.rank}</p>
+                            <p>{entry.name}</p>
+                          </div>
+                          <p>{entry.percentage}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </main>
               )}
@@ -979,15 +1014,12 @@ const Influencer = () => {
 
           {selectedCelebrityTab === "about" && (
             <section>
-              <main className="h-full text-white  rounded-xl mb-10">
+              <main className="h-full text-white  rounded-xl mb-10 mt-5">
                 <div className="p-4 flex flex-col gap-6">
                   <div>
                     <p className="font-medium text-lg">About</p>
                     <p className="text-[13px] font-normal">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ad sapiente quidem quo ratione adipisci, dicta a sit quod
-                      odio magnam vitae error dolor amet mollitia minus officiis
-                      eligendi deleniti quos.
+                      {data?.data?.description}
                     </p>
                   </div>
 
@@ -1024,36 +1056,6 @@ const Influencer = () => {
                         <a href="#" className="underline">
                           {entry.username}
                         </a>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="w-full flex flex-col gap-3">
-                    <div className="flex flex-row items-center justify-between">
-                      <p>Holder distriution</p>
-                      <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
-                        Generate bubble map
-                      </p>
-                    </div>
-
-                    {[
-                      { rank: 1, name: "Dave", percentage: "4.00%" },
-                      { rank: 2, name: "Sarah", percentage: "3.50%" },
-                      { rank: 3, name: "John", percentage: "3.25%" },
-                      { rank: 4, name: "Alice", percentage: "2.75%" },
-                      { rank: 5, name: "Bob", percentage: "2.50%" },
-                      { rank: 6, name: "Charlie", percentage: "2.20%" },
-                      { rank: 7, name: "Eve", percentage: "2.00%" },
-                    ].map((entry) => (
-                      <div
-                        key={entry.rank}
-                        className="w-full flex flex-row items-center justify-between"
-                      >
-                        <div className="flex flex-row items-center gap-2">
-                          <p>{entry.rank}</p>
-                          <p>{entry.name}</p>
-                        </div>
-                        <p>{entry.percentage}</p>
                       </div>
                     ))}
                   </div>

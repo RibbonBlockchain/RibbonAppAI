@@ -1,18 +1,15 @@
 "use client";
 
-import { ArrowDown2, ArrowLeft2 } from "iconsax-react";
-import { ArrowDownUp } from "lucide-react";
+import { ArrowLeft2 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
-import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
-import { useBuyUserToken, useSellUserToken } from "@/api/user";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 import ToggleBuySell from "@/components/toggleBuySell";
 import {
   useBuyTokenDex,
   useGetLinkageBySlug,
-  useGetLinkageToken,
   useGetLinkageTokenBySlug,
   useSellTokenDex,
 } from "@/api/linkage";
@@ -48,12 +45,18 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
 
   const { data: tokenData } = useGetLinkageTokenBySlug(slug);
 
+  const slippage = 5;
+
   const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
   const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
 
   const handleBuyToken = () => {
     buyToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -67,7 +70,11 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(

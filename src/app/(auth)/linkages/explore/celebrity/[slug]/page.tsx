@@ -30,6 +30,7 @@ import ToggleBuySell from "@/components/toggleBuySell";
 import { copyToClipboard } from "@/lib/utils";
 import { Copy } from "iconsax-react";
 import { SpinnerIconPurple } from "@/components/icons/spinner";
+import { editTokenName } from "@/lib/utils/capitalizeLetters";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -160,6 +161,7 @@ const Influencer = () => {
     { name: "$Token", value: "token" },
     { name: "Store", value: "store" },
     { name: "LIVE", value: "live" },
+    { name: "About", value: "about" },
   ];
 
   const { data: tokenData } = useGetLinkageTokenBySlug(slug);
@@ -264,7 +266,7 @@ const Influencer = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-row items-start justify-between w-full overflow-x-auto scroll-hidden">
+          <div className="mt-6 flex flex-row items-start justify-between space-x-2.5 w-full overflow-x-auto scroll-hidden">
             {tabs.map((tab) => (
               <button
                 key={tab.value}
@@ -432,14 +434,14 @@ const Influencer = () => {
               {activeTokenTab === "token-sale" && (
                 <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
                   <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                    <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                      <p className="font-bold text-sm">
+                    <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
+                      <p className="font-bold text-base">
                         {tokenData?.data?.token?.name}
                       </p>
-                      <p className="text-xl font-bold">0.00</p>
-                      <p className="text-[10px] font-normal">0 (0.0%)</p>
+                      {/* <p className="text-xl font-bold">0.00</p>
+                      <p className="text-[10px] font-normal">0 (0.0%)</p> */}
                     </div>
-                    <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
+                    {/* <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
                       <p className="font-medium text-sm">Balance </p>
                       <div className="flex flex-row items-center text-[13px] justify-center gap-1">
                         <Image
@@ -451,7 +453,7 @@ const Influencer = () => {
                         />
                         <p className="font-semibold">00000</p>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
@@ -469,34 +471,123 @@ const Influencer = () => {
                     />
                   </div>
 
-                  <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E]">
+                  <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E] mb-10">
                     <div className="w-full p-3 flex flex-col gap-4 border border-white rounded-[12px]">
                       <ToggleBuySell onChange={toggleBuySell} />
 
-                      <p className="text-xs">
-                        use 0.00002ETH for test purposes
-                      </p>
-                      <div className="w-full flex flex-row items-center gap-2 relative">
-                        <input
-                          type="number"
-                          value={amount}
-                          onChange={handleAmountChange}
-                          className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
-                          min="0"
-                        />
-                        <div className="absolute right-4 flex flex-row gap-1 items-center">
-                          <p className="text-base font-medium">ETH</p>
-                          <Image
-                            alt="logo"
-                            width={20}
-                            height={20}
-                            src={"/assets/ETHEREUM.svg"}
-                          />
-                        </div>
-                      </div>
+                      {initialTokenPurchase === "buy" && (
+                        <>
+                          <p className="text-xs">
+                            You can purchase a minimum of 0.00002 ETH
+                          </p>
+                          <div className="w-full flex flex-row items-center gap-2 relative">
+                            <input
+                              type="number"
+                              value={amount}
+                              onChange={handleAmountChange}
+                              placeholder="0"
+                              className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                              min="0"
+                            />
+                            <div className="absolute right-4 flex flex-row gap-1 items-center">
+                              <p className="text-base font-medium">ETH</p>
+                              <Image
+                                alt="logo"
+                                width={20}
+                                height={20}
+                                src={"/assets/ETHEREUM.svg"}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <p className="text-[#98A2B3] text-xs font-semibold">
+                              You get
+                            </p>
+
+                            <div className="w-full flex flex-row items-center gap-2 relative">
+                              <input
+                                type="number"
+                                value={""}
+                                onChange={handleAmountChange}
+                                placeholder="0"
+                                className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                min="0"
+                              />
+                              <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                <p className="text-base font-medium">
+                                  {tokenData?.data?.token?.name}
+                                </p>
+                                <Image
+                                  alt="logo"
+                                  width={20}
+                                  height={20}
+                                  src={tokenData?.data?.token?.logo}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {initialTokenPurchase === "sell" && (
+                        <>
+                          <p className="text-xs">
+                            You can sell a minimum of 100{" "}
+                            {tokenData?.data?.token?.name}
+                          </p>
+                          <div className="w-full flex flex-row items-center gap-2 relative">
+                            <input
+                              type="number"
+                              value={amount}
+                              onChange={handleAmountChange}
+                              placeholder="0"
+                              className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                              min="0"
+                            />
+                            <div className="absolute right-4 flex flex-row gap-1 items-center">
+                              <p className="text-base font-medium">
+                                {editTokenName(tokenData?.data?.token?.name)}
+                              </p>
+                              <Image
+                                alt="logo"
+                                width={20}
+                                height={20}
+                                src={tokenData?.data?.token?.logo}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <p className="text-[#98A2B3] text-xs font-semibold">
+                              You get
+                            </p>
+
+                            <div className="w-full flex flex-row items-center gap-2 relative">
+                              <input
+                                type="number"
+                                value={""}
+                                onChange={handleAmountChange}
+                                placeholder="0"
+                                className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                min="0"
+                              />
+                              <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                <p className="text-base font-medium">ETH</p>
+                                <Image
+                                  alt="logo"
+                                  width={20}
+                                  height={20}
+                                  src={"/assets/ETHEREUM.svg"}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
 
                       <div>
-                        <p>Default Slippage: 15%</p>
+                        <p>Default Slippage: 5%</p>
                       </div>
 
                       {initialTokenPurchase === "buy" && (
@@ -555,51 +646,6 @@ const Influencer = () => {
                         Crowned King of the hill on 10/28/2024, 9:04:01 pm
                       </p>
                     </div>
-
-                    <div className="grid grid-cols-4 items-center gap-2">
-                      {[
-                        { label: "Twitter" },
-                        { label: "Email" },
-                        { label: "LinkedIn" },
-                        { label: "GitHub" },
-                      ].map((item) => (
-                        <div key={item.label} className="flex flex-col gap-2">
-                          <p className="text-white bg-[#534E5A] py-2 px-2 rounded-md">
-                            {item.label}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="w-full flex flex-col gap-3">
-                      <div className="flex flex-row items-center justify-between">
-                        <p>Holder distriution</p>
-                        <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
-                          Generate bubble map
-                        </p>
-                      </div>
-
-                      {[
-                        { rank: 1, name: "Dave", percentage: "4.00%" },
-                        { rank: 2, name: "Sarah", percentage: "3.50%" },
-                        { rank: 3, name: "John", percentage: "3.25%" },
-                        { rank: 4, name: "Alice", percentage: "2.75%" },
-                        { rank: 5, name: "Bob", percentage: "2.50%" },
-                        { rank: 6, name: "Charlie", percentage: "2.20%" },
-                        { rank: 7, name: "Eve", percentage: "2.00%" },
-                      ].map((entry) => (
-                        <div
-                          key={entry.rank}
-                          className="w-full flex flex-row items-center justify-between"
-                        >
-                          <div className="flex flex-row items-center gap-2">
-                            <p>{entry.rank}</p>
-                            <p>{entry.name}</p>
-                          </div>
-                          <p>{entry.percentage}</p>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </main>
               )}
@@ -611,32 +657,15 @@ const Influencer = () => {
                       {activeTraderPage === "home" && (
                         <>
                           <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                            <div className="flex flex-col justify-center gap-1 text-xs font-medium">
-                              <p className="font-bold text-sm">
+                            <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
+                              <p className="font-bold text-base">
                                 {tokenData?.data?.token?.name}
                               </p>
-                              <p className="text-xl font-bold">0.00</p>
-                              <p className="text-[10px] font-normal">
-                                0 (0.0%)
-                              </p>
-                            </div>
-                            <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
-                              <p className="font-medium text-sm">Balance </p>
-                              <div className="flex flex-row items-center text-[13px] justify-center gap-1">
-                                <Image
-                                  src={tokenData?.data?.token?.logo}
-                                  alt=""
-                                  width={16}
-                                  height={16}
-                                  className="max-h-[20px] max-w-[20px]"
-                                />
-                                <p className="font-semibold">00000</p>
-                              </div>
                             </div>
                           </div>
 
                           <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
-                            {tokenData?.data?.token?.address ||
+                            {shorten(tokenData?.data?.token?.address) ||
                               "NOTAVALID.....ADDRESSS"}
                             <Copy
                               size="18"
@@ -946,6 +975,91 @@ const Influencer = () => {
                 </div>
               </section>
             </main>
+          )}
+
+          {selectedCelebrityTab === "about" && (
+            <section>
+              <main className="h-full text-white  rounded-xl mb-10">
+                <div className="p-4 flex flex-col gap-6">
+                  <div>
+                    <p className="font-medium text-lg">About</p>
+                    <p className="text-[13px] font-normal">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Ad sapiente quidem quo ratione adipisci, dicta a sit quod
+                      odio magnam vitae error dolor amet mollitia minus officiis
+                      eligendi deleniti quos.
+                    </p>
+                  </div>
+
+                  <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-row items-center justify-between">
+                      <p className="font-medium text-lg">Social links</p>
+                    </div>
+
+                    {[
+                      { id: 1, logo: "/assets/x.svg", username: "@xxx" },
+                      {
+                        id: 2,
+                        logo: "/assets/instagram-white.svg",
+                        username: "@xxx",
+                      },
+                      {
+                        id: 3,
+                        logo: "/assets/globe.svg",
+                        username: "@xxx",
+                      },
+                    ].map((entry) => (
+                      <div
+                        key={entry.id}
+                        className="w-full flex flex-row items-center gap-1.5 py-1"
+                      >
+                        <Image
+                          src={entry.logo}
+                          alt="logo"
+                          width={24}
+                          height={24}
+                          className=""
+                        />
+
+                        <a href="#" className="underline">
+                          {entry.username}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-row items-center justify-between">
+                      <p>Holder distriution</p>
+                      <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                        Generate bubble map
+                      </p>
+                    </div>
+
+                    {[
+                      { rank: 1, name: "Dave", percentage: "4.00%" },
+                      { rank: 2, name: "Sarah", percentage: "3.50%" },
+                      { rank: 3, name: "John", percentage: "3.25%" },
+                      { rank: 4, name: "Alice", percentage: "2.75%" },
+                      { rank: 5, name: "Bob", percentage: "2.50%" },
+                      { rank: 6, name: "Charlie", percentage: "2.20%" },
+                      { rank: 7, name: "Eve", percentage: "2.00%" },
+                    ].map((entry) => (
+                      <div
+                        key={entry.rank}
+                        className="w-full flex flex-row items-center justify-between"
+                      >
+                        <div className="flex flex-row items-center gap-2">
+                          <p>{entry.rank}</p>
+                          <p>{entry.name}</p>
+                        </div>
+                        <p>{entry.percentage}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </main>
+            </section>
           )}
         </main>
       </main>

@@ -161,7 +161,7 @@ const Influencer = () => {
     { name: "About", value: "about" },
   ];
 
-  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
+  const { data: tokenData, refetch } = useGetLinkageTokenBySlug(slug);
   const createdToken = tokenData?.data;
 
   const sellTokenConversion =
@@ -178,8 +178,6 @@ const Influencer = () => {
     setInitialTokenPurchase(value);
   };
 
-  // const slippage = 5;
-
   const { mutate: buyToken, isPending: buyTokenIsPending } = useBuyUserToken();
   const { mutate: sellToken, isPending: selllTokenIsPending } =
     useSellUserToken();
@@ -193,6 +191,7 @@ const Influencer = () => {
       },
       {
         onSuccess: () => {
+          refetch();
           toast.success(
             `You purchased ${amount}ETH worth of ${tokenData?.data?.token?.name}`
           );
@@ -211,6 +210,7 @@ const Influencer = () => {
       },
       {
         onSuccess: () => {
+          refetch();
           toast.success(`You sold ${amount} ${tokenData?.data?.token?.name}`);
           setAmount("");
         },

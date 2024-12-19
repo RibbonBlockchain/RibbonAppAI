@@ -20,7 +20,7 @@ import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { useGetUserWallet } from "@/api/linkage";
 import Basenames from "../personalize/basenames";
-import { useCoinDetails } from "@/lib/values/priceAPI";
+import { useEthCoinDetails, useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import SuccessAnimation from "@/components/success-animation";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
@@ -58,8 +58,11 @@ const MainWallet = () => {
     );
   };
 
-  const { data } = useCoinDetails();
+  const { data } = useUsdcCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
+
+  const { data: ethData } = useEthCoinDetails();
+  const currentEthExchange = ethData?.market_data.current_price.usd as number;
 
   const { data: loanWallet, refetch } = useGetUserWallet();
 
@@ -352,7 +355,7 @@ const MainWallet = () => {
                         {token.name.toUpperCase()}
                       </p>
                       <p className="text-sm font-bold">
-                        {parseFloat(token.ethBalance).toFixed(2)} ETH
+                        $ {(token.ethBalance * currentEthExchange).toFixed(2)}
                       </p>
                     </div>
                   </div>

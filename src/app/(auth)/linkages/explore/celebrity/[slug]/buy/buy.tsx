@@ -44,7 +44,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
     }
   };
 
-  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
+  const { data: tokenData, refetch } = useGetLinkageTokenBySlug(slug);
   const sellTokenConversion =
     Number(amount) / (tokenData?.data?.token.tokenAmount / Math.pow(10, 18));
 
@@ -74,6 +74,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
       },
       {
         onSuccess: () => {
+          refetch();
           toast.success(
             `You purchased ${amount}ETH worth of ${tokenData?.data?.token?.name}`
           );
@@ -92,6 +93,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
       },
       {
         onSuccess: () => {
+          refetch();
           toast.success(`You sold ${amount}${tokenData?.data?.token?.name}`);
           setAmount("");
         },

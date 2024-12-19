@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { shorten } from "@/lib/utils/shorten";
 import { copyToClipboard } from "@/lib/utils";
-import { fetcher, useCoinDetails } from "@/lib/values/priceAPI";
+import { fetcher, useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import SwapPointToWorldToken from "./swap-points";
 import WithdrawWorldToken from "./withdraw-token";
 import ClaimPointsModal from "./claim-point-modal";
@@ -587,7 +587,7 @@ const WalletComponent = () => {
   const [openOPSepoiliaTxPage, setOpenOPSepoiliaTxPage] = useState(false);
   const [showClaimModal, setShowClaimModal] = useState(false);
 
-  const { data } = useCoinDetails();
+  const { data } = useUsdcCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
 
   const { data: user } = useGetAuth({ enabled: true });

@@ -45,6 +45,11 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
   };
 
   const { data: tokenData } = useGetLinkageTokenBySlug(slug);
+  const sellTokenConversion =
+    Number(amount) / (tokenData?.data?.token.tokenAmount / Math.pow(10, 18));
+
+  const buyTokenConversion =
+    (Number(amount) * tokenData?.data?.token.tokenAmount) / Math.pow(10, 18);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [slippage, setSlippage] = useState<number>(5);
@@ -87,9 +92,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
       },
       {
         onSuccess: () => {
-          toast.success(
-            `You sold ${amount}ETH worth of ${tokenData?.data?.token?.name}`
-          );
+          toast.success(`You sold ${amount}${tokenData?.data?.token?.name}`);
           setAmount("");
         },
       }
@@ -143,7 +146,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={""}
+                  value={buyTokenConversion.toFixed(4)}
                   onChange={handleAmountChange}
                   placeholder="0"
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
@@ -219,7 +222,7 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={""}
+                  value={sellTokenConversion.toFixed(8)}
                   onChange={handleAmountChange}
                   placeholder="0"
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"

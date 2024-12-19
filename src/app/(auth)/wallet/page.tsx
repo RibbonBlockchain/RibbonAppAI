@@ -308,14 +308,17 @@ const MainWallet = () => {
                         <p className="text-base font-bold">
                           {token.token.toUpperCase()}
                         </p>
-                        <p className="text-[12px] font-medium">
-                          {token.balance} {token.token.toUpperCase()}
-                        </p>
+                        <p className="text-base font-semibold">{token.token}</p>
                       </div>
                     </div>
-                    <p className="text-sm font-bold">
-                      $ {(token.balance * currentPrice).toFixed(2)}
-                    </p>
+                    <div className="flex flex-col items-end gap-1">
+                      <p className="text-[12px] font-medium">
+                        {token.balance} {token.token.toUpperCase()}
+                      </p>
+                      <p className="text-sm font-bold">
+                        $ {(token.balance * currentPrice).toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 ))}
 
@@ -336,16 +339,22 @@ const MainWallet = () => {
                       </div>
                       <div>
                         <p className="text-base font-bold">
-                          {token.name.toUpperCase()}
+                          {token.symbol.toUpperCase()}
                         </p>
-                        <p className="text-[12px] font-medium">
-                          {token.tokenBalance} {token.name.toUpperCase()}
-                        </p>
+                        <p className="text-base font-semibold">{token.name}</p>
                       </div>
                     </div>
-                    <p className="text-sm font-bold">
-                      {parseFloat(token.ethBalance).toFixed(2)} ETH
-                    </p>
+                    <div className="flex flex-col items-end gap-1">
+                      <p className="text-[12px] font-medium">
+                        {(
+                          Number(token.tokenBalance) / Math.pow(10, 18)
+                        ).toFixed(2)}{" "}
+                        {token.name.toUpperCase()}
+                      </p>
+                      <p className="text-sm font-bold">
+                        {parseFloat(token.ethBalance).toFixed(2)} ETH
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

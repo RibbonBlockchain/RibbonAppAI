@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useGetAuth } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { useGetUserWallet } from "@/api/linkage";
-import { useCoinDetails } from "@/lib/values/priceAPI";
+import { useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { PointBalanceCard, WalletBalanceCard } from "./cards";
 
 const SwipeCards = () => {
@@ -15,7 +15,7 @@ const SwipeCards = () => {
   const points = user?.wallet?.balance;
   const convertedPoints = (Number(points) * 5000) as number;
 
-  const { data } = useCoinDetails();
+  const { data } = useUsdcCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
 
   const { data: wallet } = useGetUserWallet();

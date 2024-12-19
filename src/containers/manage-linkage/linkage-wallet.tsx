@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { useUserBaseTransactions } from "@/api/user";
-import { useCoinDetails } from "@/lib/values/priceAPI";
+import { useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import TransactionHistory from "./transaction-history";
 import { useLinkageGetOnramp, useLinkageSendUsdcToken } from "@/api/linkage";
 import { SpinnerIcon } from "@/components/icons/spinner";
@@ -76,7 +76,7 @@ const LinkageWallet = ({
     isPending: getTxPending,
   } = useUserBaseTransactions();
 
-  const { data } = useCoinDetails();
+  const { data } = useUsdcCoinDetails();
   const currentPrice = data?.market_data.current_price.usd as number;
 
   const handleClick = () => {

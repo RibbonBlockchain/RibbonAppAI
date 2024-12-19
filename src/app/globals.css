@@ -61,6 +61,27 @@
     -moz-box-shadow: 0px 0px 8px 5px rgba(255, 255, 255, 0.75);
     box-shadow: 0px 0px 8px 5px rgba(255, 255, 255, 0.75);
   }
+
+  .wrapper {
+    border-radius: 12px;
+    border-color: transparent;
+    overflow: hidden;
+    border: 1px solid transparent;
+    height: 8px;
+  }
+
+  .container {
+    background-color: #64656d;
+  }
+
+  .barCompleted {
+    background-color: #eaf9f5;
+    width: auto;
+  }
+
+  .label {
+    color: #64656d;
+  }
 }
 
 input[type="number"]::-webkit-outer-spin-button,

@@ -20,17 +20,20 @@ const SlippageModal: React.FC<SlippageModalProps> = ({
   const sliderButtonRef = useRef<HTMLDivElement | null>(null);
   const sliderContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    setStartX(e.clientX - (sliderButtonRef.current?.offsetLeft || 0)); // Get initial position
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    setStartX(clientX - (sliderButtonRef.current?.offsetLeft || 0)); // Get initial position
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent | TouchEvent) => {
     if (!isDragging || !sliderContainerRef.current || !sliderButtonRef.current)
       return;
 
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+
     // Calculate the new position
-    let newX = e.clientX - startX;
+    let newX = clientX - startX;
     const containerWidth = sliderContainerRef.current.offsetWidth;
     const buttonWidth = sliderButtonRef.current.offsetWidth;
 
@@ -54,16 +57,26 @@ const SlippageModal: React.FC<SlippageModalProps> = ({
   };
 
   useEffect(() => {
+    const handleTouchMove = (e: TouchEvent) => handleMouseMove(e);
+    const handleTouchEnd = () => handleMouseUp();
+
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
     } else {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     }
+
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, [isDragging]);
 
@@ -89,6 +102,7 @@ const SlippageModal: React.FC<SlippageModalProps> = ({
             <div
               ref={sliderButtonRef}
               onMouseDown={handleMouseDown}
+              onTouchStart={handleMouseDown} // Added touch event handler
               className="absolute w-6 h-6 bg-green-500 rounded-full cursor-pointer top-1/2 transform -translate-y-1/2"
               style={{ left: `${currentX}px` }}
             />

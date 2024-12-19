@@ -22,7 +22,7 @@ import { AIdata } from "@/api/linkage/types";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import React, { useEffect, useState } from "react";
-import { useCoinDetails } from "@/lib/values/priceAPI";
+import { useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { formatLastTrainedDate } from "@/lib/utils/format-date";
 import Retrain from "../../../containers/manage-linkage/retrain";
 import MyStore from "../../../containers/manage-linkage/my-store";
@@ -54,7 +54,7 @@ const tabs = [
 const MyLinkageDetails: React.FC = () => {
   const router = useRouter();
 
-  const { data: coinPrice } = useCoinDetails();
+  const { data: coinPrice } = useUsdcCoinDetails();
   const currentPrice = coinPrice?.market_data.current_price.usd as number;
 
   const [isOpen, setIsOpen] = useState(false);

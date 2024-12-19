@@ -27,6 +27,7 @@ import { Copy } from "iconsax-react";
 import { SpinnerIconPurple } from "@/components/icons/spinner";
 import { editTokenName } from "@/lib/utils/capitalizeLetters";
 import SlippageModal from "@/components/slippage-slider";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -160,8 +161,14 @@ const Influencer = () => {
     { name: "About", value: "about" },
   ];
 
-  const { data: tokenData } = useGetLinkageTokenBySlug(slug);
+  const { data: tokenData, refetch } = useGetLinkageTokenBySlug(slug);
   const createdToken = tokenData?.data;
+
+  const sellTokenConversion =
+    Number(amount) / (tokenData?.data?.token.tokenAmount / Math.pow(10, 18));
+
+  const buyTokenConversion =
+    (Number(amount) * tokenData?.data?.token.tokenAmount) / Math.pow(10, 18);
 
   const [initialTokenPurchase, setInitialTokenPurchase] = useState<
     "buy" | "sell"
@@ -170,8 +177,6 @@ const Influencer = () => {
   const handleToggleChange = (value: "buy" | "sell") => {
     setInitialTokenPurchase(value);
   };
-
-  // const slippage = 5;
 
   const { mutate: buyToken, isPending: buyTokenIsPending } = useBuyUserToken();
   const { mutate: sellToken, isPending: selllTokenIsPending } =
@@ -186,6 +191,7 @@ const Influencer = () => {
       },
       {
         onSuccess: () => {
+          refetch();
           toast.success(
             `You purchased ${amount}ETH worth of ${tokenData?.data?.token?.name}`
           );
@@ -204,9 +210,8 @@ const Influencer = () => {
       },
       {
         onSuccess: () => {
-          toast.success(
-            `You sold ${amount}ETH worth of ${tokenData?.data?.token?.name}`
-          );
+          refetch();
+          toast.success(`You sold ${amount} ${tokenData?.data?.token?.name}`);
           setAmount("");
         },
       }
@@ -508,7 +513,7 @@ const Influencer = () => {
                             <div className="w-full flex flex-row items-center gap-2 relative">
                               <input
                                 type="number"
-                                value={""}
+                                value={buyTokenConversion.toFixed(4)}
                                 onChange={handleAmountChange}
                                 placeholder="0"
                                 className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
@@ -566,7 +571,7 @@ const Influencer = () => {
                             <div className="w-full flex flex-row items-center gap-2 relative">
                               <input
                                 type="number"
-                                value={""}
+                                value={sellTokenConversion.toFixed(8)}
                                 onChange={handleAmountChange}
                                 placeholder="0"
                                 className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
@@ -631,35 +636,27 @@ const Influencer = () => {
                     </div>
 
                     <div className="w-full flex flex-col gap-1 text-sm font-medium">
-                      <p>Bonding curve progress: 80%</p>
-                      <Image
-                        src={"/assets/BCP.svg"}
-                        alt="logo"
-                        width={300}
-                        height={8}
-                      />
-                      <p>Raydium pool seeded! view on raydium here</p>
-                    </div>
-
-                    <div className="w-full flex flex-col gap-1 text-sm font-medium">
-                      <p>King of the hill progress: 80%</p>
-                      <Image
-                        src={"/assets/KOH.svg"}
-                        alt="logo"
-                        width={300}
-                        height={8}
-                      />
-                      <p className="text-[#F5C193]">
-                        Crowned King of the hill on 10/28/2024, 9:04:01 pm
+                      <p>
+                        Bonding curve progress:{" "}
+                        {tokenData?.data?.token?.boundingCurve.toFixed(2)} %
                       </p>
+
+                      <ProgressBar
+                        completed={tokenData?.data?.token?.boundingCurve}
+                        className="wrapper"
+                        barContainerClassName="container"
+                        labelClassName="label"
+                      />
+
+                      {/* <p>Raydium pool seeded! view on raydium here</p> */}
                     </div>
 
                     <div className="w-full flex flex-col gap-3">
                       <div className="flex flex-row items-center justify-between">
                         <p>Holder distriution</p>
-                        <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                        {/* <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
                           Generate bubble map
-                        </p>
+                        </p> */}
                       </div>
 
                       {[

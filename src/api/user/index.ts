@@ -442,13 +442,15 @@ export const useCreateUserToken = () => {
 export const useBuyUserToken = () => {
   return useMutation({
     onError,
-    mutationFn: (body: { amount: any; token?: string }) => buyUserToken(body),
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      buyUserToken(body),
   });
 };
 
 export const useSellUserToken = () => {
   return useMutation({
     onError,
-    mutationFn: (body: { amount: any; token?: string }) => sellUserToken(body),
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      sellUserToken(body),
   });
 };

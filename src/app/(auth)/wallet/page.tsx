@@ -318,6 +318,36 @@ const MainWallet = () => {
                     </p>
                   </div>
                 ))}
+
+                {loanWalletDetails?.tokens?.map((token: any) => (
+                  <div
+                    key={token.name}
+                    className="flex flex-row items-center justify-between p-3 cursor-pointer"
+                  >
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <div className="w-[35px] h-[35px] flex items-center">
+                        <Image
+                          width={35}
+                          height={35}
+                          src={""}
+                          alt="coin logo"
+                          className="rounded-full bg-white max-w-[35px] max-h-[35px]"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base font-bold">
+                          {token.name.toUpperCase()}
+                        </p>
+                        <p className="text-[12px] font-medium">
+                          {token.tokenBalance} {token.name.toUpperCase()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-bold">
+                      {parseFloat(token.ethBalance).toFixed(2)} ETH
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
 

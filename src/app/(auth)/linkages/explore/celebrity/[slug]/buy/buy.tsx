@@ -1,23 +1,21 @@
 "use client";
 
-import { ArrowDown2, ArrowLeft2 } from "iconsax-react";
-import { ArrowDownUp } from "lucide-react";
+import { ArrowLeft2, Edit2 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
-import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
-import { useBuyUserToken, useSellUserToken } from "@/api/user";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 import ToggleBuySell from "@/components/toggleBuySell";
 import {
   useBuyTokenDex,
   useGetLinkageBySlug,
-  useGetLinkageToken,
   useGetLinkageTokenBySlug,
   useSellTokenDex,
 } from "@/api/linkage";
 import toast from "react-hot-toast";
 import { editTokenName } from "@/lib/utils/capitalizeLetters";
+import SlippageModal from "@/components/slippage-slider";
 
 interface BuyProps {
   handleButtonClick: () => void;
@@ -48,12 +46,27 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
 
   const { data: tokenData } = useGetLinkageTokenBySlug(slug);
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [slippage, setSlippage] = useState<number>(5);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSlippageChange = (newSlippage: number) => {
+    setSlippage(newSlippage);
+  };
+
   const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
   const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
 
   const handleBuyToken = () => {
     buyToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -67,7 +80,11 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -146,8 +163,15 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               </div>
             </div>
 
-            <div>
-              <p>Default Slippage: 5%</p>
+            <div className="flex flex-row items-center justify-between">
+              <p>Default Slippage: {slippage}%</p>
+
+              <div
+                onClick={toggleModal}
+                className="flex flex-row gap-1 items-center justify-center"
+              >
+                <Edit2 color="#fff" size={20} />
+              </div>
             </div>
           </div>
 
@@ -213,8 +237,15 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
               </div>
             </div>
 
-            <div>
-              <p>Default Slippage: 5%</p>
+            <div className="flex flex-row items-center justify-between">
+              <p>Default Slippage: {slippage}%</p>
+
+              <div
+                onClick={toggleModal}
+                className="flex flex-row gap-1 items-center justify-center"
+              >
+                <Edit2 color="#fff" size={20} />
+              </div>
             </div>
           </div>
 
@@ -228,6 +259,14 @@ const Buy = ({ handleButtonClick }: BuyProps) => {
             </Button>
           </div>
         </>
+      )}
+
+      {isModalOpen && (
+        <SlippageModal
+          isOpen={isModalOpen}
+          onClose={toggleModal}
+          onSlippageChange={handleSlippageChange}
+        />
       )}
     </main>
   );

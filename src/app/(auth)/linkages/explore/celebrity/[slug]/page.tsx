@@ -5,23 +5,18 @@ import Button from "@/components/button";
 import { useParams, useRouter } from "next/navigation";
 import { Gift, Share } from "lucide-react";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
-import { ArrowLeft2, Microphone, People, Send, User } from "iconsax-react";
+import { ArrowLeft2, Edit2, People, Send, User } from "iconsax-react";
 import {
   useChatLinkage,
   useGetChatHistory,
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
-  useGetLinkageToken,
   useGetLinkageTokenBySlug,
 } from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
-import {
-  useBuyUserToken,
-  useCreateUserToken,
-  useSellUserToken,
-} from "@/api/user";
+import { useBuyUserToken, useSellUserToken } from "@/api/user";
 import toast from "react-hot-toast";
 import Buy from "./buy/buy";
 import Sell from "./sell/sell";
@@ -31,6 +26,7 @@ import { copyToClipboard } from "@/lib/utils";
 import { Copy } from "iconsax-react";
 import { SpinnerIconPurple } from "@/components/icons/spinner";
 import { editTokenName } from "@/lib/utils/capitalizeLetters";
+import SlippageModal from "@/components/slippage-slider";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -171,11 +167,11 @@ const Influencer = () => {
     "buy" | "sell"
   >("buy");
 
-  const toggleBuySell = () => {
-    setInitialTokenPurchase((prevState) =>
-      prevState === "buy" ? "sell" : "buy"
-    );
+  const handleToggleChange = (value: "buy" | "sell") => {
+    setInitialTokenPurchase(value);
   };
+
+  // const slippage = 5;
 
   const { mutate: buyToken, isPending: buyTokenIsPending } = useBuyUserToken();
   const { mutate: sellToken, isPending: selllTokenIsPending } =
@@ -183,7 +179,11 @@ const Influencer = () => {
 
   const handleBuyToken = () => {
     buyToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -197,7 +197,11 @@ const Influencer = () => {
 
   const handleSellToken = () => {
     sellToken(
-      { amount: Number(amount), token: tokenData?.data?.token?.address },
+      {
+        amount: Number(amount),
+        token: tokenData?.data?.token?.address,
+        slippage,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -207,6 +211,17 @@ const Influencer = () => {
         },
       }
     );
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [slippage, setSlippage] = useState<number>(5);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSlippageChange = (newSlippage: number) => {
+    setSlippage(newSlippage);
   };
 
   return (
@@ -438,22 +453,7 @@ const Influencer = () => {
                       <p className="font-bold text-base">
                         {tokenData?.data?.token?.name}
                       </p>
-                      {/* <p className="text-xl font-bold">0.00</p>
-                      <p className="text-[10px] font-normal">0 (0.0%)</p> */}
                     </div>
-                    {/* <div className="flex flex-col items-start justify-center gap-1 text-xs font-medium">
-                      <p className="font-medium text-sm">Balance </p>
-                      <div className="flex flex-row items-center text-[13px] justify-center gap-1">
-                        <Image
-                          src={tokenData?.data?.token?.logo}
-                          alt=""
-                          width={16}
-                          height={16}
-                          className="max-h-[20px] max-w-[20px]"
-                        />
-                        <p className="font-semibold">00000</p>
-                      </div>
-                    </div> */}
                   </div>
 
                   <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
@@ -473,7 +473,7 @@ const Influencer = () => {
 
                   <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E] mb-10">
                     <div className="w-full p-3 flex flex-col gap-4 border border-white rounded-[12px]">
-                      <ToggleBuySell onChange={toggleBuySell} />
+                      <ToggleBuySell onChange={handleToggleChange} />
 
                       {initialTokenPurchase === "buy" && (
                         <>
@@ -586,8 +586,15 @@ const Influencer = () => {
                         </>
                       )}
 
-                      <div>
-                        <p>Default Slippage: 5%</p>
+                      <div className="flex flex-row items-center justify-between">
+                        <p>Default Slippage: {slippage}%</p>
+
+                        <div
+                          onClick={toggleModal}
+                          className="flex flex-row gap-1 items-center justify-center"
+                        >
+                          <Edit2 color="#fff" size={20} />
+                        </div>
                       </div>
 
                       {initialTokenPurchase === "buy" && (
@@ -645,6 +652,36 @@ const Influencer = () => {
                       <p className="text-[#F5C193]">
                         Crowned King of the hill on 10/28/2024, 9:04:01 pm
                       </p>
+                    </div>
+
+                    <div className="w-full flex flex-col gap-3">
+                      <div className="flex flex-row items-center justify-between">
+                        <p>Holder distriution</p>
+                        <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                          Generate bubble map
+                        </p>
+                      </div>
+
+                      {[
+                        { rank: 1, name: "Dave", percentage: "4.00%" },
+                        { rank: 2, name: "Sarah", percentage: "3.50%" },
+                        { rank: 3, name: "John", percentage: "3.25%" },
+                        { rank: 4, name: "Alice", percentage: "2.75%" },
+                        { rank: 5, name: "Bob", percentage: "2.50%" },
+                        { rank: 6, name: "Charlie", percentage: "2.20%" },
+                        { rank: 7, name: "Eve", percentage: "2.00%" },
+                      ].map((entry) => (
+                        <div
+                          key={entry.rank}
+                          className="w-full flex flex-row items-center justify-between"
+                        >
+                          <div className="flex flex-row items-center gap-2">
+                            <p>{entry.rank}</p>
+                            <p>{entry.name}</p>
+                          </div>
+                          <p>{entry.percentage}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </main>
@@ -979,15 +1016,12 @@ const Influencer = () => {
 
           {selectedCelebrityTab === "about" && (
             <section>
-              <main className="h-full text-white  rounded-xl mb-10">
+              <main className="h-full text-white  rounded-xl mb-10 mt-5">
                 <div className="p-4 flex flex-col gap-6">
                   <div>
                     <p className="font-medium text-lg">About</p>
                     <p className="text-[13px] font-normal">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ad sapiente quidem quo ratione adipisci, dicta a sit quod
-                      odio magnam vitae error dolor amet mollitia minus officiis
-                      eligendi deleniti quos.
+                      {data?.data?.description}
                     </p>
                   </div>
 
@@ -1027,41 +1061,19 @@ const Influencer = () => {
                       </div>
                     ))}
                   </div>
-
-                  <div className="w-full flex flex-col gap-3">
-                    <div className="flex flex-row items-center justify-between">
-                      <p>Holder distriution</p>
-                      <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
-                        Generate bubble map
-                      </p>
-                    </div>
-
-                    {[
-                      { rank: 1, name: "Dave", percentage: "4.00%" },
-                      { rank: 2, name: "Sarah", percentage: "3.50%" },
-                      { rank: 3, name: "John", percentage: "3.25%" },
-                      { rank: 4, name: "Alice", percentage: "2.75%" },
-                      { rank: 5, name: "Bob", percentage: "2.50%" },
-                      { rank: 6, name: "Charlie", percentage: "2.20%" },
-                      { rank: 7, name: "Eve", percentage: "2.00%" },
-                    ].map((entry) => (
-                      <div
-                        key={entry.rank}
-                        className="w-full flex flex-row items-center justify-between"
-                      >
-                        <div className="flex flex-row items-center gap-2">
-                          <p>{entry.rank}</p>
-                          <p>{entry.name}</p>
-                        </div>
-                        <p>{entry.percentage}</p>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </main>
             </section>
           )}
         </main>
+
+        {isModalOpen && (
+          <SlippageModal
+            isOpen={isModalOpen}
+            onClose={toggleModal}
+            onSlippageChange={handleSlippageChange}
+          />
+        )}
       </main>
     </AuthLayout>
   );

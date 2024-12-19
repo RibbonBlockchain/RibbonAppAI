@@ -547,13 +547,15 @@ export const useGetLinkageTokenBySlug = (slug: string) => {
 export const useBuyTokenDex = () => {
   return useMutation({
     onError,
-    mutationFn: (body: { amount: any; token?: string }) => buyTokenDex(body),
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      buyTokenDex(body),
   });
 };
 
 export const useSellTokenDex = () => {
   return useMutation({
     onError,
-    mutationFn: (body: { amount: any; token?: string }) => sellTokenDex(body),
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      sellTokenDex(body),
   });
 };

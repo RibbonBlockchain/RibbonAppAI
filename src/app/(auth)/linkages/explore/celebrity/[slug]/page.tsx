@@ -659,24 +659,16 @@ const Influencer = () => {
                         </p> */}
                       </div>
 
-                      {[
-                        { rank: 1, name: "Dave", percentage: "4.00%" },
-                        { rank: 2, name: "Sarah", percentage: "3.50%" },
-                        { rank: 3, name: "John", percentage: "3.25%" },
-                        { rank: 4, name: "Alice", percentage: "2.75%" },
-                        { rank: 5, name: "Bob", percentage: "2.50%" },
-                        { rank: 6, name: "Charlie", percentage: "2.20%" },
-                        { rank: 7, name: "Eve", percentage: "2.00%" },
-                      ].map((entry) => (
+                      {tokenData?.data?.token?.holders.map((entry: any) => (
                         <div
-                          key={entry.rank}
-                          className="w-full flex flex-row items-center justify-between"
+                          key={entry.address}
+                          className="w-full flex flex-row items-center justify-between border-b pb-[2px] border-[#F2EEFF40]"
                         >
                           <div className="flex flex-row items-center gap-2">
-                            <p>{entry.rank}</p>
+                            <p>{shorten(entry.address)}</p>
                             <p>{entry.name}</p>
                           </div>
-                          <p>{entry.percentage}</p>
+                          <p>{entry.percentage.toFixed(2)} %</p>
                         </div>
                       ))}
                     </div>

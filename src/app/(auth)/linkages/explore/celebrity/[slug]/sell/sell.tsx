@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft2 } from "iconsax-react";
+import { ArrowLeft2, Edit2 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import {
 } from "@/api/linkage";
 import toast from "react-hot-toast";
 import { editTokenName } from "@/lib/utils/capitalizeLetters";
+import SlippageModal from "@/components/slippage-slider";
 
 const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
   const router = useRouter();
@@ -42,7 +43,16 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
 
   const { data: tokenData } = useGetLinkageTokenBySlug(slug);
 
-  const slippage = 5;
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [slippage, setSlippage] = useState<number>(5);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSlippageChange = (newSlippage: number) => {
+    setSlippage(newSlippage);
+  };
 
   const { mutate: buyToken, isPending: isBuyPending } = useBuyTokenDex();
   const { mutate: sellToken, isPending: isSellPending } = useSellTokenDex();
@@ -149,8 +159,15 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
               </div>
             </div>
 
-            <div>
-              <p>Default Slippage: 5%</p>
+            <div className="flex flex-row items-center justify-between">
+              <p>Default Slippage: {slippage}%</p>
+
+              <div
+                onClick={toggleModal}
+                className="flex flex-row gap-1 items-center justify-center"
+              >
+                <Edit2 color="#fff" size={20} />
+              </div>
             </div>
           </div>
 
@@ -216,8 +233,15 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
               </div>
             </div>
 
-            <div>
-              <p>Default Slippage: 5%</p>
+            <div className="flex flex-row items-center justify-between">
+              <p>Default Slippage: {slippage}%</p>
+
+              <div
+                onClick={toggleModal}
+                className="flex flex-row gap-1 items-center justify-center"
+              >
+                <Edit2 color="#fff" size={20} />
+              </div>
             </div>
           </div>
 
@@ -231,6 +255,14 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
             </Button>
           </div>
         </>
+      )}
+
+      {isModalOpen && (
+        <SlippageModal
+          isOpen={isModalOpen}
+          onClose={toggleModal}
+          onSlippageChange={handleSlippageChange}
+        />
       )}
     </main>
   );

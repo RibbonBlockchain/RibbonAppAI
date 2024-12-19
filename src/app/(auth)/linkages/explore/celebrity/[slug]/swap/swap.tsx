@@ -1,12 +1,13 @@
 "use client";
 
-import { ArrowLeft2 } from "iconsax-react";
+import { ArrowLeft2, Edit2 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/button";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import { useSellUserToken } from "@/api/user";
+import SlippageModal from "@/components/slippage-slider";
 
 const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
   const router = useRouter();
@@ -21,6 +22,17 @@ const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
     if (!isNaN(Number(newAmount))) {
       setAmount(Number(newAmount));
     }
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [slippage, setSlippage] = useState<number>(5);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSlippageChange = (newSlippage: number) => {
+    setSlippage(newSlippage);
   };
 
   const { mutate: sellToken, isPending: isSellPending } = useSellUserToken();
@@ -83,8 +95,15 @@ const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
           </div>
         </div>
 
-        <div>
-          <p>Default Slippage: 5%</p>
+        <div className="flex flex-row items-center justify-between">
+          <p>Default Slippage: {slippage}%</p>
+
+          <div
+            onClick={toggleModal}
+            className="flex flex-row gap-1 items-center justify-center"
+          >
+            <Edit2 color="#fff" size={20} />
+          </div>
         </div>
       </div>
 
@@ -97,6 +116,14 @@ const Swap = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
           {isSellPending ? <SpinnerIcon /> : "Place Trade"}
         </Button>
       </div>
+
+      {isModalOpen && (
+        <SlippageModal
+          isOpen={isModalOpen}
+          onClose={toggleModal}
+          onSlippageChange={handleSlippageChange}
+        />
+      )}
     </main>
   );
 };

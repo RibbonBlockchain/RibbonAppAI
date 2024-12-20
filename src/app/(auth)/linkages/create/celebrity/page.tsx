@@ -368,7 +368,7 @@ const CreateLinkage = () => {
           disabled={isSubmitDisabled}
           onClick={handleCreateLinkage}
           className={clsx(
-            "my-10 w-full rounded-[8px] py-3 font-bold text-sm items-center justify-center",
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm  flex items-center justify-center",
             isSubmitDisabled
               ? "bg-gray-600 text-white cursor-not-allowed items-center justify-center"
               : "bg-white text-[#290064] items-center justify-center"

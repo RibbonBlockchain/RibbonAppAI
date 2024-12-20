@@ -14,20 +14,20 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { Copy } from "iconsax-react";
 import React, { useState } from "react";
+import { useGetAuth } from "@/api/auth";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/lib/utils";
 import { shorten } from "@/lib/utils/shorten";
 import { useGetUserWallet } from "@/api/linkage";
 import Basenames from "../personalize/basenames";
-import { useEthCoinDetails, useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import SuccessAnimation from "@/components/success-animation";
 import CustomTokenUI from "@/components/wallet/native-token-ui";
 import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
+import { useEthCoinDetails, useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
-import { useGetAuth } from "@/api/auth";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -316,10 +316,18 @@ const MainWallet = () => {
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <p className="text-[12px] font-medium">
-                        {token.balance} {token.token.toUpperCase()}
+                        {Number(token.balance).toFixed(4)}{" "}
+                        {token.token.toUpperCase()}
                       </p>
                       <p className="text-sm font-bold">
-                        $ {(token.balance * currentPrice).toFixed(2)}
+                        {token?.token === "usdc" && (
+                          <>$ {(token.balance * currentPrice).toFixed(2)}</>
+                        )}
+                        {token?.token === "eth" && (
+                          <>
+                            $ {(token.balance * currentEthExchange).toFixed(2)}
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -355,7 +363,7 @@ const MainWallet = () => {
                         {token.name.toUpperCase()}
                       </p>
                       <p className="text-sm font-bold">
-                        $ {(token.ethBalance * currentEthExchange).toFixed(2)}
+                        {/* $ {(token.ethBalance * currentEthExchange).toFixed(2)} */}
                       </p>
                     </div>
                   </div>

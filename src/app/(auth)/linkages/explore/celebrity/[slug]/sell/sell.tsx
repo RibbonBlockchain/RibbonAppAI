@@ -136,7 +136,8 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                   alt="logo"
                   width={20}
                   height={20}
-                  src={tokenData?.data?.token?.logo}
+                  // src={tokenData?.data?.token?.logo}
+                  src={""}
                 />
               </div>
             </div>
@@ -147,7 +148,8 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={sellTokenConversion.toFixed(8)}
+                  // value={sellTokenConversion.toFixed(8)}
+                  value={""}
                   onChange={handleAmountChange}
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
                   min="0"
@@ -218,7 +220,8 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
               <div className="w-full flex flex-row items-center gap-2 relative">
                 <input
                   type="number"
-                  value={buyTokenConversion.toFixed(4)}
+                  // value={buyTokenConversion.toFixed(4)}
+                  value={""}
                   onChange={handleAmountChange}
                   placeholder="0"
                   className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
@@ -232,7 +235,8 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                     alt="logo"
                     width={20}
                     height={20}
-                    src={tokenData?.data?.token?.logo}
+                    // src={tokenData?.data?.token?.logo}
+                    src={""}
                   />
                 </div>
               </div>

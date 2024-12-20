@@ -452,359 +452,364 @@ const Influencer = () => {
               </div>
 
               {activeTokenTab === "token-sale" && (
-                <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
-                  <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                    <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
-                      <p className="font-bold text-base">
-                        {tokenData?.data?.token?.name}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
-                    {shorten(tokenData?.data?.token?.address) ||
-                      "NOTAVALID.....ADDRESSS"}
-                    <Copy
-                      size="18"
-                      color="#98A2B3"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        copyToClipboard(tokenData?.data?.token?.address, () =>
-                          toast.success(`Contract address copied`)
-                        );
-                      }}
-                    />
-                  </div>
-
-                  <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E] mb-10">
-                    <div className="w-full p-3 flex flex-col gap-4 border border-white rounded-[12px]">
-                      <ToggleBuySell onChange={handleToggleChange} />
-
-                      {initialTokenPurchase === "buy" && (
-                        <>
-                          <p className="text-xs">
-                            You can purchase a minimum of 0.00002 ETH
-                          </p>
-                          <div className="w-full flex flex-row items-center gap-2 relative">
-                            <input
-                              type="number"
-                              value={amount}
-                              onChange={handleAmountChange}
-                              placeholder="0"
-                              className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
-                              min="0"
-                            />
-                            <div className="absolute right-4 flex flex-row gap-1 items-center">
-                              <p className="text-base font-medium">ETH</p>
-                              <Image
-                                alt="logo"
-                                width={20}
-                                height={20}
-                                src={"/assets/ETHEREUM.svg"}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col gap-1">
-                            <p className="text-[#98A2B3] text-xs font-semibold">
-                              You get
-                            </p>
-
-                            <div className="w-full flex flex-row items-center gap-2 relative">
-                              <input
-                                type="number"
-                                value={buyTokenConversion.toFixed(4)}
-                                onChange={handleAmountChange}
-                                placeholder="0"
-                                className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
-                                min="0"
-                              />
-                              <div className="absolute right-4 flex flex-row gap-1 items-center">
-                                <p className="text-base font-medium">
-                                  {tokenData?.data?.token?.name}
-                                </p>
-                                <Image
-                                  alt="logo"
-                                  width={20}
-                                  height={20}
-                                  src={tokenData?.data?.token?.logo}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      {initialTokenPurchase === "sell" && (
-                        <>
-                          <p className="text-xs">
-                            You can sell a minimum of 100{" "}
+                <>
+                  {createdToken ? (
+                    <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
+                      <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+                        <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
+                          <p className="font-bold text-base">
                             {tokenData?.data?.token?.name}
                           </p>
-                          <div className="w-full flex flex-row items-center gap-2 relative">
-                            <input
-                              type="number"
-                              value={amount}
-                              onChange={handleAmountChange}
-                              placeholder="0"
-                              className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
-                              min="0"
-                            />
-                            <div className="absolute right-4 flex flex-row gap-1 items-center">
-                              <p className="text-base font-medium">
-                                {editTokenName(tokenData?.data?.token?.name)}
-                              </p>
-                              <Image
-                                alt="logo"
-                                width={20}
-                                height={20}
-                                src={tokenData?.data?.token?.logo}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col gap-1">
-                            <p className="text-[#98A2B3] text-xs font-semibold">
-                              You get
-                            </p>
-
-                            <div className="w-full flex flex-row items-center gap-2 relative">
-                              <input
-                                type="number"
-                                value={sellTokenConversion.toFixed(8)}
-                                onChange={handleAmountChange}
-                                placeholder="0"
-                                className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
-                                min="0"
-                              />
-                              <div className="absolute right-4 flex flex-row gap-1 items-center">
-                                <p className="text-base font-medium">ETH</p>
-                                <Image
-                                  alt="logo"
-                                  width={20}
-                                  height={20}
-                                  src={"/assets/ETHEREUM.svg"}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="flex flex-row items-center justify-between">
-                        <p>Default Slippage: {slippage}%</p>
-
-                        <div
-                          onClick={toggleModal}
-                          className="flex flex-row gap-1 items-center justify-center"
-                        >
-                          <Edit2 color="#fff" size={20} />
                         </div>
                       </div>
 
-                      {initialTokenPurchase === "buy" && (
-                        <div className="w-[60%] flex items-center justify-center mx-auto">
-                          <Button
-                            disabled={false}
-                            onClick={handleBuyToken}
-                            className="rounded-md py-3"
-                          >
-                            {buyTokenIsPending ? (
-                              <SpinnerIconPurple />
-                            ) : (
-                              "Place Trade (buy)"
-                            )}
-                          </Button>
+                      <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
+                        {shorten(tokenData?.data?.token?.address) ||
+                          "NOTAVALID.....ADDRESSS"}
+                        <Copy
+                          size="18"
+                          color="#98A2B3"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            copyToClipboard(
+                              tokenData?.data?.token?.address,
+                              () => toast.success(`Contract address copied`)
+                            );
+                          }}
+                        />
+                      </div>
+
+                      <div className="p-4 py-6 flex flex-col w-full max-w-[450px] border-b border-[#C3B1FF1A] items-start justify-between gap-6 bg-[#251F2E] mb-10">
+                        <div className="w-full p-3 flex flex-col gap-4 border border-white rounded-[12px]">
+                          <ToggleBuySell onChange={handleToggleChange} />
+
+                          {initialTokenPurchase === "buy" && (
+                            <>
+                              <p className="text-xs">
+                                You can purchase a minimum of 0.00002 ETH
+                              </p>
+                              <div className="w-full flex flex-row items-center gap-2 relative">
+                                <input
+                                  type="number"
+                                  value={amount}
+                                  onChange={handleAmountChange}
+                                  placeholder="0"
+                                  className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                  min="0"
+                                />
+                                <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                  <p className="text-base font-medium">ETH</p>
+                                  <Image
+                                    alt="logo"
+                                    width={20}
+                                    height={20}
+                                    src={"/assets/ETHEREUM.svg"}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="flex flex-col gap-1">
+                                <p className="text-[#98A2B3] text-xs font-semibold">
+                                  You get
+                                </p>
+
+                                <div className="w-full flex flex-row items-center gap-2 relative">
+                                  <input
+                                    type="number"
+                                    value={buyTokenConversion.toFixed(4)}
+                                    onChange={handleAmountChange}
+                                    placeholder="0"
+                                    className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                    min="0"
+                                  />
+                                  <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                    <p className="text-base font-medium">
+                                      {tokenData?.data?.token?.name}
+                                    </p>
+                                    <Image
+                                      alt="logo"
+                                      width={20}
+                                      height={20}
+                                      src={tokenData?.data?.token?.logo}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {initialTokenPurchase === "sell" && (
+                            <>
+                              <p className="text-xs">
+                                You can sell a minimum of 100{" "}
+                                {tokenData?.data?.token?.name}
+                              </p>
+                              <div className="w-full flex flex-row items-center gap-2 relative">
+                                <input
+                                  type="number"
+                                  value={amount}
+                                  onChange={handleAmountChange}
+                                  placeholder="0"
+                                  className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                  min="0"
+                                />
+                                <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                  <p className="text-base font-medium">
+                                    {editTokenName(
+                                      tokenData?.data?.token?.name
+                                    )}
+                                  </p>
+                                  <Image
+                                    alt="logo"
+                                    width={20}
+                                    height={20}
+                                    src={tokenData?.data?.token?.logo}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="flex flex-col gap-1">
+                                <p className="text-[#98A2B3] text-xs font-semibold">
+                                  You get
+                                </p>
+
+                                <div className="w-full flex flex-row items-center gap-2 relative">
+                                  <input
+                                    type="number"
+                                    value={sellTokenConversion.toFixed(8)}
+                                    onChange={handleAmountChange}
+                                    placeholder="0"
+                                    className="text-base rounded-[10px] py-3 w-full font-bold pl-2 bg-inherit border border-white max-w-full"
+                                    min="0"
+                                  />
+                                  <div className="absolute right-4 flex flex-row gap-1 items-center">
+                                    <p className="text-base font-medium">ETH</p>
+                                    <Image
+                                      alt="logo"
+                                      width={20}
+                                      height={20}
+                                      src={"/assets/ETHEREUM.svg"}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          <div className="flex flex-row items-center justify-between">
+                            <p>Default Slippage: {slippage}%</p>
+
+                            <div
+                              onClick={toggleModal}
+                              className="flex flex-row gap-1 items-center justify-center"
+                            >
+                              <Edit2 color="#fff" size={20} />
+                            </div>
+                          </div>
+
+                          {initialTokenPurchase === "buy" && (
+                            <div className="w-[60%] flex items-center justify-center mx-auto">
+                              <Button
+                                disabled={false}
+                                onClick={handleBuyToken}
+                                className="rounded-md py-3"
+                              >
+                                {buyTokenIsPending ? (
+                                  <SpinnerIconPurple />
+                                ) : (
+                                  "Place Trade (buy)"
+                                )}
+                              </Button>
+                            </div>
+                          )}
+
+                          {initialTokenPurchase === "sell" && (
+                            <div className="w-[60%] flex items-center justify-center mx-auto">
+                              <Button
+                                disabled={false}
+                                onClick={handleSellToken}
+                                className="rounded-md py-3"
+                              >
+                                {selllTokenIsPending ? (
+                                  <SpinnerIconPurple />
+                                ) : (
+                                  "Place Trade (sell)"
+                                )}
+                              </Button>
+                            </div>
+                          )}
                         </div>
-                      )}
 
-                      {initialTokenPurchase === "sell" && (
-                        <div className="w-[60%] flex items-center justify-center mx-auto">
-                          <Button
-                            disabled={false}
-                            onClick={handleSellToken}
-                            className="rounded-md py-3"
-                          >
-                            {selllTokenIsPending ? (
-                              <SpinnerIconPurple />
-                            ) : (
-                              "Place Trade (sell)"
-                            )}
-                          </Button>
+                        <div className="w-full flex flex-col gap-1 text-sm font-medium">
+                          <p>
+                            Bonding curve progress:{" "}
+                            {tokenData?.data?.token?.boundingCurve.toFixed(2)} %
+                          </p>
+
+                          <ProgressBar
+                            completed={tokenData?.data?.token?.boundingCurve}
+                            className="wrapper"
+                            barContainerClassName="container"
+                            labelClassName="label"
+                          />
+
+                          {/* <p>Raydium pool seeded! view on raydium here</p> */}
                         </div>
-                      )}
-                    </div>
 
-                    <div className="w-full flex flex-col gap-1 text-sm font-medium">
-                      <p>
-                        Bonding curve progress:{" "}
-                        {tokenData?.data?.token?.boundingCurve.toFixed(2)} %
-                      </p>
-
-                      <ProgressBar
-                        completed={tokenData?.data?.token?.boundingCurve}
-                        className="wrapper"
-                        barContainerClassName="container"
-                        labelClassName="label"
-                      />
-
-                      {/* <p>Raydium pool seeded! view on raydium here</p> */}
-                    </div>
-
-                    <div className="w-full flex flex-col gap-3">
-                      <div className="flex flex-row items-center justify-between">
-                        <p>Holder distriution</p>
-                        {/* <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
+                        <div className="w-full flex flex-col gap-3">
+                          <div className="flex flex-row items-center justify-between">
+                            <p>Holder distriution</p>
+                            {/* <p className="text-xs py-1.5 px-2 bg-[#C3B1FF4D] border border-[#FFFFFF36] rounded-md">
                           Generate bubble map
                         </p> */}
-                      </div>
-
-                      {tokenData?.data?.token?.holders.map((entry: any) => (
-                        <div
-                          key={entry.address}
-                          className="w-full flex flex-row items-center justify-between border-b pb-[2px] border-[#F2EEFF40]"
-                        >
-                          <div className="flex flex-row items-center gap-2">
-                            <p>{shorten(entry.address)}</p>
-                            <p>{entry.name}</p>
                           </div>
-                          <p>{entry.percentage.toFixed(2)} %</p>
+
+                          {tokenData?.data?.token?.holders.map((entry: any) => (
+                            <div
+                              key={entry.address}
+                              className="w-full flex flex-row items-center justify-between border-b pb-[2px] border-[#F2EEFF40]"
+                            >
+                              <div className="flex flex-row items-center gap-2">
+                                <p>{shorten(entry.address)}</p>
+                                <p>{entry.name}</p>
+                              </div>
+                              <p>{entry.percentage.toFixed(2)} %</p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </main>
+                      </div>
+                    </main>
+                  ) : (
+                    <main className="mt-20 px-4 h-full text-white flex flex-col rounded-xl">
+                      <p className=""> No token to show</p>
+                    </main>
+                  )}
+                </>
               )}
 
               {activeTokenTab === "token-trader" && (
                 <>
-                  {createdToken && (
-                    <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
-                      {activeTraderPage === "home" && (
-                        <>
-                          <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                            <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
-                              <p className="font-bold text-base">
-                                {tokenData?.data?.token?.name}
-                              </p>
+                  <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
+                    {activeTraderPage === "home" && (
+                      <>
+                        <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
+                          <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
+                            <p className="font-bold text-base">
+                              {tokenData?.data?.token?.name}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
+                          {shorten(tokenData?.data?.token?.address) ||
+                            "NOTAVALID.....ADDRESSS"}
+                          <Copy
+                            size="18"
+                            color="#98A2B3"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              copyToClipboard(
+                                tokenData?.data?.token?.address,
+                                () => toast.success(`Contract address copied`)
+                              );
+                            }}
+                          />
+                        </div>
+
+                        <section className="flex-1 overflow-y-auto mt-5 mx-4 flex flex-col gap-4 mb-20">
+                          <div className="w-full h-auto flex self-center items-center justify-center ">
+                            <div className="w-full bg-[inherit] min-h-[320px] border border-[#C3B1FF4D]">
+                              .
                             </div>
                           </div>
 
-                          <div className="flex flex-row gap-2 px-4 py-2 text-[#98A2B3] text-sm font-medium border-b border-[#C3B1FF1A]">
-                            {shorten(tokenData?.data?.token?.address) ||
-                              "NOTAVALID.....ADDRESSS"}
-                            <Copy
-                              size="18"
-                              color="#98A2B3"
-                              className="cursor-pointer"
-                              onClick={() => {
-                                copyToClipboard(
-                                  tokenData?.data?.token?.address,
-                                  () => toast.success(`Contract address copied`)
-                                );
-                              }}
-                            />
+                          <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
+                            <p className="text-[15px] font-bold">Statistics</p>
+
+                            <div className="grid grid-cols-2 text-sm font-normal">
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">Total supply</p>
+                                <p>xx xx</p>
+                              </div>
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">
+                                  Circulating Supply
+                                </p>
+                                <p>xx xx</p>
+                              </div>
+                            </div>
                           </div>
 
-                          <section className="flex-1 overflow-y-auto mt-5 mx-4 flex flex-col gap-4 mb-20">
-                            <div className="w-full h-auto flex self-center items-center justify-center ">
-                              <div className="w-full bg-[inherit] min-h-[320px] border border-[#C3B1FF4D]">
-                                .
+                          <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
+                            <p className="text-[15px] font-bold">
+                              Historical Data
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-y-3 text-sm font-normal">
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">24H High</p>
+                                <p>xx xx</p>
+                              </div>
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">24H Low</p>
+                                <p>xx xx</p>
+                              </div>
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">All Time High</p>
+                                <p>xx xx</p>
+                                <p>xx xx</p>
+                              </div>
+                              <div className="flex flex-col">
+                                <p className="text-[#98A2B3]">All Time Low</p>
+                                <p>xx xx</p>
+                                <p>xx xx</p>
                               </div>
                             </div>
+                          </div>
+                        </section>
+                      </>
+                    )}
 
-                            <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
-                              <p className="text-[15px] font-bold">
-                                Statistics
-                              </p>
+                    {activeTraderPage === "swap" && (
+                      <Swap
+                        handleButtonClick={() => setActiveTradePage("home")}
+                      />
+                    )}
 
-                              <div className="grid grid-cols-2 text-sm font-normal">
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">Total supply</p>
-                                  <p>xx xx</p>
-                                </div>
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">
-                                    Circulating Supply
-                                  </p>
-                                  <p>xx xx</p>
-                                </div>
-                              </div>
-                            </div>
+                    {activeTraderPage === "buy" && (
+                      <Buy
+                        handleButtonClick={() => setActiveTradePage("home")}
+                      />
+                    )}
 
-                            <div className="flex flex-col gap-2 border border-[#D6CBFF79] rounded-md px-3 py-4">
-                              <p className="text-[15px] font-bold">
-                                Historical Data
-                              </p>
+                    {activeTraderPage === "sell" && (
+                      <Sell
+                        handleButtonClick={() => setActiveTradePage("home")}
+                      />
+                    )}
 
-                              <div className="grid grid-cols-2 gap-y-3 text-sm font-normal">
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">24H High</p>
-                                  <p>xx xx</p>
-                                </div>
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">24H Low</p>
-                                  <p>xx xx</p>
-                                </div>
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">
-                                    All Time High
-                                  </p>
-                                  <p>xx xx</p>
-                                  <p>xx xx</p>
-                                </div>
-                                <div className="flex flex-col">
-                                  <p className="text-[#98A2B3]">All Time Low</p>
-                                  <p>xx xx</p>
-                                  <p>xx xx</p>
-                                </div>
-                              </div>
-                            </div>
-                          </section>
-                        </>
-                      )}
-
-                      {activeTraderPage === "swap" && (
-                        <Swap
-                          handleButtonClick={() => setActiveTradePage("home")}
-                        />
-                      )}
-
-                      {activeTraderPage === "buy" && (
-                        <Buy
-                          handleButtonClick={() => setActiveTradePage("home")}
-                        />
-                      )}
-
-                      {activeTraderPage === "sell" && (
-                        <Sell
-                          handleButtonClick={() => setActiveTradePage("home")}
-                        />
-                      )}
-
-                      <div className="z-10 fixed w-full max-w-[450px] bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
-                        <Button
-                          // onClick={() => setActiveTradePage("swap")}
-                          onClick={() => {}}
-                          className="bg-[#FFFFFF36] text-white"
-                        >
-                          Swap
-                        </Button>
-                        <Button
-                          onClick={() => setActiveTradePage("buy")}
-                          className="bg-[#40BF6A] text-white"
-                        >
-                          Buy
-                        </Button>
-                        <Button
-                          onClick={() => setActiveTradePage("sell")}
-                          className="bg-[#DF2040] text-white"
-                        >
-                          Sell
-                        </Button>
-                      </div>
-                    </main>
-                  )}
+                    <div className="z-10 fixed w-full max-w-[450px] bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
+                      <Button
+                        // onClick={() => setActiveTradePage("swap")}
+                        onClick={() => {}}
+                        className="bg-[#FFFFFF36] text-white"
+                      >
+                        Swap
+                      </Button>
+                      <Button
+                        onClick={() => setActiveTradePage("buy")}
+                        className="bg-[#40BF6A] text-white"
+                      >
+                        Buy
+                      </Button>
+                      <Button
+                        onClick={() => setActiveTradePage("sell")}
+                        className="bg-[#DF2040] text-white"
+                      >
+                        Sell
+                      </Button>
+                    </div>
+                  </main>
                 </>
               )}
             </section>

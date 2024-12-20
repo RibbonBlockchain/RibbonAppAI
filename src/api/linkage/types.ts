@@ -19,9 +19,9 @@ export type TCreateCelebrityLinkageBody = {
   phone: string;
   location: string;
   category: string;
-  image: string;
+  image?: string;
   instruction: string;
-  prompts: string;
+  prompts?: string;
   prompts1?: string;
   logo?: string;
   banner?: string;

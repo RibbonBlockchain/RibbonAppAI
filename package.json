@@ -72,6 +72,8 @@
     "react-popper": "^2.3.0",
     "react-query": "^3.39.3",
     "react-select": "^5.8.0",
+    "react-tweet": "^3.2.1",
+    "react-twitter-embed": "^4.0.4",
     "react-window": "^1.8.10",
     "recharts": "^2.12.7",
     "sass": "^1.71.1",

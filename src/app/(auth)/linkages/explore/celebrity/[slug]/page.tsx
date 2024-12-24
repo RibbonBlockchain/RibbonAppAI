@@ -453,7 +453,7 @@ const Influencer = () => {
 
               {activeTokenTab === "token-sale" && (
                 <>
-                  {createdToken ? (
+                  {tokenData?.data?.token?.holders ? (
                     <main className="mt-[36px] h-full text-white flex flex-col rounded-xl">
                       <div className="p-4 pt-6 pb-4 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
                         <div className="mt-2 flex flex-col justify-center gap-1 text-xs font-medium">
@@ -643,7 +643,8 @@ const Influencer = () => {
                         <div className="w-full flex flex-col gap-1 text-sm font-medium">
                           <p>
                             Bonding curve progress:{" "}
-                            {tokenData?.data?.token?.boundingCurve.toFixed(2)} %
+                            {tokenData?.data?.token?.boundingCurve?.toFixed(2)}{" "}
+                            %
                           </p>
 
                           <ProgressBar
@@ -664,24 +665,28 @@ const Influencer = () => {
                         </p> */}
                           </div>
 
-                          {tokenData?.data?.token?.holders.map((entry: any) => (
-                            <div
-                              key={entry.address}
-                              className="w-full flex flex-row items-center justify-between border-b pb-[2px] border-[#F2EEFF40]"
-                            >
-                              <div className="flex flex-row items-center gap-2">
-                                <p>{shorten(entry.address)}</p>
-                                <p>{entry.name}</p>
+                          {tokenData?.data?.token?.holders?.map(
+                            (entry: any) => (
+                              <div
+                                key={entry.address}
+                                className="w-full flex flex-row items-center justify-between border-b pb-[2px] border-[#F2EEFF40]"
+                              >
+                                <div className="flex flex-row items-center gap-2">
+                                  <p>{shorten(entry.address)}</p>
+                                  <p>{entry.name}</p>
+                                </div>
+                                <p>{entry.percentage.toFixed(2)} %</p>
                               </div>
-                              <p>{entry.percentage.toFixed(2)} %</p>
-                            </div>
-                          ))}
+                            )
+                          )}
                         </div>
                       </div>
                     </main>
                   ) : (
                     <main className="mt-20 px-4 h-full text-white flex flex-col rounded-xl">
-                      <p className=""> No token to show</p>
+                      <p className="">
+                        This token is no longer available for pre launch sale
+                      </p>
                     </main>
                   )}
                 </>

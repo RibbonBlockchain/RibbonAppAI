@@ -102,9 +102,7 @@ const CreateLinkage = () => {
         router.push("/linkages/create/train");
         toast.success("Linkage created");
       },
-      onError: (error) => {
-        toast.error("Failed to create linkage");
-      },
+      onError: (error) => {},
     });
   };
 

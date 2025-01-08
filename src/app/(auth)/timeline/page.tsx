@@ -41,26 +41,16 @@ const Timeline = () => {
           Tweets by RibbonProtocol
         </a>
 
-        <section className="flex flex-col gap-4 mt-5 mb-20">
-          <TwitterTimelineEmbed
-            sourceType="profile"
-            userId={"1029587508445630465"}
-            options={{ height: 500 }}
-            tweetLimit={10}
-          />
-
-          <TwitterTimelineEmbed
-            sourceType="profile"
-            screenName="dotex245"
-            options={{ height: 500 }}
-            tweetLimit={10}
-          />
+        <section className="flex flex-col gap-2 mt-5 mb-20">
           {/* <div className="space-y-4">
             {testData.map((data, index) => (
               <TimelineCard key={index} {...data} />
             ))}
           </div> */}
-          {/* <Tweet id="1628832338187636740" /> */}
+
+          <Tweet id="1783448062242816398" />
+
+          <Tweet id="1628832338187636740" />
         </section>
       </main>
     </AuthNavLayout>

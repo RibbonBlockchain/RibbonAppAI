@@ -21,6 +21,7 @@ import {
 } from "./types";
 import { signIn } from "next-auth/react";
 import { TResponse, client } from "../api-client";
+import axios from "axios";
 
 export const getAuth = async () => {
   const res = await client.get<TResponse<any>>("/auth");

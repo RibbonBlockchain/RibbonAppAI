@@ -29,7 +29,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/(auth)/contract/page.tsx",
-    "src/app/(auth)/personalize/basenames.tsx"
+    "src/app/(auth)/personalize/basenames.tsx",
+    "twscr/utils.js",
+    "twscr/index.js",
+    "src/app/(auth)/timeline/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

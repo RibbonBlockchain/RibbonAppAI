@@ -27,7 +27,7 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
 }) => {
   return (
     <Link href={`/timeline/${id}`}>
-      <div className="flex flex-row gap-3 py-5 border-b border-[#FFFFFF14]">
+      <div className="w-full flex flex-row gap-3 py-5 border-b border-[#FFFFFF14]">
         <Image
           src="/assets/ribbon.svg"
           alt="coin"
@@ -36,8 +36,8 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
           className="w-[32px] h-[32px] rounded-full bg-white p-[2px]"
         />
 
-        <div className="flex flex-col text-[15px] gap-2">
-          <div className="flex flex-row gap-2">
+        <div className="w-full flex flex-col text-[15px] gap-2">
+          <div className="flex flex-row gap-2 items-center justify-between">
             <p className="font-extrabold">{title}</p>
             <p className="font-medium text-[#FFFFFF80]">. {time}</p>
           </div>

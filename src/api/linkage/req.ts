@@ -425,3 +425,13 @@ export const sellTokenDex = async (body: {
   const res = await client.post("user/wallet/sell-token-dex", body);
   return res.data;
 };
+
+export const getLinkageTokenSupply = async ({ slug }: { slug: string }) => {
+  const res = await client.get(`linkage/slug/${slug}/token/supply`);
+  return res.data;
+};
+
+export const getLinkageTokenChartData = async ({ slug }: { slug: string }) => {
+  const res = await client.get(`linkage/slug/${slug}/token/chart`);
+  return res.data;
+};

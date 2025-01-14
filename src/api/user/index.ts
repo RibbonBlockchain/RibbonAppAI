@@ -15,6 +15,7 @@ import {
   TClaimUsdcBody,
   TUserOrderItemBody,
   TRespondBasedAgent,
+  TPostCommentBody,
 } from "./types";
 import {
   getTasks,
@@ -60,6 +61,10 @@ import {
   createUserToken,
   buyUserToken,
   sellUserToken,
+  getNotificationById,
+  postComment,
+  getNotificationComments,
+  likeNotification,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -108,16 +113,6 @@ export const useGetUserSesScore = () => {
   return useQuery({
     queryKey: ["user-ses"],
     queryFn: () => getUserSesScore(),
-  });
-};
-
-export const useGetUserNotifications = (
-  { enabled }: TGetResponse = { enabled: true }
-) => {
-  return useQuery({
-    enabled,
-    queryKey: ["notifications"],
-    queryFn: () => getUserNotifications(),
   });
 };
 
@@ -298,13 +293,6 @@ export const useGetUserActivityById = ({ id }: { id: string }) => {
   });
 };
 
-export const useReadNotification = () => {
-  return useMutation({
-    onError,
-    mutationFn: (body: TReadNotificationBody) => readNotification(body),
-  });
-};
-
 export const useClaimPoints = () => {
   return useMutation({
     onError,
@@ -400,6 +388,53 @@ export const useUserGetOnramp = () => {
   return useQuery({
     queryKey: ["user-onramp"],
     queryFn: () => userGetOnramp(),
+  });
+};
+
+// NOTIFICATIONS
+export const useGetUserNotifications = (
+  { enabled }: TGetResponse = { enabled: true }
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ["notifications"],
+    queryFn: () => getUserNotifications(),
+  });
+};
+
+export const useGetNotificationById = (id: string) => {
+  return useQuery({
+    queryKey: ["notification-id"],
+    queryFn: () => getNotificationById(id),
+  });
+};
+
+export const useGetNotificationComments = (id: string) => {
+  return useQuery({
+    queryKey: ["notification-comments"],
+    queryFn: () => getNotificationComments(id),
+  });
+};
+
+export const usePostComment = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body, id }: { body: TPostCommentBody; id: string }) =>
+      postComment({ body, id }),
+  });
+};
+
+export const useLikeNotification = () => {
+  return useMutation({
+    onError,
+    mutationFn: (id: string) => likeNotification(id),
+  });
+};
+
+export const useReadNotification = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TReadNotificationBody) => readNotification(body),
   });
 };
 

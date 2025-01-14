@@ -37,7 +37,7 @@ export const healthMenu = [
 export const financeMenu = [
   { name: "Money clubs", value: "money-clubs" },
   { name: "Lend", value: "lend" },
-  { name: "Borrow", value: "borrow" },
+  // { name: "Borrow", value: "borrow" },
 ];
 
 export const ecommerceMenu = [

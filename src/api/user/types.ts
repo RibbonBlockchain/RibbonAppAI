@@ -83,6 +83,10 @@ export type TBaseNameody = {
   name: string;
 };
 
+export type TPostCommentBody = {
+  comment: string;
+};
+
 // USER ORDERS
 interface Item {
   id: number;

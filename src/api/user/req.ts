@@ -15,6 +15,7 @@ import {
   TClaimUsdcBody,
   TUserOrderItemBody,
   TRespondBasedAgent,
+  TPostCommentBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -145,16 +146,6 @@ export const getUserActivityById = async (id: string) => {
   return res.data;
 };
 
-export const getUserNotifications = async () => {
-  const res = await client.get<TResponse<any>>("/user/notification");
-  return res.data.data;
-};
-
-export const readNotification = async (body: TReadNotificationBody) => {
-  const res = await client.post("/notification/read", body);
-  return res.data;
-};
-
 export const claimPoints = async (body: TClaimSwapPointsBody) => {
   const res = await client.post("/user/claim-point", body);
   return res.data;
@@ -223,6 +214,43 @@ export const userListTokens = async () => {
 export const userGetOnramp = async () => {
   const res = await client.get<TResponse<any>>("/user/onramp");
   return res.data.data;
+};
+
+// NOTIFICATIONS
+export const getUserNotifications = async () => {
+  const res = await client.get<TResponse<any>>("/user/notification");
+  return res.data.data;
+};
+
+export const getNotificationById = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/notification/${id}`);
+  return res.data.data;
+};
+
+export const getNotificationComments = async (id: string) => {
+  const res = await client.get<TResponse<any>>(`/notification/${id}/comments`);
+  return res.data.data;
+};
+
+export const postComment = async ({
+  body,
+  id,
+}: {
+  body: TPostCommentBody;
+  id: string;
+}) => {
+  const res = await client.post(`/notification/${id}/comments`, body);
+  return res.data;
+};
+
+export const readNotification = async (body: TReadNotificationBody) => {
+  const res = await client.post("/notification/read", body);
+  return res.data;
+};
+
+export const likeNotification = async (id: string) => {
+  const res = await client.post(`/notification/${id}/like`);
+  return res.data;
 };
 
 // USER ORDERS

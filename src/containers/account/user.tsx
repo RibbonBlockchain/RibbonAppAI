@@ -34,7 +34,7 @@ const User = () => {
             {user?.lastName}
           </p>
           <div className="lex flex-row gap-2 items-center justify-center text-base font-bold">
-            SES Score: {ses?.data}
+            credit Score: {ses?.data}
           </div>
         </div>
       </div>

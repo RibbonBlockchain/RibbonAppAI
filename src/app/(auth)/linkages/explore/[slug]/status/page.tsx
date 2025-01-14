@@ -28,6 +28,15 @@ const CreateStatus = () => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
 
+    // Ensure only image or video files are selected
+    if (
+      !selectedFile.type.startsWith("image") &&
+      !selectedFile.type.startsWith("video")
+    ) {
+      toast.error("Only image and video files are allowed!");
+      return;
+    }
+
     setFile(selectedFile);
     setFilePreview(URL.createObjectURL(selectedFile));
     setSelectedMedia(selectedFile);
@@ -87,16 +96,9 @@ const CreateStatus = () => {
 
       <form onSubmit={handleUpload} className="flex flex-col gap-4">
         {/* Conditionally Render Input for Media */}
-        <button
-          type="button"
-          onClick={handleRemoveFile}
-          className="w-[35px] h-[35px] self-end text-white rounded-full"
-        >
-          X
-        </button>
-
         {selectedMedia ? (
           <div className="relative">
+            {/* Preview the media */}
             {selectedMedia.type.startsWith("image") ? (
               <img
                 src={filePreview as string}
@@ -115,6 +117,15 @@ const CreateStatus = () => {
               </div>
             )}
 
+            {/* Remove File Button */}
+            <button
+              type="button"
+              onClick={handleRemoveFile}
+              className="absolute top-2 right-2 text-white rounded-full bg-black opacity-75 hover:opacity-100"
+            >
+              X
+            </button>
+
             {/* Caption Input for Media */}
             <input
               type="text"
@@ -132,7 +143,7 @@ const CreateStatus = () => {
             <input
               id="media-upload"
               type="file"
-              accept="*/*" // Accept all file types
+              accept="image/*,video/*" // Restrict to image and video files
               onChange={handleFileChange}
               className="hidden"
             />

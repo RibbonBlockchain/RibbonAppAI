@@ -1,8 +1,9 @@
-import React from "react";
+import Link from "next/link";
 import Image from "next/image";
+import React, { useState } from "react";
 import { Message } from "iconsax-react";
 import { Heart, Repeat } from "lucide-react";
-import Link from "next/link";
+import { useLikeNotification } from "@/api/user";
 
 interface TimelineCardProps {
   image: string | null;
@@ -25,9 +26,27 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
   shares,
   id,
 }) => {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const { mutate } = useLikeNotification();
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsLiked(!isLiked);
+
+    mutate(id as string, {
+      onSuccess: () => {
+        console.log("Liked a notification");
+      },
+    });
+  };
+
   return (
-    <Link href={`/timeline/${id}`}>
-      <div className="w-full flex flex-row gap-3 py-5 border-b border-[#FFFFFF14]">
+    <div className="border-b border-[#FFFFFF14] pb-4">
+      <Link
+        href={`/timeline/${id}`}
+        className="w-full flex flex-row gap-3 py-3"
+      >
         <Image
           src="/assets/ribbon.svg"
           alt="coin"
@@ -55,83 +74,40 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
           )}
 
           <h3 className="font-normal">{description}</h3>
+        </div>
+      </Link>
 
-          <div className="flex flex-row items-center justify-between text-[#FFFFFF80] text-[10px] font-semibold">
-            <div className="flex flex-row gap-1.5 items-center">
-              <Message size={18} width={18} height={18} fill="#FFFFFF80" />{" "}
-              {comments}
-            </div>
-            <div className="flex flex-row gap-1.5 items-center">
-              <Heart size={18} width={18} height={18} fill="#FFFFFF80" />{" "}
-              {likes}
-            </div>
-            <div className="flex flex-row gap-1.5 items-center">
-              <Repeat size={18} width={18} height={18} fill="#FFFFFF80" />{" "}
-              {shares}
-            </div>
-          </div>
+      <div className="flex flex-row items-center px-10 justify-between text-[#FFFFFF80] text-[11px] font-semibold">
+        <Link
+          href={`/timeline/${id}`}
+          className="flex flex-row gap-1.5 items-center justify-center"
+        >
+          <Message size={18} width={18} height={18} fill="#FFFFFF80" />{" "}
+          {comments}
+        </Link>
+
+        <div
+          className="flex flex-row gap-1.5 items-center justify-center"
+          onClick={handleLikeClick}
+        >
+          <Heart
+            size={18}
+            width={18}
+            height={18}
+            fill={isLiked ? "red" : "#0B0228"}
+          />
+          {likes}
+        </div>
+
+        <div
+          className="flex flex-row gap-1.5 items-center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Repeat size={18} width={18} height={18} fill="#0B0228" /> {shares}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
 export default TimelineCard;
-
-export const testData: TimelineCardProps[] = [
-  {
-    image: "/assets/ribbon.svg",
-    title: "Ribbon 1",
-    time: "3h",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Varius aliquet urna eget sed in eget.",
-    comments: "5.7k",
-    likes: "5.7k",
-    shares: "5.7k",
-    id: 1,
-  },
-  {
-    image: null,
-    title: "Ribbon 2",
-    time: "1d",
-    description:
-      "Adipiscing id nec in sed aliquet. Nunc etiam ut dui justo egestas maecenas.",
-    comments: "4.2k",
-    likes: "4.2k",
-    shares: "4.2k",
-    id: 2,
-  },
-  {
-    image: "/assets/ribbon.svg",
-    title: "Ribbon 3",
-    time: "5h",
-    description:
-      "Dolor ac sed arcu sed tristique dictum. Nisi tellus gravida tellus dui lectus dignissim.",
-    comments: "3.1k",
-    likes: "3.1k",
-    shares: "3.1k",
-    id: 3,
-  },
-  {
-    image: "/assets/ribbon.svg",
-    title: "Ribbon 4",
-    time: "2d",
-    description:
-      "Velit id imperdiet non. Donec tempor ante ac tincidunt tincidunt.",
-    comments: "6.5k",
-    likes: "6.5k",
-    shares: "6.5k",
-    id: 4,
-  },
-  {
-    image: null,
-    title: "Ribbon 5",
-    time: "10h",
-    description:
-      "Sed at sollicitudin nisi. Quisque suscipit urna et leo egestas.",
-    comments: "2.3k",
-    likes: "2.3k",
-    shares: "2.3k",
-    id: 5,
-  },
-];

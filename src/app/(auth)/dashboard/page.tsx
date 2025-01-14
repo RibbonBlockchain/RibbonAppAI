@@ -26,6 +26,8 @@ import { serviceList } from "@/components/store/store-component";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
+import { ArrowRight, ArrowRight2, Money3 } from "iconsax-react";
+import Lend from "./lend/lend";
 
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
@@ -298,7 +300,7 @@ const Dashboard = () => {
 
         {selectedCategoryTab === "finance" && (
           <div className="mt-4">
-            <div className="flex flex-row items-start justify-start gap-3 border-b border-[#F2EEFF40] w-full overflow-x-auto scroll-hidden">
+            <div className="flex flex-row items-start justify-around gap-3 border-b border-[#F2EEFF40] w-full overflow-x-auto scroll-hidden">
               {financeMenu.map((tab) => (
                 <button
                   key={tab.value}
@@ -319,11 +321,7 @@ const Dashboard = () => {
                 <div>No money club entry at the moment</div>
               )}
 
-              {activeMenu === "lend" && <div>No lend entry at the moment</div>}
-
-              {activeMenu === "borrow" && (
-                <div>No borrow entry at the moment</div>
-              )}
+              {activeMenu === "lend" && <Lend />}
             </div>
           </div>
         )}

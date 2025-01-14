@@ -116,7 +116,7 @@ const OrganizationDetails = () => {
             <p className="text-lg font-semibold">
               {user?.firstName || "Ribbon"} {user?.lastName || "Protocol"}
             </p>
-            <p>SES Score: {SES_Score}</p>
+            <p>Credit Score: {SES_Score}</p>
 
             <p>Balance: {user?.wallet.balance.toFixed(2)} WLD</p>
           </div>

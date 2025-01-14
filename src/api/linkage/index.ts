@@ -47,6 +47,8 @@ import {
   sellTokenDex,
   buyTokenDex,
   getLinkageTokenBySlug,
+  getLinkageTokenSupply,
+  getLinkageTokenChartData,
 } from "./req";
 import {
   TAddLinkageStoreItemBody,
@@ -557,5 +559,19 @@ export const useSellTokenDex = () => {
     onError,
     mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
       sellTokenDex(body),
+  });
+};
+
+export const useGetLinkageTokenSupply = (slug: string) => {
+  return useQuery({
+    queryKey: ["linkage-token-supply"],
+    queryFn: () => getLinkageTokenSupply({ slug }),
+  });
+};
+
+export const useGetLinkageTokenChartData = (slug: string) => {
+  return useQuery({
+    queryKey: ["linkage-token-chart"],
+    queryFn: () => getLinkageTokenChartData({ slug }),
   });
 };

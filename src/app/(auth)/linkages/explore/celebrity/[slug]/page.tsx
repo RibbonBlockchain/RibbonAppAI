@@ -12,6 +12,8 @@ import {
   useGetLinkageBySlug,
   useGetLinkageQuestionnaire,
   useGetLinkageTokenBySlug,
+  useGetLinkageTokenChartData,
+  useGetLinkageTokenSupply,
 } from "@/api/linkage";
 import { shorten } from "@/lib/utils/shorten";
 import { alternatePrompts } from "@/lib/values/prompts";
@@ -89,6 +91,9 @@ const Influencer = () => {
       setAmount(newAmount);
     }
   };
+
+  const { data: tokenSupplyData } = useGetLinkageTokenSupply(slug);
+  const { data: tokenChartData } = useGetLinkageTokenChartData(slug);
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -734,13 +739,15 @@ const Influencer = () => {
                             <div className="grid grid-cols-2 text-sm font-normal">
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">Total supply</p>
-                                <p>xx xx</p>
+                                {/* <p>{tokenSupplyData?.data.totalSupply}</p> */}
+                                <p>xxx</p>
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">
                                   Circulating Supply
                                 </p>
-                                <p>xx xx</p>
+                                <p>xxx</p>
+                                {/* <p>{tokenSupplyData?.data.circulatingSupply}</p> */}
                               </div>
                             </div>
                           </div>

@@ -18,11 +18,14 @@ import toast from "react-hot-toast";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 import { useGetAuth } from "@/api/auth";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import ShareTimeline from "@/components/share-modal";
 
 const TimelineDetail = () => {
   const router = useRouter();
   const params = useParams();
   const { id } = params;
+
+  const [openShareModal, setOpenShareModal] = useState(false);
 
   const { data: userData } = useGetAuth();
   const { data, refetch, isLoading } = useGetNotificationById(id as string);
@@ -148,12 +151,25 @@ const TimelineDetail = () => {
                   />
                   {data?.data.likes.length}
                 </div>
-                <div className="flex flex-row gap-1.5 items-center">
+                <div
+                  onClick={() => setOpenShareModal(true)}
+                  className="flex flex-row gap-1.5 items-center"
+                >
                   <Repeat size={18} width={18} height={18} />{" "}
                 </div>
               </div>
             </div>
           </div>
+
+          {openShareModal && (
+            <ShareTimeline
+              isOpen={openShareModal}
+              closeModal={() => setOpenShareModal(false)}
+              inviteLink={""}
+              title={""}
+              note={""}
+            />
+          )}
 
           <div className="space-y-4">
             {getComments?.data.length === 0 ? (
@@ -181,8 +197,11 @@ const TimelineDetail = () => {
         </section>
       )}
 
-      <div className="fixed bottom-0 left-0 w-full px-4 py-2 bg-[#1E1C2D] border-t border-[#FFFFFF14]">
-        <form onSubmit={handleCommentSubmit} className="flex flex-row gap-2">
+      <div className="fixed max-w-[500px] left-0 right-0 bottom-0 mx-auto px-4 py-2 bg-[#1E1C2D] border-t border-[#FFFFFF14]">
+        <form
+          onSubmit={handleCommentSubmit}
+          className="flex flex-row gap-2 mx-auto w-full"
+        >
           <input
             type="text"
             placeholder="Add a comment..."

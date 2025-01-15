@@ -65,6 +65,10 @@ import {
   postComment,
   getNotificationComments,
   likeNotification,
+  supplyAssets,
+  withdrawAssets,
+  borrowAssets,
+  repayAssets,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -487,5 +491,34 @@ export const useSellUserToken = () => {
     onError,
     mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
       sellUserToken(body),
+  });
+};
+
+// LEND and BORROW
+export const useSupplyAssets = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any }) => supplyAssets(body),
+  });
+};
+
+export const useWithdrawAssets = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any }) => withdrawAssets(body),
+  });
+};
+
+export const useBorrowAssets = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any }) => borrowAssets(body),
+  });
+};
+
+export const useRepayAssets = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any }) => repayAssets(body),
   });
 };

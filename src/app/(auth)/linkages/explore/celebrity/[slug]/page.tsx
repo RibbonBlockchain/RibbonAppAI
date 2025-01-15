@@ -30,6 +30,17 @@ import { SpinnerIconPurple } from "@/components/icons/spinner";
 import { editTokenName } from "@/lib/utils/capitalizeLetters";
 import SlippageModal from "@/components/slippage-slider";
 import ProgressBar from "@ramonak/react-progress-bar";
+import { formatNumberWithCommas } from "@/lib/values/format-number";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -94,6 +105,66 @@ const Influencer = () => {
 
   const { data: tokenSupplyData } = useGetLinkageTokenSupply(slug);
   const { data: tokenChartData } = useGetLinkageTokenChartData(slug);
+
+  const transformedData = tokenChartData?.data.data.map((item: any) => ({
+    time: new Date(item.time * 1000).toLocaleString(),
+    value: item.value.toFixed(12),
+  }));
+
+  const [highestValue, setHighestValue] = useState<number | null>(null);
+  const [lowestValue, setLowestValue] = useState<number | null>(null);
+  const [highestTime, setHighestTime] = useState<string | null>(null);
+  const [lowestTime, setLowestTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if data is available and transform it
+    if (tokenChartData?.data?.data && tokenChartData.data.data.length > 0) {
+      const transformedData = tokenChartData.data.data.map((item: any) => ({
+        time: new Date(item.time * 1000).toLocaleString(), // Convert Unix timestamp to readable time
+        value: item.value.toFixed(12), // Format value to 12 decimal places
+      }));
+
+      // Extract values and times
+      const values = transformedData.map((item: any) => item.value);
+      const times = transformedData.map((item: any) => item.time);
+
+      // Find the index of the highest and lowest values
+      const highestIndex = values.indexOf(Math.max(...values).toFixed(12));
+      const lowestIndex = values.indexOf(Math.min(...values).toFixed(12));
+
+      // Set the highest and lowest values and their corresponding times
+      setHighestValue(values[highestIndex]);
+      setLowestValue(values[lowestIndex]);
+      setHighestTime(times[highestIndex]); // Corresponding time of highest value
+      setLowestTime(times[lowestIndex]); // Corresponding time of lowest value
+    }
+  }, [tokenChartData]);
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const { time, value } = payload[0].payload;
+      return (
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "12px",
+            color: "black",
+            fontSize: "12px",
+          }}
+        >
+          <p>
+            <strong>Time:</strong> {time}
+          </p>
+          <p>
+            <strong>Price:</strong> {value}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   const { data, isLoading, isError } = useGetLinkageBySlug(slug);
   const { mutateAsync } = useChatLinkage();
@@ -728,8 +799,21 @@ const Influencer = () => {
 
                         <section className="flex-1 overflow-y-auto mt-5 mx-4 flex flex-col gap-4 mb-20">
                           <div className="w-full h-auto flex self-center items-center justify-center ">
-                            <div className="w-full bg-[inherit] min-h-[320px] border border-[#C3B1FF4D]">
-                              .
+                            <div className="w-full text-[13px] bg-[inherit] min-h-[320px]">
+                              <ResponsiveContainer width="100%" height={400}>
+                                <LineChart data={transformedData}>
+                                  <CartesianGrid strokeDasharray="1 1" />
+                                  <XAxis dataKey="time" />
+                                  <Tooltip content={<CustomTooltip />} />
+                                  {/* <Legend /> */}
+                                  <Line
+                                    type="monotone"
+                                    dataKey="value"
+                                    stroke="#8884d8"
+                                    activeDot={{ r: 8 }}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
                             </div>
                           </div>
 
@@ -739,15 +823,31 @@ const Influencer = () => {
                             <div className="grid grid-cols-2 text-sm font-normal">
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">Total supply</p>
-                                {/* <p>{tokenSupplyData?.data.totalSupply}</p> */}
-                                <p>xxx</p>
+                                <p>
+                                  {formatNumberWithCommas(
+                                    parseFloat(
+                                      (
+                                        tokenSupplyData?.data.totalSupply /
+                                        Math.pow(10, 16)
+                                      ).toFixed(2)
+                                    )
+                                  )}
+                                </p>
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">
                                   Circulating Supply
                                 </p>
-                                <p>xxx</p>
-                                {/* <p>{tokenSupplyData?.data.circulatingSupply}</p> */}
+                                <p>
+                                  {formatNumberWithCommas(
+                                    parseFloat(
+                                      (
+                                        tokenSupplyData?.data
+                                          .circulatingSupply / Math.pow(10, 16)
+                                      ).toFixed(2)
+                                    )
+                                  )}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -760,21 +860,21 @@ const Influencer = () => {
                             <div className="grid grid-cols-2 gap-y-3 text-sm font-normal">
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">24H High</p>
-                                <p>xx xx</p>
+                                <p>{highestValue}</p>
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">24H Low</p>
-                                <p>xx xx</p>
+                                <p>{lowestValue}</p>
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">All Time High</p>
-                                <p>xx xx</p>
-                                <p>xx xx</p>
+                                <p>{highestValue}</p>
+                                <p>{highestTime}</p>
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-[#98A2B3]">All Time Low</p>
-                                <p>xx xx</p>
-                                <p>xx xx</p>
+                                <p>{lowestValue}</p>
+                                <p>{lowestTime}</p>
                               </div>
                             </div>
                           </div>

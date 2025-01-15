@@ -28,6 +28,7 @@ import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import { ArrowRight, ArrowRight2, Money3 } from "iconsax-react";
 import Lend from "./lend/lend";
+import Borrow from "./lend/borrow";
 
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
@@ -55,7 +56,7 @@ const Dashboard = () => {
     if (selectedCategoryTab === "health") {
       setDisplayMenu("questionnaires");
     } else if (selectedCategoryTab === "finance") {
-      setDisplayMenu("money-clubs");
+      setDisplayMenu("borrow");
     } else {
       setDisplayMenu("shop");
     }
@@ -317,11 +318,13 @@ const Dashboard = () => {
             </div>
 
             <div className="pt-4 mb-16 text-sm bg-[#0B0228]">
+              {activeMenu === "lend" && <Lend />}
+
+              {activeMenu === "borrow" && <Borrow />}
+
               {activeMenu === "money-clubs" && (
                 <div>No money club entry at the moment</div>
               )}
-
-              {activeMenu === "lend" && <Lend />}
             </div>
           </div>
         )}

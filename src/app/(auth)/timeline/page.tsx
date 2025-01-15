@@ -35,8 +35,8 @@ const TimelineComponent = () => {
                   image={null}
                   time={formatDateAndTimeAgo(i.createdAt).relativeTime}
                   description={i.message}
-                  comments={"0"}
-                  likes={"0"}
+                  comments={i.comments.length}
+                  likes={i.likes.length}
                   shares={""}
                   id={i.id}
                 />

@@ -3,27 +3,22 @@ import Image from "next/image";
 import { ArrowRight2 } from "iconsax-react";
 import LendModal from "./lend-modal";
 import toast from "react-hot-toast";
-import {
-  useBorrowAssets,
-  useRepayAssets,
-  useSupplyAssets,
-  useWithdrawAssets,
-} from "@/api/user";
+import { useBorrowAssets, useRepayAssets } from "@/api/user";
 
-const Lend = () => {
+const Borrow = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({
     title: "",
     placeholder: "",
   });
-  const [modalAction, setModalAction] = useState<"supply" | "withdraw" | null>(
+  const [modalAction, setModalAction] = useState<"borrow" | "repay" | null>(
     null
   );
 
   const openModal = (
     title: string,
     placeholder: string,
-    action: "supply" | "withdraw"
+    action: "borrow" | "repay"
   ) => {
     setModalContent({ title, placeholder });
     setModalAction(action);
@@ -34,35 +29,31 @@ const Lend = () => {
     setIsModalOpen(false);
   };
 
-  const { mutate: supplyAssets, isPending: supplyPending } = useSupplyAssets();
-  const { mutate: withdrawAssets, isPending: withdrawPending } =
-    useWithdrawAssets();
+  const { mutate: borrowAssets, isPending: borrowPending } = useBorrowAssets();
+  const { mutate: repayAssets, isPending: repayPending } = useRepayAssets();
 
   const handleModalSubmit = (inputValue: string) => {
-    if (modalAction === "supply") {
-      supplyAssets(
+    if (modalAction === "borrow") {
+      borrowAssets(
         { amount: inputValue },
         {
           onSuccess: () => {
-            toast.success(`Supply: ${inputValue} USDC supplied successfully`);
+            toast.success(`Borrow: You borrowed ${inputValue} USDC`);
             closeModal();
           },
         }
       );
-    } else if (modalAction === "withdraw") {
-      withdrawAssets(
+    } else if (modalAction === "repay") {
+      repayAssets(
         { amount: inputValue },
         {
           onSuccess: () => {
-            toast.success(`Withdraw: ${inputValue} USDC withdrawal successful`);
+            toast.success(`Repay: You have repayed ${inputValue} USDC`);
             closeModal();
           },
         }
       );
     }
-
-    // Close modal after submit
-    setIsModalOpen(false);
   };
 
   return (
@@ -91,10 +82,10 @@ const Lend = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Supply assets */}
+        {/* Borrow assets */}
         <div
           onClick={() =>
-            openModal("Supply Assets", "Amount to supply (USDC).", "supply")
+            openModal("Borrow Assets", "Amount to borrow (USDC).", "borrow")
           }
           className="flex flex-row items-center justify-between py-2 cursor-pointer"
         >
@@ -103,22 +94,18 @@ const Lend = () => {
               alt="coin"
               width={24}
               height={24}
-              src="/assets/money-send.svg"
+              src="/assets/coin-hand.svg"
               className="w-[24px] h-[24px] rounded-full"
             />
-            Supply assets
+            Borrow assets
           </div>
           <ArrowRight2 />
         </div>
 
-        {/* Withdraw assets */}
+        {/* Repay assets */}
         <div
           onClick={() =>
-            openModal(
-              "Withdraw Assets",
-              "Amount to withdraw (USDC).",
-              "withdraw"
-            )
+            openModal("Repay Assets", "Amount to repay (USDC).", "repay")
           }
           className="flex flex-row items-center justify-between py-2 cursor-pointer"
         >
@@ -127,10 +114,10 @@ const Lend = () => {
               alt="coin"
               width={24}
               height={24}
-              src="/assets/money-recive.svg"
+              src="/assets/convert-card.svg"
               className="w-[24px] h-[24px] rounded-full"
             />
-            Withdraw assets
+            Repay assets
           </div>
           <ArrowRight2 />
         </div>
@@ -144,11 +131,11 @@ const Lend = () => {
           onSubmit={handleModalSubmit}
           placeholder={modalContent.placeholder}
           description={""}
-          isPending={supplyPending || withdrawPending}
+          isPending={borrowPending || repayPending}
         />
       )}
     </div>
   );
 };
 
-export default Lend;
+export default Borrow;

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Message } from "iconsax-react";
 import { Heart, Repeat } from "lucide-react";
 import { useLikeNotification } from "@/api/user";
+import ShareTimeline from "./share-modal";
 
 interface TimelineCardProps {
   image: string | null;
@@ -27,7 +28,7 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
   id,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate } = useLikeNotification();
 
   const handleLikeClick = (e: React.MouseEvent) => {
@@ -39,6 +40,15 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
         console.log("Liked a notification");
       },
     });
+  };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -101,11 +111,21 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
 
         <div
           className="flex flex-row gap-1.5 items-center"
-          onClick={(e) => e.stopPropagation()}
+          onClick={handleShareClick}
         >
           <Repeat size={18} width={18} height={18} fill="#0B0228" /> {shares}
         </div>
       </div>
+
+      {isModalOpen && (
+        <ShareTimeline
+          isOpen={isModalOpen}
+          closeModal={handleCloseModal}
+          inviteLink={`/timeline/${id}`}
+          title={title}
+          note={`Check out this update on our web app!`}
+        />
+      )}
     </div>
   );
 };

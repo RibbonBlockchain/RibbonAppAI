@@ -295,3 +295,24 @@ export const sellUserToken = async (body: {
   const res = await client.post("user/wallet/sell-token", body);
   return res.data;
 };
+
+// LEND and BORROW
+export const supplyAssets = async (body: { amount: any }) => {
+  const res = await client.post("user/wallet/supply-asset", body);
+  return res.data;
+};
+
+export const withdrawAssets = async (body: { amount: any }) => {
+  const res = await client.post("user/wallet/withdraw-asset", body);
+  return res.data;
+};
+
+export const borrowAssets = async (body: { amount: any }) => {
+  const res = await client.post("user/wallet/borrow-asset", body);
+  return res.data;
+};
+
+export const repayAssets = async (body: { amount: any }) => {
+  const res = await client.post("user/wallet/repay-asset", body);
+  return res.data;
+};

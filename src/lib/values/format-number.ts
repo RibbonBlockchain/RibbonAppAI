@@ -23,3 +23,10 @@ export const formatNumberWithCommas = (num: number): string => {
     ? `${formattedInteger}.${decimal} ${unit}`
     : `${formattedInteger} ${unit}`;
 };
+
+export const formatNumbersByCommas = (num: number): string => {
+  const formattedNumber = num.toFixed(2);
+  const [integer, decimal] = formattedNumber.split(".");
+  const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return decimal ? `${formattedInteger}.${decimal}` : `${formattedInteger}`;
+};

@@ -82,16 +82,20 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
   };
 
   const handleSellToken = () => {
+    const amountInWei = (
+      BigInt(amount) * BigInt(1000000000000000000)
+    ).toString();
+
     sellToken(
       {
-        amount: Number(amount),
+        amount: amountInWei,
         token: tokenData?.data?.token?.address,
         slippage,
       },
       {
         onSuccess: () => {
           refetch();
-          toast.success(`You sold ${amount}${tokenData?.data?.token?.name}`);
+          toast.success(`You sold ${amount} ${tokenData?.data?.token?.name}`);
           setAmount("");
         },
       }
@@ -117,7 +121,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
         <>
           <div className="flex flex-col gap-8 w-full mt-10">
             <p className="text-xs  -mt-6 -mb-4">
-              You can sell a minimum of 100 {tokenData?.data?.token?.name}
+              {/* You can sell a minimum of 100 {tokenData?.data?.token?.name} */}
             </p>
             <div className="w-full flex flex-row items-center gap-2 relative">
               <input
@@ -136,8 +140,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                   alt="logo"
                   width={20}
                   height={20}
-                  // src={tokenData?.data?.token?.logo}
-                  src={""}
+                  src={tokenData?.data?.token?.logo || ""}
                 />
               </div>
             </div>
@@ -235,8 +238,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
                     alt="logo"
                     width={20}
                     height={20}
-                    // src={tokenData?.data?.token?.logo}
-                    src={""}
+                    src={tokenData?.data?.token?.logo || ""}
                   />
                 </div>
               </div>

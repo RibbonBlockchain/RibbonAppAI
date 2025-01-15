@@ -28,6 +28,7 @@ import WithdrawUSDCToken from "@/containers/wallet/withdraw-token";
 import { useEthCoinDetails, useUsdcCoinDetails } from "@/lib/values/priceAPI";
 import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowUp, X } from "lucide-react";
 import TransactionHistory from "@/containers/manage-linkage/transaction-history";
+import { formatNumbersByCommas } from "@/lib/values/format-number";
 
 const MainWallet = () => {
   const router = useRouter();
@@ -357,9 +358,9 @@ const MainWallet = () => {
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <p className="text-[12px] font-medium">
-                        {(
+                        {formatNumbersByCommas(
                           Number(token.tokenBalance) / Math.pow(10, 18)
-                        ).toFixed(2)}{" "}
+                        )}
                         {token.name.toUpperCase()}
                       </p>
                       <p className="text-sm font-bold">

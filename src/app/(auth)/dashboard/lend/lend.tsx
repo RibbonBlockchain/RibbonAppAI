@@ -3,12 +3,7 @@ import Image from "next/image";
 import { ArrowRight2 } from "iconsax-react";
 import LendModal from "./lend-modal";
 import toast from "react-hot-toast";
-import {
-  useBorrowAssets,
-  useRepayAssets,
-  useSupplyAssets,
-  useWithdrawAssets,
-} from "@/api/user";
+import { useSupplyAssets, useWithdrawAssets } from "@/api/user";
 
 const Lend = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,9 +55,6 @@ const Lend = () => {
         }
       );
     }
-
-    // Close modal after submit
-    setIsModalOpen(false);
   };
 
   return (

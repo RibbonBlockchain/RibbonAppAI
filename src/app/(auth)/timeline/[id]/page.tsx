@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Heart, Repeat } from "lucide-react";
 import { ArrowLeft2, Message, Send } from "iconsax-react";
@@ -19,6 +19,8 @@ import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 import { useGetAuth } from "@/api/auth";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import ShareTimeline from "@/components/share-modal";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 const TimelineDetail = () => {
   const router = useRouter();
@@ -56,10 +58,38 @@ const TimelineDetail = () => {
 
   const { mutate: postComment } = usePostComment();
   const [comment, setComment] = useState<string>("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setComment(comment + emoji.native);
+  };
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,17 +227,20 @@ const TimelineDetail = () => {
         </section>
       )}
 
-      <div className="fixed max-w-[500px] left-0 right-0 bottom-0 mx-auto px-4 py-2 bg-[#1E1C2D] border-t border-[#FFFFFF14]">
+      <div
+        ref={emojiPickerRef}
+        className="fixed max-w-[500px] left-0 right-0 bottom-0 mx-auto px-4 py-2"
+      >
         <form
           onSubmit={handleCommentSubmit}
-          className="flex flex-row gap-2 mx-auto w-full"
+          className="flex flex-row gap-1 mx-auto w-full"
         >
           <input
             type="text"
             placeholder="Add a comment..."
             value={comment}
             onChange={handleCommentChange}
-            className="w-full p-3 rounded-md bg-[#1E1C2D] text-white placeholder-[#ffffff80] border border-[#FFFFFF14] focus:outline-none"
+            className="w-full p-2.5 rounded-md bg-[#1E1C2D] text-white placeholder-[#ffffff80] border border-[#FFFFFF14] focus:outline-none"
           />
           <button
             type="submit"
@@ -215,7 +248,21 @@ const TimelineDetail = () => {
           >
             <Send size={24} />
           </button>
+
+          <button
+            type="button"
+            onClick={toggleEmojiPicker}
+            className="px-3 bg-[#290064] text-white rounded-full hover:bg-[#380085] flex items-center justify-center"
+          >
+            😊
+          </button>
         </form>
+
+        {showEmojiPicker && (
+          <div className="absolute bottom-16 left-0 right-0 mx-auto">
+            <Picker onEmojiSelect={handleEmojiSelect} />
+          </div>
+        )}
       </div>
     </main>
   );

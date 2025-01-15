@@ -123,7 +123,6 @@ const Borrow = () => {
         </div>
       </div>
 
-      {/* Conditionally render Modal */}
       {isModalOpen && (
         <LendModal
           title={modalContent.title}

@@ -41,6 +41,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import clsx from "clsx";
 
 const influencerStoreData = [
   { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
@@ -92,6 +93,7 @@ const Influencer = () => {
 
   const [activeTokenTab, setActiveTokenTab] = useState<string>("token-sale");
   const [activeTraderPage, setActiveTradePage] = useState<string>("home");
+  const [hideButtons, setHideButtons] = useState(false);
 
   const [amount, setAmount] = useState<number | string>("");
 
@@ -890,17 +892,26 @@ const Influencer = () => {
 
                     {activeTraderPage === "buy" && (
                       <Buy
-                        handleButtonClick={() => setActiveTradePage("home")}
+                        handleButtonClick={() => {
+                          setActiveTradePage("home"), setHideButtons(false);
+                        }}
                       />
                     )}
 
                     {activeTraderPage === "sell" && (
                       <Sell
-                        handleButtonClick={() => setActiveTradePage("home")}
+                        handleButtonClick={() => {
+                          setActiveTradePage("home"), setHideButtons(false);
+                        }}
                       />
                     )}
 
-                    <div className="z-10 fixed w-full max-w-[450px] bottom-0 bg-[#251F2E] py-3 flex gap-4 mt-6 px-4 ">
+                    <div
+                      className={clsx(
+                        "z-10 fixed w-full max-w-[450px] bottom-0 bg-[#251F2E] py-3 gap-4 mt-6 px-4",
+                        hideButtons ? "hidden" : "flex"
+                      )}
+                    >
                       <Button
                         // onClick={() => setActiveTradePage("swap")}
                         onClick={() => {}}
@@ -909,13 +920,17 @@ const Influencer = () => {
                         Swap
                       </Button>
                       <Button
-                        onClick={() => setActiveTradePage("buy")}
+                        onClick={() => {
+                          setActiveTradePage("buy"), setHideButtons(true);
+                        }}
                         className="bg-[#40BF6A] text-white"
                       >
                         Buy
                       </Button>
                       <Button
-                        onClick={() => setActiveTradePage("sell")}
+                        onClick={() => {
+                          setActiveTradePage("sell"), setHideButtons(true);
+                        }}
                         className="bg-[#DF2040] text-white"
                       >
                         Sell

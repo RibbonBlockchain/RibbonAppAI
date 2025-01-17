@@ -69,6 +69,7 @@ import {
   withdrawAssets,
   borrowAssets,
   repayAssets,
+  getLendBorrowStats,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -520,5 +521,12 @@ export const useRepayAssets = () => {
   return useMutation({
     onError,
     mutationFn: (body: { amount: any }) => repayAssets(body),
+  });
+};
+
+export const useGetLendBorrowStats = () => {
+  return useQuery({
+    queryKey: ["lendborrow-stats"],
+    queryFn: () => getLendBorrowStats(),
   });
 };

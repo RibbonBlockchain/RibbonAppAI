@@ -3,7 +3,11 @@ import Image from "next/image";
 import { ArrowRight2 } from "iconsax-react";
 import LendModal from "./lend-modal";
 import toast from "react-hot-toast";
-import { useBorrowAssets, useRepayAssets } from "@/api/user";
+import {
+  useBorrowAssets,
+  useGetLendBorrowStats,
+  useRepayAssets,
+} from "@/api/user";
 
 const Borrow = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +32,8 @@ const Borrow = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const { data } = useGetLendBorrowStats();
 
   const { mutate: borrowAssets, isPending: borrowPending } = useBorrowAssets();
   const { mutate: repayAssets, isPending: repayPending } = useRepayAssets();
@@ -68,15 +74,15 @@ const Borrow = () => {
         <div className="flex flex-col gap-1 text-sm font-normal text-[#FFFFFF]">
           <div className="flex flex-row gap-5">
             <p className="w-[135px]">Total supplied:</p>
-            <span>xx.xx USDC</span>
+            <span>{data?.data?.totalDeposited} USDC</span>
           </div>
           <div className="flex flex-row gap-5">
             <p className="w-[135px]">Total borrowed:</p>
-            <span>xx.xx USDC</span>
+            <span>{data?.data?.totalDebtBase} USDC</span>
           </div>
           <div className="flex flex-row gap-5">
             <p className="w-[135px]">Available to borrow:</p>
-            <span>xx.xx USDC</span>
+            <span>{data?.data?.availableBorrowsBase} USDC</span>
           </div>
         </div>
       </div>

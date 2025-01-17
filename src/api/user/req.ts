@@ -316,3 +316,8 @@ export const repayAssets = async (body: { amount: any }) => {
   const res = await client.post("user/wallet/repay-asset", body);
   return res.data;
 };
+
+export const getLendBorrowStats = async () => {
+  const res = await client.get<any>("/user/wallet/lend-borrow-stats");
+  return res.data;
+};

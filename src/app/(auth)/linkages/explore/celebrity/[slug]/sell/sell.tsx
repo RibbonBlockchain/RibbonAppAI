@@ -88,7 +88,7 @@ const Sell = ({ handleButtonClick }: { handleButtonClick: () => void }) => {
 
     sellToken(
       {
-        amount: amountInWei,
+        amount: "99900000000000000000000",
         token: tokenData?.data?.token?.address,
         slippage,
       },

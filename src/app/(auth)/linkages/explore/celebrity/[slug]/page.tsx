@@ -830,7 +830,7 @@ const Influencer = () => {
                                     parseFloat(
                                       (
                                         tokenSupplyData?.data.totalSupply /
-                                        Math.pow(10, 16)
+                                        Math.pow(10, 18)
                                       ).toFixed(2)
                                     )
                                   )}
@@ -845,7 +845,7 @@ const Influencer = () => {
                                     parseFloat(
                                       (
                                         tokenSupplyData?.data
-                                          .circulatingSupply / Math.pow(10, 16)
+                                          .circulatingSupply / Math.pow(10, 18)
                                       ).toFixed(2)
                                     )
                                   )}

@@ -34,3 +34,14 @@ export const celebrityFieldOptions = [
   { id: "activists", label: "Public Speakers/Activists" },
   { id: "other", label: "Other" },
 ];
+
+export const moneyClubSavingsPlan = [
+  { id: "fixed", label: "Fixed savings" },
+  { id: "flexible", label: "Flexible savings" },
+];
+
+export const savingsFrequency = [
+  { id: "weekly", label: "Weekly" },
+  { id: "biweekly", label: "Biweekly" },
+  { id: "monthly", label: "Monthly" },
+];

@@ -85,6 +85,10 @@ const Lend = () => {
             <p className="w-[135px]">Available to borrow:</p>
             <span>{data?.data?.availableBorrowsBase} USDC</span>
           </div>
+          <div className="flex flex-row gap-5 text-[#DFCBFB]">
+            <p className="w-[135px]">APY(Interest rate):</p>
+            <span>6.5 %</span>
+          </div>
         </div>
       </div>
 

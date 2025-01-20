@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { ArrowRight2 } from "iconsax-react";
-import LendModal from "./lend-modal";
-import toast from "react-hot-toast";
 import {
+  useRepayAssets,
   useBorrowAssets,
   useGetLendBorrowStats,
-  useRepayAssets,
 } from "@/api/user";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import LendModal from "./lend-modal";
+import React, { useState } from "react";
+import { ArrowRight2 } from "iconsax-react";
 
 const Borrow = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -83,6 +83,10 @@ const Borrow = () => {
           <div className="flex flex-row gap-5">
             <p className="w-[135px]">Available to borrow:</p>
             <span>{data?.data?.availableBorrowsBase} USDC</span>
+          </div>
+          <div className="flex flex-row gap-5 text-[#DFCBFB]">
+            <p className="w-[135px]">APY(Interest rate):</p>
+            <span>10.5 %</span>
           </div>
         </div>
       </div>

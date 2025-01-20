@@ -29,6 +29,7 @@ import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
 import { ArrowRight, ArrowRight2, Money3 } from "iconsax-react";
 import Lend from "./lend/lend";
 import Borrow from "./lend/borrow";
+import MoneyClubs from "./moneyclubs";
 
 const Dashboard = () => {
   const [priorityTask, setPriorityTask] = React.useState<any>([]);
@@ -322,9 +323,7 @@ const Dashboard = () => {
 
               {activeMenu === "borrow" && <Borrow />}
 
-              {activeMenu === "money-clubs" && (
-                <div>No money club entry at the moment</div>
-              )}
+              {activeMenu === "money-clubs" && <MoneyClubs />}
             </div>
           </div>
         )}

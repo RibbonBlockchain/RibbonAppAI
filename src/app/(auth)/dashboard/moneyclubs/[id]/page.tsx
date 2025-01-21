@@ -12,28 +12,29 @@ import {
   MoneySend,
   People,
   Refresh,
-  Star,
   Star1,
-  User,
 } from "iconsax-react";
-import { Repeat, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import Image from "next/image";
+import { useGetSavingsPlanById } from "@/api/user";
+import { formatDate } from "react-datepicker/dist/date_utils";
+import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
+  const params = useParams();
 
-  const savingsType = "flexible";
+  const { data } = useGetSavingsPlanById(params.id as any);
 
-  const isSubmitDisabled = true;
+  const isSubmitDisabled = false;
   const handleJoinSavingsPlan = () => {};
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
       <div className="flex flex-row gap-2 items-center mt-3">
         <ArrowLeft2 onClick={() => router.back()} className="" />
-        <p className="text-xl font-bold">xxx</p>
+        <p className="text-xl font-bold">{data?.data.name}</p>
       </div>
 
       <section className="flex flex-col gap-4 mt-6">
@@ -42,23 +43,25 @@ const SavingsPlanDetailsPage = () => {
           <p className="text-2xl font-bold">$ 1000</p>
         </div>
 
-        {savingsType ? (
+        {data?.data.type === "flexible" ? (
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next contribution</label>
-                <p className="text-xl font-bold">Feb 15, 2024</p>
+                <p className="text-xl font-bold">
+                  {formatDateTime(data?.data.payoutDate).date}
+                </p>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Your number</label>
                 <div className="flex flex-row items-center gap-2">
-                  <p className="text-xl font-bold">3</p>
-                  <span>Cycle 2 of 15</span>
+                  <p className="text-xl font-bold">{data?.data.payoutNumber}</p>
+                  <span>Cycle xx of {data?.data.participant}</span>
                 </div>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
-                <p className="text-xl font-bold">Uzor (2)</p>
+                <p className="text-xl font-bold">Uzor (xx)</p>
               </div>
             </div>
 
@@ -70,7 +73,7 @@ const SavingsPlanDetailsPage = () => {
                 height={2}
                 className="w-full"
               />
-              <p>2 of 15 payouts completed</p>
+              <p>xx of {data?.data.participant} payouts completed</p>
             </div>
 
             <div className="flex flex-row gap-2 border-b border-[#FFFFFF36] pb-4">
@@ -98,6 +101,8 @@ const SavingsPlanDetailsPage = () => {
             About the savings
           </label>
 
+          <p className="text-[15px] font-medium">{data?.data.about}</p>
+
           <div className="py-1 flex flex-row items-center justify-between">
             <div className="text-sm flex flex-row items-center justify-center gap-2 ">
               <People size={16} />
@@ -114,12 +119,7 @@ const SavingsPlanDetailsPage = () => {
             <ArrowRight2 />
           </div>
 
-          <p className="text-[15px] font-medium">
-            Savings for a group trip to Europe. We’re planning to visit multiple
-            countries & experience diverse cultures
-          </p>
-
-          {savingsType ? (
+          {data?.data?.type === "flexible" ? (
             <div className="grid grid-cols-2 gap-4 items-center">
               <div className="p-4 flex flex-col gap-3 rounded-lg border border-[#FFFFFF36]">
                 <div className="flex flex-row gap-2 items-center text-[13px] font-medium">
@@ -127,7 +127,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Frequency</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>Biweekly</span> <span>Contributions</span>
+                  <span>{data?.data.frequency}</span> <span>Contributions</span>
                 </div>
               </div>
 
@@ -137,7 +137,8 @@ const SavingsPlanDetailsPage = () => {
                   <p>Participants</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>15</span> <span>Participants</span>
+                  <span>{data?.data.participant}</span>{" "}
+                  <span>Participants</span>
                 </div>{" "}
               </div>
 
@@ -147,7 +148,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Savings type</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>Flexible </span> <span>Savings</span>
+                  <span>{data?.data.type}</span> <span>Savings</span>
                 </div>{" "}
               </div>
 
@@ -157,7 +158,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Contribution Amt.</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>500</span> <span>USDC</span>
+                  <span>{data?.data.individualAmount}</span> <span>USDC</span>
                 </div>{" "}
               </div>
 
@@ -167,7 +168,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Target</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>10,000</span> <span>USDC</span>
+                  <span>{data?.data.targetAmount}</span> <span>USDC</span>
                 </div>{" "}
               </div>
 
@@ -177,7 +178,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Payout cycle</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>15</span> <span>cycles</span>
+                  <span>{data?.data.participant}</span> <span>cycles</span>
                 </div>{" "}
               </div>
             </div>
@@ -189,7 +190,8 @@ const SavingsPlanDetailsPage = () => {
                   <p>Frequency</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>Biweekly</span> <span>Contributions</span>
+                  <span>{data?.data?.frequency}</span>{" "}
+                  <span>Contributions</span>
                 </div>
               </div>
 
@@ -199,7 +201,8 @@ const SavingsPlanDetailsPage = () => {
                   <p>Participants</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>15</span> <span>Participants</span>
+                  <span>{data?.data.participant}</span>{" "}
+                  <span>Participants</span>
                 </div>{" "}
               </div>
 
@@ -209,7 +212,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Savings type</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>Fixed </span> <span>Savings</span>
+                  <span>{data?.data?.type}</span> <span>Savings</span>
                 </div>{" "}
               </div>
 
@@ -219,7 +222,16 @@ const SavingsPlanDetailsPage = () => {
                   <p>Duration</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>6</span> <span>Months</span>
+                  <span>{data?.data?.duration}</span>{" "}
+                  <span>
+                    {data?.data.frequency === "weekly"
+                      ? "Weeks"
+                      : data?.data.frequency === "biweekly"
+                      ? "Biweeks"
+                      : data?.data.frequency === "monthly"
+                      ? "Months"
+                      : ""}
+                  </span>
                 </div>{" "}
               </div>
 
@@ -229,7 +241,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Contribution Amt.</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>500</span> <span>USDC</span>
+                  <span>{data?.data.individualAmount}</span> <span>USDC</span>
                 </div>{" "}
               </div>
 
@@ -239,7 +251,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Target</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>10,000</span> <span>USDC</span>
+                  <span>{data?.data.targetAmount}</span> <span>USDC</span>
                 </div>
               </div>
             </div>

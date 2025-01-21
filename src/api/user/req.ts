@@ -16,6 +16,7 @@ import {
   TUserOrderItemBody,
   TRespondBasedAgent,
   TPostCommentBody,
+  TSavingsPlanBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -319,5 +320,21 @@ export const repayAssets = async (body: { amount: any }) => {
 
 export const getLendBorrowStats = async () => {
   const res = await client.get<any>("/user/wallet/lend-borrow-stats");
+  return res.data;
+};
+
+// FINANCE
+export const createSavingsPlan = async (body: TSavingsPlanBody) => {
+  const res = await client.post("finance/savings", body);
+  return res.data;
+};
+
+export const getAllSavingsPlan = async () => {
+  const res = await client.get<any>("/finance/savings");
+  return res.data;
+};
+
+export const getSavingsPlanById = async (id: string) => {
+  const res = await client.get<any>(`/finance/savings/${id}`);
   return res.data;
 };

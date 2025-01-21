@@ -16,6 +16,7 @@ import {
   TUserOrderItemBody,
   TRespondBasedAgent,
   TPostCommentBody,
+  TSavingsPlanBody,
 } from "./types";
 import {
   getTasks,
@@ -70,6 +71,9 @@ import {
   borrowAssets,
   repayAssets,
   getLendBorrowStats,
+  createSavingsPlan,
+  getAllSavingsPlan,
+  getSavingsPlanById,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -528,5 +532,27 @@ export const useGetLendBorrowStats = () => {
   return useQuery({
     queryKey: ["lendborrow-stats"],
     queryFn: () => getLendBorrowStats(),
+  });
+};
+
+// FINANCE
+export const useCreateSavingsPlan = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TSavingsPlanBody) => createSavingsPlan(body),
+  });
+};
+
+export const useGetAllSavingsPlan = () => {
+  return useQuery({
+    queryKey: ["savings-plan"],
+    queryFn: () => getAllSavingsPlan(),
+  });
+};
+
+export const useGetSavingsPlanById = (id: string) => {
+  return useQuery({
+    queryKey: ["savings-plan"],
+    queryFn: () => getSavingsPlanById(id),
   });
 };

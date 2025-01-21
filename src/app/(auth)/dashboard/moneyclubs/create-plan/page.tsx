@@ -1,5 +1,7 @@
 "use client";
 
+import { useCreateSavingsPlan } from "@/api/user";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 import InputBox from "@/components/questionnarie/input-box";
 import { moneyClubSavingsPlan, savingsFrequency } from "@/lib/values/prompts";
 import clsx from "clsx";
@@ -7,6 +9,8 @@ import { ArrowLeft2, Calendar } from "iconsax-react";
 import { Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CreateSavingsPlan = () => {
   const router = useRouter();
@@ -28,10 +32,10 @@ const CreateSavingsPlan = () => {
 
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [contribution, setContribution] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [contribution, setContribution] = useState(0);
   const [duration, setDuration] = useState("");
-  const [participants, setParticipants] = useState("");
+  const [participants, setParticipants] = useState(0);
 
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
   const [planCategory, setPlanCategory] = useState("");
@@ -47,7 +51,7 @@ const CreateSavingsPlan = () => {
     setFrequecnyCategory(label);
   };
 
-  const [selectedPayoutNumber, setSelectedPayoutNumber] = useState(null);
+  const [selectedPayoutNumber, setSelectedPayoutNumber] = useState(0);
   const handleClick = (number: any) => {
     setSelectedPayoutNumber(number);
   };
@@ -55,15 +59,45 @@ const CreateSavingsPlan = () => {
   const numbers = [...Array(20)].map((_, index) => (
     <p
       key={index}
-      className="border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer"
+      className={`border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer ${
+        selectedPayoutNumber === index + 1 ? "bg-blue-500 text-white" : ""
+      }`}
       onClick={() => handleClick(index + 1)}
     >
       {index + 1}
     </p>
   ));
 
-  const isSubmitDisabled = true;
-  const handleCreateSavingsPlan = () => {};
+  const [startDate, setStartDate] = useState<Date | null>(null);
+
+  const handleDateChange = (date: Date | null) => {
+    setStartDate(date);
+  };
+
+  const { mutate, isPending } = useCreateSavingsPlan();
+
+  const isSubmitDisabled = false;
+  const handleCreateSavingsPlan = () => {
+    const body = {
+      type: selectedPlanId,
+      about: description,
+      name: name,
+      targetAmount: amount,
+      individualAmount: contribution,
+      frequency: selectedFrequencyId,
+      duration: duration,
+      participant: participants,
+      payoutDate: startDate,
+      payoutNumber: selectedPayoutNumber,
+    };
+    console.log(body, "body");
+
+    mutate(body, {
+      onSuccess: () => {
+        router.back();
+      },
+    });
+  };
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -213,11 +247,6 @@ const CreateSavingsPlan = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 mt-2">{numbers}</div>
-            {/* {selectedPayoutNumber && (
-              <div className="mt-4">
-                <p>You selected number: {selectedPayoutNumber}</p>
-              </div>
-            )} */}
           </div>
         )}
 
@@ -227,7 +256,12 @@ const CreateSavingsPlan = () => {
 
             <div className="flex flex-row items-center justify-between">
               <label className="text-sm font-bold">Set date</label>
-              <Calendar />
+              <DatePicker
+                selected={startDate}
+                onChange={handleDateChange}
+                dateFormat="yyyy-MM-dd"
+                className="p-2 border rounded-md bg-inherit"
+              />
             </div>
           </div>
         )}
@@ -236,13 +270,13 @@ const CreateSavingsPlan = () => {
           disabled={isSubmitDisabled}
           onClick={handleCreateSavingsPlan}
           className={clsx(
-            "mt-6 w-full rounded-[8px] py-3 font-bold text-sm",
+            "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
             isSubmitDisabled
               ? "bg-gray-600 text-white cursor-not-allowed"
               : "bg-white text-[#290064]"
           )}
         >
-          Create Savings Plan
+          {isPending ? <SpinnerIconPurple /> : "Create Savings Plan"}
         </button>
       </section>
     </main>

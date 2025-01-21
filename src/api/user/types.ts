@@ -105,3 +105,17 @@ export type TRespondBasedAgent = {
   taskId?: number;
   optionId?: number | string | number[];
 };
+
+// FINANCE
+export type TSavingsPlanBody = {
+  name: string;
+  type: string;
+  participant: number;
+  frequency: string;
+  duration: string;
+  targetAmount: number;
+  individualAmount: number;
+  about: string;
+  payoutDate?: Date | null;
+  payoutNumber?: number;
+};

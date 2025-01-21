@@ -182,6 +182,9 @@ importers:
       react-country-flag:
         specifier: ^3.1.0
         version: 3.1.0(react@18.2.0)
+      react-datepicker:
+        specifier: ^7.6.0
+        version: 7.6.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-day-picker:
         specifier: ^8.10.0
         version: 8.10.0(date-fns@3.3.1)(react@18.2.0)
@@ -1809,8 +1812,17 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
+  '@floating-ui/react@0.27.3':
+    resolution: {integrity: sha512-CLHnes3ixIFFKVQDdICjel8muhFLOBdQH7fgtHNPY8UbCNqbeKZ262G7K66lGQOUQWWnYocf7ZbUsLJgGfsLHg==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+
   '@floating-ui/utils@0.2.1':
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+
+  '@floating-ui/utils@0.2.9':
+    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
   '@formatjs/ecma402-abstract@1.18.2':
     resolution: {integrity: sha512-+QoPW4csYALsQIl8GbN14igZzDbuwzcpWrku9nyMXlaqAlwRBgl5V+p0vWMGFqHOw37czNXaP/lEk4wbLgcmtA==}
@@ -5742,6 +5754,9 @@ packages:
   date-fns@3.3.1:
     resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
 
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
 
@@ -8516,6 +8531,12 @@ packages:
     engines: {node: '>=12'}
     peerDependencies:
       react: '>=16'
+
+  react-datepicker@7.6.0:
+    resolution: {integrity: sha512-9cQH6Z/qa4LrGhzdc3XoHbhrxNcMi9MKjZmYgF/1MNNaJwvdSjv3Xd+jjvrEEbKEf71ZgCA3n7fQbdwd70qCRw==}
+    peerDependencies:
+      react: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
   react-day-picker@8.10.0:
     resolution: {integrity: sha512-mz+qeyrOM7++1NCb1ARXmkjMkzWVh2GL9YiPbRjKe0zHccvekk4HE+0MPOZOrosn8r8zTHIIeOUXTmXRqmkRmg==}
@@ -12551,7 +12572,17 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
+  '@floating-ui/react@0.27.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/utils': 0.2.9
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tabbable: 6.2.0
+
   '@floating-ui/utils@0.2.1': {}
+
+  '@floating-ui/utils@0.2.9': {}
 
   '@formatjs/ecma402-abstract@1.18.2':
     dependencies:
@@ -18769,6 +18800,8 @@ snapshots:
 
   date-fns@3.3.1: {}
 
+  date-fns@3.6.0: {}
+
   dateformat@4.6.3: {}
 
   dayjs@1.11.10: {}
@@ -21983,6 +22016,14 @@ snapshots:
   react-country-flag@3.1.0(react@18.2.0):
     dependencies:
       react: 18.2.0
+
+  react-datepicker@7.6.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@floating-ui/react': 0.27.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      date-fns: 3.6.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   react-day-picker@8.10.0(date-fns@3.3.1)(react@18.2.0):
     dependencies:

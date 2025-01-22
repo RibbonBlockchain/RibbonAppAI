@@ -28,7 +28,6 @@ const SavingsPlanDetailsPage = () => {
   const { data } = useGetSavingsPlanById(params.id as any);
 
   const isSubmitDisabled = false;
-  const handleJoinSavingsPlan = () => {};
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -268,7 +267,9 @@ const SavingsPlanDetailsPage = () => {
 
         <button
           disabled={isSubmitDisabled}
-          onClick={handleJoinSavingsPlan}
+          onClick={() =>
+            router.push(`/dashboard/moneyclubs/${params.id}/join-savings`)
+          }
           className={clsx(
             "mt-6 w-full rounded-[8px] py-3 font-bold text-sm",
             isSubmitDisabled

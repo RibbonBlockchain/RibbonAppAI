@@ -1,12 +1,13 @@
 "use client";
 
 import { useCreateSavingsPlan } from "@/api/user";
-import { SpinnerIconPurple } from "@/components/icons/spinner";
+import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import InputBox from "@/components/questionnarie/input-box";
 import { moneyClubSavingsPlan, savingsFrequency } from "@/lib/values/prompts";
 import clsx from "clsx";
-import { ArrowLeft2, Calendar } from "iconsax-react";
-import { Info } from "lucide-react";
+import { ArrowLeft2, Calendar, InfoCircle } from "iconsax-react";
+import { Info, X } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -17,6 +18,8 @@ const CreateSavingsPlan = () => {
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
+
+  const [openTransactionModal, setOpenTransactionModal] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -36,6 +39,7 @@ const CreateSavingsPlan = () => {
   const [contribution, setContribution] = useState(0);
   const [duration, setDuration] = useState("");
   const [participants, setParticipants] = useState(0);
+  const [walletAddress, setWalletAddress] = useState("");
 
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
   const [planCategory, setPlanCategory] = useState("");
@@ -56,7 +60,7 @@ const CreateSavingsPlan = () => {
     setSelectedPayoutNumber(number);
   };
 
-  const numbers = [...Array(20)].map((_, index) => (
+  const numbers = [...Array(participants)].map((_, index) => (
     <p
       key={index}
       className={`border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer ${
@@ -74,7 +78,7 @@ const CreateSavingsPlan = () => {
     setStartDate(date);
   };
 
-  const { mutate, isPending } = useCreateSavingsPlan();
+  const { mutate, isPending, isSuccess } = useCreateSavingsPlan();
 
   const isSubmitDisabled = false;
   const handleCreateSavingsPlan = () => {
@@ -90,13 +94,16 @@ const CreateSavingsPlan = () => {
       payoutDate: startDate,
       payoutNumber: selectedPayoutNumber,
     };
-    console.log(body, "body");
 
     mutate(body, {
       onSuccess: () => {
         router.back();
       },
     });
+  };
+
+  const handleCompleteTransaction = () => {
+    setOpenTransactionModal(true);
   };
 
   return (
@@ -266,9 +273,18 @@ const CreateSavingsPlan = () => {
           </div>
         )}
 
+        <InputBox
+          name={"walletaddress"}
+          label={"Your wallet address"}
+          placeholder="e.g Xyusdf...."
+          required={false}
+          value={walletAddress}
+          onChange={(e) => setWalletAddress(e.target.value)}
+        />
+
         <button
           disabled={isSubmitDisabled}
-          onClick={handleCreateSavingsPlan}
+          onClick={handleCompleteTransaction}
           className={clsx(
             "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
             isSubmitDisabled
@@ -276,9 +292,84 @@ const CreateSavingsPlan = () => {
               : "bg-white text-[#290064]"
           )}
         >
-          {isPending ? <SpinnerIconPurple /> : "Create Savings Plan"}
+          {"Create Savings Plan"}
         </button>
       </section>
+
+      {openTransactionModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          {isSuccess && (
+            <div className="min-h-[360px] p-4 flex flex-col items-center justify-around gap-3 text-white bg-[#3e3854] rounded-lg w-[92%] md:w-[500px]">
+              <div className="flex items-center justify-center">
+                <Image
+                  src={"/assets/success.png"}
+                  alt="success"
+                  height={68}
+                  width={68}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 items-center justify-center text-center">
+                <p className="font-bold text-xl">Savings Group Created!</p>
+                <p className="text-sm">
+                  Your savings group is now active! You’ve successfully made the
+                  initial payment to start this savings plan
+                </p>
+              </div>
+
+              <button
+                disabled={isSubmitDisabled}
+                onClick={() => router.push("/dashboard")}
+                className={clsx(
+                  "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
+                  isSubmitDisabled
+                    ? "bg-gray-600 text-white cursor-not-allowed"
+                    : "bg-white text-[#290064]"
+                )}
+              >
+                {"View Dashboard"}
+              </button>
+            </div>
+          )}
+
+          {!isSuccess && (
+            <div className="min-h-[360px] p-4 flex flex-col gap-3 text-white bg-[#3e3854] rounded-lg w-[92%] md:w-[500px]">
+              <X
+                className="flex self-end"
+                onClick={() => setOpenTransactionModal(false)}
+              />
+
+              <p className="font-bold text-xl">
+                Complete Payment to Activate Your Savings
+              </p>
+
+              <p className="text-sm">
+                To create and activate this savings group, you&apos;ll need to
+                make the first contribution. Once the payment is complete, your
+                group will go live and be ready for participants to join.
+              </p>
+
+              <button
+                disabled={isSubmitDisabled}
+                onClick={handleCreateSavingsPlan}
+                className={clsx(
+                  "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
+                  isSubmitDisabled
+                    ? "bg-gray-600 text-white cursor-not-allowed"
+                    : "bg-white text-[#290064]"
+                )}
+              >
+                {isPending ? <SpinnerIconPurple /> : "Pay & Activate Savings"}
+              </button>
+
+              <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
+                <InfoCircle size={16} />
+                <p> ${contribution} will be charged from your USDC wallet</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 };

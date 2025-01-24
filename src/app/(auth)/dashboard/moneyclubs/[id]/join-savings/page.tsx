@@ -18,15 +18,18 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useGetSavingsPlanById } from "@/api/user";
+import { useGetSavingsPlanById, useJoinSavingsPlan } from "@/api/user";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 import InputBox from "@/components/questionnarie/input-box";
+import { useGetUserWallet } from "@/api/linkage";
+import toast from "react-hot-toast";
 
 const JoinSavingsPlan = () => {
   const router = useRouter();
   const params = useParams();
 
+  const { data: walletDetails } = useGetUserWallet();
   const { data } = useGetSavingsPlanById(params.id as any);
 
   const [walletAddress, setWalletAddress] = useState("");
@@ -49,7 +52,17 @@ const JoinSavingsPlan = () => {
   ));
 
   const isSubmitDisabled = false;
-  const handleJoinSavingsPlan = () => {};
+
+  const { mutate } = useJoinSavingsPlan();
+  const handleJoinSavingsPlan = () => {
+    mutate(
+      { id: params.id as any, payoutNumber: selectedPayoutNumber },
+      {
+        onSuccess: () =>
+          toast.success("You have successfully joined the savings club"),
+      }
+    );
+  };
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -197,7 +210,7 @@ const JoinSavingsPlan = () => {
           label={"Your wallet address"}
           placeholder="e.g Xyusdf...."
           required={false}
-          value={walletAddress}
+          value={walletDetails?.data[0].address}
           onChange={(e) => setWalletAddress(e.target.value)}
         />
 

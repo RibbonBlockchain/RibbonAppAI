@@ -1,11 +1,12 @@
 "use client";
 
+import { useGetUserWallet } from "@/api/linkage";
 import { useCreateSavingsPlan } from "@/api/user";
-import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 import InputBox from "@/components/questionnarie/input-box";
 import { moneyClubSavingsPlan, savingsFrequency } from "@/lib/values/prompts";
 import clsx from "clsx";
-import { ArrowLeft2, Calendar, InfoCircle } from "iconsax-react";
+import { ArrowLeft2, InfoCircle } from "iconsax-react";
 import { Info, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -60,17 +61,20 @@ const CreateSavingsPlan = () => {
     setSelectedPayoutNumber(number);
   };
 
-  const numbers = [...Array(participants)].map((_, index) => (
-    <p
-      key={index}
-      className={`border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer ${
-        selectedPayoutNumber === index + 1 ? "bg-blue-500 text-white" : ""
-      }`}
-      onClick={() => handleClick(index + 1)}
-    >
-      {index + 1}
-    </p>
-  ));
+  const numbers =
+    participants > 0
+      ? [...Array(participants)].map((_, index) => (
+          <p
+            key={index}
+            className={`border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer ${
+              selectedPayoutNumber === index + 1 ? "bg-blue-500 text-white" : ""
+            }`}
+            onClick={() => handleClick(index + 1)}
+          >
+            {index + 1}
+          </p>
+        ))
+      : null;
 
   const [startDate, setStartDate] = useState<Date | null>(null);
 
@@ -78,6 +82,7 @@ const CreateSavingsPlan = () => {
     setStartDate(date);
   };
 
+  const { data: walletDetails } = useGetUserWallet();
   const { mutate, isPending, isSuccess } = useCreateSavingsPlan();
 
   const isSubmitDisabled = false;
@@ -190,7 +195,7 @@ const CreateSavingsPlan = () => {
           label={"Target amount"}
           placeholder="0.00 USDC"
           required={false}
-          value={amount}
+          value={amount === 0 ? "" : amount}
           onChange={(e) => setAmount(e.target.value)}
         />
 
@@ -199,7 +204,7 @@ const CreateSavingsPlan = () => {
           label={"Individual Contribution Amount"}
           placeholder="0.00 USDC"
           required={false}
-          value={contribution}
+          value={contribution === 0 ? "" : contribution}
           onChange={(e) => setContribution(e.target.value)}
         />
 
@@ -240,8 +245,15 @@ const CreateSavingsPlan = () => {
           label={"Number of participants"}
           placeholder="e.g 20"
           required={false}
-          value={participants}
-          onChange={(e) => setParticipants(e.target.value)}
+          value={participants === 0 ? "" : participants}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            if (!isNaN(value) && value > 0) {
+              setParticipants(value);
+            } else if (e.target.value === "") {
+              setParticipants(0);
+            }
+          }}
         />
 
         {selectedPlanId === "flexible" && (
@@ -263,6 +275,7 @@ const CreateSavingsPlan = () => {
 
             <div className="flex flex-row items-center justify-between">
               <label className="text-sm font-bold">Set date</label>
+
               <DatePicker
                 selected={startDate}
                 onChange={handleDateChange}
@@ -278,7 +291,7 @@ const CreateSavingsPlan = () => {
           label={"Your wallet address"}
           placeholder="e.g Xyusdf...."
           required={false}
-          value={walletAddress}
+          value={walletDetails?.data[0].address}
           onChange={(e) => setWalletAddress(e.target.value)}
         />
 
@@ -286,7 +299,7 @@ const CreateSavingsPlan = () => {
           disabled={isSubmitDisabled}
           onClick={handleCompleteTransaction}
           className={clsx(
-            "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
+            "mt-6 mb-10 w-full rounded-[8px] py-3 font-bold text-sm flex flex-row items-center justify-center",
             isSubmitDisabled
               ? "bg-gray-600 text-white cursor-not-allowed"
               : "bg-white text-[#290064]"
@@ -333,7 +346,7 @@ const CreateSavingsPlan = () => {
           )}
 
           {!isSuccess && (
-            <div className="min-h-[360px] p-4 flex flex-col gap-3 text-white bg-[#3e3854] rounded-lg w-[92%] md:w-[500px]">
+            <div className="min-h-[360px] p-4 flex flex-col gap-3 text-white bg-[#3e3854] rounded-lg w-[92%] md:w-[450px] max-w-[450px]">
               <X
                 className="flex self-end"
                 onClick={() => setOpenTransactionModal(false)}

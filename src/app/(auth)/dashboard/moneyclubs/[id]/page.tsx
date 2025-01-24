@@ -3,6 +3,7 @@
 import Button from "@/components/button";
 import clsx from "clsx";
 import {
+  ArrowDown2,
   ArrowLeft2,
   ArrowRight2,
   Calendar,
@@ -15,9 +16,9 @@ import {
   Star1,
 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { useGetSavingsPlanById } from "@/api/user";
+import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 
@@ -26,6 +27,13 @@ const SavingsPlanDetailsPage = () => {
   const params = useParams();
 
   const { data } = useGetSavingsPlanById(params.id as any);
+  const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   const isSubmitDisabled = false;
 
@@ -39,7 +47,7 @@ const SavingsPlanDetailsPage = () => {
       <section className="flex flex-col gap-4 mt-6">
         <div className="w-full flex flex-col gap-2">
           <label className="text-sm font-black">Amount saved</label>
-          <p className="text-2xl font-bold">$ 1000</p>
+          <p className="text-2xl font-bold">$ xx</p>
         </div>
 
         {data?.data.type === "flexible" ? (
@@ -102,12 +110,42 @@ const SavingsPlanDetailsPage = () => {
 
           <p className="text-[15px] font-medium">{data?.data.about}</p>
 
-          <div className="py-1 flex flex-row items-center justify-between">
-            <div className="text-sm flex flex-row items-center justify-center gap-2 ">
-              <People size={16} />
-              <p className="font-medium">View all participants</p>
+          <div>
+            <div
+              className="py-1 flex flex-row items-center justify-between cursor-pointer"
+              onClick={handleToggleDropdown}
+            >
+              <div className="text-sm flex flex-row items-center justify-center gap-2">
+                <People size={16} />
+                <p className="font-medium">View all participants</p>
+              </div>
+
+              {isOpen ? <ArrowDown2 /> : <ArrowRight2 />}
             </div>
-            <ArrowRight2 />
+
+            {isOpen && (
+              <div className="shadow-lg rounded-lg p-4">
+                <ul>
+                  {savingsMembers?.data.map((member: any) => (
+                    <li
+                      key={member.id}
+                      className="py-2 flex items-center border-b border-[#FFFFFF36]"
+                    >
+                      {member.user.avatar ? (
+                        <img
+                          src={member.user.avatar}
+                          alt={`${member.user.firstName} ${member.user.lastName}`}
+                          className="w-8 h-8 rounded-full mr-3"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gray-300 mr-3" />
+                      )}
+                      <span className="font-medium">user {member.user.id}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <div className="py-1 flex flex-row items-center justify-between">

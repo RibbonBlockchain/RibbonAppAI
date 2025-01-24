@@ -119,3 +119,8 @@ export type TSavingsPlanBody = {
   payoutDate?: Date | null;
   payoutNumber?: number;
 };
+
+export type TJoinSavingsBody = {
+  id: number;
+  payoutNumber?: number;
+};

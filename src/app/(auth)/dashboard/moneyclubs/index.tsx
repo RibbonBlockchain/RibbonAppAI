@@ -27,7 +27,7 @@ const MoneyClubs = () => {
           <div className="flex flex-row items-center gap-2">
             <p
               onClick={() => handleTabClick("all")}
-              className={`px-2.5 py-1.5 rounded-full border ${
+              className={`cursor-pointer px-2.5 py-1.5 rounded-full border ${
                 activeTab === "all"
                   ? "bg-[#413f4a] text-white"
                   : "border-[#F2EEFF40]"
@@ -37,7 +37,7 @@ const MoneyClubs = () => {
             </p>
             <p
               onClick={() => handleTabClick("joined")}
-              className={`px-2.5 py-1.5 rounded-full border ${
+              className={`cursor-pointer px-2.5 py-1.5 rounded-full border ${
                 activeTab === "joined"
                   ? "bg-[#413f4a] text-white"
                   : "border-[#F2EEFF40]"
@@ -47,7 +47,7 @@ const MoneyClubs = () => {
             </p>
             <p
               onClick={() => handleTabClick("created")}
-              className={`px-2.5 py-1.5 rounded-full border ${
+              className={`cursor-pointer px-2.5 py-1.5 rounded-full border ${
                 activeTab === "created"
                   ? "bg-[#413f4a] text-white"
                   : "border-[#F2EEFF40]"
@@ -58,7 +58,7 @@ const MoneyClubs = () => {
           </div>
           <p
             onClick={() => router.push("/dashboard/moneyclubs/create-plan")}
-            className="flex flex-row items-center gap-1 px-4 py-1.5 rounded-full border border-[#F2EEFF40] text-[#290064] bg-white"
+            className="flex cursor-pointer flex-row items-center gap-1 px-4 py-1.5 rounded-full border border-[#F2EEFF40] text-[#290064] bg-white"
           >
             Create <Plus size={16} />
           </p>

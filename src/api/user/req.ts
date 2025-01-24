@@ -17,6 +17,7 @@ import {
   TRespondBasedAgent,
   TPostCommentBody,
   TSavingsPlanBody,
+  TJoinSavingsBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -336,5 +337,15 @@ export const getAllSavingsPlan = async () => {
 
 export const getSavingsPlanById = async (id: string) => {
   const res = await client.get<any>(`/finance/savings/${id}`);
+  return res.data;
+};
+
+export const joinSavingsPlan = async (body: TJoinSavingsBody) => {
+  const res = await client.post("finance/savings/join", body);
+  return res.data;
+};
+
+export const getSavingsMember = async (id: string) => {
+  const res = await client.get<any>(`/finance/savings/${id}/members`);
   return res.data;
 };

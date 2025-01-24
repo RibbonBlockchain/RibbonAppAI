@@ -17,6 +17,7 @@ import {
   TRespondBasedAgent,
   TPostCommentBody,
   TSavingsPlanBody,
+  TJoinSavingsBody,
 } from "./types";
 import {
   getTasks,
@@ -74,6 +75,8 @@ import {
   createSavingsPlan,
   getAllSavingsPlan,
   getSavingsPlanById,
+  joinSavingsPlan,
+  getSavingsMember,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -554,5 +557,19 @@ export const useGetSavingsPlanById = (id: string) => {
   return useQuery({
     queryKey: ["savings-plan"],
     queryFn: () => getSavingsPlanById(id),
+  });
+};
+
+export const useJoinSavingsPlan = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TJoinSavingsBody) => joinSavingsPlan(body),
+  });
+};
+
+export const useGetSavingsMembers = (id: string) => {
+  return useQuery({
+    queryKey: ["savings-members"],
+    queryFn: () => getSavingsMember(id),
   });
 };

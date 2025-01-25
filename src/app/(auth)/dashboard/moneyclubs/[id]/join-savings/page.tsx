@@ -18,12 +18,17 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useGetSavingsPlanById, useJoinSavingsPlan } from "@/api/user";
+import {
+  useGetSavingsMembers,
+  useGetSavingsPlanById,
+  useJoinSavingsPlan,
+} from "@/api/user";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 import InputBox from "@/components/questionnarie/input-box";
 import { useGetUserWallet } from "@/api/linkage";
 import toast from "react-hot-toast";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const JoinSavingsPlan = () => {
   const router = useRouter();
@@ -31,6 +36,7 @@ const JoinSavingsPlan = () => {
 
   const { data: walletDetails } = useGetUserWallet();
   const { data } = useGetSavingsPlanById(params.id as any);
+  const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
 
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -51,9 +57,7 @@ const JoinSavingsPlan = () => {
     </p>
   ));
 
-  const isSubmitDisabled = false;
-
-  const { mutate } = useJoinSavingsPlan();
+  const { mutate, isPending } = useJoinSavingsPlan();
   const handleJoinSavingsPlan = () => {
     mutate(
       { id: params.id as any, payoutNumber: selectedPayoutNumber },
@@ -63,6 +67,8 @@ const JoinSavingsPlan = () => {
       }
     );
   };
+
+  const isSubmitDisabled = isPending || !walletDetails;
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -92,7 +98,10 @@ const JoinSavingsPlan = () => {
                 <People size={16} />
                 <p>Participants</p>
               </div>
-              <p>{data?.data.participant} participants</p>
+              <p>
+                {savingsMembers?.data.length} of {data?.data.participant}{" "}
+                participants
+              </p>
             </div>
 
             <div className="flex flex-row items-center gap-2">
@@ -223,13 +232,13 @@ const JoinSavingsPlan = () => {
           disabled={isSubmitDisabled}
           onClick={handleJoinSavingsPlan}
           className={clsx(
-            "mt-6 w-full rounded-[8px] py-3 font-bold text-sm",
+            "mt-6 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center",
             isSubmitDisabled
               ? "bg-gray-600 text-white cursor-not-allowed"
               : "bg-white text-[#290064]"
           )}
         >
-          Pay & Join
+          {isPending ? <SpinnerIconPurple /> : "Pay & Join"}
         </button>
         <div className="flex flex-row gap-1 items-center justify-center text-[#F5C193] text-xs font-bold">
           <InfoCircle size={16} />

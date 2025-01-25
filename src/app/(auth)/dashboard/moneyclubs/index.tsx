@@ -70,7 +70,7 @@ const MoneyClubs = () => {
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
-                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between"
+                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between cursor-pointer"
               >
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>
@@ -96,7 +96,7 @@ const MoneyClubs = () => {
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
-                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between"
+                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between cursor-pointer"
               >
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>
@@ -122,7 +122,7 @@ const MoneyClubs = () => {
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
-                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between"
+                className="bg-[#3e3854] rounded-lg p-3 flex flex-row items-center justify-between cursor-pointer"
               >
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>

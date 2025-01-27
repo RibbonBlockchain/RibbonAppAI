@@ -3,31 +3,54 @@
 import Button from "@/components/button";
 import clsx from "clsx";
 import {
+  Coin,
+  Star1,
+  Money3,
+  People,
+  Refresh,
+  Calendar,
+  MoneySend,
   ArrowDown2,
   ArrowLeft2,
   ArrowRight2,
-  Calendar,
-  Coin,
-  Money3,
   MoneyRecive,
-  MoneySend,
-  People,
-  Refresh,
-  Star1,
 } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
 import Image from "next/image";
-import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
-import { formatDate } from "react-datepicker/dist/date_utils";
+import React, { useState } from "react";
+import { useGetAuth } from "@/api/auth";
+import { Minus, Plus } from "lucide-react";
+import { shorten } from "@/lib/utils/shorten";
+import { useParams, useRouter } from "next/navigation";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
+import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
 
+  const { data: user } = useGetAuth();
+  const userId = user?.id;
+
   const { data } = useGetSavingsPlanById(params.id as any);
   const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
+
+  const userSavingsDetails = savingsMembers?.data.filter(
+    (item: any) => item.userId === userId
+  );
+
+  const userPayoutNumber = userSavingsDetails?.[0]?.payoutNumber;
+
+  const netDeposit = data?.data?.transactions?.reduce(
+    (total: any, transaction: any) => {
+      if (transaction.type === "deposit") {
+        return total + transaction.amount;
+      } else if (transaction.type === "withdraw") {
+        return total - transaction.amount;
+      }
+      return total;
+    },
+    0
+  );
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +70,12 @@ const SavingsPlanDetailsPage = () => {
       <section className="flex flex-col gap-4 mt-6">
         <div className="w-full flex flex-col gap-2">
           <label className="text-sm font-black">Amount saved</label>
-          <p className="text-2xl font-bold">$ xx</p>
+          <p className="text-2xl font-bold">{netDeposit} USDC</p>
+        </div>
+
+        <div className="w-full flex flex-row gap-2">
+          <label className="text-sm font-black">Wallet Address:</label>
+          <p className="text-sm">{shorten(data?.data.walletAddress)}</p>
         </div>
 
         {data?.data.type === "flexible" ? (
@@ -62,7 +90,7 @@ const SavingsPlanDetailsPage = () => {
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Your number</label>
                 <div className="flex flex-row items-center gap-2">
-                  <p className="text-xl font-bold">{data?.data.payoutNumber}</p>
+                  <p className="text-xl font-bold">{userPayoutNumber}</p>
                   <span>Cycle xx of {data?.data.participant}</span>
                 </div>
               </div>
@@ -174,7 +202,9 @@ const SavingsPlanDetailsPage = () => {
                   <p>Participants</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>{data?.data.participant}</span>{" "}
+                  <span>
+                    {savingsMembers?.data.length} of {data?.data.participant}
+                  </span>{" "}
                   <span>Participants</span>
                 </div>{" "}
               </div>
@@ -238,7 +268,7 @@ const SavingsPlanDetailsPage = () => {
                   <p>Participants</p>
                 </div>
                 <div className="flex flex-col text-lg font-black">
-                  <span>{data?.data.participant}</span>{" "}
+                  {savingsMembers?.data.length} of {data?.data.participant}
                   <span>Participants</span>
                 </div>{" "}
               </div>
@@ -300,7 +330,37 @@ const SavingsPlanDetailsPage = () => {
             <p>Recent Deposits</p>
           </div>
 
-          <div></div>
+          <div>
+            <ul>
+              {data?.data?.transactions?.map((transaction: any) => {
+                return (
+                  <li key={transaction.id} className="py-2">
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm text-gray-500">
+                          {transaction.type}
+                        </span>
+                        <span>{transaction.userId}</span>
+                      </div>
+                      <div className="text-sm">
+                        <span className="flex flex-row items-center gap-1 font-medium">
+                          {transaction.type === "deposit" ? (
+                            <Plus size={14} color="green" />
+                          ) : (
+                            <Minus size={14} color="red" />
+                          )}{" "}
+                          {transaction.amount}USDC
+                        </span>
+                        <div className="text-xs text-gray-400">
+                          {new Date(transaction.createdAt).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
 
         <button

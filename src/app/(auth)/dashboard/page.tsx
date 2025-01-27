@@ -26,7 +26,6 @@ import { serviceList } from "@/components/store/store-component";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import RewardButton from "../../../containers/dashboard/reward-button";
 import { verifyPhoneTask, completeProfileTask } from "@/lib/values/mockData";
-import { ArrowRight, ArrowRight2, Money3 } from "iconsax-react";
 import Lend from "./lend/lend";
 import Borrow from "./lend/borrow";
 import MoneyClubs from "./moneyclubs";
@@ -45,21 +44,33 @@ const Dashboard = () => {
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
 
-  const [selectedCategoryTab, setSelectedCategoryTab] = useState("health");
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState(() => {
+    const savedTab = localStorage.getItem("currentCategoryTab");
+    return savedTab ? savedTab : "health";
+  });
+
   const handleCategoryTabClick = (tab: string) => {
     setSelectedCategoryTab(tab);
+    localStorage.setItem("currentCategoryTab", tab);
   };
 
-  const [displayMenu, setDisplayMenu] = useState("questionnaires");
+  const [displayMenu, setDisplayMenu] = useState(() => {
+    const savedTab = localStorage.getItem("currentMenu");
+    return savedTab ? savedTab : "questionnaires";
+  });
+
   const [activeMenu, setActiveMenu] = useState(displayMenu);
 
   useEffect(() => {
     if (selectedCategoryTab === "health") {
-      setDisplayMenu("questionnaires");
+      const newMenu = localStorage.getItem("currentMenu");
+      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("questionnaires");
     } else if (selectedCategoryTab === "finance") {
-      setDisplayMenu("borrow");
+      const newMenu = localStorage.getItem("currentMenu");
+      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("borrow");
     } else {
-      setDisplayMenu("shop");
+      const newMenu = localStorage.getItem("currentMenu");
+      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("shop");
     }
   }, [selectedCategoryTab]);
 
@@ -69,6 +80,7 @@ const Dashboard = () => {
 
   const handleActiveMenuClick = (menu: string) => {
     setActiveMenu(menu);
+    localStorage.setItem("currentMenu", menu);
   };
 
   React.useEffect(() => {

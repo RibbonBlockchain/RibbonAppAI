@@ -11,6 +11,7 @@ const MoneyClubs = () => {
   const { data } = useGetAllSavingsPlan();
 
   const savingsPlans = Array.isArray(data?.data) ? data?.data : [];
+  const createdPlans = savingsPlans?.filter((item: any) => item.userId === 265);
 
   const [activeTab, setActiveTab] = useState("all");
 
@@ -118,7 +119,7 @@ const MoneyClubs = () => {
 
         {activeTab === "created" && (
           <div className="flex flex-col gap-4 text-sm font-normal text-[#FFFFFF]">
-            {emptyData.map((i: any) => (
+            {createdPlans.map((i: any) => (
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
@@ -134,7 +135,7 @@ const MoneyClubs = () => {
               </div>
             ))}
 
-            {emptyData?.length === 0 && (
+            {createdPlans?.length === 0 && (
               <div className="mt-5 text-center">
                 You have not created any savings plan
               </div>

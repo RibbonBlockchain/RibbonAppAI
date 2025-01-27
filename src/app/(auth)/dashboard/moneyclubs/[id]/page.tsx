@@ -3,33 +3,42 @@
 import Button from "@/components/button";
 import clsx from "clsx";
 import {
+  Coin,
+  Star1,
+  Money3,
+  People,
+  Refresh,
+  Calendar,
+  MoneySend,
   ArrowDown2,
   ArrowLeft2,
   ArrowRight2,
-  Calendar,
-  Coin,
-  Money3,
   MoneyRecive,
-  MoneySend,
-  People,
-  Refresh,
-  Star1,
 } from "iconsax-react";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
 import Image from "next/image";
-import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
-import { formatDate } from "react-datepicker/dist/date_utils";
-import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
-import { shorten, shortenTransaction } from "@/lib/utils/shorten";
+import React, { useState } from "react";
+import { useGetAuth } from "@/api/auth";
 import { Minus, Plus } from "lucide-react";
+import { shorten } from "@/lib/utils/shorten";
+import { useParams, useRouter } from "next/navigation";
+import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
+import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
 
+  const { data: user } = useGetAuth();
+  const userId = user?.id;
+
   const { data } = useGetSavingsPlanById(params.id as any);
   const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
+
+  const userSavingsDetails = savingsMembers?.data.filter(
+    (item: any) => item.userId === userId
+  );
+
+  const userPayoutNumber = userSavingsDetails?.[0]?.payoutNumber;
 
   const netDeposit = data?.data?.transactions?.reduce(
     (total: any, transaction: any) => {
@@ -81,7 +90,7 @@ const SavingsPlanDetailsPage = () => {
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Your number</label>
                 <div className="flex flex-row items-center gap-2">
-                  <p className="text-xl font-bold">{data?.data.payoutNumber}</p>
+                  <p className="text-xl font-bold">{userPayoutNumber}</p>
                   <span>Cycle xx of {data?.data.participant}</span>
                 </div>
               </div>

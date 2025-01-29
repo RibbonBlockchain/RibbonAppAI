@@ -4,8 +4,8 @@ import RootProvider from "@/provider";
 import localFont from "next/font/local";
 
 export const metadata: Metadata = {
-  title: "Ribbon Protocol",
-  description: "Earn Personalized Universal Basic Income",
+  title: "Linkages",
+  description: "Onchain Agentic Economy",
 };
 
 const inter = localFont({

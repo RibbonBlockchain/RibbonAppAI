@@ -17,7 +17,7 @@ const Home = () => {
           <h1 className="text-base font-normal">Welcome to</h1>
           <h1 className="text-3xl font-extrabold">Linkages</h1>
           <p className="text-base font-normal text-center">
-            Personalized Consumer Experiences
+            Onchain Agentic Economy
           </p>
         </div>
       </div>

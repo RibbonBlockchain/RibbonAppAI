@@ -63,14 +63,17 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (selectedCategoryTab === "health") {
+      localStorage.setItem("currentMenu", "questionnaires");
       const newMenu = localStorage.getItem("currentMenu");
-      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("questionnaires");
+      newMenu && setDisplayMenu(newMenu);
     } else if (selectedCategoryTab === "finance") {
+      localStorage.setItem("currentMenu", "borrow");
       const newMenu = localStorage.getItem("currentMenu");
-      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("borrow");
+      newMenu && setDisplayMenu(newMenu);
     } else {
+      localStorage.setItem("currentMenu", "shop");
       const newMenu = localStorage.getItem("currentMenu");
-      newMenu ? setDisplayMenu(newMenu) : setDisplayMenu("shop");
+      newMenu && setDisplayMenu(newMenu);
     }
   }, [selectedCategoryTab]);
 

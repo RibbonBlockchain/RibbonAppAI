@@ -1,30 +1,22 @@
 "use client";
 
-import Button from "@/components/button";
 import clsx from "clsx";
 import {
   ArrowLeft2,
-  ArrowRight2,
   Calendar,
   Coin,
   InfoCircle,
   Money3,
-  MoneyRecive,
-  MoneySend,
   People,
   Refresh,
-  Star1,
 } from "iconsax-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import Image from "next/image";
 import {
   useGetSavingsMembers,
   useGetSavingsPlanById,
   useJoinSavingsPlan,
 } from "@/api/user";
-import { formatDate } from "react-datepicker/dist/date_utils";
-import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 import InputBox from "@/components/questionnarie/input-box";
 import { useGetUserWallet } from "@/api/linkage";
 import toast from "react-hot-toast";
@@ -45,13 +37,26 @@ const JoinSavingsPlan = () => {
     setSelectedPayoutNumber(number);
   };
 
+  const payoutNumbers = savingsMembers?.data?.map(
+    (item: any) => item.payoutNumber
+  );
+  const uniquePayoutNumbers = [...new Set(payoutNumbers)];
+
   const numbers = [...Array(data?.data.participant)].map((_, index) => (
     <p
       key={index}
       className={`border border-[#FFFFFF36] flex items-center justify-center text-center w-[40px] h-[40px] rounded-lg cursor-pointer ${
         selectedPayoutNumber === index + 1 ? "bg-blue-500 text-white" : ""
+      } ${
+        uniquePayoutNumbers.includes(index + 1)
+          ? "text-gray-500 cursor-not-allowed"
+          : "text-white"
       }`}
-      onClick={() => handleClick(index + 1)}
+      onClick={() => {
+        if (!uniquePayoutNumbers.includes(index + 1)) {
+          handleClick(index + 1);
+        }
+      }}
     >
       {index + 1}
     </p>

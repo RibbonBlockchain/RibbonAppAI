@@ -23,6 +23,7 @@ import { shorten } from "@/lib/utils/shorten";
 import { useParams, useRouter } from "next/navigation";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
 import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
+import toast from "react-hot-toast";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -57,6 +58,17 @@ const SavingsPlanDetailsPage = () => {
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  const [activateEmergencyWithdral, setActivateEmergencyWithdral] =
+    useState(false);
+  const handleEmergencyWithdrawal = () => {
+    setActivateEmergencyWithdral(true);
+  };
+
+  const handleAcceptEmergencyWithdrawal = () =>
+    toast.success("implement function here");
+  const handleRejectEmergencyWithdrawal = () =>
+    toast.success("implement function here");
 
   const isSubmitDisabled = false;
 
@@ -125,9 +137,30 @@ const SavingsPlanDetailsPage = () => {
             <Button className="bg-[#3e3756] text-white border border-[#FFFFFF36]">
               <MoneySend size={16} /> Add Contribution
             </Button>
-            <Button className="bg-[inherit] text-[#F2B4B4] border border-[#F2B4B4]">
-              Emergency Withdrawal
-            </Button>
+
+            {activateEmergencyWithdral ? (
+              <div className="flex gap-2 items-center justify-center w-full text-sm font-semibold text-center p-2 rounded-xl bg-[inherit]  border border-[#FFFFFF36]">
+                <button
+                  onClick={handleAcceptEmergencyWithdrawal}
+                  className="px-3 py-2 border text-green-300 border-green-400 rounded-md"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={handleRejectEmergencyWithdrawal}
+                  className="px-4 py-2 text-[#F2B4B4] border  border-[#F2B4B4] rounded-md"
+                >
+                  Reject
+                </button>
+              </div>
+            ) : (
+              <Button
+                onClick={handleEmergencyWithdrawal}
+                className="bg-[inherit] text-[#F2B4B4] border border-[#F2B4B4]"
+              >
+                Emergency Withdrawal
+              </Button>
+            )}
           </div>
         )}
 

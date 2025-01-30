@@ -81,12 +81,12 @@ export const Support = [
     logo: <HelpCircle />,
   },
   {
-    href: "#",
-    description: "Terms of Service",
+    href: "https://ribbonprotocol.gitbook.io/linkages.ai/terms-of-use",
+    description: "Terms of Use",
     logo: <Shield />,
   },
   {
-    href: "#",
+    href: "https://ribbonprotocol.gitbook.io/linkages.ai/privacy-policy",
     description: "Privacy Policy",
     logo: <Lock1 />,
   },

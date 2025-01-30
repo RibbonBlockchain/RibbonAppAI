@@ -5,6 +5,17 @@ import { WorldIdButton } from "@/containers/auth/landing/button";
 const Home = () => {
   return (
     <div className="text-white bg-[#0B0228] flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
+      <div className="w-full flex flex-end items-end justify-end">
+        <a
+          href="https://ribbonprotocol.gitbook.io/linkages.ai"
+          className="text-end px-5 py-2 underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Whitepaper
+        </a>
+      </div>
+
       <div className="h-full w-full flex flex-col items-center justify-center gap-4 sm:gap-6">
         <Image
           width={100}
@@ -49,6 +60,25 @@ const Home = () => {
         </LinkButton>
 
         <WorldIdButton>Sign In with World ID</WorldIdButton>
+      </div>
+
+      <div className="w-full flex flex-row items-center justify-between px-2 text-center text-[13px] mb-3 text-gray-400">
+        <a
+          href="https://ribbonprotocol.gitbook.io/linkages.ai/terms-of-use"
+          className="text-white underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Terms of Use
+        </a>
+        <a
+          href="https://ribbonprotocol.gitbook.io/linkages.ai/privacy-policy"
+          className="text-white underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Privacy Policy
+        </a>
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ const SavingsPlanDetailsPage = () => {
   const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
   const { data: emergencyWithdrawalRequests } =
     useGetEmergencyWithdrawalRequests(params.id as any);
+
   const {
     mutate: requestEmergencyWithdrawal,
     isPending: requestEmergencyWithdrawalPending,
@@ -50,11 +51,10 @@ const SavingsPlanDetailsPage = () => {
   const { mutate: approveEmergencyWithdrawal } =
     useApproveEmergenctyWithdrawal();
 
-  const userSavingsDetails = savingsMembers?.data.filter(
+  const userSavingsDetails = savingsMembers?.data.find(
     (item: any) => item.userId === userId
   );
-
-  const userPayoutNumber = userSavingsDetails?.[0]?.payoutNumber;
+  const userPayoutNumber = userSavingsDetails?.payoutNumber;
 
   const netDeposit = data?.data?.transactions?.reduce(
     (total: any, transaction: any) => {
@@ -76,6 +76,7 @@ const SavingsPlanDetailsPage = () => {
 
   const [activateEmergencyWithdral, setActivateEmergencyWithdral] =
     useState(false);
+
   const handleEmergencyWithdrawal = () => {
     requestEmergencyWithdrawal(
       { id: params.id },
@@ -179,7 +180,8 @@ const SavingsPlanDetailsPage = () => {
               <MoneySend size={16} /> Add Contribution
             </Button>
 
-            {activateEmergencyWithdral ? (
+            {activateEmergencyWithdral ||
+            emergencyWithdrawalRequests?.data.length ? (
               <div className="flex gap-2 items-center justify-center w-full text-sm font-semibold text-center p-2 rounded-xl bg-[inherit]  border border-[#FFFFFF36]">
                 <button
                   onClick={handleAcceptEmergencyWithdrawal}

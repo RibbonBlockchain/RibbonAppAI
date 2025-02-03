@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Submit from "./sections/submit";
 import FormInput from "./sections/form";
@@ -5,6 +7,7 @@ import BackArrow from "./sections/back";
 import LinkButton from "@/components/button/link";
 import { WorldIdButton } from "../../landing/button";
 import { AppleIcon, GoogleIcon } from "@/public/assets";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   return (
@@ -32,19 +35,25 @@ const Signup = () => {
       </div>
 
       <div className="w-full flex flex-col gap-3">
-        <LinkButton
-          href="#"
-          className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
-        >
-          <AppleIcon /> Continue with Apple
-        </LinkButton>
+        <button onClick={() => toast.success("Coming soon")}>
+          <LinkButton
+            href="#"
+            className="flex bg-stone-400/50 border border-[#E5E7EB] flex-row items-center justify-center gap-3"
+            // className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
+          >
+            <AppleIcon /> Continue with Apple
+          </LinkButton>
+        </button>
 
-        <LinkButton
-          href="#"
-          className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
-        >
-          <GoogleIcon /> Continue with Google
-        </LinkButton>
+        <button onClick={() => toast.success("Coming soon")}>
+          <LinkButton
+            href="#"
+            className="flex bg-stone-400/50 border border-[#E5E7EB] flex-row items-center justify-center gap-3"
+            // className="flex bg-inherit border border-[#E5E7EB] flex-row items-center justify-center gap-3"
+          >
+            <GoogleIcon /> Continue with Google
+          </LinkButton>
+        </button>
 
         <WorldIdButton>Sign In with World ID</WorldIdButton>
       </div>

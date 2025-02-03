@@ -18,6 +18,7 @@ import {
   TPostCommentBody,
   TSavingsPlanBody,
   TJoinSavingsBody,
+  TApproveEmergencyWithdrawalBody,
 } from "./types";
 import {
   getTasks,
@@ -77,6 +78,11 @@ import {
   getSavingsPlanById,
   joinSavingsPlan,
   getSavingsMember,
+  getCreatedSavingsPlan,
+  getJoinedSavingsPlan,
+  requestEmergencyWithdrawal,
+  approveEmergenctyWithdrawal,
+  getEmergencyWithdrawalRequests,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -555,7 +561,7 @@ export const useGetAllSavingsPlan = () => {
 
 export const useGetSavingsPlanById = (id: string) => {
   return useQuery({
-    queryKey: ["savings-plan"],
+    queryKey: ["savings-plan-id"],
     queryFn: () => getSavingsPlanById(id),
   });
 };
@@ -571,5 +577,42 @@ export const useGetSavingsMembers = (id: string) => {
   return useQuery({
     queryKey: ["savings-members"],
     queryFn: () => getSavingsMember(id),
+  });
+};
+
+export const useGetCreatedSavingsPlan = () => {
+  return useQuery({
+    queryKey: ["created-savings"],
+    queryFn: () => getCreatedSavingsPlan(),
+  });
+};
+
+export const useGetJoinedSavingsPlan = () => {
+  return useQuery({
+    queryKey: ["joined-savings"],
+    queryFn: () => getJoinedSavingsPlan(),
+  });
+};
+
+// emergency withdrawal
+export const useRequestEmergencyWithdrawal = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { id: any }) => requestEmergencyWithdrawal(body),
+  });
+};
+
+export const useApproveEmergenctyWithdrawal = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: TApproveEmergencyWithdrawalBody) =>
+      approveEmergenctyWithdrawal(body),
+  });
+};
+
+export const useGetEmergencyWithdrawalRequests = (id: string) => {
+  return useQuery({
+    queryKey: ["emergency-withdrawal"],
+    queryFn: () => getEmergencyWithdrawalRequests(id),
   });
 };

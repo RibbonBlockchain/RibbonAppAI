@@ -124,3 +124,9 @@ export type TJoinSavingsBody = {
   id: number;
   payoutNumber?: number;
 };
+
+export type TApproveEmergencyWithdrawalBody = {
+  requestId: number;
+  savingsId: number;
+  approve: boolean;
+};

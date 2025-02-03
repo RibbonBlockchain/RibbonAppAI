@@ -1,6 +1,10 @@
 "use client";
 
-import { useGetAllSavingsPlan } from "@/api/user";
+import {
+  useGetAllSavingsPlan,
+  useGetCreatedSavingsPlan,
+  useGetJoinedSavingsPlan,
+} from "@/api/user";
 import { ArrowRight2 } from "iconsax-react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,9 +13,10 @@ import React, { useState } from "react";
 const MoneyClubs = () => {
   const router = useRouter();
   const { data } = useGetAllSavingsPlan();
+  const { data: createdSavingsPlan } = useGetCreatedSavingsPlan();
+  const { data: joinedSavingsPlan } = useGetJoinedSavingsPlan();
 
   const savingsPlans = Array.isArray(data?.data) ? data?.data : [];
-  const createdPlans = savingsPlans?.filter((item: any) => item.userId === 265);
 
   const [activeTab, setActiveTab] = useState("all");
 
@@ -93,7 +98,7 @@ const MoneyClubs = () => {
 
         {activeTab === "joined" && (
           <div className="flex flex-col gap-4 text-sm font-normal text-[#FFFFFF]">
-            {emptyData.map((i: any) => (
+            {joinedSavingsPlan?.data.map((i: any) => (
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
@@ -109,7 +114,7 @@ const MoneyClubs = () => {
               </div>
             ))}
 
-            {emptyData?.length === 0 && (
+            {joinedSavingsPlan?.data.length === 0 && (
               <div className="mt-5 text-center">
                 You have not joined any savings plan
               </div>
@@ -119,7 +124,7 @@ const MoneyClubs = () => {
 
         {activeTab === "created" && (
           <div className="flex flex-col gap-4 text-sm font-normal text-[#FFFFFF]">
-            {createdPlans.map((i: any) => (
+            {createdSavingsPlan?.data.map((i: any) => (
               <div
                 key={i.id}
                 onClick={() => router.push(`/dashboard/moneyclubs/${i.id}`)}
@@ -135,7 +140,7 @@ const MoneyClubs = () => {
               </div>
             ))}
 
-            {createdPlans?.length === 0 && (
+            {createdSavingsPlan?.data.length === 0 && (
               <div className="mt-5 text-center">
                 You have not created any savings plan
               </div>

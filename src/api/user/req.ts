@@ -18,6 +18,7 @@ import {
   TPostCommentBody,
   TSavingsPlanBody,
   TJoinSavingsBody,
+  TApproveEmergencyWithdrawalBody,
 } from "./types";
 import { TResponse, client } from "../api-client";
 
@@ -347,5 +348,33 @@ export const joinSavingsPlan = async (body: TJoinSavingsBody) => {
 
 export const getSavingsMember = async (id: string) => {
   const res = await client.get<any>(`/finance/savings/${id}/members`);
+  return res.data;
+};
+
+export const getCreatedSavingsPlan = async () => {
+  const res = await client.get<any>(`/finance/savings/created`);
+  return res.data;
+};
+
+export const getJoinedSavingsPlan = async () => {
+  const res = await client.get<any>(`/finance/savings/joined`);
+  return res.data;
+};
+
+// emergency withdrawal
+export const requestEmergencyWithdrawal = async (body: { id: any }) => {
+  const res = await client.post("finance/savings/withdraw-request", body);
+  return res.data;
+};
+
+export const approveEmergenctyWithdrawal = async (
+  body: TApproveEmergencyWithdrawalBody
+) => {
+  const res = await client.post("finance/savings/withdraw-approve", body);
+  return res.data;
+};
+
+export const getEmergencyWithdrawalRequests = async (id: string) => {
+  const res = await client.get<any>(`/finance/savings/${id}/withdraw-request`);
   return res.data;
 };

@@ -22,8 +22,15 @@ import { Minus, Plus } from "lucide-react";
 import { shorten } from "@/lib/utils/shorten";
 import { useParams, useRouter } from "next/navigation";
 import { formatDateTime } from "@/lib/values/format-dateandtime-ago";
-import { useGetSavingsMembers, useGetSavingsPlanById } from "@/api/user";
+import {
+  useApproveEmergenctyWithdrawal,
+  useGetEmergencyWithdrawalRequests,
+  useGetSavingsMembers,
+  useGetSavingsPlanById,
+  useRequestEmergencyWithdrawal,
+} from "@/api/user";
 import toast from "react-hot-toast";
+import { SpinnerIconPurple } from "@/components/icons/spinner";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -34,6 +41,14 @@ const SavingsPlanDetailsPage = () => {
 
   const { data } = useGetSavingsPlanById(params.id as any);
   const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
+  const { data: emergencyWithdrawalRequests } =
+    useGetEmergencyWithdrawalRequests(params.id as any);
+  const {
+    mutate: requestEmergencyWithdrawal,
+    isPending: requestEmergencyWithdrawalPending,
+  } = useRequestEmergencyWithdrawal();
+  const { mutate: approveEmergencyWithdrawal } =
+    useApproveEmergenctyWithdrawal();
 
   const userSavingsDetails = savingsMembers?.data.filter(
     (item: any) => item.userId === userId
@@ -62,14 +77,40 @@ const SavingsPlanDetailsPage = () => {
   const [activateEmergencyWithdral, setActivateEmergencyWithdral] =
     useState(false);
   const handleEmergencyWithdrawal = () => {
-    setActivateEmergencyWithdral(true);
+    requestEmergencyWithdrawal(
+      { id: params.id },
+      {
+        onSuccess: () => {
+          setActivateEmergencyWithdral(true);
+          toast.success("Withdrawal requests sent to members");
+        },
+      }
+    );
   };
 
-  const handleAcceptEmergencyWithdrawal = () =>
-    toast.success("implement function here");
-  const handleRejectEmergencyWithdrawal = () =>
-    toast.success("implement function here");
+  // request id is where?
+  const handleAcceptEmergencyWithdrawal = () => {
+    approveEmergencyWithdrawal(
+      { approve: true, requestId: 0, savingsId: params.id as any },
+      {
+        onSuccess: () => {
+          toast.success("Withdrawal request approved");
+        },
+      }
+    );
+  };
 
+  // request id is where?
+  const handleRejectEmergencyWithdrawal = () => {
+    approveEmergencyWithdrawal(
+      { approve: false, requestId: 0, savingsId: params.id as any },
+      {
+        onSuccess: () => {
+          toast.success("Withdrawal request rejected");
+        },
+      }
+    );
+  };
   const isSubmitDisabled = false;
 
   return (
@@ -156,9 +197,13 @@ const SavingsPlanDetailsPage = () => {
             ) : (
               <Button
                 onClick={handleEmergencyWithdrawal}
-                className="bg-[inherit] text-[#F2B4B4] border border-[#F2B4B4]"
+                className="flex items-center justify-center text-center bg-[inherit] text-[#F2B4B4] border border-[#F2B4B4]"
               >
-                Emergency Withdrawal
+                {requestEmergencyWithdrawalPending ? (
+                  <SpinnerIconPurple />
+                ) : (
+                  "Emergency Withdrawal"
+                )}
               </Button>
             )}
           </div>

@@ -14,7 +14,9 @@ const Verify = () => {
         <div className="flex flex-col gap-2">
           <h1 className="font-extrabold text-3xl">Verify your phone number</h1>
 
-          <SubHeading />
+          {/* <SubHeading /> */}
+          <p className="text-sm">Test verification code is: 000000.</p>
+          <p className="text-sm">Click verify to continue.</p>
         </div>
 
         <FormInput />

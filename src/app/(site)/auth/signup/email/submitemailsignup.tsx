@@ -37,7 +37,8 @@ const SubmitEmailSignup = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Send Email verification Code
+        {/* Send Email verification Code */}
+        Continue
       </Button>
     </div>
   );

@@ -32,8 +32,6 @@ const FormInput = () => {
       const countryCode = data.countryCode;
       const countryName = data.countryName;
 
-      console.log(countryCode, countryName, "details here");
-
       if (countryCode) {
         setCountry(JSON.stringify({ code: countryCode, name: countryName }));
       }

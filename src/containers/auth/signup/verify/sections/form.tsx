@@ -23,7 +23,7 @@ const FormInput = () => {
         value={state.code}
         setValue={setOtp}
       />
-      <p className="flex items-center gap-2 text-sm">
+      {/* <p className="flex items-center gap-2 text-sm">
         <span>I didn&apos;t get a code!</span>{" "}
         <span
           onClick={handleRequest}
@@ -35,7 +35,7 @@ const FormInput = () => {
             "Resend Code"
           )}
         </span>
-      </p>
+      </p> */}
     </>
   );
 };

@@ -52,7 +52,10 @@ const Verify = () => {
           <h1 className="font-extrabold text-3xl">
             Verify your organization email
           </h1>
-          <p className="text-sm ">A code has been sent to {email}.</p>{" "}
+          {/* <p className="text-sm ">A code has been sent to {email}.</p>{" "} */}
+          <p className="text-sm ">
+            We have prefilled a default code for test purpose.
+          </p>{" "}
         </div>
 
         <p className="text-sm font-extrabold mt-3 -mb-2">Enter Code</p>

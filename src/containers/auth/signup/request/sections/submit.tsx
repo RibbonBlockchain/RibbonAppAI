@@ -38,7 +38,8 @@ const Submit = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Send SMS Code
+        {/* Send SMS Code */}
+        Next
       </Button>
     </div>
   );

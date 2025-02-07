@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import { useCheckMail, usePhoneSignUpRequest } from "@/api/auth";
 import { TCheckPhoneResponse } from "@/api/auth/types";
+import toast from "react-hot-toast";
 
 const SubmitEmailSignup = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const SubmitEmailSignup = () => {
   const onSuccess = (data: TCheckPhoneResponse) => {
     const url = data?.exists ? "/auth/password" : "/auth/signup/email/verify";
     router.push(url);
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import { useVerifyPhoneSignUp } from "@/api/auth";
+import toast from "react-hot-toast";
 
 const Submit = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const Submit = () => {
 
   const onSuccess = () => {
     router.push("/auth/signup/phone/pin");
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

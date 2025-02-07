@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { usePhoneSignUpPin } from "@/api/auth";
 import { authAtom } from "@/lib/atoms/auth.atom";
+import toast from "react-hot-toast";
 
 const Submit = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const Submit = () => {
   const onSuccess = async () => {
     await login({ pin: form.pin, phone: form.phoneNumber });
     router.push("/dashboard");
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

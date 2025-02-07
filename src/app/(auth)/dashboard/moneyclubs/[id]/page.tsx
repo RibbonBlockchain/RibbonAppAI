@@ -16,7 +16,7 @@ import {
   MoneyRecive,
 } from "iconsax-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetAuth } from "@/api/auth";
 import { Minus, Plus } from "lucide-react";
 import { shorten } from "@/lib/utils/shorten";
@@ -30,7 +30,9 @@ import {
   useRequestEmergencyWithdrawal,
 } from "@/api/user";
 import toast from "react-hot-toast";
-import { SpinnerIconPurple } from "@/components/icons/spinner";
+import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
+import { formatDate } from "react-datepicker/dist/date_utils";
+import { format, differenceInMonths, differenceInWeeks } from "date-fns";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -48,13 +50,14 @@ const SavingsPlanDetailsPage = () => {
     mutate: requestEmergencyWithdrawal,
     isPending: requestEmergencyWithdrawalPending,
   } = useRequestEmergencyWithdrawal();
-  const { mutate: approveEmergencyWithdrawal } =
+  const { mutate: approveEmergencyWithdrawal, isPending: approveIsPending } =
     useApproveEmergenctyWithdrawal();
 
   const userSavingsDetails = savingsMembers?.data.find(
     (item: any) => item.userId === userId
   );
   const userPayoutNumber = userSavingsDetails?.payoutNumber;
+  const requestId = userSavingsDetails?.id;
 
   const netDeposit = data?.data?.transactions?.reduce(
     (total: any, transaction: any) => {
@@ -74,25 +77,20 @@ const SavingsPlanDetailsPage = () => {
     setIsOpen(!isOpen);
   };
 
-  const [activateEmergencyWithdral, setActivateEmergencyWithdral] =
-    useState(false);
-
   const handleEmergencyWithdrawal = () => {
     requestEmergencyWithdrawal(
       { id: params.id },
       {
         onSuccess: () => {
-          setActivateEmergencyWithdral(true);
           toast.success("Withdrawal requests sent to members");
         },
       }
     );
   };
 
-  // request id is where?
   const handleAcceptEmergencyWithdrawal = () => {
     approveEmergencyWithdrawal(
-      { approve: true, requestId: 0, savingsId: params.id as any },
+      { approve: true, requestId: requestId, savingsId: params.id as any },
       {
         onSuccess: () => {
           toast.success("Withdrawal request approved");
@@ -101,10 +99,9 @@ const SavingsPlanDetailsPage = () => {
     );
   };
 
-  // request id is where?
   const handleRejectEmergencyWithdrawal = () => {
     approveEmergencyWithdrawal(
-      { approve: false, requestId: 0, savingsId: params.id as any },
+      { approve: false, requestId: requestId, savingsId: params.id as any },
       {
         onSuccess: () => {
           toast.success("Withdrawal request rejected");
@@ -113,6 +110,104 @@ const SavingsPlanDetailsPage = () => {
     );
   };
   const isSubmitDisabled = false;
+
+  interface Participant {
+    id: number;
+    userId: number;
+    savingsId: number;
+    payoutNumber: number;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+      id: number;
+      firstName: string | null;
+      lastName: string | null;
+      phone: string;
+      email: string | null;
+      role: string;
+      status: string;
+    };
+  }
+
+  const [nextPayoutDate, setNextPayoutDate] = useState<string>("");
+  const [cycleCount, setCycleCount] = useState<number>(0);
+  const [nextPayout, setNextPayout] = useState<string>("");
+  const [nextPayoutCycle, setNextPayoutCycle] = useState<number>(0);
+  const [nextPayoutParticipant, setNextPayoutParticipant] =
+    useState<Participant | null>(null); // New state to store participant details
+
+  const initialDate = data?.data?.payoutDate;
+
+  const getNextPayoutInfo = (
+    sortedParticipants: Participant[],
+    userPayoutNumber: number
+  ): string => {
+    let nextCycle = userPayoutNumber;
+
+    const firstParticipant = sortedParticipants.find(
+      (participant) => participant.payoutNumber === 1
+    );
+
+    if (firstParticipant) {
+      nextCycle = 1;
+    }
+
+    while (
+      !sortedParticipants.find(
+        (participant) => participant.payoutNumber === nextCycle
+      )
+    ) {
+      nextCycle++;
+    }
+
+    const nextPayoutParticipant = sortedParticipants.find(
+      (participant) => participant.payoutNumber === nextCycle
+    );
+
+    if (!nextPayoutParticipant) {
+      return `No payout for Cycle ${nextCycle}. Skipping...`;
+    }
+
+    setNextPayoutParticipant(nextPayoutParticipant);
+
+    const payoutDate = new Date(initialDate);
+
+    if (nextCycle === 1) {
+      payoutDate.setMonth(payoutDate.getMonth() + 1);
+      payoutDate.setDate(27);
+    } else if (nextCycle > 1) {
+      payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
+      payoutDate.setDate(27);
+    }
+
+    setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
+    setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
+
+    return `Payout for Cycle ${nextCycle} will be processed on ${format(
+      payoutDate,
+      "MM-dd-yyyy"
+    )}`;
+  };
+
+  useEffect(() => {
+    if (Array.isArray(savingsMembers?.data)) {
+      const sortedParticipants = [...savingsMembers.data].sort(
+        (a, b) => a.payoutNumber - b.payoutNumber
+      );
+
+      const nextPayoutInfo = getNextPayoutInfo(
+        sortedParticipants,
+        userPayoutNumber
+      );
+
+      setNextPayout(nextPayoutInfo);
+      setCycleCount(userPayoutNumber);
+    } else {
+      console.error("Invalid data for savingsMembers:", savingsMembers?.data);
+    }
+  }, [savingsMembers, userPayoutNumber]);
+
+  console.log(nextPayoutParticipant, "here");
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -137,20 +232,23 @@ const SavingsPlanDetailsPage = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next contribution</label>
-                <p className="text-xl font-bold">
-                  {formatDateTime(data?.data.payoutDate).date}
-                </p>
+                <p className="text-xl font-bold">{nextPayoutDate}</p>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Your number</label>
                 <div className="flex flex-row items-center gap-2">
                   <p className="text-xl font-bold">{userPayoutNumber}</p>
-                  <span>Cycle xx of {data?.data.participant}</span>
+                  <span>
+                    Cycle {nextPayoutCycle} of {data?.data.participant}
+                  </span>
                 </div>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
-                <p className="text-xl font-bold">Uzor (xx)</p>
+                <p className="text-xl font-bold">
+                  User {nextPayoutParticipant?.userId} (Payout# :{" "}
+                  {nextPayoutParticipant?.payoutNumber})
+                </p>
               </div>
             </div>
 
@@ -162,7 +260,10 @@ const SavingsPlanDetailsPage = () => {
                 height={2}
                 className="w-full"
               />
-              <p>xx of {data?.data.participant} payouts completed</p>
+              <p>
+                {nextPayoutCycle - 1} of {data?.data.participant} payouts
+                completed
+              </p>
             </div>
 
             <div className="flex flex-row gap-2 border-b border-[#FFFFFF36] pb-4">
@@ -180,20 +281,19 @@ const SavingsPlanDetailsPage = () => {
               <MoneySend size={16} /> Add Contribution
             </Button>
 
-            {activateEmergencyWithdral ||
-            emergencyWithdrawalRequests?.data.length ? (
+            {emergencyWithdrawalRequests?.data ? (
               <div className="flex gap-2 items-center justify-center w-full text-sm font-semibold text-center p-2 rounded-xl bg-[inherit]  border border-[#FFFFFF36]">
                 <button
                   onClick={handleAcceptEmergencyWithdrawal}
                   className="px-3 py-2 border text-green-300 border-green-400 rounded-md"
                 >
-                  Accept
+                  {approveIsPending ? <SpinnerIcon /> : "Accept"}
                 </button>
                 <button
                   onClick={handleRejectEmergencyWithdrawal}
                   className="px-4 py-2 text-[#F2B4B4] border  border-[#F2B4B4] rounded-md"
                 >
-                  Reject
+                  {approveIsPending ? <SpinnerIcon /> : "Reject"}
                 </button>
               </div>
             ) : (
@@ -248,7 +348,12 @@ const SavingsPlanDetailsPage = () => {
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-gray-300 mr-3" />
                       )}
-                      <span className="font-medium">user {member.user.id}</span>
+                      <div className="flex flex-row items-center">
+                        <span className="font-medium">
+                          user {member.user.id} Payout number:{" "}
+                          {member.payoutNumber}{" "}
+                        </span>
+                      </div>
                     </li>
                   ))}
                 </ul>

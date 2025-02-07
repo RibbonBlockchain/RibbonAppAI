@@ -9,6 +9,7 @@ import { loginPassword } from "@/api/auth/req";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import BackArrow from "@/components/button/back-arrow";
 import InputBox from "@/components/questionnarie/input-box";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [state, setState] = useAtom(authAtom);
@@ -29,6 +30,7 @@ const Login = () => {
   const onSuccess = async () => {
     await loginPassword({ password: form.password, email: form.email });
     router.push("/dashboard");
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

@@ -6,6 +6,7 @@ import { useCheckPhone } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import phoneValidator from "validator/lib/isMobilePhone";
+import toast from "react-hot-toast";
 
 const Submit = () => {
   const router = useRouter();
@@ -20,7 +21,9 @@ const Submit = () => {
   const isFormInvalid = !isValidPhoneNumber;
   const isSubmitDisabled = isLoading || isFormInvalid;
 
-  const onSuccess = () => router.push("/auth/pin");
+  const onSuccess = () => {
+    router.push("/auth/pin"), toast.success("You received 1000Ribbon reward");
+  };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;

@@ -11,7 +11,7 @@ export const WorldIdButton = ({ children }: Props) => {
 
   return (
     <button
-      onClick={handleClick}
+      // onClick={handleClick}
       className="
       flex flex-row gap-3 items-center justify-center w-full text-sm font-semibold text-center px-4 py-3 rounded-xl border-2 shadow-sm transition-colors duration-100 disabled:cursor-not-allowed bg-[#DFCBFB] text-black disabled:border-stone-300 disabled:bg-stone-400/50"
     >

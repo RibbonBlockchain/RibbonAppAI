@@ -7,6 +7,7 @@ import { authAtom } from "@/lib/atoms/auth.atom";
 import { usePhoneSignUpRequest } from "@/api/auth";
 import { TCheckPhoneResponse } from "@/api/auth/types";
 import phoneValidator from "validator/lib/isMobilePhone";
+import toast from "react-hot-toast";
 
 const Submit = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const Submit = () => {
   const onSuccess = (data: TCheckPhoneResponse) => {
     const url = data?.exists ? "/auth/pin" : "/auth/signup/phone/verify";
     router.push(url);
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

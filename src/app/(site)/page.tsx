@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import LinkButton from "@/components/button/link";
 import { WorldIdButton } from "@/containers/auth/landing/button";
+import toast from "react-hot-toast";
 
 const Home = () => {
   return (
@@ -39,12 +42,14 @@ const Home = () => {
 
           <LinkButton
             href="/auth/signup/phone"
+            onclick={() => toast.success("You received 2500 Ribbon reward")}
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Personal account
           </LinkButton>
           <LinkButton
             href="/auth/signup/email"
+            onclick={() => toast.success("You received 2500 Ribbon reward")}
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Organization account

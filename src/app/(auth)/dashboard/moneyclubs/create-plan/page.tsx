@@ -162,7 +162,7 @@ const CreateSavingsPlan = () => {
                 <div
                   className={`w-4 h-4 flex items-center justify-center rounded-full border-2 ${
                     selectedPlanId === option.id
-                      ? "bg-white border-2 border-[#290064]"
+                      ? "bg-white border-2 border-white"
                       : "border-white"
                   }`}
                 >
@@ -170,7 +170,7 @@ const CreateSavingsPlan = () => {
                     className={`w-2 h-2 rounded-full ${
                       selectedPlanId === option.id
                         ? "bg-[#290064] border-2 border-[#290064]"
-                        : "border-white"
+                        : "border-[#290064]"
                     }`}
                   />
                 </div>
@@ -228,13 +228,22 @@ const CreateSavingsPlan = () => {
                 className="flex items-center cursor-pointer py-1 text-base font-normal"
               >
                 <span className="flex-grow">{option.label}</span>
+
                 <div
-                  className={`w-4 h-4 rounded-full border-2 ml-2 ${
+                  className={`w-4 h-4 flex items-center justify-center rounded-full border-2 ${
                     selectedFrequencyId === option.id
-                      ? "bg-white border-white"
+                      ? "bg-white border-2 border-white"
                       : "border-white"
                   }`}
-                />
+                >
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      selectedFrequencyId === option.id
+                        ? "bg-[#290064] border-2 border-[#290064]"
+                        : "border-[#290064]"
+                    }`}
+                  />
+                </div>
               </div>
             ))}
           </div>

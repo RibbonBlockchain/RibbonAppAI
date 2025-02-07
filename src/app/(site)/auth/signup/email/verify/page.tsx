@@ -13,6 +13,7 @@ import {
   useVerifyEmailSignUp,
   useVerifyPhoneForgotPassword,
 } from "@/api/auth";
+import toast from "react-hot-toast";
 
 const Verify = () => {
   const { email } = useAtomValue(authAtom);
@@ -37,6 +38,7 @@ const Verify = () => {
 
   const onSuccess = () => {
     router.push("/auth/signup/email/password");
+    toast.success("You received 2500 Ribbon reward");
   };
 
   const handleSubmit = () => {

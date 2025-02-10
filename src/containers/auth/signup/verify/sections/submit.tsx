@@ -6,19 +6,27 @@ import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import { useVerifyPhoneSignUp } from "@/api/auth";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import RewardAnimation from "@/components/reward-animation";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
   const { mutate: verify, isPending, isSuccess } = useVerifyPhoneSignUp();
 
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+
   const isLoading = isPending || isSuccess;
   const isFormInvalid = form.code.length < 6 || !form.phoneNumber;
   const isSubmitDisabled = isFormInvalid || isLoading;
 
   const onSuccess = () => {
-    router.push("/auth/signup/phone/pin");
+    setShowRewardAnimation(true);
     toast.success("You received 2500 Ribbon reward");
+
+    setTimeout(() => {
+      router.push("/auth/signup/phone/pin");
+    }, 2000);
   };
 
   const handleSubmit = () => {
@@ -35,6 +43,8 @@ const Submit = () => {
       >
         Verify
       </Button>
+
+      {showRewardAnimation && <RewardAnimation />}
     </div>
   );
 };

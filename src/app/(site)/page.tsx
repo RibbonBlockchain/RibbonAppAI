@@ -4,8 +4,12 @@ import Image from "next/image";
 import LinkButton from "@/components/button/link";
 import { WorldIdButton } from "@/containers/auth/landing/button";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import RewardAnimation from "@/components/reward-animation";
 
 const Home = () => {
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+
   return (
     <div className="text-white bg-[#0B0228] flex flex-col h-[inherit] items-center justify-between gap-6 p-4 sm:p-6">
       <div className="w-full flex flex-end items-end justify-end">
@@ -42,14 +46,20 @@ const Home = () => {
 
           <LinkButton
             href="/auth/signup/phone"
-            onclick={() => toast.success("You received 2500 Ribbon reward")}
+            onclick={() => {
+              toast.success("You received 2500 Ribbon reward"),
+                setShowRewardAnimation(true);
+            }}
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Personal account
           </LinkButton>
           <LinkButton
             href="/auth/signup/email"
-            onclick={() => toast.success("You received 2500 Ribbon reward")}
+            onclick={() => {
+              toast.success("You received 2500 Ribbon reward"),
+                setShowRewardAnimation(true);
+            }}
             className="text-sm font-normal text-white text-start bg-inherit border border-[#98A2B3]"
           >
             Organization account
@@ -85,6 +95,8 @@ const Home = () => {
           Privacy Policy
         </a>
       </div>
+
+      {showRewardAnimation && <RewardAnimation />}
     </div>
   );
 };

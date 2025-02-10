@@ -7,11 +7,15 @@ import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
 import phoneValidator from "validator/lib/isMobilePhone";
 import toast from "react-hot-toast";
+import RewardAnimation from "@/components/reward-animation";
+import { useState } from "react";
 
 const Submit = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
   const { mutate: check, isPending, isSuccess } = useCheckPhone();
+
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
 
   const isLoading = isPending || isSuccess;
 
@@ -22,13 +26,19 @@ const Submit = () => {
   const isSubmitDisabled = isLoading || isFormInvalid;
 
   const onSuccess = () => {
-    router.push("/auth/pin"), toast.success("You received 1000Ribbon reward");
+    setShowRewardAnimation(true);
+    toast.success("You received 1000 Ribbon reward");
+
+    setTimeout(() => {
+      router.push("/auth/pin");
+    }, 2000);
   };
 
   const handleSubmit = () => {
     if (isSubmitDisabled) return;
     check({ phone: form.phoneNumber }, { onSuccess });
   };
+
   return (
     <div className="flex items-center justify-center w-full pb-6">
       <Button
@@ -38,6 +48,8 @@ const Submit = () => {
       >
         Continue
       </Button>
+
+      {showRewardAnimation && <RewardAnimation />}
     </div>
   );
 };

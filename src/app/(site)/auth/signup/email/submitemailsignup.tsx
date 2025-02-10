@@ -4,14 +4,18 @@ import { useAtomValue } from "jotai";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import { useCheckMail, usePhoneSignUpRequest } from "@/api/auth";
+import { useCheckMail } from "@/api/auth";
 import { TCheckPhoneResponse } from "@/api/auth/types";
 import toast from "react-hot-toast";
+import RewardAnimation from "@/components/reward-animation";
+import { useState } from "react";
 
 const SubmitEmailSignup = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
   const { isPending, isSuccess, mutate: request } = useCheckMail();
+
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
 
   const isLoading = isPending || isSuccess;
 
@@ -23,8 +27,12 @@ const SubmitEmailSignup = () => {
 
   const onSuccess = (data: TCheckPhoneResponse) => {
     const url = data?.exists ? "/auth/password" : "/auth/signup/email/verify";
-    router.push(url);
+    setShowRewardAnimation(true);
     toast.success("You received 2500 Ribbon reward");
+
+    setTimeout(() => {
+      router.push(url);
+    }, 2000);
   };
 
   const handleSubmit = () => {
@@ -42,6 +50,8 @@ const SubmitEmailSignup = () => {
         {/* Send Email verification Code */}
         Continue
       </Button>
+
+      {showRewardAnimation && <RewardAnimation />}
     </div>
   );
 };

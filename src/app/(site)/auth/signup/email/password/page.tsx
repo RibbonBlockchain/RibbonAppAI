@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
@@ -22,6 +22,8 @@ const Login = () => {
   const form = useAtomValue(authAtom);
   const { isPending, isSuccess, mutate: request } = usePasswordSignUp();
 
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+
   const isLoading = isPending || isSuccess;
   const isFormInvalid = !form.email || !form.password;
 
@@ -29,8 +31,12 @@ const Login = () => {
 
   const onSuccess = async () => {
     await loginPassword({ password: form.password, email: form.email });
-    router.push("/dashboard");
+    setShowRewardAnimation(true);
     toast.success("You received 2500 Ribbon reward");
+
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 2000);
   };
 
   const handleSubmit = () => {

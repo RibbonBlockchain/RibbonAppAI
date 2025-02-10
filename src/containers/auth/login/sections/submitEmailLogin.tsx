@@ -2,18 +2,20 @@
 
 import { useAtomValue } from "jotai";
 import Button from "@/components/button";
-import { useCheckPhone, useEmailLogin, useLoginPassword } from "@/api/auth";
+import { useEmailLogin, useLoginPassword } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { authAtom } from "@/lib/atoms/auth.atom";
-import phoneValidator from "validator/lib/isMobilePhone";
-import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import RewardAnimation from "@/components/reward-animation";
 
 const SubmitEmailLogin = () => {
   const router = useRouter();
   const form = useAtomValue(authAtom);
   const { mutate: emailLogin, isPending, isSuccess } = useEmailLogin();
   const { mutate: loginPassword } = useLoginPassword();
+
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
 
   const isLoading = isPending || isSuccess;
 
@@ -24,7 +26,12 @@ const SubmitEmailLogin = () => {
   const isSubmitDisabled = isLoading;
 
   const onSuccess = () => {
-    router.push("/dashboard");
+    setShowRewardAnimation(true);
+    toast.success("You received 1000 Ribbon reward");
+
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 2000);
   };
 
   const handleSubmit = async () => {
@@ -42,6 +49,8 @@ const SubmitEmailLogin = () => {
       >
         Sign In
       </Button>
+
+      {showRewardAnimation && <RewardAnimation />}
     </div>
   );
 };

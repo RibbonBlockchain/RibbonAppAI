@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
@@ -14,6 +14,7 @@ import {
   useVerifyPhoneForgotPassword,
 } from "@/api/auth";
 import toast from "react-hot-toast";
+import RewardAnimation from "@/components/reward-animation";
 
 const Verify = () => {
   const { email } = useAtomValue(authAtom);
@@ -32,13 +33,19 @@ const Verify = () => {
   const form = useAtomValue(authAtom);
   const { isPending, isSuccess, mutate: verify } = useVerifyEmailSignUp();
 
+  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+
   const isLoading = isPending || isSuccess;
   const isFormInvalid = form.code.length < 6 || !form.email;
   const isSubmitDisabled = isFormInvalid || isLoading;
 
   const onSuccess = () => {
-    router.push("/auth/signup/email/password");
+    setShowRewardAnimation(true);
     toast.success("You received 2500 Ribbon reward");
+
+    setTimeout(() => {
+      router.push("/auth/signup/email/password");
+    }, 2000);
   };
 
   const handleSubmit = () => {
@@ -94,6 +101,8 @@ const Verify = () => {
         >
           Continue
         </Button>
+
+        {showRewardAnimation && <RewardAnimation />}
       </div>
     </div>
   );

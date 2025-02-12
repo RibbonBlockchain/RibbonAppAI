@@ -24,8 +24,6 @@ const Submit = () => {
       phone: form.phoneNumber,
     });
 
-    console.log(res?.status, "response here");
-
     setIsLoading(false);
     setShowRewardAnimation(true);
     toast.success("You received 1000 Ribbon reward");

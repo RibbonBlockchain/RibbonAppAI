@@ -41,6 +41,8 @@ export const moneyClubSavingsPlan = [
 ];
 
 export const savingsFrequency = [
+  { id: "minutes", label: "Minutes" },
+  { id: "hourly", label: "Hourly" },
   { id: "weekly", label: "Weekly" },
   { id: "biweekly", label: "Biweekly" },
   { id: "monthly", label: "Monthly" },

@@ -131,6 +131,10 @@ const JoinSavingsPlan = () => {
                     ? "Biweeks"
                     : data?.data.frequency === "monthly"
                     ? "Months"
+                    : data?.data.frequency === "hourly"
+                    ? "Hours"
+                    : data?.data.frequency === "minutes"
+                    ? "Minutes"
                     : ""}
                 </span>
               </p>

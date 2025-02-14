@@ -207,8 +207,6 @@ const SavingsPlanDetailsPage = () => {
     }
   }, [savingsMembers, userPayoutNumber]);
 
-  console.log(nextPayoutParticipant, "here");
-
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
       <div className="flex flex-row gap-2 items-center mt-3">
@@ -281,7 +279,7 @@ const SavingsPlanDetailsPage = () => {
               <MoneySend size={16} /> Add Contribution
             </Button>
 
-            {emergencyWithdrawalRequests?.data ? (
+            {data?.data?.withdrawalRequest ? (
               <div className="flex gap-2 items-center justify-center w-full text-sm font-semibold text-center p-2 rounded-xl bg-[inherit]  border border-[#FFFFFF36]">
                 <button
                   onClick={handleAcceptEmergencyWithdrawal}
@@ -482,6 +480,10 @@ const SavingsPlanDetailsPage = () => {
                       ? "Biweeks"
                       : data?.data.frequency === "monthly"
                       ? "Months"
+                      : data?.data.frequency === "hourly"
+                      ? "Hours"
+                      : data?.data.frequency === "minutes"
+                      ? "Minutes"
                       : ""}
                   </span>
                 </div>{" "}

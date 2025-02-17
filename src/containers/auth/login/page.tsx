@@ -33,7 +33,7 @@ const Login = () => {
             <FormInput />
 
             <p
-              className="text-sm underline mt-5 text-end"
+              className="text-sm underline mt-5 flex self-end text-end w-fit"
               onClick={() => setPageUI("organization")}
             >
               Sign in as organization instead?
@@ -75,7 +75,7 @@ const Login = () => {
             </div>
 
             <p
-              className="text-sm underline mt-5 text-end"
+              className="text-sm underline flex self-end mt-5 text-end w-fit "
               onClick={() => setPageUI("personal")}
             >
               Sign in with phone number instead?

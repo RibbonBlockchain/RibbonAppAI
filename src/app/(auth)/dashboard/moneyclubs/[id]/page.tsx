@@ -41,8 +41,8 @@ const SavingsPlanDetailsPage = () => {
   const { data: user } = useGetAuth();
   const userId = user?.id;
 
-  const { data } = useGetSavingsPlanById(params.id as any);
-  const { data: savingsMembers } = useGetSavingsMembers(params.id as any);
+  const { data } = useGetSavingsPlanById(params.id as string);
+  const { data: savingsMembers } = useGetSavingsMembers(params.id as string);
   const { data: emergencyWithdrawalRequests } =
     useGetEmergencyWithdrawalRequests(params.id as any);
 
@@ -90,7 +90,7 @@ const SavingsPlanDetailsPage = () => {
 
   const handleAcceptEmergencyWithdrawal = () => {
     approveEmergencyWithdrawal(
-      { approve: true, requestId: requestId, savingsId: params.id as any },
+      { approve: true, requestId: requestId, savingsId: Number(params.id) },
       {
         onSuccess: () => {
           toast.success("Withdrawal request approved");
@@ -101,7 +101,7 @@ const SavingsPlanDetailsPage = () => {
 
   const handleRejectEmergencyWithdrawal = () => {
     approveEmergencyWithdrawal(
-      { approve: false, requestId: requestId, savingsId: params.id as any },
+      { approve: false, requestId: requestId, savingsId: Number(params.id) },
       {
         onSuccess: () => {
           toast.success("Withdrawal request rejected");
@@ -138,58 +138,68 @@ const SavingsPlanDetailsPage = () => {
 
   const initialDate = data?.data?.payoutDate;
 
-  const getNextPayoutInfo = (
-    sortedParticipants: Participant[],
-    userPayoutNumber: number
-  ): string => {
-    let nextCycle = userPayoutNumber;
-
-    const firstParticipant = sortedParticipants.find(
-      (participant) => participant.payoutNumber === 1
-    );
-
-    if (firstParticipant) {
-      nextCycle = 1;
-    }
-
-    while (
-      !sortedParticipants.find(
-        (participant) => participant.payoutNumber === nextCycle
-      )
-    ) {
-      nextCycle++;
-    }
-
-    const nextPayoutParticipant = sortedParticipants.find(
-      (participant) => participant.payoutNumber === nextCycle
-    );
-
-    if (!nextPayoutParticipant) {
-      return `No payout for Cycle ${nextCycle}. Skipping...`;
-    }
-
-    setNextPayoutParticipant(nextPayoutParticipant);
-
-    const payoutDate = new Date(initialDate);
-
-    if (nextCycle === 1) {
-      payoutDate.setMonth(payoutDate.getMonth() + 1);
-      payoutDate.setDate(27);
-    } else if (nextCycle > 1) {
-      payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
-      payoutDate.setDate(27);
-    }
-
-    setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
-    setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
-
-    return `Payout for Cycle ${nextCycle} will be processed on ${format(
-      payoutDate,
-      "MM-dd-yyyy"
-    )}`;
-  };
-
   useEffect(() => {
+    if (!data || !savingsMembers) {
+      setNextPayout("Loading...");
+      return;
+    }
+
+    if (!user) {
+      setNextPayout("Please log in to continue.");
+      return;
+    }
+
+    const getNextPayoutInfo = (
+      sortedParticipants: Participant[],
+      userPayoutNumber: number
+    ): string => {
+      let nextCycle = userPayoutNumber;
+
+      const firstParticipant = sortedParticipants.find(
+        (participant) => participant.payoutNumber === 1
+      );
+
+      if (firstParticipant) {
+        nextCycle = 1;
+      }
+
+      while (
+        !sortedParticipants.find(
+          (participant) => participant.payoutNumber === nextCycle
+        )
+      ) {
+        nextCycle++;
+      }
+
+      const nextPayoutParticipant = sortedParticipants.find(
+        (participant) => participant.payoutNumber === nextCycle
+      );
+
+      if (!nextPayoutParticipant) {
+        return `No payout for Cycle ${nextCycle}. Skipping...`;
+      }
+
+      setNextPayoutParticipant(nextPayoutParticipant);
+
+      const payoutDate = new Date(initialDate);
+
+      if (nextCycle === 1) {
+        payoutDate.setMonth(payoutDate.getMonth() + 1);
+        payoutDate.setDate(27);
+      } else if (nextCycle > 1) {
+        payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
+        payoutDate.setDate(27);
+      }
+
+      setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
+      setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
+
+      return `Payout for Cycle ${nextCycle} will be processed on ${format(
+        payoutDate,
+        "MM-dd-yyyy"
+      )}`;
+    };
+
     if (Array.isArray(savingsMembers?.data)) {
       const sortedParticipants = [...savingsMembers.data].sort(
         (a, b) => a.payoutNumber - b.payoutNumber
@@ -205,7 +215,7 @@ const SavingsPlanDetailsPage = () => {
     } else {
       console.error("Invalid data for savingsMembers:", savingsMembers?.data);
     }
-  }, [savingsMembers, userPayoutNumber]);
+  }, [savingsMembers, userPayoutNumber, user, data, initialDate]);
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
@@ -244,8 +254,8 @@ const SavingsPlanDetailsPage = () => {
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
                 <p className="w-full text-xl font-bold">
-                  #{nextPayoutParticipant?.payoutNumber} - User{" "}
-                  {nextPayoutParticipant?.userId}
+                  #{nextPayoutParticipant?.payoutNumber ?? "N/A"} - User{" "}
+                  {nextPayoutParticipant?.userId ?? "Unknown"}
                 </p>
               </div>
             </div>

@@ -33,6 +33,7 @@ import toast from "react-hot-toast";
 import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { format, differenceInMonths, differenceInWeeks } from "date-fns";
+import { useUserBaseTransactions } from "@/api/user";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -58,6 +59,18 @@ const SavingsPlanDetailsPage = () => {
   );
   const userPayoutNumber = userSavingsDetails?.payoutNumber;
   const requestId = userSavingsDetails?.id;
+
+  // const {
+  //   mutate: getTxnHistory,
+  //   data: transactionHistory,
+  //   isPending: getTxPending,
+  // } = useUserBaseTransactions();
+
+  // useEffect(() => {
+  //   if (data?.data?.walletAddress) {
+  //     getTxnHistory({ address: data?.data?.walletAddress });
+  //   }
+  // }, [data?.data?.walletAddress, getTxnHistory]);
 
   const netDeposit = data?.data?.transactions?.reduce(
     (total: any, transaction: any) => {

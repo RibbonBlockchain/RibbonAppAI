@@ -81,7 +81,7 @@ const MoneyClubs = () => {
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>
                   <p className="font-medium">
-                    ${i.individualAmount} x {i.duration} months
+                    ${i.individualAmount} x {i.duration} {i.frequency}
                   </p>
                 </div>
                 <ArrowRight2 />
@@ -107,7 +107,7 @@ const MoneyClubs = () => {
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>
                   <p className="font-medium">
-                    ${i.individualAmount} x {i.duration} months
+                    ${i.individualAmount} x {i.duration} {i.frequency}
                   </p>
                 </div>
                 <ArrowRight2 />
@@ -133,7 +133,7 @@ const MoneyClubs = () => {
                 <div className="text-xs flex flex-col gap-2 ">
                   <p className="font-black">{i.name}</p>
                   <p className="font-medium">
-                    ${i.individualAmount} x {i.duration} months
+                    ${i.individualAmount} x {i.duration} {i.frequency}
                   </p>
                 </div>
                 <ArrowRight2 />

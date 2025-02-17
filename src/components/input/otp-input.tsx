@@ -41,6 +41,8 @@ const OtpInput = ({
             "outline-none bg-transparent border-[1px] !w-11 !h-11 rounded-xl:bg-transparent rounded-xl focus:outline-none focus:border-stone-600 focus:ring-stone-600 focus:ring-1",
             fieldClassName
           )}
+          type="tel"
+          inputMode="numeric"
         />
       )}
       {...props}

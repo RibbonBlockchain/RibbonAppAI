@@ -33,6 +33,7 @@ import toast from "react-hot-toast";
 import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { format, differenceInMonths, differenceInWeeks } from "date-fns";
+import { useUserBaseTransactions } from "@/api/user";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -58,6 +59,18 @@ const SavingsPlanDetailsPage = () => {
   );
   const userPayoutNumber = userSavingsDetails?.payoutNumber;
   const requestId = userSavingsDetails?.id;
+
+  // const {
+  //   mutate: getTxnHistory,
+  //   data: transactionHistory,
+  //   isPending: getTxPending,
+  // } = useUserBaseTransactions();
+
+  // useEffect(() => {
+  //   if (data?.data?.walletAddress) {
+  //     getTxnHistory({ address: data?.data?.walletAddress });
+  //   }
+  // }, [data?.data?.walletAddress, getTxnHistory]);
 
   const netDeposit = data?.data?.transactions?.reduce(
     (total: any, transaction: any) => {
@@ -138,84 +151,84 @@ const SavingsPlanDetailsPage = () => {
 
   const initialDate = data?.data?.payoutDate;
 
-  useEffect(() => {
-    if (!data || !savingsMembers) {
-      setNextPayout("Loading...");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!data || !savingsMembers) {
+  //     setNextPayout("Loading...");
+  //     return;
+  //   }
 
-    if (!user) {
-      setNextPayout("Please log in to continue.");
-      return;
-    }
+  //   if (!user) {
+  //     setNextPayout("Please log in to continue.");
+  //     return;
+  //   }
 
-    const getNextPayoutInfo = (
-      sortedParticipants: Participant[],
-      userPayoutNumber: number
-    ): string => {
-      let nextCycle = userPayoutNumber;
+  //   const getNextPayoutInfo = (
+  //     sortedParticipants: Participant[],
+  //     userPayoutNumber: number
+  //   ): string => {
+  //     let nextCycle = userPayoutNumber;
 
-      const firstParticipant = sortedParticipants.find(
-        (participant) => participant.payoutNumber === 1
-      );
+  //     const firstParticipant = sortedParticipants.find(
+  //       (participant) => participant.payoutNumber === 1
+  //     );
 
-      if (firstParticipant) {
-        nextCycle = 1;
-      }
+  //     if (firstParticipant) {
+  //       nextCycle = 1;
+  //     }
 
-      while (
-        !sortedParticipants.find(
-          (participant) => participant.payoutNumber === nextCycle
-        )
-      ) {
-        nextCycle++;
-      }
+  //     while (
+  //       !sortedParticipants.find(
+  //         (participant) => participant.payoutNumber === nextCycle
+  //       )
+  //     ) {
+  //       nextCycle++;
+  //     }
 
-      const nextPayoutParticipant = sortedParticipants.find(
-        (participant) => participant.payoutNumber === nextCycle
-      );
+  //     const nextPayoutParticipant = sortedParticipants.find(
+  //       (participant) => participant.payoutNumber === nextCycle
+  //     );
 
-      if (!nextPayoutParticipant) {
-        return `No payout for Cycle ${nextCycle}. Skipping...`;
-      }
+  //     if (!nextPayoutParticipant) {
+  //       return `No payout for Cycle ${nextCycle}. Skipping...`;
+  //     }
 
-      setNextPayoutParticipant(nextPayoutParticipant);
+  //     setNextPayoutParticipant(nextPayoutParticipant);
 
-      const payoutDate = new Date(initialDate);
+  //     const payoutDate = new Date(initialDate);
 
-      if (nextCycle === 1) {
-        payoutDate.setMonth(payoutDate.getMonth() + 1);
-        payoutDate.setDate(27);
-      } else if (nextCycle > 1) {
-        payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
-        payoutDate.setDate(27);
-      }
+  //     if (nextCycle === 1) {
+  //       payoutDate.setMonth(payoutDate.getMonth() + 1);
+  //       payoutDate.setDate(27);
+  //     } else if (nextCycle > 1) {
+  //       payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
+  //       payoutDate.setDate(27);
+  //     }
 
-      setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
-      setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
+  //     setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
+  //     setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
 
-      return `Payout for Cycle ${nextCycle} will be processed on ${format(
-        payoutDate,
-        "MM-dd-yyyy"
-      )}`;
-    };
+  //     return `Payout for Cycle ${nextCycle} will be processed on ${format(
+  //       payoutDate,
+  //       "MM-dd-yyyy"
+  //     )}`;
+  //   };
 
-    if (Array.isArray(savingsMembers?.data)) {
-      const sortedParticipants = [...savingsMembers.data].sort(
-        (a, b) => a.payoutNumber - b.payoutNumber
-      );
+  //   if (Array.isArray(savingsMembers?.data)) {
+  //     const sortedParticipants = [...savingsMembers.data].sort(
+  //       (a, b) => a.payoutNumber - b.payoutNumber
+  //     );
 
-      const nextPayoutInfo = getNextPayoutInfo(
-        sortedParticipants,
-        userPayoutNumber
-      );
+  //     const nextPayoutInfo = getNextPayoutInfo(
+  //       sortedParticipants,
+  //       userPayoutNumber
+  //     );
 
-      setNextPayout(nextPayoutInfo);
-      setCycleCount(userPayoutNumber);
-    } else {
-      console.error("Invalid data for savingsMembers:", savingsMembers?.data);
-    }
-  }, [savingsMembers, userPayoutNumber, user, data, initialDate]);
+  //     setNextPayout(nextPayoutInfo);
+  //     setCycleCount(userPayoutNumber);
+  //   } else {
+  //     console.error("Invalid data for savingsMembers:", savingsMembers?.data);
+  //   }
+  // }, [savingsMembers, userPayoutNumber, user, data, initialDate]);
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">

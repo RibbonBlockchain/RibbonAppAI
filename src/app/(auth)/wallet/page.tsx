@@ -240,7 +240,7 @@ const MainWallet = () => {
               </div>
             </div>
 
-            <div
+            {/* <div
               onClick={() => {}}
               className="cursor-pointer w-full max-w-[165px] items-center justify-center flex flex-col gap-2"
             >
@@ -248,7 +248,7 @@ const MainWallet = () => {
                 <ArrowLeftRight stroke="#fff" />
                 Swap
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="w-full px-2 flex flex-row items-center justify-between gap-2 text-center text-sm font-bold rounded-[10px]">
@@ -406,7 +406,7 @@ const MainWallet = () => {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#0808086B] bg-opacity-50">
           <div className="bg-white backdrop h-auto rounded-lg shadow-lg p-4 mx-1 max-w-[460px] w-full transition-transform transform translate-y-0">
             <div className="py-4 flex flex-col gap-4 bg-white bg-opacity-75 backdrop-blur-sm rounded-md w-full text-black">
-              <div className="mb-6 flex flex-row items-center justify-between">
+              <div className="mb-4 flex flex-row items-center justify-between">
                 <div />
                 <div className="flex flex-row gap-2 items-center text-lg font-bold">
                   <Image
@@ -420,7 +420,9 @@ const MainWallet = () => {
                 <X size={20} onClick={() => setClaimUsdcModal(false)} />
               </div>
 
-              <div className="flex flex-col gap-4 text-black">
+              <p>Ribbon balance: {points}</p>
+
+              <div className="flex flex-col text-black">
                 <div className="mb-4">
                   <label
                     htmlFor="input"
@@ -428,6 +430,7 @@ const MainWallet = () => {
                   >
                     Claim amount (10,000 points minimum)
                   </label>
+
                   <input
                     id="input"
                     type="number"
@@ -439,12 +442,23 @@ const MainWallet = () => {
                       "text-xs bg-inherit py-3.5 px-2 leading-tight shadow appearance-none border border-[#D6CBFF79] rounded-[10px] focus:outline-none focus:shadow-outline min-w-full"
                     )}
                   />
+
+                  {Number(claimAmount) > points && (
+                    <p className="block after:ml-1 text-red-500 text-sm mt-1">
+                      You do not have sufficient balance
+                    </p>
+                  )}
                 </div>
               </div>
+
               <Button
                 onClick={handleClaimUsdc}
-                className="my-6 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm"
-                disabled={(claimAmount as number) < 10000 || claimPending}
+                className="my-5 w-full flex flex-row gap-2 items-center justify-center rounded-[8px] py-3 font-bold text-sm"
+                disabled={
+                  (claimAmount as number) < 10000 ||
+                  claimPending ||
+                  Number(claimAmount) > points
+                }
               >
                 {claimPending ? <SpinnerIcon /> : `Claim USDC`}
               </Button>

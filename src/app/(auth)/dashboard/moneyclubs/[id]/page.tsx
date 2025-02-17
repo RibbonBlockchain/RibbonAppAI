@@ -243,9 +243,9 @@ const SavingsPlanDetailsPage = () => {
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
-                <p className="text-xl font-bold">
-                  User {nextPayoutParticipant?.userId} (Payout# :{" "}
-                  {nextPayoutParticipant?.payoutNumber})
+                <p className="w-full text-xl font-bold">
+                  #{nextPayoutParticipant?.payoutNumber} - User{" "}
+                  {nextPayoutParticipant?.userId}
                 </p>
               </div>
             </div>

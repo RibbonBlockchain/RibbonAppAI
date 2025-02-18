@@ -327,7 +327,9 @@ export const getLendBorrowStats = async () => {
 
 // FINANCE
 export const createSavingsPlan = async (body: TSavingsPlanBody) => {
-  const res = await client.post("finance/savings", body);
+  const res = await client.post("finance/savings", body, {
+    timeout: 180000,
+  });
   return res.data;
 };
 
@@ -342,7 +344,9 @@ export const getSavingsPlanById = async (id: string) => {
 };
 
 export const joinSavingsPlan = async (body: TJoinSavingsBody) => {
-  const res = await client.post("finance/savings/join", body);
+  const res = await client.post("finance/savings/join", body, {
+    timeout: 180000,
+  });
   return res.data;
 };
 

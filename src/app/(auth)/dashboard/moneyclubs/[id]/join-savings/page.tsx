@@ -73,7 +73,10 @@ const JoinSavingsPlan = () => {
     );
   };
 
-  const isSubmitDisabled = isPending || !walletDetails;
+  const isSubmitDisabled =
+    isPending ||
+    !walletDetails ||
+    (data?.data?.type === "flexible" && !selectedPayoutNumber);
 
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">

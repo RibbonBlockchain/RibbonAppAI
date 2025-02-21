@@ -142,7 +142,7 @@ const SavingsPlanDetailsPage = () => {
     };
   }
 
-  const [nextPayoutDate, setNextPayoutDate] = useState<string>("");
+  // const [nextPayoutDate, setNextPayoutDate] = useState<string>("");
   const [cycleCount, setCycleCount] = useState<number>(0);
   const [nextPayout, setNextPayout] = useState<string>("");
   const [nextPayoutCycle, setNextPayoutCycle] = useState<number>(0);
@@ -230,6 +230,133 @@ const SavingsPlanDetailsPage = () => {
   //   }
   // }, [savingsMembers, userPayoutNumber, user, data, initialDate]);
 
+  // utils/payoutCalculator.js
+
+  interface Payout {
+    payoutNumber: number;
+    payoutDate: string;
+  }
+
+  function calculatePayoutDates(
+    numUsers: number,
+    intervalType: string
+  ): Payout[] {
+    const startDate = new Date(data?.data.payoutDate);
+    const payoutDates: Payout[] = [];
+
+    for (let payoutNumber = 1; payoutNumber <= numUsers; payoutNumber++) {
+      let daysToAdd = 0;
+
+      switch (intervalType) {
+        case "minutes":
+          daysToAdd = (payoutNumber - 1) * 0;
+          break;
+        case "weekly":
+          daysToAdd = (payoutNumber - 1) * 7;
+          break;
+        case "biweekly":
+          daysToAdd = (payoutNumber - 1) * 14;
+          break;
+        case "monthly":
+          daysToAdd = (payoutNumber - 1) * 28;
+          break;
+        default:
+          throw new Error("Invalid interval type");
+      }
+
+      const payoutDate = new Date(startDate);
+      payoutDate.setDate(startDate.getDate() + daysToAdd);
+
+      payoutDates.push({ payoutNumber, payoutDate: payoutDate.toISOString() });
+    }
+
+    return payoutDates;
+  }
+
+  interface PayoutsDoneInfo {
+    payoutsDone: number;
+    lastPayoutDate: Date | null;
+  }
+
+  function countPayoutsDone(payoutDates: Payout[]): PayoutsDoneInfo {
+    const currentDate = new Date();
+    let payoutsDone = 0;
+    let lastPayoutDate: Date | null = null;
+
+    payoutDates.forEach((payout) => {
+      const payoutDate = new Date(payout.payoutDate);
+      if (payoutDate <= currentDate) {
+        payoutsDone++;
+        lastPayoutDate = payoutDate; // Update last payout date
+      }
+    });
+
+    return { payoutsDone, lastPayoutDate };
+  }
+
+  interface NextPayoutInfo {
+    nextPayoutDate: Date | null;
+    nextPayoutUser: number | null;
+  }
+
+  function getNextPayoutInfo(
+    payoutDates: Payout[],
+    lastPayoutDate: Date | null
+  ): NextPayoutInfo {
+    let nextPayoutDate: Date | null = null;
+    let nextPayoutUser: number | null = null;
+
+    if (lastPayoutDate) {
+      for (let i = 0; i < payoutDates.length; i++) {
+        const payoutDate = new Date(payoutDates[i].payoutDate);
+        if (payoutDate > lastPayoutDate) {
+          nextPayoutDate = payoutDate;
+          nextPayoutUser = payoutDates[i].payoutNumber;
+          break;
+        }
+      }
+    }
+
+    return { nextPayoutDate, nextPayoutUser };
+  }
+
+  function getUserDetailsByPayoutNumber(payoutNumber: number) {
+    const userDetails = savingsMembers?.data
+      .filter((item: any) => item.payoutNumber === payoutNumber)
+      .map((item: any) => item.user); // Extract only the user details
+
+    return userDetails;
+  }
+
+  // Sample output (you will need to replace `data` with actual data in your application)
+  const payoutDates = calculatePayoutDates(
+    Number(data?.data.participant),
+    data?.data.frequency
+  );
+  const { payoutsDone, lastPayoutDate } = countPayoutsDone(payoutDates);
+  const { nextPayoutDate, nextPayoutUser } = getNextPayoutInfo(
+    payoutDates,
+    lastPayoutDate
+  );
+
+  const userDetails = getUserDetailsByPayoutNumber(payoutsDone);
+
+  // console.log("Payouts done:", payoutsDone);
+  // console.log(
+  //   "Last payout date:",
+  //   lastPayoutDate ? lastPayoutDate.toISOString() : "No payouts done yet"
+  // );
+  // console.log(
+  //   "Next payout date:",
+  //   nextPayoutDate ? nextPayoutDate.toISOString() : "No next payout available"
+  // );
+  // console.log(
+  //   "Next payout user:",
+  //   nextPayoutUser ? `User ${nextPayoutUser}` : "No next user"
+  // );
+
+  // console.log(userDetails);
+
   return (
     <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 pb-20">
       <div className="flex flex-row gap-2 items-center mt-3">
@@ -253,22 +380,24 @@ const SavingsPlanDetailsPage = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next contribution</label>
-                <p className="text-xl font-bold">{nextPayoutDate}</p>
+                <p className="text-xl font-bold">
+                  {formatDateTime(data?.data.payoutDate).date}
+                </p>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Your number</label>
                 <div className="flex flex-row items-center gap-2">
                   <p className="text-xl font-bold">{userPayoutNumber}</p>
                   <span>
-                    Cycle {nextPayoutCycle} of {data?.data.participant}
+                    Cycle {payoutsDone} of {data?.data.participant}
                   </span>
                 </div>
               </div>
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
                 <p className="w-full text-xl font-bold">
-                  #{nextPayoutParticipant?.payoutNumber ?? "N/A"} - User{" "}
-                  {nextPayoutParticipant?.userId ?? "Unknown"}
+                  #{userDetails.firstname || "N/A"} - User{" "}
+                  {userDetails.id || "NA"}
                 </p>
               </div>
             </div>
@@ -282,8 +411,7 @@ const SavingsPlanDetailsPage = () => {
                 className="w-full"
               />
               <p>
-                {nextPayoutCycle - 1} of {data?.data.participant} payouts
-                completed
+                {payoutsDone - 1} of {data?.data.participant} payouts completed
               </p>
             </div>
 

@@ -400,7 +400,7 @@ const Dashboard = () => {
                     </p>
 
                     <div>
-                      {trendingItems.data.length === 0 && (
+                      {uniqueItems.length === 0 && (
                         <div className="mt-4 pb-6">
                           No trending products at the moment
                         </div>

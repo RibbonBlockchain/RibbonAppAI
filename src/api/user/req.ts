@@ -270,6 +270,11 @@ export const getUserOrders = async () => {
   return res.data;
 };
 
+export const getTrendingItems = async () => {
+  const res = await client.get<any>("/linkage/store/item/trending");
+  return res.data;
+};
+
 export const respondBasedAgent = async (body: TRespondBasedAgent) => {
   const res = await client.post("ai/chat", body);
   return res.data;

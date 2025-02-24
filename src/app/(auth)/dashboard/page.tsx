@@ -6,12 +6,12 @@ import {
   financeMenu,
   categoryTabs,
   ecommerceMenu,
-  trendingItems,
 } from "@/lib/values/constants";
 import {
   useGetUncompletedTasks,
   useGetUncompletedSurveys,
   useGetUncompletedQuestionnaires,
+  useGetTrendingItems,
 } from "@/api/user";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,6 +40,21 @@ const Dashboard = () => {
   const { data: questionnaire, isLoading } = useGetUncompletedQuestionnaires();
   const { data: survey } = useGetUncompletedSurveys();
   const { data: task } = useGetUncompletedTasks();
+
+  const { data: trendingItems } = useGetTrendingItems();
+  const uniqueItems = trendingItems?.data.reduce(
+    (acc: any[], item: { name: any }) => {
+      if (
+        !acc.some(
+          (existingItem: { name: any }) => existingItem.name === item.name
+        )
+      ) {
+        acc.push(item);
+      }
+      return acc;
+    },
+    []
+  );
 
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
@@ -384,15 +399,15 @@ const Dashboard = () => {
                       Trending products
                     </p>
 
-                    <div key={trendingItems.data.id}>
-                      {trendingItems.data.items.length === 0 && (
+                    <div>
+                      {trendingItems.data.length === 0 && (
                         <div className="mt-4 pb-6">
                           No trending products at the moment
                         </div>
                       )}
 
                       <div className="mt-4 grid xxxs:grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-8 pb-6">
-                        {trendingItems.data.items.map((item: any) => (
+                        {uniqueItems.map((item: any) => (
                           <div
                             key={item.id}
                             className="relative flex flex-row items-center justify-between"
@@ -400,16 +415,15 @@ const Dashboard = () => {
                             <div className="flex flex-row items-center gap-1">
                               <Image
                                 width={68}
-                                // alt={item.name}
-                                alt={"name"}
+                                alt={item.name}
                                 height={68}
-                                src={"/assets/status-circle.png"}
+                                src={item.images[0]}
                                 className="bg-white rounded-md w-[68px] h-[68px]"
                               />
                               <div className="flex flex-col items-start justify-between py-1">
-                                <p className="text-xs">Item info</p>
+                                <p className="text-xs">Product info</p>
                                 <p className="text-sm font-semibold line-clamp-2">
-                                  Item Id: {item.name || item.itemId}
+                                  {item.name}
                                 </p>
 
                                 <p className="text-sm font-bold">

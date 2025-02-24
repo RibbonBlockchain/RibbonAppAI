@@ -34,6 +34,7 @@ import { SpinnerIcon, SpinnerIconPurple } from "@/components/icons/spinner";
 import { formatDate } from "react-datepicker/dist/date_utils";
 import { format, differenceInMonths, differenceInWeeks } from "date-fns";
 import { useUserBaseTransactions } from "@/api/user";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const SavingsPlanDetailsPage = () => {
   const router = useRouter();
@@ -141,96 +142,6 @@ const SavingsPlanDetailsPage = () => {
       status: string;
     };
   }
-
-  // const [nextPayoutDate, setNextPayoutDate] = useState<string>("");
-  const [cycleCount, setCycleCount] = useState<number>(0);
-  const [nextPayout, setNextPayout] = useState<string>("");
-  const [nextPayoutCycle, setNextPayoutCycle] = useState<number>(0);
-  const [nextPayoutParticipant, setNextPayoutParticipant] =
-    useState<Participant | null>(null); // New state to store participant details
-
-  const initialDate = data?.data?.payoutDate;
-
-  // useEffect(() => {
-  //   if (!data || !savingsMembers) {
-  //     setNextPayout("Loading...");
-  //     return;
-  //   }
-
-  //   if (!user) {
-  //     setNextPayout("Please log in to continue.");
-  //     return;
-  //   }
-
-  //   const getNextPayoutInfo = (
-  //     sortedParticipants: Participant[],
-  //     userPayoutNumber: number
-  //   ): string => {
-  //     let nextCycle = userPayoutNumber;
-
-  //     const firstParticipant = sortedParticipants.find(
-  //       (participant) => participant.payoutNumber === 1
-  //     );
-
-  //     if (firstParticipant) {
-  //       nextCycle = 1;
-  //     }
-
-  //     while (
-  //       !sortedParticipants.find(
-  //         (participant) => participant.payoutNumber === nextCycle
-  //       )
-  //     ) {
-  //       nextCycle++;
-  //     }
-
-  //     const nextPayoutParticipant = sortedParticipants.find(
-  //       (participant) => participant.payoutNumber === nextCycle
-  //     );
-
-  //     if (!nextPayoutParticipant) {
-  //       return `No payout for Cycle ${nextCycle}. Skipping...`;
-  //     }
-
-  //     setNextPayoutParticipant(nextPayoutParticipant);
-
-  //     const payoutDate = new Date(initialDate);
-
-  //     if (nextCycle === 1) {
-  //       payoutDate.setMonth(payoutDate.getMonth() + 1);
-  //       payoutDate.setDate(27);
-  //     } else if (nextCycle > 1) {
-  //       payoutDate.setMonth(payoutDate.getMonth() + nextCycle - 1);
-  //       payoutDate.setDate(27);
-  //     }
-
-  //     setNextPayoutDate(format(payoutDate, "MM-dd-yyyy"));
-  //     setNextPayoutCycle(nextCycle); // Update nextPayoutCycle state
-
-  //     return `Payout for Cycle ${nextCycle} will be processed on ${format(
-  //       payoutDate,
-  //       "MM-dd-yyyy"
-  //     )}`;
-  //   };
-
-  //   if (Array.isArray(savingsMembers?.data)) {
-  //     const sortedParticipants = [...savingsMembers.data].sort(
-  //       (a, b) => a.payoutNumber - b.payoutNumber
-  //     );
-
-  //     const nextPayoutInfo = getNextPayoutInfo(
-  //       sortedParticipants,
-  //       userPayoutNumber
-  //     );
-
-  //     setNextPayout(nextPayoutInfo);
-  //     setCycleCount(userPayoutNumber);
-  //   } else {
-  //     console.error("Invalid data for savingsMembers:", savingsMembers?.data);
-  //   }
-  // }, [savingsMembers, userPayoutNumber, user, data, initialDate]);
-
-  // utils/payoutCalculator.js
 
   interface Payout {
     payoutNumber: number;
@@ -341,15 +252,15 @@ const SavingsPlanDetailsPage = () => {
 
   const userDetails = getUserDetailsByPayoutNumber(payoutsDone);
 
-  // console.log("Payouts done:", payoutsDone);
-  // console.log(
-  //   "Last payout date:",
-  //   lastPayoutDate ? lastPayoutDate.toISOString() : "No payouts done yet"
-  // );
-  // console.log(
-  //   "Next payout date:",
-  //   nextPayoutDate ? nextPayoutDate.toISOString() : "No next payout available"
-  // );
+  console.log("Payouts done:", payoutsDone);
+  console.log(
+    "Last payout date:",
+    lastPayoutDate ? lastPayoutDate.toISOString() : "No payouts done yet"
+  );
+  console.log(
+    "Next payout date:",
+    nextPayoutDate ? nextPayoutDate.toISOString() : "No next payout available"
+  );
   // console.log(
   //   "Next payout user:",
   //   nextPayoutUser ? `User ${nextPayoutUser}` : "No next user"
@@ -381,7 +292,8 @@ const SavingsPlanDetailsPage = () => {
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next contribution</label>
                 <p className="text-xl font-bold">
-                  {formatDateTime(data?.data.payoutDate).date}
+                  {/* {formatDateTime(data?.data.payoutDate).date} */}
+                  {nextPayoutDate ? nextPayoutDate.toDateString() : "N/A"}
                 </p>
               </div>
               <div className="w-full flex flex-col gap-2">
@@ -396,22 +308,22 @@ const SavingsPlanDetailsPage = () => {
               <div className="w-full flex flex-col gap-2">
                 <label className="text-sm font-bold">Next Payout</label>
                 <p className="w-full text-xl font-bold">
-                  #{userDetails.firstname || "N/A"} - User{" "}
-                  {userDetails.id || "NA"}
+                  #{userDetails?.firstname || "N/A"} - User{" "}
+                  {userDetails?.id || "NA"}
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 text-[13px] font-medium">
-              <Image
-                src={"/assets/progress.png"}
-                alt="line"
-                width={100}
-                height={2}
-                className="w-full"
-              />
+              <progress
+                value={payoutsDone / 3}
+                max="1"
+                className="w-full h-4 bg-gray-200 rounded-full"
+                color="white"
+              ></progress>
+
               <p>
-                {payoutsDone - 1} of {data?.data.participant} payouts completed
+                {payoutsDone} of {data?.data.participant} payouts completed
               </p>
             </div>
 

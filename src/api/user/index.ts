@@ -83,6 +83,7 @@ import {
   requestEmergencyWithdrawal,
   approveEmergenctyWithdrawal,
   getEmergencyWithdrawalRequests,
+  getTrendingItems,
 } from "./req";
 import { onError } from "../api-client";
 import { TGetResponse } from "../auth/types";
@@ -474,6 +475,13 @@ export const useGetUserOrders = () => {
   return useQuery({
     queryKey: ["user-orders"],
     queryFn: () => getUserOrders(),
+  });
+};
+
+export const useGetTrendingItems = () => {
+  return useQuery({
+    queryKey: ["trending-items"],
+    queryFn: () => getTrendingItems(),
   });
 };
 

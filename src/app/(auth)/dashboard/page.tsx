@@ -42,7 +42,7 @@ const Dashboard = () => {
   const { data: task } = useGetUncompletedTasks();
 
   const { data: trendingItems } = useGetTrendingItems();
-  const uniqueItems = trendingItems?.data.reduce(
+  const uniqueItems = trendingItems?.data?.reduce(
     (acc: any[], item: { name: any }) => {
       if (
         !acc.some(
@@ -55,6 +55,8 @@ const Dashboard = () => {
     },
     []
   );
+
+  console.log(uniqueItems, "here?");
 
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
@@ -399,43 +401,45 @@ const Dashboard = () => {
                       Trending products
                     </p>
 
-                    <div>
-                      {uniqueItems.length === 0 && (
-                        <div className="mt-4 pb-6">
-                          No trending products at the moment
-                        </div>
-                      )}
+                    {uniqueItems && (
+                      <div>
+                        {uniqueItems.length === 0 && (
+                          <div className="mt-4 pb-6">
+                            No trending products at the moment
+                          </div>
+                        )}
 
-                      <div className="mt-4 grid xxxs:grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-8 pb-6">
-                        {uniqueItems.map((item: any) => (
-                          <div
-                            key={item.id}
-                            className="relative flex flex-row items-center justify-between"
-                          >
-                            <div className="flex flex-row items-center gap-1">
-                              <Image
-                                width={68}
-                                alt={item.name}
-                                height={68}
-                                src={item.images[0]}
-                                className="bg-white rounded-md w-[68px] h-[68px]"
-                              />
-                              <div className="flex flex-col items-start justify-between py-1">
-                                <p className="text-xs">Product info</p>
-                                <p className="text-sm font-semibold line-clamp-2">
-                                  {item.name}
-                                </p>
+                        <div className="mt-4 grid xxxs:grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-8 pb-6">
+                          {uniqueItems.map((item: any) => (
+                            <div
+                              key={item.id}
+                              className="relative flex flex-row items-center justify-between"
+                            >
+                              <div className="flex flex-row items-center gap-1">
+                                <Image
+                                  width={68}
+                                  alt={item.name}
+                                  height={68}
+                                  src={item.images[0]}
+                                  className="bg-white rounded-md w-[68px] h-[68px]"
+                                />
+                                <div className="flex flex-col items-start justify-between py-1">
+                                  <p className="text-xs">Product info</p>
+                                  <p className="text-sm font-semibold line-clamp-2">
+                                    {item.name}
+                                  </p>
 
-                                <p className="text-sm font-bold">
-                                  {item.currency || "$"}
-                                  {item.price}
-                                </p>
+                                  <p className="text-sm font-bold">
+                                    {item.currency || "$"}
+                                    {item.price}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}

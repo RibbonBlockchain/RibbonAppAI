@@ -56,8 +56,6 @@ const Dashboard = () => {
     []
   );
 
-  console.log(uniqueItems, "here?");
-
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   isLoading && <PageLoader />;
 

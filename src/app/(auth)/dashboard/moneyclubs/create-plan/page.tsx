@@ -39,6 +39,7 @@ const CreateSavingsPlan = () => {
   const [amount, setAmount] = useState(0);
   const [contribution, setContribution] = useState(0);
   const [duration, setDuration] = useState("");
+  const [cycles, setCycles] = useState("");
   const [participants, setParticipants] = useState(0);
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -95,6 +96,7 @@ const CreateSavingsPlan = () => {
       individualAmount: contribution,
       frequency: selectedFrequencyId,
       duration: duration,
+      cycles: cycles,
       participant: participants,
       payoutDate: startDate,
       payoutNumber: selectedPayoutNumber,
@@ -256,6 +258,15 @@ const CreateSavingsPlan = () => {
           required={false}
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
+        />
+
+        <InputBox
+          name={"cycles"}
+          label={"Number of cycles"}
+          placeholder="e.g 5"
+          required={false}
+          value={cycles}
+          onChange={(e) => setCycles(e.target.value)}
         />
 
         <InputBox

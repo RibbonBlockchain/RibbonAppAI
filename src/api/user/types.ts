@@ -113,6 +113,7 @@ export type TSavingsPlanBody = {
   participant: number;
   frequency: string;
   duration: string;
+  cycles: any;
   targetAmount: number;
   individualAmount: number;
   about: string;

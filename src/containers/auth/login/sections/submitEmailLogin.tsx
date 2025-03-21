@@ -27,7 +27,7 @@ const SubmitEmailLogin = () => {
 
   const onSuccess = () => {
     setShowRewardAnimation(true);
-    toast.success("You received 1000 Ribbon reward");
+    toast.success("You received 2000 Ribbon reward");
 
     setTimeout(() => {
       router.push("/dashboard");

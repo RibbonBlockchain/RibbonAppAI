@@ -26,7 +26,7 @@ const Submit = () => {
 
     setIsLoading(false);
     setShowRewardAnimation(true);
-    toast.success("You received 1000 Ribbon reward");
+    toast.success("You received 2000 Ribbon reward");
 
     if (res?.error) {
       setIsLoading(false);

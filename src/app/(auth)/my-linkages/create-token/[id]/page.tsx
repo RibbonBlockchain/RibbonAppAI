@@ -218,7 +218,7 @@ const CreateToken = () => {
           disabled={isSubmitDisabled}
           type="submit"
           className={clsx(
-            "my-10 w-full rounded-[8px] py-3 font-bold text-sm",
+            "my-10 w-full rounded-[8px] py-3 font-bold text-sm flex items-center justify-center text-center",
             isSubmitDisabled
               ? "bg-gray-600 text-white cursor-not-allowed"
               : "bg-white text-[#290064]"

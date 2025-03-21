@@ -206,7 +206,7 @@ const LinkageAIChatInterface: React.FC = () => {
               </div>
             ))}
 
-            <p>Loan services</p>
+            <p>Services</p>
             {loanServices?.data?.data.map((i: any) => (
               <div key={i.id} className="flex flex-col gap-2 py-2">
                 <Link

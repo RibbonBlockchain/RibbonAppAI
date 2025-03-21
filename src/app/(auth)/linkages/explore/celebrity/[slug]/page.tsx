@@ -44,18 +44,93 @@ import {
 import clsx from "clsx";
 
 const influencerStoreData = [
-  { id: 1, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
-  { id: 2, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
+  {
+    id: 1,
+    image: "/images/wizkid.webp",
+    title: "Wizkid Old times",
+    price: 9,
+    currency: "$",
+  },
+  {
+    id: 2,
+    image: "/images/wizkid2.jpeg",
+    title: "Ayo (Joy)",
+    price: 12,
+    currency: "$",
+  },
   {
     id: 3,
-    image: "",
-    title: "Tyla Digital 2024 Long text",
+    image: "/images/wizkid3.jpeg",
+    title: "Best of 2020",
+    price: 10,
+    currency: "$",
+  },
+  {
+    id: 4,
+    image: "/images/wizkid3.jpeg",
+    title: "Best of 2022",
+    price: 10,
+    currency: "$",
+  },
+  {
+    id: 5,
+    image: "/images/wizkid2.jpeg",
+    title: "Ayo (Joy) Remix",
+    price: 12,
+    currency: "$",
+  },
+  {
+    id: 6,
+    image: "/images/wizkid.webp",
+    title: "All times best",
+    price: 12,
+    currency: "$",
+  },
+];
+
+const influencerMerchandiseData = [
+  {
+    id: 1,
+    image: "/images/starboy.jpeg",
+    title: "Star boy",
+    price: 20,
+    currency: "$",
+  },
+  {
+    id: 2,
+    image: "/images/starboy1.jpeg",
+    title: "Louis Vuitton",
+    price: 17,
+    currency: "$",
+  },
+  {
+    id: 3,
+    image: "/images/starboy2.jpeg",
+    title: "Made in Lagos",
     price: 15,
     currency: "$",
   },
-  { id: 4, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
-  { id: 5, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
-  { id: 6, image: "", title: "Tyla Digital 2024", price: 15, currency: "$" },
+  {
+    id: 4,
+    image: "/images/starboy3.jpeg",
+    title: "Puma/Sports",
+    price: 12,
+    currency: "$",
+  },
+  {
+    id: 5,
+    image: "/images/starboy1.jpeg",
+    title: "Louis Vuitton",
+    price: 14,
+    currency: "$",
+  },
+  {
+    id: 6,
+    image: "/images/starboy2.jpeg",
+    title: "Made in Lagos",
+    price: 10,
+    currency: "$",
+  },
 ];
 
 const tokenTabs: TabProps[] = [
@@ -1005,7 +1080,7 @@ const Influencer = () => {
                       </p>
                     </div>
                     <div className="flex flex-row gap-4 overflow-x-auto ">
-                      {influencerStoreData.map((i) => (
+                      {influencerMerchandiseData.map((i) => (
                         <div
                           key={i.id}
                           className="flex flex-col gap-1 w-[100px]"
@@ -1015,7 +1090,7 @@ const Influencer = () => {
                             alt=""
                             width={96}
                             height={84}
-                            className="max-h-[84px] max-w-[96px] bg-white"
+                            className="h-[84px] max-w-[96px] bg-white"
                           />
                           <p className="text-xs font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                             {i.title}

@@ -1,52 +1,35 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import Topbar from "@/containers/dashboard/top-bar";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import TimelineCard from "@/components/timeline-card";
-import { useGetUserNotifications } from "@/api/user";
-import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
-import { SpinnerIcon } from "@/components/icons/spinner";
+import { useEffect, useState } from "react";
 
-const TimelineComponent = () => {
-  const { data: notifications, isLoading } = useGetUserNotifications();
+interface User {
+  id: string;
+  username: string;
+}
 
-  const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+const TimelinePage = () => {
+  const [isEmbedded, setIsEmbedded] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const embedded = window.location.pathname.includes("/embed");
+      setIsEmbedded(embedded);
+    }
+  }, []);
 
   return (
     <AuthNavLayout>
-      <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6">
-        <Topbar>
-          <p className="text-xl font-bold">Timeline</p>
-        </Topbar>
-        <section className="mt-5 mb-20">
-          {isLoading ? (
-            <div className="mt-10 flex items-center justify-center">
-              <SpinnerIcon />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {sortedNotifications?.map((i: any) => (
-                <TimelineCard
-                  key={i.id}
-                  title={i.title}
-                  image={null}
-                  time={formatDateAndTimeAgo(i.createdAt).relativeTime}
-                  description={i.message}
-                  comments={i.comments.length}
-                  likes={i.likes.length}
-                  shares={""}
-                  id={i.id}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-      </main>
+      <div className={isEmbedded ? "embedded-view" : ""}>
+        <iframe
+          src="https://tymeline.replit.app/"
+          width="100%"
+          height="1000"
+          allowFullScreen
+        ></iframe>
+      </div>
     </AuthNavLayout>
   );
 };
 
-export default TimelineComponent;
+export default TimelinePage;

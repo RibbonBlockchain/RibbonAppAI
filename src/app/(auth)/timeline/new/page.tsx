@@ -1,70 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
+import Topbar from "@/containers/dashboard/top-bar";
+import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
+import TimelineCard from "@/components/timeline-card";
+import { useGetUserNotifications } from "@/api/user";
+import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
-interface Tweet {
-  id: string;
-  text: string;
-  created_at: string;
-}
+const TimelineComponent = () => {
+  const { data: notifications, isLoading } = useGetUserNotifications();
 
-const TimelinePage = () => {
-  const [tweets, setTweets] = useState<Tweet[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const userId = "1384590339286179843";
-  const BEARER_TOKEN =
-    "AAAAAAAAAAAAAAAAAAAAAJH4xwEAAAAADCwVkVJWbRSiF8tp9mqeHoEz4Jc%3DIBR9p9I3GOea2yWhU4h0gh9uNeKx8If9rZjY5wfmAbD67k9wyX";
-
-  useEffect(() => {
-    const fetchTweets = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get(
-          `https://api.twitter.com/2/users/${userId}/tweets`,
-          {
-            headers: {
-              Authorization: `Bearer ${BEARER_TOKEN}`,
-            },
-          }
-        );
-        console.log(response.data, "response here");
-
-        setTweets(response.data.data || []);
-      } catch (err) {
-        console.log(err, "eror");
-        setError("Failed to fetch tweets");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTweets();
-  }, [userId]);
+  const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
-    <div>
-      <h1>User Timeline</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <div>
-        {tweets.length === 0 ? (
-          <p>No tweets found.</p>
-        ) : (
-          tweets.map((tweet) => (
-            <div key={tweet.id} style={{ marginBottom: "20px" }}>
-              <p>{tweet.text}</p>
-              <small>{tweet.created_at}</small>
+    <AuthNavLayout>
+      <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6">
+        <Topbar>
+          <p className="text-xl font-bold">Timeline</p>
+        </Topbar>
+        <section className="mt-5 mb-20">
+          {isLoading ? (
+            <div className="mt-10 flex items-center justify-center">
+              <SpinnerIcon />
             </div>
-          ))
-        )}
-      </div>
-    </div>
+          ) : (
+            <div className="space-y-4">
+              {sortedNotifications?.map((i: any) => (
+                <TimelineCard
+                  key={i.id}
+                  title={i.title}
+                  image={null}
+                  time={formatDateAndTimeAgo(i.createdAt).relativeTime}
+                  description={i.message}
+                  comments={i.comments.length}
+                  likes={i.likes.length}
+                  shares={""}
+                  id={i.id}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </AuthNavLayout>
   );
 };
 
-export default TimelinePage;
+export default TimelineComponent;

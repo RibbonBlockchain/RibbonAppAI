@@ -10,12 +10,11 @@ import { SpinnerIcon } from "@/components/icons/spinner";
 import ActivityButton from "@/components/button/activity-button";
 
 type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
-
 type EmbedData = {
   type: EmbedType;
   id: string;
+  url: string;
   username?: string;
-  additionalData?: any;
 };
 
 const TimelineComponent = () => {
@@ -26,41 +25,35 @@ const TimelineComponent = () => {
   });
 
   const [url, setUrl] = useState("");
-  const [embedData, setEmbedData] = useState<EmbedData | null>(null);
+  const [embeds, setEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
 
-  // Load appropriate embed scripts when embedData changes
+  // Load appropriate embed scripts when embeds change
   useEffect(() => {
-    if (!embedData) return;
-
-    let script: HTMLScriptElement | null = null;
-
-    switch (embedData.type) {
-      case "twitter":
-        script = document.createElement("script");
-        script.src = "https://platform.twitter.com/widgets.js";
-        script.async = true;
-        document.body.appendChild(script);
-        break;
-
-      case "youtube":
-        // YouTube iframe API is usually loaded automatically when using iframe embeds
-        break;
-
-      case "tiktok":
-        script = document.createElement("script");
-        script.src = "https://www.tiktok.com/embed.js";
-        script.async = true;
-        document.body.appendChild(script);
-        break;
+    // Twitter
+    if (embeds.some((e) => e.type === "twitter")) {
+      const script = document.createElement("script");
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      document.body.appendChild(script);
     }
 
-    return () => {
-      if (script) {
-        document.body.removeChild(script);
-      }
-    };
-  }, [embedData]);
+    // TikTok
+    if (embeds.some((e) => e.type === "tiktok")) {
+      const script = document.createElement("script");
+      script.src = "https://www.tiktok.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    // Instagram
+    if (embeds.some((e) => e.type === "instagram")) {
+      const script = document.createElement("script");
+      script.src = "//www.instagram.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, [embeds]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +62,7 @@ const TimelineComponent = () => {
     try {
       const parsed = parseSocialUrl(url);
       if (parsed) {
-        setEmbedData(parsed);
+        setEmbeds((prev) => [...prev, parsed]);
         setUrl("");
       } else {
         setError(
@@ -82,96 +75,154 @@ const TimelineComponent = () => {
   };
 
   const parseSocialUrl = (url: string): EmbedData | null => {
-    // Normalize x.com to twitter.com
     const normalizedUrl = url.replace(/x\.com/g, "twitter.com");
 
-    // Try to match Twitter URL
+    // Twitter
     const twitterMatch = normalizedUrl.match(
       /(?:twitter\.com)\/(\w+)\/status\/(\d+)/i
     );
-    if (twitterMatch && twitterMatch[1] && twitterMatch[2]) {
+    if (twitterMatch?.[1] && twitterMatch?.[2]) {
       return {
         type: "twitter",
         username: twitterMatch[1],
         id: twitterMatch[2],
+        url: normalizedUrl,
       };
     }
 
-    // Try to match YouTube URL
+    // YouTube
     const youtubeMatch = normalizedUrl.match(
       /(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/)?([a-zA-Z0-9_-]{11})/i
     );
-    if (youtubeMatch && youtubeMatch[1]) {
+    if (youtubeMatch?.[1]) {
       return {
         type: "youtube",
         id: youtubeMatch[1],
+        url: normalizedUrl,
       };
     }
 
-    // Try to match TikTok URL
+    // TikTok
     const tiktokMatch = normalizedUrl.match(
       /(?:tiktok\.com)\/@([a-zA-Z0-9_.-]+)\/video\/(\d+)/i
     );
-    if (tiktokMatch && tiktokMatch[1] && tiktokMatch[2]) {
+    if (tiktokMatch?.[1] && tiktokMatch?.[2]) {
       return {
         type: "tiktok",
         username: tiktokMatch[1],
         id: tiktokMatch[2],
+        url: normalizedUrl,
+      };
+    }
+
+    // Instagram
+    const instagramMatch = normalizedUrl.match(
+      /(?:instagram\.com|instagr\.am)\/(?:p|reel)\/([a-zA-Z0-9_-]+)/i
+    );
+    if (instagramMatch?.[1]) {
+      return {
+        type: "instagram",
+        id: instagramMatch[1],
+        url: normalizedUrl,
       };
     }
 
     return null;
   };
 
-  const renderEmbed = () => {
-    if (!embedData) return null;
+  const removeEmbed = (index: number) => {
+    setEmbeds((prev) => prev.filter((_, i) => i !== index));
+  };
 
-    switch (embedData.type) {
+  // Updated renderEmbed function with Instagram support
+  const renderEmbed = (embed: EmbedData, index: number) => {
+    switch (embed.type) {
       case "twitter":
         return (
-          <blockquote className="twitter-tweet">
-            <a
-              href={`https://twitter.com/${embedData.username}/status/${embedData.id}`}
-            ></a>
-          </blockquote>
+          <div key={index} className="relative group">
+            <blockquote className="twitter-tweet">
+              <a href={embed.url}></a>
+            </blockquote>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       case "youtube":
         return (
-          <iframe
-            width="100%"
-            height="400"
-            src={`https://www.youtube.com/embed/${embedData.id}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="my-4"
-          ></iframe>
+          <div key={index} className="relative group">
+            <iframe
+              width="100%"
+              height="315"
+              src={`https://www.youtube.com/embed/${embed.id}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="rounded-lg"
+            ></iframe>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       case "tiktok":
         return (
-          <blockquote
-            className="tiktok-embed"
-            cite={`https://www.tiktok.com/@${embedData.username}/video/${embedData.id}`}
-            data-video-id={embedData.id}
-          >
-            <section>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`https://www.tiktok.com/@${embedData.username}?refer=embed`}
-              >
-                @{embedData.username}
-              </a>
-            </section>
-          </blockquote>
+          <div key={index} className="relative group">
+            <blockquote
+              className="tiktok-embed"
+              cite={embed.url}
+              data-video-id={embed.id}
+            >
+              <section>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://www.tiktok.com/@${embed.username}`}
+                >
+                  @{embed.username}
+                </a>
+              </section>
+            </blockquote>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
+        );
+
+      case "instagram":
+        return (
+          <div key={index} className="relative group">
+            <blockquote
+              className="instagram-media"
+              data-instgrm-permalink={`https://www.instagram.com/p/${embed.id}/`}
+              data-instgrm-version="14"
+            ></blockquote>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       default:
         return null;
     }
   };
+
+  console.log(embeds, "here");
 
   return (
     <AuthNavLayout>
@@ -204,7 +255,7 @@ const TimelineComponent = () => {
           )}
         </section>
 
-        <section className="">
+        <section className="mb-20">
           <h1 className="font-bold mb-2">
             Social Media Embed (Twitter, YouTube, Tiktok)
           </h1>
@@ -225,27 +276,43 @@ const TimelineComponent = () => {
                 Embed
               </button>
             </div>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {error && (
+              <p className="text-red-500 mt-2">
+                {error.includes("Twitter, YouTube, or TikTok")
+                  ? error.replace(
+                      "Twitter, YouTube, or TikTok",
+                      "Twitter, YouTube, TikTok, or Instagram"
+                    )
+                  : error}
+              </p>
+            )}{" "}
           </form>
 
-          {renderEmbed()}
-
-          <div className="flex flex-row items-center justify-between mt-4">
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Mint"}
-              onClick={() => {}}
-            />
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Buy"}
-              onClick={() => {}}
-            />
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Sell"}
-              onClick={() => {}}
-            />
+          <div className="space-y-2">
+            {embeds.map((embed, index) => (
+              <div key={embed.url} className="flex flex-col gap-2">
+                <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
+                  {renderEmbed(embed, index)}
+                </div>
+                <div className="flex flex-row items-center justify-between mt-4">
+                  <ActivityButton
+                    className={"text-[#290064] bg-white rounded-md"}
+                    text={"Mint"}
+                    onClick={() => {}}
+                  />
+                  <ActivityButton
+                    className={"text-[#290064] bg-white rounded-md"}
+                    text={"Buy"}
+                    onClick={() => {}}
+                  />
+                  <ActivityButton
+                    className={"text-[#290064] bg-white rounded-md"}
+                    text={"Sell"}
+                    onClick={() => {}}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>

@@ -2,52 +2,39 @@
 
 import React, { useEffect, useState } from "react";
 
-type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
-
+type EmbedType = "twitter" | "youtube" | "tiktok";
 type EmbedData = {
   type: EmbedType;
   id: string;
+  url: string;
   username?: string;
-  additionalData?: any;
 };
 
-const SocialEmbed = () => {
+const MultiSocialEmbed = () => {
   const [url, setUrl] = useState("");
-  const [embedData, setEmbedData] = useState<EmbedData | null>(null);
+  const [embeds, setEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
 
-  // Load appropriate embed scripts when embedData changes
+  // Load appropriate embed scripts when embeds change
   useEffect(() => {
-    if (!embedData) return;
-
-    let script: HTMLScriptElement | null = null;
-
-    switch (embedData.type) {
-      case "twitter":
-        script = document.createElement("script");
-        script.src = "https://platform.twitter.com/widgets.js";
-        script.async = true;
-        document.body.appendChild(script);
-        break;
-
-      case "youtube":
-        // YouTube iframe API is usually loaded automatically when using iframe embeds
-        break;
-
-      case "tiktok":
-        script = document.createElement("script");
-        script.src = "https://www.tiktok.com/embed.js";
-        script.async = true;
-        document.body.appendChild(script);
-        break;
+    // Twitter
+    if (embeds.some((e) => e.type === "twitter")) {
+      const script = document.createElement("script");
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      document.body.appendChild(script);
     }
 
-    return () => {
-      if (script) {
-        document.body.removeChild(script);
-      }
-    };
-  }, [embedData]);
+    // TikTok
+    if (embeds.some((e) => e.type === "tiktok")) {
+      const script = document.createElement("script");
+      script.src = "https://www.tiktok.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    // No cleanup needed as we want scripts to persist
+  }, [embeds]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +43,7 @@ const SocialEmbed = () => {
     try {
       const parsed = parseSocialUrl(url);
       if (parsed) {
-        setEmbedData(parsed);
+        setEmbeds((prev) => [...prev, parsed]);
         setUrl("");
       } else {
         setError(
@@ -69,90 +56,116 @@ const SocialEmbed = () => {
   };
 
   const parseSocialUrl = (url: string): EmbedData | null => {
-    // Normalize x.com to twitter.com
     const normalizedUrl = url.replace(/x\.com/g, "twitter.com");
 
-    // Try to match Twitter URL
+    // Twitter
     const twitterMatch = normalizedUrl.match(
       /(?:twitter\.com)\/(\w+)\/status\/(\d+)/i
     );
-    if (twitterMatch && twitterMatch[1] && twitterMatch[2]) {
+    if (twitterMatch?.[1] && twitterMatch?.[2]) {
       return {
         type: "twitter",
         username: twitterMatch[1],
         id: twitterMatch[2],
+        url: normalizedUrl,
       };
     }
 
-    // Try to match YouTube URL
+    // YouTube
     const youtubeMatch = normalizedUrl.match(
       /(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/)?([a-zA-Z0-9_-]{11})/i
     );
-    if (youtubeMatch && youtubeMatch[1]) {
+    if (youtubeMatch?.[1]) {
       return {
         type: "youtube",
         id: youtubeMatch[1],
+        url: normalizedUrl,
       };
     }
 
-    // Try to match TikTok URL
+    // TikTok
     const tiktokMatch = normalizedUrl.match(
       /(?:tiktok\.com)\/@([a-zA-Z0-9_.-]+)\/video\/(\d+)/i
     );
-    if (tiktokMatch && tiktokMatch[1] && tiktokMatch[2]) {
+    if (tiktokMatch?.[1] && tiktokMatch?.[2]) {
       return {
         type: "tiktok",
         username: tiktokMatch[1],
         id: tiktokMatch[2],
+        url: normalizedUrl,
       };
     }
 
     return null;
   };
 
-  const renderEmbed = () => {
-    if (!embedData) return null;
+  const removeEmbed = (index: number) => {
+    setEmbeds((prev) => prev.filter((_, i) => i !== index));
+  };
 
-    switch (embedData.type) {
+  const renderEmbed = (embed: EmbedData, index: number) => {
+    switch (embed.type) {
       case "twitter":
         return (
-          <blockquote className="twitter-tweet">
-            <a
-              href={`https://twitter.com/${embedData.username}/status/${embedData.id}`}
-            ></a>
-          </blockquote>
+          <div key={index} className="relative group">
+            <blockquote className="twitter-tweet">
+              <a href={embed.url}></a>
+            </blockquote>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       case "youtube":
         return (
-          <iframe
-            width="100%"
-            height="400"
-            src={`https://www.youtube.com/embed/${embedData.id}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="my-4"
-          ></iframe>
+          <div key={index} className="relative group">
+            <iframe
+              width="100%"
+              height="315"
+              src={`https://www.youtube.com/embed/${embed.id}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="rounded-lg"
+            ></iframe>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       case "tiktok":
         return (
-          <blockquote
-            className="tiktok-embed"
-            cite={`https://www.tiktok.com/@${embedData.username}/video/${embedData.id}`}
-            data-video-id={embedData.id}
-          >
-            <section>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`https://www.tiktok.com/@${embedData.username}?refer=embed`}
-              >
-                @{embedData.username}
-              </a>
-            </section>
-          </blockquote>
+          <div key={index} className="relative group">
+            <blockquote
+              className="tiktok-embed"
+              cite={embed.url}
+              data-video-id={embed.id}
+            >
+              <section>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://www.tiktok.com/@${embed.username}`}
+                >
+                  @{embed.username}
+                </a>
+              </section>
+            </blockquote>
+            <button
+              onClick={() => removeEmbed(index)}
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
         );
 
       default:
@@ -171,7 +184,7 @@ const SocialEmbed = () => {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste Twitter, YouTube, or TikTok URL..."
-            className="flex-1 p-2 border border-gray-300 rounded"
+            className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
           />
           <button
             type="submit"
@@ -183,21 +196,18 @@ const SocialEmbed = () => {
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
 
-      {renderEmbed()}
-
-      <div className="flex flex-row items-center justify-between mt-4">
-        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
-          Mint
-        </button>
-        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
-          Buy
-        </button>
-        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
-          Sell
-        </button>
+      <div className="space-y-4">
+        {embeds.map((embed, index) => (
+          <div
+            key={index}
+            className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800"
+          >
+            {renderEmbed(embed, index)}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default SocialEmbed;
+export default MultiSocialEmbed;

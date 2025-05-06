@@ -20,6 +20,11 @@
     "@heroicons/react": "^2.1.3",
     "@nextui-org/react": "^2.2.10",
     "@openai/realtime-api-beta": "github:openai/openai-realtime-api-beta",
+    "@radix-ui/react-avatar": "^1.1.7",
+    "@radix-ui/react-dialog": "^1.1.11",
+    "@radix-ui/react-scroll-area": "^1.2.6",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@radix-ui/react-tooltip": "^1.2.4",
     "@ramonak/react-progress-bar": "^5.2.0",
     "@react-google-maps/api": "^2.20.3",
     "@safe-global/auth-kit": "^2.0.4",
@@ -42,6 +47,7 @@
     "@web3auth/web3auth": "^2.1.3",
     "axios": "^1.6.7",
     "bignumber.js": "^9.1.2",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "dayjs": "^1.11.10",
@@ -98,7 +104,8 @@
     "viem": "^2.21.34",
     "wagmi": "^2.12.17",
     "wavesurfer.js": "^7.8.8",
-    "web3": "^4.8.0"
+    "web3": "^4.8.0",
+    "wouter": "^3.7.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

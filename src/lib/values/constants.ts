@@ -45,3 +45,68 @@ export const ecommerceMenu = [
   { name: "Drop Ship", value: "drop-ship" },
   { name: "Swap", value: "swap" },
 ];
+
+/// new
+// Timer constants
+export const CONTENT_DEFAULT_TIME = 15; // seconds
+export const TIMER_UPDATE_INTERVAL = 100; // milliseconds
+export const TIMER_DECREMENT_AMOUNT = 0.1; // seconds
+
+// API endpoints
+export const API_ENDPOINTS = {
+  USERS: "/api/users",
+  PLATFORMS: "/api/platforms",
+  CONTENTS: "/api/contents",
+  INTERACTIONS: "/api/interactions",
+  TIMER: (id: number) => `/api/contents/${id}/timer`,
+  RESET_TIMER: (id: number) => `/api/contents/${id}/reset`,
+  BOOST: (id: number) => `/api/contents/${id}/boost`,
+  FETCH_CONTENT: (userId: number | undefined) =>
+    userId ? `/api/fetch-content/${userId}` : "/api/fetch-content",
+  AUTH: (platform: string) => `/api/auth/${platform}`,
+  USER_POINTS: (id: number | undefined) =>
+    id ? `/api/users/${id}/points` : "/api/user/points",
+  USER_POINTS_HISTORY: (id: number | undefined) =>
+    id ? `/api/users/${id}/points/history` : "/api/user/points/history",
+};
+
+// WebSocket events
+export const WS_EVENTS = {
+  NEW_CONTENT: "NEW_CONTENT",
+  CONTENT_EXPIRED: "CONTENT_EXPIRED",
+  CONTENT_BOOSTED: "CONTENT_BOOSTED",
+  CONTENT_INTERACTION: "CONTENT_INTERACTION",
+};
+
+// Local storage keys
+export const STORAGE_KEYS = {
+  USER_ID: "timeline_user_id",
+  SELECTED_PLATFORM: "timeline_selected_platform",
+};
+
+// No longer using mock users - proper authentication is implemented
+
+// Default platform filter
+export const DEFAULT_PLATFORM_FILTER = "all";
+
+// Time display formatting
+export const formatTimeAgo = (date: Date): string => {
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + "y ago";
+
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + "mo ago";
+
+  interval = seconds / 86400;
+  if (interval > 1) return Math.floor(interval) + "d ago";
+
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + "h ago";
+
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + "m ago";
+
+  return Math.floor(seconds) + "s ago";
+};

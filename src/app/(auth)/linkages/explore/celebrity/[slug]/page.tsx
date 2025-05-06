@@ -183,7 +183,7 @@ const Influencer = () => {
   const { data: tokenSupplyData } = useGetLinkageTokenSupply(slug);
   const { data: tokenChartData } = useGetLinkageTokenChartData(slug);
 
-  const transformedData = tokenChartData?.data.data.map((item: any) => ({
+  const transformedData = tokenChartData?.data?.data?.map((item: any) => ({
     time: new Date(item.time * 1000).toLocaleString(),
     value: item.value.toFixed(12),
   }));
@@ -196,7 +196,7 @@ const Influencer = () => {
   useEffect(() => {
     // Check if data is available and transform it
     if (tokenChartData?.data?.data && tokenChartData.data.data.length > 0) {
-      const transformedData = tokenChartData.data.data.map((item: any) => ({
+      const transformedData = tokenChartData?.data?.data?.map((item: any) => ({
         time: new Date(item.time * 1000).toLocaleString(), // Convert Unix timestamp to readable time
         value: item.value.toFixed(12), // Format value to 12 decimal places
       }));

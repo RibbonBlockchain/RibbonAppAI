@@ -32,8 +32,8 @@
     "src/app/(auth)/personalize/basenames.tsx",
     "twscr/utils.js",
     "twscr/index.js",
-    "src/app/(auth)/timeline/page.tsx",
-    "src/app/(auth)/timeline/update/page.jsx"
+    "src/app/(auth)/timeline/tymeline/page.tsx",
+    "src/app/(auth)/timeline/update/page.tsx"
   ],
   "exclude": ["node_modules"]
 }

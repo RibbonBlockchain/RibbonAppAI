@@ -1,13 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import Topbar from "@/containers/dashboard/top-bar";
-import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
-import TimelineCard from "@/components/timeline-card";
-import { useGetUserNotifications } from "@/api/user";
-import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
-import { SpinnerIcon } from "@/components/icons/spinner";
-import ActivityButton from "@/components/button/activity-button";
+import React, { useEffect, useState } from "react";
 
 type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
 
@@ -18,13 +11,7 @@ type EmbedData = {
   additionalData?: any;
 };
 
-const TimelineComponent = () => {
-  const { data: notifications, isLoading } = useGetUserNotifications();
-
-  const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-
+const SocialEmbed = () => {
   const [url, setUrl] = useState("");
   const [embedData, setEmbedData] = useState<EmbedData | null>(null);
   const [error, setError] = useState("");
@@ -174,83 +161,43 @@ const TimelineComponent = () => {
   };
 
   return (
-    <AuthNavLayout>
-      <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
-        <Topbar>
-          <p className="text-xl font-bold">Timeline</p>
-        </Topbar>
+    <div className="social-embed p-4 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Social Media Embed</h1>
 
-        <section>
-          {isLoading ? (
-            <div className="mt-10 flex items-center justify-center">
-              <SpinnerIcon />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {sortedNotifications?.map((i: any) => (
-                <TimelineCard
-                  key={i.id}
-                  title={i.title}
-                  image={null}
-                  time={formatDateAndTimeAgo(i.createdAt).relativeTime}
-                  description={i.message}
-                  comments={i.comments.length}
-                  likes={i.likes.length}
-                  shares={""}
-                  id={i.id}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Paste Twitter, YouTube, or TikTok URL..."
+            className="flex-1 p-2 border border-gray-300 rounded"
+          />
+          <button
+            type="submit"
+            className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Embed
+          </button>
+        </div>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+      </form>
 
-        <section className="">
-          <h1 className="font-bold mb-2">
-            Social Media Embed (Twitter, YouTube, Tiktok)
-          </h1>
+      {renderEmbed()}
 
-          <form onSubmit={handleSubmit} className="mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Paste Twitter, YouTube, or TikTok URL..."
-                className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Embed
-              </button>
-            </div>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-          </form>
-
-          {renderEmbed()}
-
-          <div className="flex flex-row items-center justify-between mt-4">
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Mint"}
-              onClick={() => {}}
-            />
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Buy"}
-              onClick={() => {}}
-            />
-            <ActivityButton
-              className={"text-[#290064] bg-white rounded-md"}
-              text={"Sell"}
-              onClick={() => {}}
-            />
-          </div>
-        </section>
-      </main>
-    </AuthNavLayout>
+      <div className="flex flex-row items-center justify-between mt-4">
+        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
+          Mint
+        </button>
+        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
+          Buy
+        </button>
+        <button className="py-2 px-4 bg-green-200 rounded hover:bg-green-300">
+          Sell
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default TimelineComponent;
+export default SocialEmbed;

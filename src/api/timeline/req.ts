@@ -52,3 +52,21 @@ export const sellTimelineTokenDex = async (body: {
   const res = await client.post("timeline/sell-token-dex", body);
   return res.data;
 };
+
+export const buyTimelineToken = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
+  const res = await client.post("user/wallet/buy-token", body);
+  return res.data;
+};
+
+export const sellTimelineToken = async (body: {
+  amount: any;
+  token?: string;
+  slippage?: number;
+}) => {
+  const res = await client.post("timeline/sell-token", body);
+  return res.data;
+};

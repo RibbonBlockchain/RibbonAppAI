@@ -471,7 +471,7 @@ const Influencer = () => {
                       height={16}
                       className="max-h-4 max-w-4"
                     />
-                    <p>20 $Tyla</p>
+                    <p>20 {slug}</p>
                   </div>
                 </div>
               </div>
@@ -1020,7 +1020,7 @@ const Influencer = () => {
           {selectedCelebrityTab === "store" && (
             <main className="h-full text-white flex flex-col rounded-xl">
               <div className="fixed z-20 p-4 py-6 w-full max-w-[450px] border-b border-[#C3B1FF1A] flex flex-row items-center justify-between bg-[#251F2E]">
-                <p className="text-xl font-bold">Tyla Store</p>
+                <p className="text-xl font-bold">{slug} Store</p>
                 <div className="flex flex-col justify-center gap-1 text-xs font-medium">
                   <p>Balance</p>
                   <div className="flex flex-row items-center text-[13px] justify-center gap-1">
@@ -1031,7 +1031,7 @@ const Influencer = () => {
                       height={16}
                       className="max-h-4 max-w-4"
                     />
-                    <p>20 $Tyla</p>
+                    <p>20 {slug}</p>
                   </div>
                 </div>
               </div>

@@ -371,19 +371,31 @@ const TimelineComponent = () => {
   };
 
   const handleBuyToken = () => {
-    buyTimelineToken({
-      amount: "0.00002",
-      slippage: 5,
-      token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
-    });
+    buyTimelineToken(
+      {
+        amount: "0.00002",
+        slippage: 5,
+        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+      },
+      {
+        onSuccess: () => toast.success("Token purchased successfully"),
+        onError: () => {},
+      }
+    );
   };
 
   const handleSellToken = () => {
-    sellTimelineToken({
-      amount: 20,
-      slippage: 5,
-      token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
-    });
+    sellTimelineToken(
+      {
+        amount: "0.00002",
+        slippage: 5,
+        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+      },
+      {
+        onSuccess: () => toast.success("Token sold successfully"),
+        onError: () => {},
+      }
+    );
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);

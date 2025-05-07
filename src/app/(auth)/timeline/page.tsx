@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import TimelineCard from "@/components/timeline-card";
@@ -8,6 +8,12 @@ import { useGetUserNotifications } from "@/api/user";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import ActivityButton from "@/components/button/activity-button";
+import {
+  useCreateEmbed,
+  useGetEmbeds,
+  useGetMyEmbeds,
+} from "@/api/timeline/index";
+import toast from "react-hot-toast";
 
 type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
 type EmbedData = {
@@ -20,13 +26,69 @@ type EmbedData = {
 const TimelineComponent = () => {
   const { data: notifications, isLoading } = useGetUserNotifications();
 
+  const { mutate: createEmbed } = useCreateEmbed();
+  const { data: getAllEmbeds } = useGetEmbeds();
+  const { data: getMyEmbeds, refetch: refetchEmbeds } = useGetMyEmbeds();
+
   const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
   const [url, setUrl] = useState("");
   const [embeds, setEmbeds] = useState<EmbedData[]>([]);
+  const [allEmbeds, setAllEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
+
+  const [activeTab, setActiveTab] = useState<"my" | "all">("my"); // State to manage active tab
+
+  const handleTabChange = (tab: "my" | "all") => {
+    setActiveTab(tab);
+  };
+
+  // Load embeds from backend
+  useEffect(() => {
+    if (getMyEmbeds?.length) {
+      const allEmbeds: EmbedData[] = getMyEmbeds
+        .flatMap((entry: any) => entry.embed || [])
+        .map((item: any) => {
+          if (item.type && item.id && item.url) {
+            return {
+              type: item.type,
+              id: item.id,
+              url: item.url,
+              username: item.username,
+            };
+          }
+          return parseSocialUrl(item.url);
+        })
+        .filter(Boolean) as EmbedData[];
+
+      console.log("parsed embeds:", allEmbeds);
+      setEmbeds(allEmbeds);
+    }
+  }, [getMyEmbeds]);
+
+  useEffect(() => {
+    if (getAllEmbeds?.length) {
+      const allEmbeds: EmbedData[] = getAllEmbeds
+        .flatMap((entry: any) => entry.embed || [])
+        .map((item: any) => {
+          if (item.type && item.id && item.url) {
+            return {
+              type: item.type,
+              id: item.id,
+              url: item.url,
+              username: item.username,
+            };
+          }
+          return parseSocialUrl(item.url);
+        })
+        .filter(Boolean) as EmbedData[];
+
+      console.log("parsed embeds:", allEmbeds);
+      setAllEmbeds(allEmbeds);
+    }
+  }, [getAllEmbeds]);
 
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
@@ -53,24 +115,48 @@ const TimelineComponent = () => {
       script.async = true;
       document.body.appendChild(script);
     }
+
+    // Cleanup function to remove scripts
+    return () => {
+      document
+        .querySelectorAll('script[src*="twitter.com/widgets.js"]')
+        .forEach((el) => el.remove());
+      document
+        .querySelectorAll('script[src*="tiktok.com/embed.js"]')
+        .forEach((el) => el.remove());
+      document
+        .querySelectorAll('script[src*="instagram.com/embed.js"]')
+        .forEach((el) => el.remove());
+    };
   }, [embeds]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
       const parsed = parseSocialUrl(url);
-      if (parsed) {
-        setEmbeds((prev) => [...prev, parsed]);
-        setUrl("");
-      } else {
-        setError(
-          "Invalid URL. Please enter a valid Twitter, YouTube, or TikTok URL."
-        );
+      if (!parsed) {
+        throw new Error("Invalid URL. Please enter a valid social media URL.");
       }
+
+      createEmbed(
+        {
+          embedItems: [parsed],
+        },
+        {
+          onSuccess: () => {
+            toast.success("Successfully embedded post");
+            setUrl("");
+            refetchEmbeds();
+          },
+          onError: (error: any) => {
+            toast.error(error.message || "Failed to create embed");
+          },
+        }
+      );
     } catch (err) {
-      setError("Error processing URL. Please check the format and try again.");
+      setError(err instanceof Error ? err.message : "Error processing URL");
     }
   };
 
@@ -130,16 +216,18 @@ const TimelineComponent = () => {
     return null;
   };
 
-  const removeEmbed = (index: number) => {
+  const removeEmbed = async (index: number) => {
+    // In a real app, you would call an API to delete the embed from the backend
+    // For now, we'll just update the UI
     setEmbeds((prev) => prev.filter((_, i) => i !== index));
+    toast.success("Embed removed");
   };
 
-  // Updated renderEmbed function with Instagram support
   const renderEmbed = (embed: EmbedData, index: number) => {
     switch (embed.type) {
       case "twitter":
         return (
-          <div key={index} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative group">
             <blockquote className="twitter-tweet">
               <a href={embed.url}></a>
             </blockquote>
@@ -154,7 +242,7 @@ const TimelineComponent = () => {
 
       case "youtube":
         return (
-          <div key={index} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative group">
             <iframe
               width="100%"
               height="315"
@@ -175,7 +263,7 @@ const TimelineComponent = () => {
 
       case "tiktok":
         return (
-          <div key={index} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative group">
             <blockquote
               className="tiktok-embed"
               cite={embed.url}
@@ -202,7 +290,7 @@ const TimelineComponent = () => {
 
       case "instagram":
         return (
-          <div key={index} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative group">
             <blockquote
               className="instagram-media"
               data-instgrm-permalink={`https://www.instagram.com/p/${embed.id}/`}
@@ -222,7 +310,7 @@ const TimelineComponent = () => {
     }
   };
 
-  console.log(embeds, "here");
+  console.log(embeds, "here?");
 
   return (
     <AuthNavLayout>
@@ -257,7 +345,7 @@ const TimelineComponent = () => {
 
         <section className="mb-20">
           <h1 className="font-bold mb-2">
-            Social Media Embed (Twitter, YouTube, Tiktok)
+            Social Media Embed (Twitter, YouTube, TikTok, Instagram)
           </h1>
 
           <form onSubmit={handleSubmit} className="mb-6">
@@ -266,7 +354,7 @@ const TimelineComponent = () => {
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Paste Twitter, YouTube, or TikTok URL..."
+                placeholder="Paste Twitter, YouTube, TikTok, or Instagram URL..."
                 className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
               />
               <button
@@ -276,43 +364,97 @@ const TimelineComponent = () => {
                 Embed
               </button>
             </div>
-            {error && (
-              <p className="text-red-500 mt-2">
-                {error.includes("Twitter, YouTube, or TikTok")
-                  ? error.replace(
-                      "Twitter, YouTube, or TikTok",
-                      "Twitter, YouTube, TikTok, or Instagram"
-                    )
-                  : error}
-              </p>
-            )}{" "}
+            {error && <p className="text-red-500 mt-2">{error}</p>}
           </form>
 
-          <div className="space-y-2">
-            {embeds.map((embed, index) => (
-              <div key={embed.url} className="flex flex-col gap-2">
-                <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
-                  {renderEmbed(embed, index)}
-                </div>
-                <div className="flex flex-row items-center justify-between mt-4">
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Mint"}
-                    onClick={() => {}}
-                  />
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Buy"}
-                    onClick={() => {}}
-                  />
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Sell"}
-                    onClick={() => {}}
-                  />
+          <div className="flex space-x-4 mb-6">
+            <button
+              className={`px-4 py-2 rounded-lg text-lg font-medium transition-all duration-300 ${
+                activeTab === "my"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-blue-100"
+              }`}
+              onClick={() => handleTabChange("my")}
+            >
+              My Embeds
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg text-lg font-medium transition-all duration-300 ${
+                activeTab === "all"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-blue-100"
+              }`}
+              onClick={() => handleTabChange("all")}
+            >
+              All Embeds
+            </button>
+          </div>
+
+          <div className="tab-content">
+            {activeTab === "my" ? (
+              <div className="space-y-4">
+                {embeds.map((embed, index) => (
+                  <div
+                    key={`${embed.id}-${index}`}
+                    className="flex flex-col gap-4"
+                  >
+                    <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
+                      {renderEmbed(embed, index)}
+                    </div>
+                    <div className="flex flex-row items-center justify-between mt-2">
+                      <ActivityButton
+                        className={"text-[#290064] bg-white rounded-md"}
+                        text={"Mint"}
+                        onClick={() => {}}
+                      />
+                      <ActivityButton
+                        className={"text-[#290064] bg-white rounded-md"}
+                        text={"Buy"}
+                        onClick={() => {}}
+                      />
+                      <ActivityButton
+                        className={"text-[#290064] bg-white rounded-md"}
+                        text={"Sell"}
+                        onClick={() => {}}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-2xl font-semibold mb-4">All Embeds</h2>
+                <div className="space-y-4">
+                  {allEmbeds.map((embed, index) => (
+                    <div
+                      key={`${embed.id}-${index}`}
+                      className="flex flex-col gap-4"
+                    >
+                      <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
+                        {renderEmbed(embed, index)}
+                      </div>
+                      <div className="flex flex-row items-center justify-between mt-2">
+                        <ActivityButton
+                          className={"text-[#290064] bg-white rounded-md"}
+                          text={"Mint"}
+                          onClick={() => {}}
+                        />
+                        <ActivityButton
+                          className={"text-[#290064] bg-white rounded-md"}
+                          text={"Buy"}
+                          onClick={() => {}}
+                        />
+                        <ActivityButton
+                          className={"text-[#290064] bg-white rounded-md"}
+                          text={"Sell"}
+                          onClick={() => {}}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </section>
       </main>

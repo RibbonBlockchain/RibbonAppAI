@@ -1,6 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import {
+  useBuyTimelineToken,
+  useBuyTimelineTokenDex,
+  useCreateEmbed,
+  useCreateTimelineToken,
+  useGetEmbeds,
+  useGetMyEmbeds,
+  useSellTimelineToken,
+  useSellTimelineTokenDex,
+} from "@/api/timeline/index";
+import toast from "react-hot-toast";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Topbar from "@/containers/dashboard/top-bar";
 import AuthNavLayout from "@/containers/layout/auth/auth-nav.layout";
 import TimelineCard from "@/components/timeline-card";
@@ -8,12 +19,8 @@ import { useGetUserNotifications } from "@/api/user";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import ActivityButton from "@/components/button/activity-button";
-import {
-  useCreateEmbed,
-  useGetEmbeds,
-  useGetMyEmbeds,
-} from "@/api/timeline/index";
-import toast from "react-hot-toast";
+import { mutate } from "swr";
+import CreateTokenModal from "@/containers/timeline/create-timlinetoken-modal";
 
 type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
 type EmbedData = {
@@ -29,6 +36,11 @@ const TimelineComponent = () => {
   const { mutate: createEmbed } = useCreateEmbed();
   const { data: getAllEmbeds } = useGetEmbeds();
   const { data: getMyEmbeds, refetch: refetchEmbeds } = useGetMyEmbeds();
+
+  const { mutate: createTimelineToken, isPending: createIsPending } =
+    useCreateTimelineToken();
+  const { mutate: buyTimelineToken } = useBuyTimelineToken();
+  const { mutate: sellTimelineToken } = useSellTimelineToken();
 
   const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -63,7 +75,6 @@ const TimelineComponent = () => {
         })
         .filter(Boolean) as EmbedData[];
 
-      console.log("parsed embeds:", allEmbeds);
       setEmbeds(allEmbeds);
     }
   }, [getMyEmbeds]);
@@ -85,7 +96,6 @@ const TimelineComponent = () => {
         })
         .filter(Boolean) as EmbedData[];
 
-      console.log("parsed embeds:", allEmbeds);
       setAllEmbeds(allEmbeds);
     }
   }, [getAllEmbeds]);
@@ -217,8 +227,6 @@ const TimelineComponent = () => {
   };
 
   const removeEmbed = async (index: number) => {
-    // In a real app, you would call an API to delete the embed from the backend
-    // For now, we'll just update the UI
     setEmbeds((prev) => prev.filter((_, i) => i !== index));
     toast.success("Embed removed");
   };
@@ -310,7 +318,87 @@ const TimelineComponent = () => {
     }
   };
 
-  console.log(embeds, "here?");
+  const [name, setName] = useState("");
+  const [symbol, setSymbol] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [logo, setLogo] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState("");
+
+  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size exceeds the limit of 5MB.");
+      return;
+    }
+
+    setLogoPreview(URL.createObjectURL(file));
+    setLogo(file);
+  };
+
+  const handlehandleCreateTokenSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("symbol", symbol);
+    formData.append("description", description);
+    formData.append("category", "Social");
+    if (logo) formData.append("file", logo);
+
+    createTimelineToken(
+      {
+        body: formData as any,
+      },
+      {
+        onSuccess: () => {
+          toast.success(`Token ${name} created`);
+          setIsModalOpen(false);
+        },
+        onError: () => {
+          toast.error("An error occurred while creating the token.");
+        },
+      }
+    );
+  };
+
+  const handleBuyToken = () => {
+    buyTimelineToken(
+      {
+        amount: "0.00002",
+        slippage: 5,
+        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+      },
+      {
+        onSuccess: () => toast.success("Token purchased successfully"),
+        onError: () => {},
+      }
+    );
+  };
+
+  const handleSellToken = () => {
+    sellTimelineToken(
+      {
+        amount: "0.00002",
+        slippage: 5,
+        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+      },
+      {
+        onSuccess: () => toast.success("Token sold successfully"),
+        onError: () => {},
+      }
+    );
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <AuthNavLayout>
@@ -403,19 +491,20 @@ const TimelineComponent = () => {
                     </div>
                     <div className="flex flex-row items-center justify-between mt-2">
                       <ActivityButton
-                        className={"text-[#290064] bg-white rounded-md"}
-                        text={"Mint"}
-                        onClick={() => {}}
+                        className="text-[#290064] bg-white rounded-md"
+                        text="Mint"
+                        onClick={() => setIsModalOpen(true)}
                       />
+
                       <ActivityButton
                         className={"text-[#290064] bg-white rounded-md"}
                         text={"Buy"}
-                        onClick={() => {}}
+                        onClick={handleBuyToken}
                       />
                       <ActivityButton
                         className={"text-[#290064] bg-white rounded-md"}
                         text={"Sell"}
-                        onClick={() => {}}
+                        onClick={handleSellToken}
                       />
                     </div>
                   </div>
@@ -423,7 +512,6 @@ const TimelineComponent = () => {
               </div>
             ) : (
               <div>
-                <h2 className="text-2xl font-semibold mb-4">All Embeds</h2>
                 <div className="space-y-4">
                   {allEmbeds.map((embed, index) => (
                     <div
@@ -435,19 +523,20 @@ const TimelineComponent = () => {
                       </div>
                       <div className="flex flex-row items-center justify-between mt-2">
                         <ActivityButton
-                          className={"text-[#290064] bg-white rounded-md"}
-                          text={"Mint"}
-                          onClick={() => {}}
+                          className="text-[#290064] bg-white rounded-md"
+                          text="Mint"
+                          onClick={() => setIsModalOpen(true)}
                         />
+
                         <ActivityButton
                           className={"text-[#290064] bg-white rounded-md"}
                           text={"Buy"}
-                          onClick={() => {}}
+                          onClick={handleBuyToken}
                         />
                         <ActivityButton
                           className={"text-[#290064] bg-white rounded-md"}
                           text={"Sell"}
-                          onClick={() => {}}
+                          onClick={handleSellToken}
                         />
                       </div>
                     </div>
@@ -457,6 +546,22 @@ const TimelineComponent = () => {
             )}
           </div>
         </section>
+
+        <CreateTokenModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          name={name}
+          symbol={symbol}
+          setName={setName}
+          setSymbol={setSymbol}
+          isSubmitDisabled={false}
+          logoPreview={logoPreview}
+          description={description}
+          isPending={createIsPending}
+          setDescription={setDescription}
+          handleLogoChange={handleLogoChange}
+          handleSubmit={handlehandleCreateTokenSubmit}
+        />
       </main>
     </AuthNavLayout>
   );

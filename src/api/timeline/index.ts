@@ -2,11 +2,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { onError } from "../api-client";
 import { EmbedItem, TCreateEmbedBody, TCreateTimelineToken } from "./types";
 import {
+  buyTimelineToken,
   buyTimelineTokenDex,
   createEmbed,
   createTimelineToken,
   getEmbeds,
   getMyEmbeds,
+  sellTimelineToken,
   sellTimelineTokenDex,
 } from "./req";
 
@@ -53,5 +55,21 @@ export const useSellTimelineTokenDex = () => {
     onError,
     mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
       sellTimelineTokenDex(body),
+  });
+};
+
+export const useBuyTimelineToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      buyTimelineToken(body),
+  });
+};
+
+export const useSellTimelineToken = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
+      sellTimelineToken(body),
   });
 };

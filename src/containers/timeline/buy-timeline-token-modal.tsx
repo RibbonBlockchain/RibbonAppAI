@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-interface BuyTimeLineTokenModal {
+interface BuyTimeLineTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isPending: boolean;
   onSubmit: (data: {
     amount: number;
     slippage: number;
@@ -10,20 +11,32 @@ interface BuyTimeLineTokenModal {
   }) => void;
 }
 
-const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModal> = ({
+const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  isPending,
 }) => {
   const [amount, setAmount] = useState(0);
   const [slippage, setSlippage] = useState(5);
-  const [address, setAddress] = useState("");
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setAmount(0);
+      setSlippage(5);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    setIsValid(amount > 0.000019 && slippage >= 0 && slippage <= 100);
+  }, [amount, slippage]);
 
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ amount, slippage, address });
-    onClose();
+    if (!isValid || isPending) return;
+    onSubmit({ amount, slippage, address: "" });
   };
 
   return (
@@ -34,6 +47,7 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModal> = ({
           <button
             onClick={onClose}
             className="text-white text-xl hover:text-gray-400"
+            disabled={isPending}
           >
             &times;
           </button>
@@ -55,7 +69,13 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModal> = ({
               className="w-full px-3 py-2 border border-gray-600 rounded-md bg-[#121212] text-white"
               placeholder="Enter amount"
               min="0"
+              disabled={isPending}
             />
+            {amount > 0 && amount <= 0.000019 && (
+              <p className="text-red-500 text-xs mt-1">
+                Must be greater than 0.00002 ETH
+              </p>
+            )}
           </div>
 
           <div>
@@ -71,27 +91,24 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModal> = ({
               min="0"
               max="100"
               step="0.1"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold mb-1 block">
-              Recipient Address
-            </label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-600 rounded-md bg-[#121212] text-white"
-              placeholder="0x..."
+              disabled={isPending}
             />
           </div>
 
           <button
             onClick={handleSubmit}
-            className="mt-4 w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+            disabled={!isValid || isPending}
+            className={`mt-4 w-full py-2 rounded-md flex items-center justify-center ${
+              isValid && !isPending
+                ? "bg-purple-600 hover:bg-purple-700"
+                : "bg-gray-500 cursor-not-allowed"
+            }`}
           >
-            Buy
+            {isPending ? (
+              <span className="animate-spin border-2 border-t-transparent border-white rounded-full w-5 h-5" />
+            ) : (
+              "Buy"
+            )}
           </button>
         </div>
       </div>

@@ -14,4 +14,5 @@ export type TCreateTimelineToken = {
   description: string;
   category: string;
   file: any;
+  embedId: any;
 };

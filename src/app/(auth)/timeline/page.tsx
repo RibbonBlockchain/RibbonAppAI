@@ -24,6 +24,7 @@ import CreateTokenModal from "@/containers/timeline/create-timlinetoken-modal";
 import Link from "next/link";
 import BuyTimelineTokenModal from "@/containers/timeline/buy-timeline-token-modal";
 import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-modal";
+import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 
 type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
 type EmbedData = {
@@ -31,6 +32,22 @@ type EmbedData = {
   id: string;
   url: string;
   username?: string;
+};
+type TokenData = {
+  id: number;
+  logo: string;
+  name: string;
+  symbol: string;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+};
+
+type TimelineWithEmbed = {
+  timelineId: string;
+  embed: EmbedData;
+  token: TokenData;
 };
 
 const TimelineComponent = () => {
@@ -41,8 +58,10 @@ const TimelineComponent = () => {
 
   const { mutate: createTimelineToken, isPending: createIsPending } =
     useCreateTimelineToken();
-  const { mutate: buyTimelineToken } = useBuyTimelineToken();
-  const { mutate: sellTimelineToken } = useSellTimelineToken();
+  const { mutate: buyTimelineToken, isPending: buyIsPending } =
+    useBuyTimelineToken();
+  const { mutate: sellTimelineToken, isPending: sellIsPending } =
+    useSellTimelineToken();
 
   const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -50,29 +69,50 @@ const TimelineComponent = () => {
 
   const [url, setUrl] = useState("");
   const [embeds, setEmbeds] = useState<EmbedData[]>([]);
-  const [allEmbeds, setAllEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (getAllEmbeds?.length) {
-      const allEmbeds: EmbedData[] = getAllEmbeds
-        .flatMap((entry: any) => entry.embed || [])
-        .map((item: any) => {
-          if (item.type && item.id && item.url) {
-            return {
-              type: item.type,
-              id: item.id,
-              url: item.url,
-              username: item.username,
-            };
-          }
-          return parseSocialUrl(item.url);
+    if (getAllEmbeds) {
+      const formatted: TimelineWithEmbed[] = getAllEmbeds
+        .map((entry: any) => {
+          return {
+            timelineId: entry.id,
+            embed: entry.embed[0], // Assuming each entry has at least one embed
+            token: entry.token,
+          };
         })
-        .filter(Boolean) as EmbedData[];
+        .filter((item: any) => item.embed); // Filter out entries without embeds
 
-      setAllEmbeds(allEmbeds);
+      setTimelineEmbeds(formatted);
     }
   }, [getAllEmbeds]);
+
+  const [timelineEmbeds, setTimelineEmbeds] = useState<TimelineWithEmbed[]>([]);
+  useEffect(() => {
+    // TikTok needs special handling
+    if (timelineEmbeds.some((e) => e.embed.type === "tiktok")) {
+      const loadTikTok = () => {
+        const tiktokScript = document.createElement("script");
+        tiktokScript.src = "https://www.tiktok.com/embed.js";
+        tiktokScript.async = true;
+        tiktokScript.onload = () => {
+          // Manually initialize TikTok embeds after script loads
+          if (window.tiktokEmbed) {
+            window.tiktokEmbed.lib.init();
+          }
+        };
+        document.body.appendChild(tiktokScript);
+
+        return tiktokScript;
+      };
+
+      const script = loadTikTok();
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [timelineEmbeds]);
 
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
@@ -245,22 +285,28 @@ const TimelineComponent = () => {
 
       case "tiktok":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group">
-            <blockquote
-              className="tiktok-embed"
-              cite={embed.url}
+          <div key={`${embed.id}-${index}`} className="relative group w-full">
+            <div
+              className="tiktok-embed-container"
               data-video-id={embed.id}
+              data-username={embed.username}
             >
-              <section>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`https://www.tiktok.com/@${embed.username}`}
-                >
-                  @{embed.username}
-                </a>
-              </section>
-            </blockquote>
+              <blockquote
+                className="tiktok-embed w-full"
+                cite={embed.url}
+                data-video-id={embed.id}
+              >
+                <section>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://www.tiktok.com/@${embed.username}`}
+                  >
+                    @{embed.username}
+                  </a>
+                </section>
+              </blockquote>
+            </div>
             <button
               onClick={() => removeEmbed(index)}
               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
@@ -292,6 +338,10 @@ const TimelineComponent = () => {
     }
   };
 
+  const [selectedTimelineId, setSelectedTimelineId] = useState<string | null>(
+    null
+  );
+
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [description, setDescription] = useState("");
@@ -322,6 +372,7 @@ const TimelineComponent = () => {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append("embedId", selectedTimelineId || "");
     formData.append("name", name);
     formData.append("symbol", symbol);
     formData.append("description", description);
@@ -344,38 +395,52 @@ const TimelineComponent = () => {
     );
   };
 
-  // const handleBuyToken = (data: { amount: number; slippage: number; address: string }) => {
-  //   setTradeData(data);
-  //   console.log("Trade Data:", data);
-  // };
-
-  const handleBuyToken = () => {
+  const handleBuyToken = (data: {
+    amount: number;
+    slippage: number;
+    address: string;
+  }) => {
     buyTimelineToken(
       {
-        amount: "0.00002",
-        slippage: 5,
-        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+        amount: data.amount.toString(),
+        slippage: data.slippage,
+        token: data.address,
       },
       {
-        onSuccess: () => toast.success("Token purchased successfully"),
-        onError: () => {},
+        onSuccess: () => {
+          toast.success("Token purchased successfully"),
+            setIsBuyModalOpen(false);
+        },
+        onError: () => {
+          setIsBuyModalOpen(false);
+        },
       }
     );
   };
 
-  const handleSellToken = () => {
+  const handleSellToken = (data: {
+    amount: number;
+    slippage: number;
+    address: string;
+  }) => {
     sellTimelineToken(
       {
-        amount: "0.00002",
-        slippage: 5,
-        token: "0xD05A63Ec12a81F7a5225288A64908aD456991204",
+        amount: data.amount.toString(),
+        slippage: data.slippage,
+        token: data.address,
       },
       {
-        onSuccess: () => toast.success("Token sold successfully"),
-        onError: () => {},
+        onSuccess: () => {
+          toast.success("Token sold successfully"), setIsSellModalOpen(false);
+        },
+        onError: () => {
+          setIsSellModalOpen(false);
+        },
       }
     );
   };
+
+  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
@@ -444,31 +509,67 @@ const TimelineComponent = () => {
           </Link>
 
           <div className="space-y-4">
-            {allEmbeds.map((embed, index) => (
-              <div key={`${embed.id}-${index}`} className="flex flex-col gap-4">
+            {timelineEmbeds.map((item, index) => (
+              <div
+                key={`${item.embed.id}-${index}`}
+                className="flex flex-col gap-4"
+              >
                 <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
-                  {renderEmbed(embed, index)}
+                  {renderEmbed(item.embed, index)}
                 </div>
                 <div className="flex flex-row items-center justify-between mt-2">
+                  {/* if token, render token address and name */}
+                  {item.token ? (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={item.token.logo}
+                        alt={item.token.name}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <div>
+                        <p className="font-medium">
+                          {item.token.name} ({item.token.symbol})
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {shorten(item.token.address)}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <ActivityButton
+                      className="text-[#290064] bg-white rounded-md"
+                      text="Mint"
+                      onClick={() => {
+                        setSelectedTimelineId(item.timelineId);
+                        setIsModalOpen(true);
+                      }}
+                    />
+                  )}
+
                   <ActivityButton
                     className="text-[#290064] bg-white rounded-md"
-                    text="Mint"
-                    onClick={() => setIsModalOpen(true)}
+                    text="Buy"
+                    onClick={() => {
+                      setSelectedToken(item.token);
+                      setIsBuyModalOpen(true);
+                    }}
                   />
 
                   <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Buy"}
-                    onClick={() => setIsBuyModalOpen(true)}
-                  />
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Sell"}
-                    onClick={() => setIsSellModalOpen(true)}
+                    className="text-[#290064] bg-white rounded-md"
+                    text="Sell"
+                    onClick={() => {
+                      setSelectedToken(item.token);
+                      setIsSellModalOpen(true);
+                    }}
                   />
                 </div>
               </div>
             ))}
+
+            {timelineEmbeds.length === 0 && (
+              <div>You do not have any embeded post</div>
+            )}
           </div>
         </section>
 
@@ -491,13 +592,27 @@ const TimelineComponent = () => {
         <BuyTimelineTokenModal
           isOpen={isBuyModalOpen}
           onClose={() => setIsBuyModalOpen(false)}
-          onSubmit={handleBuyToken}
+          onSubmit={(data) =>
+            selectedToken &&
+            handleBuyToken({
+              ...data,
+              address: selectedToken.address,
+            })
+          }
+          isPending={buyIsPending}
         />
 
         <SellTimelineTokenModal
           isOpen={isSellModalOpen}
           onClose={() => setIsSellModalOpen(false)}
-          onSubmit={handleSellToken}
+          onSubmit={(data) =>
+            selectedToken &&
+            handleSellToken({
+              ...data,
+              address: selectedToken.address,
+            })
+          }
+          isPending={sellIsPending}
         />
       </main>
     </AuthNavLayout>

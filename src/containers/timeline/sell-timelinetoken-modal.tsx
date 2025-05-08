@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-interface SellTimelineTokenModal {
+interface SellTimelineTokenModalProps {
   isOpen: boolean;
+  isPending: boolean;
   onClose: () => void;
   onSubmit: (data: {
     amount: number;
@@ -10,20 +11,31 @@ interface SellTimelineTokenModal {
   }) => void;
 }
 
-const SellTimelineTokenModal: React.FC<SellTimelineTokenModal> = ({
+const SellTimelineTokenModal: React.FC<SellTimelineTokenModalProps> = ({
   isOpen,
+  isPending,
   onClose,
   onSubmit,
 }) => {
   const [amount, setAmount] = useState(0);
   const [slippage, setSlippage] = useState(5);
-  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      setAmount(0);
+      setSlippage(5);
+    }
+  }, [isOpen]);
+
+  // useEffect(() => {
+  //   setIsValid();
+  // }, [amount, slippage]);
 
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ amount, slippage, address });
-    onClose();
+    if (isPending) return;
+    onSubmit({ amount, slippage, address: "" }); // Address is provided externally
   };
 
   return (
@@ -34,6 +46,7 @@ const SellTimelineTokenModal: React.FC<SellTimelineTokenModal> = ({
           <button
             onClick={onClose}
             className="text-white text-xl hover:text-gray-400"
+            disabled={isPending}
           >
             &times;
           </button>
@@ -51,6 +64,7 @@ const SellTimelineTokenModal: React.FC<SellTimelineTokenModal> = ({
               className="w-full px-3 py-2 border border-gray-600 rounded-md bg-[#121212] text-white"
               placeholder="Enter amount"
               min="0"
+              disabled={isPending}
             />
           </div>
 
@@ -67,27 +81,24 @@ const SellTimelineTokenModal: React.FC<SellTimelineTokenModal> = ({
               min="0"
               max="100"
               step="0.1"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold mb-1 block">
-              Recipient Address
-            </label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-600 rounded-md bg-[#121212] text-white"
-              placeholder="0x..."
+              disabled={isPending}
             />
           </div>
 
           <button
             onClick={handleSubmit}
-            className="mt-4 w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+            disabled={isPending}
+            className={`mt-4 w-full py-2 rounded-md flex items-center justify-center ${
+              !isPending
+                ? "bg-purple-600 hover:bg-purple-700"
+                : "bg-gray-500 cursor-not-allowed"
+            }`}
           >
-            Sell
+            {isPending ? (
+              <span className="animate-spin border-2 border-t-transparent border-white rounded-full w-5 h-5" />
+            ) : (
+              "Sell"
+            )}
           </button>
         </div>
       </div>

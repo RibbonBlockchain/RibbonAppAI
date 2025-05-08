@@ -41,7 +41,7 @@ const CreateTokenModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="relative w-full max-w-xl bg-[#0B0228] rounded-lg shadow-xl text-white p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
+      <div className="relative w-full max-w-[400px] bg-[#0B0228] rounded-lg shadow-xl text-white p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
         {/* Close Button */}
         <button
           onClick={onClose}

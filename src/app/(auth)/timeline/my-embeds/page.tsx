@@ -19,9 +19,10 @@ import { useGetUserNotifications } from "@/api/user";
 import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 import { SpinnerIcon } from "@/components/icons/spinner";
 import ActivityButton from "@/components/button/activity-button";
-import { mutate } from "swr";
+import AuthLayout from "@/containers/layout/auth/auth.layout";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import CreateTokenModal from "@/containers/timeline/create-timlinetoken-modal";
-import Link from "next/link";
 import BuyTimelineTokenModal from "@/containers/timeline/buy-timeline-token-modal";
 import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-modal";
 
@@ -33,29 +34,25 @@ type EmbedData = {
   username?: string;
 };
 
-const TimelineComponent = () => {
-  const { data: notifications, isLoading } = useGetUserNotifications();
+const MyEmbeds = () => {
+  const router = useRouter();
 
   const { mutate: createEmbed } = useCreateEmbed();
-  const { data: getAllEmbeds, refetch } = useGetEmbeds();
+  const { data: getMyEmbeds, refetch: refetchEmbeds } = useGetMyEmbeds();
 
   const { mutate: createTimelineToken, isPending: createIsPending } =
     useCreateTimelineToken();
   const { mutate: buyTimelineToken } = useBuyTimelineToken();
   const { mutate: sellTimelineToken } = useSellTimelineToken();
 
-  const sortedNotifications = notifications?.data?.sort((a: any, b: any) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-
   const [url, setUrl] = useState("");
   const [embeds, setEmbeds] = useState<EmbedData[]>([]);
-  const [allEmbeds, setAllEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
 
+  // Load embeds from backend
   useEffect(() => {
-    if (getAllEmbeds?.length) {
-      const allEmbeds: EmbedData[] = getAllEmbeds
+    if (getMyEmbeds?.length) {
+      const allEmbeds: EmbedData[] = getMyEmbeds
         .flatMap((entry: any) => entry.embed || [])
         .map((item: any) => {
           if (item.type && item.id && item.url) {
@@ -70,9 +67,9 @@ const TimelineComponent = () => {
         })
         .filter(Boolean) as EmbedData[];
 
-      setAllEmbeds(allEmbeds);
+      setEmbeds(allEmbeds);
     }
-  }, [getAllEmbeds]);
+  }, [getMyEmbeds]);
 
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
@@ -132,7 +129,7 @@ const TimelineComponent = () => {
           onSuccess: () => {
             toast.success("Successfully embedded post");
             setUrl("");
-            refetch();
+            refetchEmbeds();
           },
           onError: (error: any) => {
             toast.error(error.message || "Failed to create embed");
@@ -344,11 +341,6 @@ const TimelineComponent = () => {
     );
   };
 
-  // const handleBuyToken = (data: { amount: number; slippage: number; address: string }) => {
-  //   setTradeData(data);
-  //   console.log("Trade Data:", data);
-  // };
-
   const handleBuyToken = () => {
     buyTimelineToken(
       {
@@ -382,95 +374,66 @@ const TimelineComponent = () => {
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
 
   return (
-    <AuthNavLayout>
+    <AuthLayout>
       <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
-        <Topbar>
-          <p className="text-xl font-bold">Timeline</p>
-        </Topbar>
+        <ArrowLeft
+          size={20}
+          className="text-white"
+          onClick={() => router.back()}
+        />
 
-        <section>
-          {isLoading ? (
-            <div className="mt-10 flex items-center justify-center">
-              <SpinnerIcon />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {sortedNotifications?.map((i: any) => (
-                <TimelineCard
-                  key={i.id}
-                  title={i.title}
-                  image={null}
-                  time={formatDateAndTimeAgo(i.createdAt).relativeTime}
-                  description={i.message}
-                  comments={i.comments.length}
-                  likes={i.likes.length}
-                  shares={""}
-                  id={i.id}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        <h1 className="font-bold mb-2">
+          Social Media Embed (Twitter, YouTube, TikTok, Instagram)
+        </h1>
 
-        <section className="mb-20">
-          <h1 className="font-bold mb-2">
-            Social Media Embed (Twitter, YouTube, TikTok, Instagram)
-          </h1>
-
-          <form onSubmit={handleSubmit} className="mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Paste Twitter, YouTube, TikTok, or Instagram URL..."
-                className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Embed
-              </button>
-            </div>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-          </form>
-
-          <Link
-            href="/timeline/my-embeds"
-            className="flex mb-4 underline self-end justify-end"
-          >
-            See my embeded posts
-          </Link>
-
-          <div className="space-y-4">
-            {allEmbeds.map((embed, index) => (
-              <div key={`${embed.id}-${index}`} className="flex flex-col gap-4">
-                <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
-                  {renderEmbed(embed, index)}
-                </div>
-                <div className="flex flex-row items-center justify-between mt-2">
-                  <ActivityButton
-                    className="text-[#290064] bg-white rounded-md"
-                    text="Mint"
-                    onClick={() => setIsModalOpen(true)}
-                  />
-
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Buy"}
-                    onClick={() => setIsBuyModalOpen(true)}
-                  />
-                  <ActivityButton
-                    className={"text-[#290064] bg-white rounded-md"}
-                    text={"Sell"}
-                    onClick={() => setIsSellModalOpen(true)}
-                  />
-                </div>
-              </div>
-            ))}
+        <form onSubmit={handleSubmit} className="mb-6">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Paste Twitter, YouTube, TikTok, or Instagram URL..."
+              className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Embed
+            </button>
           </div>
-        </section>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </form>
+
+        <div className="space-y-4 mb-20">
+          {embeds.map((embed, index) => (
+            <div key={`${embed.id}-${index}`} className="flex flex-col gap-4">
+              <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
+                {renderEmbed(embed, index)}
+              </div>
+              <div className="flex flex-row items-center justify-between mt-2">
+                <ActivityButton
+                  className="text-[#290064] bg-white rounded-md"
+                  text="Mint"
+                  onClick={() => setIsModalOpen(true)}
+                />
+
+                <ActivityButton
+                  className={"text-[#290064] bg-white rounded-md"}
+                  text={"Buy"}
+                  onClick={handleBuyToken}
+                />
+                <ActivityButton
+                  className={"text-[#290064] bg-white rounded-md"}
+                  text={"Sell"}
+                  onClick={handleSellToken}
+                />
+              </div>
+            </div>
+          ))}
+
+          {embeds.length === 0 && <div>You do not have any embeded post</div>}
+        </div>
 
         <CreateTokenModal
           isOpen={isModalOpen}
@@ -500,8 +463,8 @@ const TimelineComponent = () => {
           onSubmit={handleSellToken}
         />
       </main>
-    </AuthNavLayout>
+    </AuthLayout>
   );
 };
 
-export default TimelineComponent;
+export default MyEmbeds;

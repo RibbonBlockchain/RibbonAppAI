@@ -10,3 +10,13 @@ declare global {
     };
   }
 }
+
+declare global {
+  interface Window {
+    twttr?: {
+      widgets?: {
+        load: () => void;
+      };
+    };
+  }
+}

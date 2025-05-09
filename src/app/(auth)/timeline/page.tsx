@@ -88,6 +88,7 @@ const TimelineComponent = () => {
   }, [getAllEmbeds]);
 
   const [timelineEmbeds, setTimelineEmbeds] = useState<TimelineWithEmbed[]>([]);
+
   useEffect(() => {
     // TikTok needs special handling
     if (timelineEmbeds.some((e) => e.embed.type === "tiktok")) {
@@ -117,31 +118,41 @@ const TimelineComponent = () => {
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
     // Twitter
-    if (embeds.some((e) => e.type === "twitter")) {
-      const script = document.createElement("script");
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      document.body.appendChild(script);
+    if (timelineEmbeds.some((e) => e.embed.type === "twitter")) {
+      const twitterScript = document.createElement("script");
+      twitterScript.src = "https://platform.twitter.com/widgets.js";
+      twitterScript.async = true;
+      twitterScript.onload = () => {
+        if (window.twttr) {
+          window.twttr.widgets?.load();
+        }
+      };
+      document.body.appendChild(twitterScript);
     }
 
     // TikTok
-    if (embeds.some((e) => e.type === "tiktok")) {
-      const script = document.createElement("script");
-      script.src = "https://www.tiktok.com/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
+    if (timelineEmbeds.some((e) => e.embed.type === "tiktok")) {
+      const tiktokScript = document.createElement("script");
+      tiktokScript.src = "https://www.tiktok.com/embed.js";
+      tiktokScript.async = true;
+      tiktokScript.onload = () => {
+        if (window.tiktokEmbed) {
+          window.tiktokEmbed.lib.init();
+        }
+      };
+      document.body.appendChild(tiktokScript);
     }
 
     // Instagram
-    if (embeds.some((e) => e.type === "instagram")) {
-      const script = document.createElement("script");
-      script.src = "//www.instagram.com/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
+    if (timelineEmbeds.some((e) => e.embed.type === "instagram")) {
+      const instagramScript = document.createElement("script");
+      instagramScript.src = "//www.instagram.com/embed.js";
+      instagramScript.async = true;
+      document.body.appendChild(instagramScript);
     }
 
-    // Cleanup function to remove scripts
     return () => {
+      // Cleanup all scripts
       document
         .querySelectorAll('script[src*="twitter.com/widgets.js"]')
         .forEach((el) => el.remove());
@@ -152,7 +163,7 @@ const TimelineComponent = () => {
         .querySelectorAll('script[src*="instagram.com/embed.js"]')
         .forEach((el) => el.remove());
     };
-  }, [embeds]);
+  }, [timelineEmbeds]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -318,12 +329,15 @@ const TimelineComponent = () => {
 
       case "instagram":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group">
-            <blockquote
-              className="instagram-media"
-              data-instgrm-permalink={`https://www.instagram.com/p/${embed.id}/`}
-              data-instgrm-version="14"
-            ></blockquote>
+          <div key={`${embed.id}-${index}`} className="relative group w-full">
+            <div className="instagram-embed-container w-full flex justify-center">
+              <blockquote
+                className="instagram-media w-full max-w-full"
+                data-instgrm-permalink={`https://www.instagram.com/p/${embed.id}/`}
+                data-instgrm-version="14"
+                style={{ width: "100%" }}
+              ></blockquote>
+            </div>
             <button
               onClick={() => removeEmbed(index)}
               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"

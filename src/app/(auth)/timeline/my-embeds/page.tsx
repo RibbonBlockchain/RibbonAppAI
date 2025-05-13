@@ -1,12 +1,16 @@
 "use client";
 
 import {
+  useBuyRate,
   useBuyTimelineToken,
   useBuyTimelineTokenDex,
   useCreateEmbed,
   useCreateTimelineToken,
+  useDeleteEmbed,
+  useFeaturedEmbed,
   useGetEmbeds,
   useGetMyEmbeds,
+  useSellRate,
   useSellTimelineToken,
   useSellTimelineTokenDex,
 } from "@/api/timeline/index";
@@ -20,13 +24,24 @@ import CreateTokenModal from "@/containers/timeline/create-timlinetoken-modal";
 import BuyTimelineTokenModal from "@/containers/timeline/buy-timeline-token-modal";
 import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-modal";
 import { shorten } from "@/lib/utils/shorten";
+import { SpinnerIcon } from "@/components/icons/spinner";
 
-type EmbedType = "twitter" | "youtube" | "tiktok" | "instagram";
+type EmbedType =
+  | "twitter"
+  | "youtube"
+  | "tiktok"
+  | "instagram"
+  | "zora"
+  | "warpcast"
+  | "farcaster";
 type EmbedData = {
   type: EmbedType;
   id: string;
   url: string;
   username?: string;
+  // Additional fields for Zora/Warpcast
+  contractAddress?: string; // For Zora
+  castHash?: string; // For Warpcast
 };
 type TokenData = {
   id: number;
@@ -48,8 +63,11 @@ type TimelineWithEmbed = {
 const MyEmbeds = () => {
   const router = useRouter();
 
-  const { mutate: createEmbed } = useCreateEmbed();
+  const { mutate: createEmbed, isPending } = useCreateEmbed();
   const { data: getMyEmbeds, refetch: refetchEmbeds } = useGetMyEmbeds();
+
+  const { mutate: deleteEmbed } = useDeleteEmbed();
+  const { mutate: featureEmbed } = useFeaturedEmbed();
 
   const { mutate: createTimelineToken, isPending: createIsPending } =
     useCreateTimelineToken();
@@ -58,6 +76,9 @@ const MyEmbeds = () => {
     useBuyTimelineToken();
   const { mutate: sellTimelineToken, isPending: sellIsPending } =
     useSellTimelineToken();
+
+  const { mutate: sellRate } = useSellRate();
+  const { mutate: buyRate } = useBuyRate();
 
   const [url, setUrl] = useState("");
   const [embeds, setEmbeds] = useState<EmbedData[]>([]);
@@ -106,6 +127,29 @@ const MyEmbeds = () => {
       };
     }
   }, [timelineEmbeds]); // Watch timelineEmbeds instead of embeds
+
+  // Add this to your useEffect for loading casts
+  useEffect(() => {
+    const loadFarcasterCasts = async () => {
+      const farcasterEmbeds = timelineEmbeds.filter(
+        (e) => e.embed.type === "farcaster"
+      );
+      if (farcasterEmbeds.length > 0) {
+        try {
+          const responses = await Promise.all(
+            farcasterEmbeds.map((e) =>
+              fetch(`https://api.farcaster.xyz/v1/casts/${e.embed.castHash}`)
+            )
+          );
+          // Process and store cast data
+        } catch (error) {
+          console.error("Error loading Farcaster casts:", error);
+        }
+      }
+    };
+
+    loadFarcasterCasts();
+  }, [timelineEmbeds]);
 
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
@@ -240,34 +284,144 @@ const MyEmbeds = () => {
       };
     }
 
+    // Zora
+    const zoraMatch = normalizedUrl.match(
+      /(?:zora\.co|zora\.xyz)\/(?:collect|eth)\/([a-zA-Z0-9:]+)/i
+    );
+    if (zoraMatch?.[1]) {
+      return {
+        type: "zora",
+        id: zoraMatch[1],
+        url: normalizedUrl,
+        contractAddress: zoraMatch[1],
+      };
+    }
+
+    // Warpcast
+    const warpcastMatch = normalizedUrl.match(
+      /(?:warpcast\.com)\/(\w+)\/(\w+)/i
+    );
+    if (warpcastMatch?.[2]) {
+      return {
+        type: "warpcast",
+        id: warpcastMatch[2],
+        url: normalizedUrl,
+        castHash: warpcastMatch[2],
+      };
+    }
+
+    // Warpcast/Farcaster
+    const farcasterMatch = normalizedUrl.match(
+      /(?:warpcast\.com|farcaster\.xyz)\/(\w+)\/(\w+)/i
+    );
+    if (farcasterMatch?.[2]) {
+      return {
+        type: "farcaster",
+        id: farcasterMatch[2],
+        url: normalizedUrl,
+        castHash: farcasterMatch[2],
+        username: farcasterMatch[1], // Store username too
+      };
+    }
+
     return null;
   };
 
   const removeEmbed = async (index: number) => {
-    setEmbeds((prev) => prev.filter((_, i) => i !== index));
-    toast.success("Embed removed");
+    const item = timelineEmbeds[index];
+    if (!item?.embed?.id) {
+      toast.error("Embed ID not found");
+      return;
+    }
+
+    deleteEmbed(
+      { embedId: item.timelineId },
+      {
+        onSuccess: () => {
+          setTimelineEmbeds((prev) => prev.filter((_, i) => i !== index));
+          toast.success("Embed removed");
+        },
+      }
+    );
+  };
+
+  const handleFeatureEmbed = async (index: number) => {
+    const item = timelineEmbeds[index];
+    if (!item?.embed?.id) {
+      toast.error("Embed ID not found");
+      return;
+    }
+
+    featureEmbed(
+      { embedId: item.timelineId },
+      {
+        onSuccess: () => {
+          setTimelineEmbeds((prev) => prev.filter((_, i) => i !== index));
+          toast.success("Embed Featured");
+        },
+      }
+    );
   };
 
   const renderEmbed = (embed: EmbedData, index: number) => {
+    const ActionButtons = (
+      <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+        <button
+          onClick={() => handleFeatureEmbed(index)}
+          className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+        >
+          Feature
+        </button>
+        <button
+          onClick={() => removeEmbed(index)}
+          className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+        >
+          ×
+        </button>
+      </div>
+    );
+
     switch (embed.type) {
       case "twitter":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
             <blockquote className="twitter-tweet">
               <a href={embed.url}></a>
             </blockquote>
-            <button
-              onClick={() => removeEmbed(index)}
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
-            >
-              ×
-            </button>
           </div>
         );
 
       case "youtube":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group">
+          <div key={`${embed.id}-${index}`} className="relative">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
             <iframe
               width="100%"
               height="315"
@@ -277,18 +431,26 @@ const MyEmbeds = () => {
               allowFullScreen
               className="rounded-lg"
             ></iframe>
-            <button
-              onClick={() => removeEmbed(index)}
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
-            >
-              ×
-            </button>
           </div>
         );
 
       case "tiktok":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group w-full">
+          <div key={`${embed.id}-${index}`} className="relative w-full">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
             <div
               className="tiktok-embed-container"
               data-video-id={embed.id}
@@ -310,18 +472,26 @@ const MyEmbeds = () => {
                 </section>
               </blockquote>
             </div>
-            <button
-              onClick={() => removeEmbed(index)}
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
-            >
-              ×
-            </button>
           </div>
         );
 
       case "instagram":
         return (
-          <div key={`${embed.id}-${index}`} className="relative group w-full">
+          <div key={`${embed.id}-${index}`} className="relative w-full">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
             <div className="instagram-embed-container w-full flex justify-center">
               <blockquote
                 className="instagram-media w-full max-w-full"
@@ -330,12 +500,102 @@ const MyEmbeds = () => {
                 style={{ width: "100%" }}
               ></blockquote>
             </div>
-            <button
-              onClick={() => removeEmbed(index)}
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1 transition-opacity"
-            >
-              ×
-            </button>
+          </div>
+        );
+
+      case "zora":
+        return (
+          <div
+            key={`${embed.id}-${index}`}
+            className="relative w-full h-[600px]"
+          >
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
+            <iframe
+              src={`https://zora.co/embed/${embed.contractAddress}`}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allowFullScreen
+              className="rounded-lg"
+            ></iframe>
+          </div>
+        );
+
+      case "warpcast":
+        return (
+          <div key={`${embed.id}-${index}`} className="relative w-full">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
+            <iframe
+              src={`https://warpcast.com/~/embed/casts/${embed.castHash}`}
+              width="100%"
+              height="400"
+              frameBorder="0"
+              className="rounded-lg"
+            ></iframe>
+          </div>
+        );
+
+      case "farcaster":
+        return (
+          <div key={`${embed.id}-${index}`} className="relative w-full">
+            <div className="w-full absolute top-2 left-2 flex gap-2 z-10 justify-between">
+              <button
+                onClick={() => handleFeatureEmbed(index)}
+                className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => removeEmbed(index)}
+                className="bg-red-500 text-white rounded-full px-3 py-1 text-sm"
+              >
+                ×
+              </button>
+            </div>{" "}
+            <div className="farcaster-embed p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+                <div>
+                  <p className="font-medium">@{embed.username}</p>
+                  <p className="text-xs text-gray-500">Farcaster cast</p>
+                </div>
+              </div>
+              <p className="mb-2">Loading cast...</p>
+              <a
+                href={embed.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                View on Warpcast
+              </a>
+            </div>
           </div>
         );
 
@@ -471,17 +731,27 @@ const MyEmbeds = () => {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Paste Twitter, YouTube, TikTok, or Instagram URL..."
+              placeholder="Paste Twitter, YouTube, TikTok, Instagram, Zora, or Warpcast URL..."
               className="w-full bg-inherit text-[13px] py-2 px-2 rounded-[8px] border text-white placeholder:text-[#98A2B3] focus:ring-0 focus:outline-none"
             />
             <button
               type="submit"
+              disabled={isPending}
               className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              Embed
+              {isPending ? <SpinnerIcon /> : "Embed"}
             </button>
           </div>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 mt-2">
+              {error.includes("Twitter, YouTube, or TikTok")
+                ? error.replace(
+                    "Twitter, YouTube, or TikTok",
+                    "Twitter, YouTube, TikTok, Instagram, Zora, or Warpcast"
+                  )
+                : error}
+            </p>
+          )}{" "}
         </form>
 
         <div className="space-y-4 mb-20">
@@ -576,6 +846,7 @@ const MyEmbeds = () => {
             })
           }
           isPending={buyIsPending}
+          contractAddress={selectedToken?.address as string}
         />
 
         <SellTimelineTokenModal

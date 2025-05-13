@@ -2,12 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { onError } from "../api-client";
 import { EmbedItem, TCreateEmbedBody, TCreateTimelineToken } from "./types";
 import {
+  buyRate,
   buyTimelineToken,
   buyTimelineTokenDex,
   createEmbed,
   createTimelineToken,
+  deleteEmbed,
+  featuredEmbed,
   getEmbeds,
+  getFeaturedEmbeds,
   getMyEmbeds,
+  sellRate,
   sellTimelineToken,
   sellTimelineTokenDex,
 } from "./req";
@@ -31,6 +36,27 @@ export const useGetMyEmbeds = () => {
   return useQuery({
     queryKey: ["get-my-embeds"],
     queryFn: () => getMyEmbeds(),
+  });
+};
+
+export const useDeleteEmbed = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { embedId: string }) => deleteEmbed(body),
+  });
+};
+
+export const useFeaturedEmbed = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { embedId: string }) => featuredEmbed(body),
+  });
+};
+
+export const useGetFeaturedEmbeds = () => {
+  return useQuery({
+    queryKey: ["get-featured-embeds"],
+    queryFn: () => getFeaturedEmbeds(),
   });
 };
 
@@ -71,5 +97,19 @@ export const useSellTimelineToken = () => {
     onError,
     mutationFn: (body: { amount: any; token?: string; slippage?: number }) =>
       sellTimelineToken(body),
+  });
+};
+
+export const useBuyRate = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => buyRate(body),
+  });
+};
+
+export const useSellRate = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { amount: any; token?: string }) => sellRate(body),
   });
 };

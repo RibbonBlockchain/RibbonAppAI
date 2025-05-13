@@ -1,9 +1,11 @@
+import { useBuyRate } from "@/api/timeline/index";
 import React, { useState, useEffect } from "react";
 
 interface BuyTimeLineTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
   isPending: boolean;
+  contractAddress: string;
   onSubmit: (data: {
     amount: number;
     slippage: number;
@@ -11,33 +13,80 @@ interface BuyTimeLineTokenModalProps {
   }) => void;
 }
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
   isPending,
+  contractAddress,
 }) => {
   const [amount, setAmount] = useState(0);
+  const debouncedAmount = useDebounce(amount, 500); // <--- Debounced amount
   const [slippage, setSlippage] = useState(5);
   const [isValid, setIsValid] = useState(false);
+  const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
 
+  const { mutate: buyRate } = useBuyRate();
+
+  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setAmount(0);
       setSlippage(5);
+      setConvertedAmount(null);
     }
   }, [isOpen]);
 
+  // Validate inputs
   useEffect(() => {
     setIsValid(amount > 0.000019 && slippage >= 0 && slippage <= 100);
   }, [amount, slippage]);
 
-  if (!isOpen) return null;
+  // Fetch token conversion rate when amount or token changes
+  useEffect(() => {
+    if (debouncedAmount > 0 && contractAddress) {
+      buyRate(
+        { amount: debouncedAmount.toString(), token: contractAddress },
+        {
+          onSuccess: (data: any) => {
+            if (data?.amount) {
+              setConvertedAmount(Number(data.amount));
+            }
+          },
+          onError: () => {
+            setConvertedAmount(null);
+          },
+        }
+      );
+    } else {
+      setConvertedAmount(null);
+    }
+  }, [debouncedAmount, contractAddress]);
 
   const handleSubmit = () => {
     if (!isValid || isPending) return;
-    onSubmit({ amount, slippage, address: "" });
+    onSubmit({ amount, slippage, address: contractAddress });
   };
+
+  const handleBuy = () => {
+    buyRate({
+      amount: "0.00002",
+      token: "0x1E9cfE6FC50E51FFC5211FCF73eD5421121E8943",
+    });
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
@@ -57,7 +106,10 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
           You can purchase a minimum of 0.00002 ETH
         </p>
 
+        <button onClick={handleBuy}>Buy</button>
+
         <div className="flex flex-col gap-4">
+          {/* Amount Input */}
           <div>
             <label className="text-sm font-semibold mb-1 block">
               Amount (ETH)
@@ -76,8 +128,14 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
                 Must be greater than 0.00002 ETH
               </p>
             )}
+            {convertedAmount !== null && (
+              <p className="text-green-400 text-xs mt-1">
+                You will receive approx. {convertedAmount.toFixed(4)} tokens
+              </p>
+            )}
           </div>
 
+          {/* Slippage Input */}
           <div>
             <label className="text-sm font-semibold mb-1 block">
               Slippage (%)
@@ -95,6 +153,7 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
             />
           </div>
 
+          {/* Submit Button */}
           <button
             onClick={handleSubmit}
             disabled={!isValid || isPending}

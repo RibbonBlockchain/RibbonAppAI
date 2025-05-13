@@ -130,3 +130,15 @@
 .content-actions button svg {
   margin-right: 5px;
 }
+
+.zora-embed-container {
+  min-height: 600px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.warpcast-embed-container {
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+}

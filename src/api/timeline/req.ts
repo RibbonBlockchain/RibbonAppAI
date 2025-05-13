@@ -25,6 +25,21 @@ export const getMyEmbeds = async () => {
   return res.data.data;
 };
 
+export const deleteEmbed = async (body: { embedId: string }) => {
+  const res = await client.delete(`timeline/embed`, { data: body });
+  return res.data;
+};
+
+export const featuredEmbed = async (body: { embedId: string }) => {
+  const res = await client.post(`timeline/featured`, { body });
+  return res.data;
+};
+
+export const getFeaturedEmbeds = async () => {
+  const res = await client.get<TResponse<any>>(`/timeline/featured`);
+  return res.data.data;
+};
+
 //TIMELINE TOKEN
 export const createTimelineToken = async ({
   body,
@@ -58,7 +73,7 @@ export const buyTimelineToken = async (body: {
   token?: string;
   slippage?: number;
 }) => {
-  const res = await client.post("user/wallet/buy-token", body);
+  const res = await client.post("timeline/buy-token", body);
   return res.data;
 };
 
@@ -68,5 +83,15 @@ export const sellTimelineToken = async (body: {
   slippage?: number;
 }) => {
   const res = await client.post("timeline/sell-token", body);
+  return res.data;
+};
+
+export const sellRate = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("timeline/sell-rate", body);
+  return res.data;
+};
+
+export const buyRate = async (body: { amount: any; token?: string }) => {
+  const res = await client.post("timeline/buy-rate", body);
   return res.data;
 };

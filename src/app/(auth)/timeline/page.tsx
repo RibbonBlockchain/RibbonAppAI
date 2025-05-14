@@ -29,6 +29,8 @@ import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-mod
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { Add } from "iconsax-react";
 import Image from "next/image";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import ButtonGroup from "./button-group";
 
 type EmbedType =
   | "twitter"
@@ -131,6 +133,14 @@ const TimelineComponent = () => {
       };
     }
   }, [timelineEmbeds]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsEmbedModalOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Load appropriate embed scripts when embeds change
   useEffect(() => {
@@ -549,6 +559,22 @@ const TimelineComponent = () => {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
 
+  const [selectedEmbed, setSelectedEmbed] = useState<any | null>(null);
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsEmbedModalOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const account = useAccount();
+  const { connectors, connect, status } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isConnected } = useAccount();
+
   return (
     <AuthNavLayout>
       <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
@@ -579,6 +605,28 @@ const TimelineComponent = () => {
             </div>
           )}
         </section>
+
+        <div className="flex flex-end z-10">
+          {account.status === "connected" && (
+            <button
+              onClick={() => disconnect()}
+              className="px-8 py-0.5  border-2 border-black dark:border-white uppercase bg-[#fffdd0] text-black transition duration-200 text-sm shadow-[1px_1px_rgba(0,0,0),2px_2px_rgba(0,0,0),3px_3px_rgba(0,0,0),4px_4px_rgba(0,0,0),5px_5px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] hover:bg-primarycolor hover:text-white "
+            >
+              Disconnect
+            </button>
+          )}
+          {account.status === "disconnected" &&
+            connectors.map((connector) => (
+              <button
+                key={connector.uid}
+                onClick={() => connect({ connector })}
+              >
+                Connect Wallet
+              </button>
+            ))}
+        </div>
+
+        {isConnected && <ButtonGroup />}
 
         <section className="mb-20">
           <h1 className="font-bold mb-2">
@@ -627,32 +675,25 @@ const TimelineComponent = () => {
             {featuredEmbedData?.map((i: any, index: number) => (
               <div
                 key={i.id}
-                className="flex-shrink-0 w-20 h-20 relative"
-                // onClick={() =>
-                //   openModal(
-                //     statuses?.data?.data.map((img: any) => ({
-                //       url: img.media || "/assets/sample-icon.png",
-                //       caption: img.caption,
-                //       linkageName: img.linkage.name,
-                //       linkageLogo: img.linkageLogo || "/assets/sample-icon.png",
-                //       updatedTime: ``,
-                //       statusId: img.id,
-                //       linkageId: img.linkageId,
-                //     })),
-                //     index
-                //   )
-                // }
+                className="flex-shrink-0 w-20 h-20 cursor-pointer relative rounded-md overflow-hidden"
+                onClick={() => {
+                  setSelectedEmbed(i); // Set full object (embed + token)
+                  setIsEmbedModalOpen(true);
+                }}
               >
-                <div className="flex flex-col gap-1">
-                  <Image
-                    alt="alt"
-                    layout="fill"
-                    objectFit="cover"
-                    src={i.media || "/assets/sample-icon.png"}
-                    className="rounded-md border border-[#FFF]"
-                  />
-                  <h1 className="text-white">{i.embedId}</h1>
+                {/* Text Overlay */}
+                <div className="absolute top-0 left-0 w-full bg-black bg-opacity-60 text-white text-xs p-1 z-10 truncate">
+                  {i.embed.token.name} ({i.embed.token.symbol})
                 </div>
+
+                {/* Image */}
+                <Image
+                  alt={`${i.embed.token.name} logo`}
+                  layout="fill"
+                  objectFit="cover"
+                  src={i.embed.token.logo || "/assets/sample-icon.png"}
+                  className="rounded-md border border-white"
+                />
               </div>
             ))}
           </div>
@@ -728,6 +769,82 @@ const TimelineComponent = () => {
             )}
           </div>
         </section>
+
+        {selectedEmbed && isEmbedModalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+            onClick={() => setIsEmbedModalOpen(false)}
+          >
+            <div
+              className="bg-gray-400 dark:bg-gray-900 rounded-lg p-4 max-w-[90%] max-h-[90%] overflow-auto relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsEmbedModalOpen(false)}
+                className="absolute top-3 right-3 text-xl text-black dark:text-white"
+              >
+                ✕
+              </button>
+
+              {/* Embed */}
+              {/* <div className="border rounded-lg dark:bg-gray-800 min-w-[320px] w-[400px] h-[500px] mx-auto">
+                {renderEmbed(selectedEmbed.embed.embed[0], 0)}
+              </div> */}
+
+              <img
+                src={selectedEmbed?.embed.token.logo}
+                alt={selectedEmbed?.embed.token.name}
+                className="border rounded-lg dark:bg-gray-800 min-w-[320px] w-[400px] h-[500px] mx-auto"
+              />
+
+              {/* Token Info & Actions */}
+              {selectedEmbed.embed.token && (
+                <>
+                  <div className="flex items-center gap-2 mt-4">
+                    <img
+                      src={selectedEmbed.embed.token.logo}
+                      alt={selectedEmbed.embed.token.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                      <p className="font-semibold">
+                        {selectedEmbed.embed.token.name} (
+                        {selectedEmbed.embed.token.symbol})
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {shorten(selectedEmbed.embed.token.address)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Buy / Sell Buttons */}
+                  <div className="flex justify-between gap-4 mt-4">
+                    <ActivityButton
+                      className="text-[#290064] bg-white rounded-md w-full"
+                      text="Buy"
+                      onClick={() => {
+                        setSelectedToken(selectedEmbed.embed.token);
+                        setIsBuyModalOpen(true);
+                        setIsEmbedModalOpen(false);
+                      }}
+                    />
+
+                    <ActivityButton
+                      className="text-[#290064] bg-white rounded-md w-full"
+                      text="Sell"
+                      onClick={() => {
+                        setSelectedToken(selectedEmbed.embed.token);
+                        setIsSellModalOpen(true);
+                        setIsEmbedModalOpen(false);
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         <CreateTokenModal
           isOpen={isModalOpen}

@@ -30,13 +30,45 @@ export const deleteEmbed = async (body: { embedId: string }) => {
   return res.data;
 };
 
-export const featuredEmbed = async (body: { embedId: string }) => {
-  const res = await client.post(`timeline/featured`, { body });
+export const featuredEmbed = async ({ embedId }: { embedId: string }) => {
+  const res = await client.post(`timeline/embed/featured`, { embedId });
   return res.data;
 };
 
 export const getFeaturedEmbeds = async () => {
-  const res = await client.get<TResponse<any>>(`/timeline/featured`);
+  const res = await client.get<TResponse<any>>(`/timeline/embed/featured`);
+  return res.data.data;
+};
+
+export const commentEmbed = async ({
+  embedId,
+  comment,
+}: {
+  embedId: string;
+  comment: string;
+}) => {
+  const res = await client.post(`timeline/embed/${embedId}/comments`, {
+    comment,
+  });
+  return res.data;
+};
+
+export const likeEmbed = async ({ embedId }: { embedId: string }) => {
+  const res = await client.post(`timeline/embed/${embedId}/like`);
+  return res.data;
+};
+
+export const getCommentEmbeds = async ({ embedId }: { embedId: string }) => {
+  const res = await client.get<TResponse<any>>(
+    `/timeline/embed/${embedId}/comments`
+  );
+  return res.data.data;
+};
+
+export const getLikedEmbeds = async ({ embedId }: { embedId: string }) => {
+  const res = await client.get<TResponse<any>>(
+    `/timeline/embed/${embedId}/like`
+  );
   return res.data.data;
 };
 

@@ -29,6 +29,8 @@ import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-mod
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
 import { Add } from "iconsax-react";
 import Image from "next/image";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import ButtonGroup from "./button-group";
 
 type EmbedType =
   | "twitter"
@@ -568,6 +570,11 @@ const TimelineComponent = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const account = useAccount();
+  const { connectors, connect, status } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isConnected } = useAccount();
+
   return (
     <AuthNavLayout>
       <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
@@ -598,6 +605,28 @@ const TimelineComponent = () => {
             </div>
           )}
         </section>
+
+        <div className="flex flex-end z-10">
+          {account.status === "connected" && (
+            <button
+              onClick={() => disconnect()}
+              className="px-8 py-0.5  border-2 border-black dark:border-white uppercase bg-[#fffdd0] text-black transition duration-200 text-sm shadow-[1px_1px_rgba(0,0,0),2px_2px_rgba(0,0,0),3px_3px_rgba(0,0,0),4px_4px_rgba(0,0,0),5px_5px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] hover:bg-primarycolor hover:text-white "
+            >
+              Disconnect
+            </button>
+          )}
+          {account.status === "disconnected" &&
+            connectors.map((connector) => (
+              <button
+                key={connector.uid}
+                onClick={() => connect({ connector })}
+              >
+                Connect Wallet
+              </button>
+            ))}
+        </div>
+
+        {isConnected && <ButtonGroup />}
 
         <section className="mb-20">
           <h1 className="font-bold mb-2">

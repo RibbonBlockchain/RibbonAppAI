@@ -340,7 +340,6 @@ const MyEmbeds = () => {
       toast.error("Embed ID not found");
       return;
     }
-
     deleteEmbed(
       { embedId: item.timelineId },
       {
@@ -358,7 +357,6 @@ const MyEmbeds = () => {
       toast.error("Embed ID not found");
       return;
     }
-
     featureEmbed(
       { embedId: item.timelineId },
       {

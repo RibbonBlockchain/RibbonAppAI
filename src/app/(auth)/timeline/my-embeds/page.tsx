@@ -4,27 +4,35 @@ import {
   useBuyRate,
   useBuyTimelineToken,
   useBuyTimelineTokenDex,
+  useCommentEmbed,
   useCreateEmbed,
   useCreateTimelineToken,
   useDeleteEmbed,
   useFeaturedEmbed,
+  useGetCommentEmbeds,
   useGetEmbeds,
+  useGetLikedEmbeds,
   useGetMyEmbeds,
+  useLikeEmbed,
   useSellRate,
   useSellTimelineToken,
   useSellTimelineTokenDex,
 } from "@/api/timeline/index";
 import toast from "react-hot-toast";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import ActivityButton from "@/components/button/activity-button";
 import AuthLayout from "@/containers/layout/auth/auth.layout";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Heart, Repeat, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import CreateTokenModal from "@/containers/timeline/create-timlinetoken-modal";
 import BuyTimelineTokenModal from "@/containers/timeline/buy-timeline-token-modal";
 import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-modal";
 import { shorten } from "@/lib/utils/shorten";
 import { SpinnerIcon } from "@/components/icons/spinner";
+import { Message } from "iconsax-react";
+import ReplyCards from "@/components/timeline/reply-cards";
+import Picker from "@emoji-mart/react";
+import { formatDateAndTimeAgo } from "@/lib/values/format-dateandtime-ago";
 
 type EmbedType =
   | "twitter"
@@ -81,7 +89,6 @@ const MyEmbeds = () => {
   const { mutate: buyRate } = useBuyRate();
 
   const [url, setUrl] = useState("");
-  const [embeds, setEmbeds] = useState<EmbedData[]>([]);
   const [error, setError] = useState("");
 
   // Add this useEffect hook near your other useEffect hooks
@@ -608,6 +615,8 @@ const MyEmbeds = () => {
     null
   );
 
+  console.log(selectedTimelineId, "id?");
+
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [description, setDescription] = useState("");
@@ -712,6 +721,83 @@ const MyEmbeds = () => {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
 
+  const { data: getComments, refetch: refetchComments } = useGetCommentEmbeds({
+    embedId: selectedTimelineId as string,
+  });
+  const { mutate: postComment } = useCommentEmbed();
+
+  const [showComments, setShowComments] = useState(false);
+
+  const [comment, setComment] = useState<string>("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setComment(comment + emoji.native);
+  };
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (comment.trim()) {
+      postComment(
+        { embedId: selectedTimelineId as string, comment },
+        {
+          onSuccess: () => {
+            setComment("");
+            refetchComments();
+            toast.success("New comment submitted");
+          },
+        }
+      );
+    }
+  };
+
+  const { mutate: likeNotification } = useLikeEmbed();
+  const [isLiked, setIsLiked] = useState(false);
+
+  const { data: getLikes, refetch: refetchLikes } = useGetLikedEmbeds({
+    embedId: selectedTimelineId as string,
+  });
+
+  const handleLikeNotification = () => {
+    likeNotification(
+      { embedId: selectedTimelineId as string },
+      {
+        onSuccess: () => {
+          setIsLiked(!isLiked);
+          // refetch();
+        },
+      }
+    );
+  };
+
   return (
     <AuthLayout>
       <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
@@ -758,13 +844,115 @@ const MyEmbeds = () => {
           {timelineEmbeds.map((item, index) => (
             <div
               key={`${item.embed.id}-${index}`}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-3"
             >
               <div className="border rounded-lg bg-gray-50 dark:bg-gray-800">
                 {renderEmbed(item.embed, index)}
               </div>
 
-              <div className="flex flex-row items-center justify-between mt-2">
+              <div className="flex flex-row items-center justify-between text-[#FFFFFF80] text-[10px] font-semibold">
+                <div
+                  onClick={() => {
+                    setShowComments(!showComments),
+                      setSelectedTimelineId(item.timelineId);
+                  }}
+                  className="flex flex-row gap-1.5 items-center"
+                >
+                  <Message size={18} width={18} height={18} fill="#FFFFFF80" />
+                  {getComments?.comments.length}
+                </div>
+                <div
+                  onClick={() => {
+                    setSelectedTimelineId(item.timelineId);
+                    handleLikeNotification;
+                  }}
+                  className="flex flex-row gap-1.5 items-center"
+                >
+                  <Heart
+                    size={18}
+                    width={18}
+                    height={18}
+                    fill={isLiked ? "red" : "#0B0228"}
+                  />
+                  {getLikes?.likes.length}
+                </div>
+                <div
+                  // onClick={() => setOpenShareModal(true)}
+                  className="flex flex-row gap-1.5 items-center"
+                >
+                  <Repeat size={18} width={18} height={18} />
+                </div>
+              </div>
+
+              {showComments && (
+                <div className="w-full max-h-[350px] min-h-[200px] flex flex-col overflow-hidden space-y-2">
+                  <div className="w-full flex-1 overflow-y-auto space-y-2">
+                    {getComments?.comments.length === 0 ? (
+                      <div className="mt-10 text-center">
+                        <p>No comments under this post</p>
+                        <p>Be the first to add a comment</p>
+                      </div>
+                    ) : (
+                      <>
+                        {getComments?.comments.map((index: any) => (
+                          <ReplyCards
+                            key={index}
+                            comments={""}
+                            title={"Title"}
+                            time={
+                              formatDateAndTimeAgo(index.createdAt).relativeTime
+                            }
+                            description={index.comment}
+                            likes={""}
+                            shares={""}
+                            id={""}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </div>
+
+                  <div
+                    ref={emojiPickerRef}
+                    className="w-full max-w-[500px] mx-auto px-4 py-2 bg-[#1E1C2D]"
+                  >
+                    <form
+                      onSubmit={handleCommentSubmit}
+                      className="flex flex-row gap-1 mx-auto w-full"
+                    >
+                      <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        value={comment}
+                        onChange={handleCommentChange}
+                        className="w-full p-2.5 rounded-md bg-[#1E1C2D] text-white placeholder-[#ffffff80] border border-[#FFFFFF14] focus:outline-none"
+                      />
+                      <button
+                        type="submit"
+                        className="px-3 bg-[#290064] text-white rounded-full hover:bg-[#380085] flex items-center justify-center"
+                      >
+                        <Send size={24} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={toggleEmojiPicker}
+                        className="px-3 bg-[#290064] text-white rounded-full hover:bg-[#380085] flex items-center justify-center"
+                      >
+                        😊
+                      </button>
+                    </form>
+
+                    {showEmojiPicker && (
+                      <div className="absolute bottom-16 left-0 right-0 mx-auto">
+                        <Picker onEmojiSelect={handleEmojiSelect} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-row items-center justify-between mt-0">
                 {/* if token, render token address and name */}
                 {item.token ? (
                   <div className="flex items-center gap-2">

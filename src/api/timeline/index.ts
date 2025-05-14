@@ -5,13 +5,17 @@ import {
   buyRate,
   buyTimelineToken,
   buyTimelineTokenDex,
+  commentEmbed,
   createEmbed,
   createTimelineToken,
   deleteEmbed,
   featuredEmbed,
+  getCommentEmbeds,
   getEmbeds,
   getFeaturedEmbeds,
+  getLikedEmbeds,
   getMyEmbeds,
+  likeEmbed,
   sellRate,
   sellTimelineToken,
   sellTimelineTokenDex,
@@ -49,7 +53,37 @@ export const useDeleteEmbed = () => {
 export const useFeaturedEmbed = () => {
   return useMutation({
     onError,
-    mutationFn: (body: { embedId: string }) => featuredEmbed(body),
+    mutationFn: ({ embedId }: { embedId: string }) =>
+      featuredEmbed({ embedId }),
+  });
+};
+
+export const useCommentEmbed = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ embedId, comment }: { embedId: string; comment: string }) =>
+      commentEmbed({ embedId, comment }),
+  });
+};
+
+export const useLikeEmbed = () => {
+  return useMutation({
+    onError,
+    mutationFn: (body: { embedId: string }) => likeEmbed(body),
+  });
+};
+
+export const useGetCommentEmbeds = ({ embedId }: { embedId: string }) => {
+  return useQuery({
+    queryKey: ["get-comment-embeds"],
+    queryFn: () => getCommentEmbeds({ embedId }),
+  });
+};
+
+export const useGetLikedEmbeds = ({ embedId }: { embedId: string }) => {
+  return useQuery({
+    queryKey: ["get-liked-embeds"],
+    queryFn: () => getLikedEmbeds({ embedId }),
   });
 };
 

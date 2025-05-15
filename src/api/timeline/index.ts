@@ -1,7 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { onError } from "../api-client";
-import { EmbedItem, TCreateEmbedBody, TCreateTimelineToken } from "./types";
 import {
+  EmbedItem,
+  TAddTokenAddress,
+  TCreateEmbedBody,
+  TCreateTimelineToken,
+} from "./types";
+import {
+  addTokenAddress,
   buyRate,
   buyTimelineToken,
   buyTimelineTokenDex,
@@ -99,6 +105,14 @@ export const useCreateTimelineToken = () => {
     onError,
     mutationFn: ({ body }: { body: TCreateTimelineToken }) =>
       createTimelineToken({ body }),
+  });
+};
+
+export const useAddTokenAddress = () => {
+  return useMutation({
+    onError,
+    mutationFn: ({ body }: { body: TAddTokenAddress }) =>
+      addTokenAddress({ body }),
   });
 };
 

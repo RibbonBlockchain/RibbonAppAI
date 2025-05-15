@@ -64,9 +64,9 @@ const CreateTokenModal: React.FC<Props> = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
           {/* Network Options */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <p className="text-sm font-bold">Token Network</p>
-          </div>
+          </div> */}
 
           {/* Token Logo Upload */}
           <div>

@@ -1,5 +1,10 @@
 import { client, TResponse } from "../api-client";
-import { EmbedItem, TCreateEmbedBody, TCreateTimelineToken } from "./types";
+import {
+  EmbedItem,
+  TAddTokenAddress,
+  TCreateEmbedBody,
+  TCreateTimelineToken,
+} from "./types";
 
 // EMBEDS
 export const createEmbed = async ({
@@ -79,6 +84,11 @@ export const createTimelineToken = async ({
   body: TCreateTimelineToken;
 }) => {
   const res = await client.post(`timeline/create-token`, body);
+  return res.data;
+};
+
+export const addTokenAddress = async ({ body }: { body: TAddTokenAddress }) => {
+  const res = await client.post(`timeline/token-address`, body);
   return res.data;
 };
 

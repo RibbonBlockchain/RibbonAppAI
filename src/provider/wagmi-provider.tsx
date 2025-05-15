@@ -7,14 +7,14 @@ import { type ReactNode, useState } from "react";
 import { type State, WagmiProvider } from "wagmi";
 
 export const getConfig = createConfig({
-  chains: [baseSepolia, base],
+  chains: [base, baseSepolia],
   multiInjectedProviderDiscovery: false,
   connectors: [
     coinbaseWallet({ appName: "Create Wagmi", preference: "smartWalletOnly" }),
   ],
   transports: {
-    [baseSepolia.id]: http(),
     [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
 });
 

@@ -35,7 +35,7 @@ const Signup = () => {
       </div>
 
       <div className="w-full flex flex-col gap-3">
-        <button onClick={() => toast.success("Coming soon")}>
+        {/* <button onClick={() => toast.success("Coming soon")}>
           <LinkButton
             href="#"
             className="flex bg-stone-400/50 border border-[#E5E7EB] flex-row items-center justify-center gap-3"
@@ -43,9 +43,9 @@ const Signup = () => {
           >
             <AppleIcon /> Continue with Apple
           </LinkButton>
-        </button>
+        </button> */}
 
-        <button onClick={() => toast.success("Coming soon")}>
+        {/* <button onClick={() => toast.success("Coming soon")}>
           <LinkButton
             href="#"
             className="flex bg-stone-400/50 border border-[#E5E7EB] flex-row items-center justify-center gap-3"
@@ -53,9 +53,9 @@ const Signup = () => {
           >
             <GoogleIcon /> Continue with Google
           </LinkButton>
-        </button>
+        </button> */}
 
-        <WorldIdButton>Sign In with World ID</WorldIdButton>
+        {/* <WorldIdButton>Sign In with World ID</WorldIdButton> */}
       </div>
     </div>
   );

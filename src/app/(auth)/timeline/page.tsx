@@ -571,6 +571,7 @@ const TimelineComponent = () => {
   }, []);
 
   const account = useAccount();
+  const { address } = useAccount();
   const { connectors, connect, status } = useConnect();
   const { disconnect } = useDisconnect();
   const { isConnected } = useAccount();
@@ -626,7 +627,12 @@ const TimelineComponent = () => {
             ))}
         </div>
 
-        {isConnected && <ButtonGroup />}
+        {isConnected && (
+          <div>
+            <p>Your smart wallet address is</p>
+            <p>{address}</p>
+          </div>
+        )}
 
         <section className="mb-20">
           <h1 className="font-bold mb-2">

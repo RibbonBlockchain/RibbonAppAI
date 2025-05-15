@@ -37,8 +37,6 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
   const [isValid, setIsValid] = useState(false);
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
 
-  const { mutate: buyRate } = useBuyRate();
-
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -53,37 +51,9 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
     setIsValid(amount > 0.000019 && slippage >= 0 && slippage <= 100);
   }, [amount, slippage]);
 
-  // Fetch token conversion rate when amount or token changes
-  useEffect(() => {
-    if (debouncedAmount > 0 && contractAddress) {
-      buyRate(
-        { amount: debouncedAmount.toString(), token: contractAddress },
-        {
-          onSuccess: (data: any) => {
-            if (data?.amount) {
-              setConvertedAmount(Number(data.amount));
-            }
-          },
-          onError: () => {
-            setConvertedAmount(null);
-          },
-        }
-      );
-    } else {
-      setConvertedAmount(null);
-    }
-  }, [debouncedAmount, contractAddress]);
-
   const handleSubmit = () => {
     if (!isValid || isPending) return;
     onSubmit({ amount, slippage, address: contractAddress });
-  };
-
-  const handleBuy = () => {
-    buyRate({
-      amount: "0.00002",
-      token: "0x1E9cfE6FC50E51FFC5211FCF73eD5421121E8943",
-    });
   };
 
   if (!isOpen) return null;
@@ -105,8 +75,6 @@ const BuyTimelineTokenModal: React.FC<BuyTimeLineTokenModalProps> = ({
         <p className="text-xs mb-2">
           You can purchase a minimum of 0.00002 ETH
         </p>
-
-        <button onClick={handleBuy}>Buy</button>
 
         <div className="flex flex-col gap-4">
           {/* Amount Input */}

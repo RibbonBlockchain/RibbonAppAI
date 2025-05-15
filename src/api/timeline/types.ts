@@ -16,3 +16,8 @@ export type TCreateTimelineToken = {
   file: any;
   embedId: any;
 };
+
+export type TAddTokenAddress = {
+  address: any;
+  embedId: any;
+};

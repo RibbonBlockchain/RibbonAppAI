@@ -806,19 +806,22 @@ const MyEmbeds = () => {
   // };
 
   const { address } = useAccount();
+  const { isConnected } = useAccount();
+
+  console.log(address, "smart address");
   // testnet parameters
-  // const network = baseSepolia;
-  // const bounding_curve = "0xE7bAB14fd484562b53c91c625D16368beb494DD3";
-  // const ribbonfactory = "0x0008ACAFe1024E1CE8e5CB628Cf302A94375938e";
-  // const alchemyURL =
-  //   "https://base-sepolia.g.alchemy.com/v2/liLaWcC6Ivga84e3rgy3h2WbPmKEHO1G";
+  const network = baseSepolia;
+  const bounding_curve = "0xE7bAB14fd484562b53c91c625D16368beb494DD3";
+  const ribbonfactory = "0x0008ACAFe1024E1CE8e5CB628Cf302A94375938e";
+  const alchemyURL =
+    "https://base-sepolia.g.alchemy.com/v2/liLaWcC6Ivga84e3rgy3h2WbPmKEHO1G";
 
   // mainnet parameters
-  const network = base;
-  const bounding_curve = "0xd472c545aC4A482Ef08A2f73e007d4C403901c81";
-  const ribbonfactory = "0xfd878b3c723B57BBdBEE9FB7d5e663eb7774c440";
-  const alchemyURL =
-    "https://base-mainnet.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
+  // const network = base;
+  // const bounding_curve = "0xd472c545aC4A482Ef08A2f73e007d4C403901c81";
+  // const ribbonfactory = "0xfd878b3c723B57BBdBEE9FB7d5e663eb7774c440";
+  // const alchemyURL =
+  //   "https://base-mainnet.g.alchemy.com/v2/fw6todGL-HqWdvvhbGrx_nXxROeQQIth";
 
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -1196,63 +1199,85 @@ const MyEmbeds = () => {
                 </div>
               )} */}
 
-              <div className="flex flex-row items-center justify-between mt-0">
-                {/* if token, render token address and name */}
-                {item.token ? (
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={item.token.logo}
-                      alt={item.token.name}
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div>
-                      <p className="font-medium">
-                        {item.token.name} ({item.token.symbol})
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {shorten(item.token.address)}
-                      </p>
+              {!isConnected && (
+                <div className="flex flex-row items-center justify-between mt-0">
+                  {/* if token, render token address and name */}
+                  {item.token ? (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={item.token.logo}
+                        alt={item.token.name}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <div>
+                        <p className="font-medium">
+                          {item.token.name} ({item.token.symbol})
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {shorten(item.token.address)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ) : (
+                  ) : (
+                    <ActivityButton
+                      className="text-[#290064] bg-white rounded-md"
+                      text="Mint"
+                      onClick={() => {
+                        setSelectedTimelineId(item.timelineId);
+                        setIsModalOpen(true);
+                      }}
+                    />
+                  )}
+
                   <ActivityButton
                     className="text-[#290064] bg-white rounded-md"
-                    text="Mint"
+                    text="Buy"
                     onClick={() => {
-                      setSelectedTimelineId(item.timelineId);
-                      setIsModalOpen(true);
+                      setSelectedToken(item.token);
+                      setIsBuyModalOpen(true);
                     }}
                   />
-                )}
 
-                <ActivityButton
-                  className="text-[#290064] bg-white rounded-md"
-                  text="Buy"
-                  onClick={() => {
-                    setSelectedToken(item.token);
-                    setIsBuyModalOpen(true);
-                  }}
-                />
-
-                <ActivityButton
-                  className="text-[#290064] bg-white rounded-md"
-                  text="Sell"
-                  onClick={() => {
-                    setSelectedToken(item.token);
-                    setIsSellModalOpen(true);
-                  }}
-                />
-
-                <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
-                  <button
+                  <ActivityButton
+                    className="text-[#290064] bg-white rounded-md"
+                    text="Sell"
                     onClick={() => {
-                      setSelectedTimelineId(item.timelineId);
-                      setIsCreateModalOpen(true);
+                      setSelectedToken(item.token);
+                      setIsSellModalOpen(true);
                     }}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    Create Token
-                  </button>
+                  />
+                </div>
+              )}
+
+              {isConnected && (
+                <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
+                  {item.token ? (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={item.token.logo}
+                        alt={item.token.name}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <div>
+                        <p className="font-medium">
+                          {item.token.name} ({item.token.symbol})
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {shorten(item.token.address)}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setSelectedTimelineId(item.timelineId);
+                        setIsCreateModalOpen(true);
+                      }}
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Create Token
+                    </button>
+                  )}
 
                   <button
                     onClick={() => {
@@ -1274,7 +1299,7 @@ const MyEmbeds = () => {
                     Sell Meme
                   </button>
                 </div>
-              </div>
+              )}
             </div>
           ))}
 
@@ -1283,8 +1308,8 @@ const MyEmbeds = () => {
           )}
         </div>
 
-        {/* <CreateTokenModal
-          isOpen={isModalOpen}
+        <CreateTokenModal
+          isOpen={isModalOpen && !isConnected}
           onClose={() => setIsModalOpen(false)}
           name={name}
           symbol={symbol}
@@ -1297,10 +1322,10 @@ const MyEmbeds = () => {
           setDescription={setDescription}
           handleLogoChange={handleLogoChange}
           handleSubmit={handlehandleCreateTokenSubmit}
-        /> */}
-        {/* 
+        />
+
         <BuyTimelineTokenModal
-          isOpen={isBuyModalOpen}
+          isOpen={isBuyModalOpen && !isConnected}
           onClose={() => setIsBuyModalOpen(false)}
           onSubmit={(data) =>
             selectedToken &&
@@ -1311,10 +1336,10 @@ const MyEmbeds = () => {
           }
           isPending={buyIsPending}
           contractAddress={selectedToken?.address as string}
-        /> */}
+        />
 
-        {/* <SellTimelineTokenModal
-          isOpen={isSellModalOpen}
+        <SellTimelineTokenModal
+          isOpen={isSellModalOpen && !isConnected}
           onClose={() => setIsSellModalOpen(false)}
           onSubmit={(data) =>
             selectedToken &&
@@ -1324,10 +1349,10 @@ const MyEmbeds = () => {
             })
           }
           isPending={sellIsPending}
-        /> */}
+        />
 
         {/* Create Token Modal */}
-        {isCreateModalOpen && (
+        {isCreateModalOpen && isConnected && (
           <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
             <div className="bg-[#0B0228] rounded-lg shadow-xl text-white p-6 w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">Create New Token</h2>
@@ -1416,7 +1441,7 @@ const MyEmbeds = () => {
         )}
 
         {/* Buy Token Modal */}
-        {isBuyModalOpen && (
+        {isBuyModalOpen && isConnected && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-[#0B0228] rounded-lg shadow-xl text-white p-6 w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">Buy Meme Tokens</h2>
@@ -1471,7 +1496,7 @@ const MyEmbeds = () => {
         )}
 
         {/* Sell Token Modal */}
-        {isSellModalOpen && (
+        {isSellModalOpen && isConnected && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-[#0B0228] rounded-lg shadow-xl text-white p-6 w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">Sell Meme Tokens</h2>

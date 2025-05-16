@@ -74,7 +74,7 @@ const Home = () => {
           <span className="text-[#290064] font-semibold">Sign In</span>
         </LinkButton>
 
-        <WorldIdButton>Sign In with World ID</WorldIdButton>
+        {/* <WorldIdButton>Sign In with World ID</WorldIdButton> */}
       </div>
 
       <div className="w-full flex flex-row items-center justify-between px-2 text-center text-[13px] mb-3 text-gray-400">

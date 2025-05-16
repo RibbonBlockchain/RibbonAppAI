@@ -20,7 +20,7 @@ const Topbar = ({ children }: { children: React.ReactNode }) => {
   const unreadCount = useUnreadNotificationCount();
 
   return (
-    <div className="w-full p-4 sm:p-6 flex flex-row mt-4 py-1 items-center justify-between">
+    <div className="w-full p-4 sm:p-4 flex flex-row items-center justify-between">
       {children}
 
       <div className="flex flex-row items-center justify-center gap-3">

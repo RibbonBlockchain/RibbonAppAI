@@ -1,10 +1,10 @@
-Home page: [ribbon-app-ten.vercel.app](https://ribbon-app-ten.vercel.app)
+Home page: [ribbon-app-ai-phi.vercel.app](https://ribbon-app-ai-phi.vercel.app)
 
-Staging: [ribbon-app-ten.vercel.app/](https://ribbon-app-ten.vercel.app)
+Staging: [ribbon-app-ai-phi.vercel.app](https://ribbon-app-ai-phi.vercel.app)
 
-Production: [ribbon-app-ten.vercel.app/](https://ribbon-app-ten.vercel.app)
+Production: [ribbon-app-ai-phi.vercel.app](https://ribbon-app-ai-phi.vercel.app)
 
-## [RibbonProtocol <a href="https://ibb.co/pfpWc5b"><img src="https://i.ibb.co/8rVzqtN/ribbon-app-logo-copy.png" alt="ribbon-app-logo-copy" border="0"></a>](https://ribbon-app-ten.vercel.app)
+## [RibbonProtocol <a href="https://ibb.co/7JrJ4Fm1"><img src="https://i.ibb.co/6RDRB5CW/linkages.png" alt="linkages" border="0"></a>](https://ribbon-app-ai-phi.vercel.app)
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](/LICENSE)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
@@ -12,9 +12,9 @@ Production: [ribbon-app-ten.vercel.app/](https://ribbon-app-ten.vercel.app)
 
 Ribbon Protocol is a universal health coverage rewards and loyalty platform that aims to modify health and wellness behavior through incentivization and rewardable tasks.
 
-The Ribbon App intertwines Universal Basic Income with Universal Health Coverage, utilizing World ID users health & socioeconomic data to enhance global well-being. The protocol rewards users for activities that help assess their wellness and socioeconomic needs, while linking them to equitable UBI and personalized services.
+The Linkages App intertwines Universal Basic Income with Universal Health Coverage, utilizing World ID users health & socioeconomic data to enhance global well-being. The protocol rewards users for activities that help assess their wellness and socioeconomic needs, while linking them to equitable UBI and personalized services.
 
-Rewards and Incentives are distributed in points and WLD tokens, on the Optimism Mainnet network which is a Layer 2 network of the Ethereum blockchain.
+Rewards and Incentives are distributed in points and USDC tokens, on the Optimism Mainnet network which is a Layer 2 network of the Ethereum blockchain.
 
 ## Table of Contents
 
@@ -27,13 +27,13 @@ Rewards and Incentives are distributed in points and WLD tokens, on the Optimism
 
 ## Packages
 
-This RibbonProtocol App contains JavaScript tools and applications that enables users to earn tokenized universal basic income. The ribbon app consists of three key components right now; this will change in time. These are as follows:
+This Linkages App contains JavaScript tools and applications that enables users to earn tokenized universal basic income. The ribbon app consists of three key components right now; this will change in time. These are as follows:
 
-| Name                                                                                           | Description                                                                                                                    |
-| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [`@ribbonprotocol/api`](https://github.com/RibbonBlockchain/RibbonApp-BackEnd)                 | Backend API built with Typescript and NestJS restful API that handles data capture for users and all system wide interactions. |
-| [`@ribbonprotoccol/frontend`](https://github.com/RibbonBlockchain/RibbonApp)                   | Frontend NextJS application that users interact with. [Link](https://ribbon-app-ten.vercel.app)                                |
-| [`@ribbonprotoccol/admin-panel`](https://github.com/RibbonBlockchain/RibbonAdminPanelFrontEnd) | Frontend NextJS application for admin management.                                                                              |
+| Name                                                                                    | Description                                                                                                                    |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [`@ribbonprotocol/api`](https://github.com/RibbonBlockchain/RibbonBackEndAI)            | Backend API built with Typescript and NestJS restful API that handles data capture for users and all system wide interactions. |
+| [`@ribbonprotocol/frontend`](https://github.com/RibbonBlockchain/RibbonAppAI)           | Frontend NextJS application that users interact with. [Link](https://ribbon-app-ai-phi.vercel.app)                             |
+| [`@ribbonprotocol/admin-panel`](https://github.com/RibbonBlockchain/RibbonAdminPanelAI) | Frontend NextJS application for admin management.                                                                              |
 
 Each section has it's own repository and has it's own readme within the package that explains how to set it up and get running with that specific component.
 
@@ -50,8 +50,8 @@ This project requires `node >=18.0.0`, `npm >=10.x.x` and `pnpm >=8.x.x`. A unix
 To get started, clone the repo and install its dependencies:
 
 ```bash
-git clone https://github.com/RibbonBlockchain/RibbonApp.git
-cd RibbonApp
+git clone https://github.com/RibbonBlockchain/RibbonAppAI.git
+cd RibbonAppAI
 pnpm install
 ```
 
@@ -74,21 +74,21 @@ For next steps, take a look at documentation for the individual package(s) you w
 
 ## Deployment
 
-RibbonProtocol App is currently deployed using vercel.
+Linkages App is currently deployed using vercel.
 
 ## Contributing
 
-Thanks for your interest in RibbonProtocol App. There are many ways you can contribute. To start, take a few minutes to look over the official guide:
+Thanks for your interest in Linkages App. There are many ways you can contribute. To start, take a few minutes to look over the official guide:
 
-**[Read the "Contributing to RibbonProtocol App" Guide &raquo;](/contributing.md)**
+**[Read the "Contributing to Linkages App" Guide &raquo;](/contributing.md)**
 
-We happily await your pull requests and/or involvement in our [issues page](https://github.com/RibbonBlockchain/RibbonApp/issues) and hope to see your username on our [list of contributors](https://github.com/RibbonBlockchain/RibbonApp) 🎉🎉🎉
+We happily await your pull requests and/or involvement in our [issues page](https://github.com/RibbonBlockchain/RibbonAppAI/issues) and hope to see your username on our [list of contributors](https://github.com/RibbonBlockchain/RibbonAppAI) 🎉🎉🎉
 
 ## Resources
 
-To get a full idea of what RibbonProtocol is about, be sure to take a look at these other resources
+To get a full idea of what Linkages is about, be sure to take a look at these other resources
 
-1.  [Website](https://ribbon-app-ten.vercel.app)
+1.  [Website](https://ribbon-app-ai-phi.vercel.app)
 2.  [Twitter](https://twitter.com/ribbonprotocol)
 3.  [Telegram Announcements](https://t.me/RibbonProtocol)
 4.  [Telegram Community Group](https://t.me/+JbmcP2EjVqYwMjRk)

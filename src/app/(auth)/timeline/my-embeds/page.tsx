@@ -629,26 +629,26 @@ const MyEmbeds = () => {
   // const [description, setDescription] = useState("");
 
   const [logo, setLogo] = useState<File | null>(null);
-  // const [logoPreview, setLogoPreview] = useState("");
+  const [logoPreview, setLogoPreview] = useState("");
 
-  // const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
+  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  //   const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-  //   if (!allowedTypes.includes(file.type)) {
-  //     toast.error("Please upload a valid image file.");
-  //     return;
-  //   }
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file.");
+      return;
+    }
 
-  //   if (file.size > 5 * 1024 * 1024) {
-  //     toast.error("File size exceeds the limit of 5MB.");
-  //     return;
-  //   }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size exceeds the limit of 5MB.");
+      return;
+    }
 
-  //   setLogoPreview(URL.createObjectURL(file));
-  //   setLogo(file);
-  // };
+    setLogoPreview(URL.createObjectURL(file));
+    setLogo(file);
+  };
 
   const handlehandleCreateTokenSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -832,7 +832,7 @@ const MyEmbeds = () => {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [description, setDescription] = useState("");
-  const [logoPreview, setLogoPreview] = useState("");
+  // const [logoPreview, setLogoPreview] = useState("");
   const [embedUrl, setEmbedUrl] = useState("");
 
   // Buy/Sell states
@@ -840,7 +840,11 @@ const MyEmbeds = () => {
   const [slippage, setSlippage] = useState("5");
   const [isPending, setIsPending] = useState(false);
 
-  const { data: writeData, writeContract } = useWriteContract();
+  const {
+    data: writeData,
+    writeContract,
+    error: writeContractError,
+  } = useWriteContract();
   const { data: receipt } = useWaitForTransactionReceipt({ hash: writeData });
 
   const { mutate: addTokenAddress } = useAddTokenAddress();
@@ -853,6 +857,7 @@ const MyEmbeds = () => {
     chainId: network.id,
   });
 
+  console.log("error ==>", writeContractError);
   console.log(selectedTimelineId, "selected timeline id???");
   console.log("selected address", selectedTimelineToken);
 
@@ -900,18 +905,6 @@ const MyEmbeds = () => {
     }
   }, [receipt]);
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target) {
-          setLogoPreview(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-
   const createMeme = async () => {
     if (!name || !symbol || !embedUrl) {
       toast.error("Please fill all required fields");
@@ -927,7 +920,7 @@ const MyEmbeds = () => {
         address: ribbonfactory,
         functionName: "createMemecoin",
         args: [address, bounding_curve, name, symbol, embedUrl],
-        value: parseEther("0.0000002"),
+        // value: parseEther("0.0000002"),
         chain: network,
         account: address,
       });

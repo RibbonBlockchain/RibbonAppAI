@@ -613,7 +613,11 @@ const TimelineComponent = () => {
   const [slippage, setSlippage] = useState("5");
   const [isPending, setIsPending] = useState(false);
 
-  const { data: writeData, writeContract } = useWriteContract();
+  const {
+    data: writeData,
+    writeContract,
+    error: writeContractError,
+  } = useWriteContract();
   const { data: receipt } = useWaitForTransactionReceipt({ hash: writeData });
 
   const { mutate: addTokenAddress } = useAddTokenAddress();
@@ -626,6 +630,7 @@ const TimelineComponent = () => {
     chainId: network.id,
   });
 
+  console.log("error ==>", writeContractError);
   console.log(selectedTimelineId, "selected timeline id???");
   console.log("selected address", selectedTimelineToken);
 
@@ -688,7 +693,7 @@ const TimelineComponent = () => {
         address: ribbonfactory,
         functionName: "createMemecoin",
         args: [address, bounding_curve, name, symbol, embedUrl],
-        value: parseEther("0.0000002"),
+        // value: parseEther("0.0000002"),
         chain: network,
         account: address,
       });

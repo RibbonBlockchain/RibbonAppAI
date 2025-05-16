@@ -27,7 +27,7 @@ import Link from "next/link";
 import BuyTimelineTokenModal from "@/containers/timeline/buy-timeline-token-modal";
 import SellTimelineTokenModal from "@/containers/timeline/sell-timelinetoken-modal";
 import { shorten, shortenTransaction } from "@/lib/utils/shorten";
-import { Add } from "iconsax-react";
+import { Add, Copy } from "iconsax-react";
 import Image from "next/image";
 import { useConnect, useDisconnect } from "wagmi";
 import ButtonGroup from "./button-group";
@@ -583,10 +583,9 @@ const TimelineComponent = () => {
   }, []);
 
   const account = useAccount();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { connectors, connect, status } = useConnect();
   const { disconnect } = useDisconnect();
-  const { isConnected } = useAccount();
 
   // testnet parameters
   const network = baseSepolia;
@@ -673,18 +672,6 @@ const TimelineComponent = () => {
       fetchAddressAndData();
     }
   }, [receipt]);
-
-  // const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       if (event.target) {
-  //         setLogoPreview(event.target.result as string);
-  //       }
-  //     };
-  //     reader.readAsDataURL(e.target.files[0]);
-  //   }
-  // };
 
   const createMeme = async () => {
     if (!name || !symbol || !embedUrl) {
@@ -821,7 +808,7 @@ const TimelineComponent = () => {
 
   return (
     <AuthNavLayout>
-      <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col gap-4">
+      <main className="w-full min-h-screen text-white bg-[#0B0228] p-4 sm:p-6 flex flex-col">
         <Topbar>
           <p className="text-xl font-bold">Timeline</p>
         </Topbar>
@@ -850,34 +837,53 @@ const TimelineComponent = () => {
           )}
         </section>
 
-        <div className="flex flex-end z-10">
+        {isConnected && address && (
+          <div className="mt-4 px-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md max-w-md mx-auto text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+              Your smart wallet address is:
+            </p>
+            <div className="flex items-center justify-center space-x-2">
+              <span className="font-mono text-sm break-all text-gray-800 dark:text-white">
+                {address}
+              </span>
+
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(address);
+                  alert("Address copied to clipboard!");
+                }}
+                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer"
+                title="Copy to clipboard"
+              >
+                <Copy size="20" color="black" className="dark:invert" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-end items-center space-x-4 z-10">
           {account.status === "connected" && (
             <button
               onClick={() => disconnect()}
-              className="px-8 py-0.5  border-2 border-black dark:border-white uppercase bg-[#fffdd0] text-black transition duration-200 text-sm shadow-[1px_1px_rgba(0,0,0),2px_2px_rgba(0,0,0),3px_3px_rgba(0,0,0),4px_4px_rgba(0,0,0),5px_5px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] hover:bg-primarycolor hover:text-white "
+              className="px-6 py-2 border-2 border-black dark:border-white uppercase bg-[#fffdd0] text-black dark:text-white transition duration-200 text-sm font-semibold rounded shadow-[1px_1px_rgba(0,0,0,0.2),2px_2px_rgba(0,0,0,0.2),3px_3px_rgba(0,0,0,0.2)] dark:shadow-[1px_1px_rgba(255,255,255,0.2),2px_2px_rgba(255,255,255,0.2),3px_3px_rgba(255,255,255,0.2)] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
             >
               Disconnect
             </button>
           )}
+
           {account.status === "disconnected" &&
             connectors.map((connector) => (
               <button
                 key={connector.uid}
                 onClick={() => connect({ connector })}
+                className="px-6 py-2 border-2 border-black dark:border-white uppercase bg-[#fffdd0] text-black dark:text-white transition duration-200 text-sm font-semibold rounded shadow-[1px_1px_rgba(0,0,0,0.2),2px_2px_rgba(0,0,0,0.2),3px_3px_rgba(0,0,0,0.2)] dark:shadow-[1px_1px_rgba(255,255,255,0.2),2px_2px_rgba(255,255,255,0.2),3px_3px_rgba(255,255,255,0.2)] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
               >
                 Connect Wallet
               </button>
             ))}
         </div>
 
-        {isConnected && (
-          <div>
-            <p>Your smart wallet address is</p>
-            <p>{address}</p>
-          </div>
-        )}
-
-        <section className="mb-20">
+        <section className="mb-20 mt-6">
           <h1 className="font-bold mb-2">
             Social Media Embed (Twitter, YouTube, TikTok, Instagram)
           </h1>
@@ -911,7 +917,7 @@ const TimelineComponent = () => {
             )}{" "}
           </form>
 
-          <h1>Featured embeds</h1>
+          <h1 className="font-bold mb-2">Featured embeds</h1>
           <div className="flex flex-row gap-2 w-[inherit] py-2 overflow-x-auto scroll-hidden">
             {featuredEmbedData?.length === 0 && (
               <div className="flex flex-row items-center gap-2">

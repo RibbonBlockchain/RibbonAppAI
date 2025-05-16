@@ -55,7 +55,7 @@ const SellTimelineTokenModal: React.FC<SellTimelineTokenModalProps> = ({
         <div className="flex flex-col gap-4">
           <div>
             <label className="text-sm font-semibold mb-1 block">
-              Amount (ETH)
+              Amount (Token)
             </label>
             <input
               type="number"

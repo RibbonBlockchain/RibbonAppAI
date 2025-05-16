@@ -136,7 +136,7 @@ export const WalletBalanceCard = ({
         <p className="text-sm font-bold mb-2">Wallet Balance</p>
 
         <div
-          className="flex flex-row items-center justify-center gap-1"
+          className="flex flex-row items-center justify-center gap-1 cursor-pointer"
           onClick={onclick}
         >
           <Wallet2 size="24" color="#ffffff" variant="Bold" />

@@ -2,7 +2,7 @@
 
 import { http, createConfig } from "wagmi";
 import { baseSepolia, base } from "wagmi/chains";
-import { coinbaseWallet } from "wagmi/connectors";
+import { coinbaseWallet, metaMask } from "wagmi/connectors";
 import { type ReactNode, useState } from "react";
 import { type State, WagmiProvider } from "wagmi";
 
@@ -12,6 +12,7 @@ export const getConfig = createConfig({
   connectors: [
     coinbaseWallet({ appName: "Create Wagmi", preference: "smartWalletOnly" }),
   ],
+  // connectors: [metaMask()],
   transports: {
     [base.id]: http(),
     [baseSepolia.id]: http(),

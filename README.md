@@ -12,9 +12,9 @@ Production: [ribbon-app-ai-phi.vercel.app](https://ribbon-app-ai-phi.vercel.app)
 
 Ribbon Protocol is a universal health coverage rewards and loyalty platform that aims to modify health and wellness behavior through incentivization and rewardable tasks.
 
-The Linkages App intertwines Universal Basic Income with Universal Health Coverage, utilizing World ID users health & socioeconomic data to enhance global well-being. The protocol rewards users for activities that help assess their wellness and socioeconomic needs, while linking them to equitable UBI and personalized services.
+The Linkages App is developed using our Ribbon Protocol system, and intertwines rewards with Health, Socioeconomic Status Credit Scores, E-commerce and AI Agents, while utilizing users' health & socioeconomic data to personalize their experience and enhance global well-being. The Linkgaes App rewards users for activities that help assess their wellness and socioeconomic needs, while linking them to equitable rewards, personalized socioeconomic, finance, e-commerce and AI Agent services.
 
-Rewards and Incentives are distributed in points and USDC tokens, on the Optimism Mainnet network which is a Layer 2 network of the Ethereum blockchain.
+The Linkages App is deployed on the BASE Blockchain network which is a Layer 2 network on the Ethereum blockchain.
 
 ## Table of Contents
 
@@ -27,7 +27,7 @@ Rewards and Incentives are distributed in points and USDC tokens, on the Optimis
 
 ## Packages
 
-This Linkages App contains JavaScript tools and applications that enables users to earn tokenized universal basic income. The ribbon app consists of three key components right now; this will change in time. These are as follows:
+This Linkages App contains JavaScript tools and applications that enables users to earn tokenized universal basic income. The Linkages app consists of three key components right now; this will change in time. These are as follows:
 
 | Name                                                                                    | Description                                                                                                                    |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
